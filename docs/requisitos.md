@@ -1,10 +1,11 @@
 # Trasteando — Especificación de Requisitos
 
-**Proyecto:** Trasteando (working title; alternativa: *Trasting*)
+**Proyecto:** Trasteando
 **Tipo:** Aplicación web progresiva (PWA), desplegada en GitHub Pages
 **Repositorio:** github.com/pdigue/guitarra
-**Versión del documento:** 1.0
-**Última actualización:** 14 de septiembre de 2026
+**Versión del documento:** 1.1
+**Última actualización:** 15 de septiembre de 2026
+**Cambios en esta versión:** reconciliación de estados tras la auditoría de requisitos del 15/09. Nuevo modelo de estado en dos columnas. Nuevos requisitos S-07, V-09, J-11, G-05, G-06 y bloque X. Decisiones abiertas 1, 2, 3, 5, 6 y 7 cerradas. Roadmap simplificado de cinco versiones a cuatro.
 
 ---
 
@@ -12,214 +13,254 @@
 
 | ID | Objetivo | Descripción |
 |----|----------|-------------|
-| **O-01** | Aprendizaje del mástil | Que el usuario aprenda a identificar las notas en cualquier posición del diapasón de la guitarra, mediante exploración libre y mediante juegos de refuerzo. |
+| **O-01** | Aprendizaje del mástil | Que el usuario aprenda a identificar las notas en cualquier posición del diapasón, mediante exploración libre y juegos de refuerzo. |
 | **O-02** | Lectura musical | Que el usuario asocie cada posición del mástil con su representación en el pentagrama. |
 | **O-03** | Escalas | Que el usuario aprenda y practique escalas sobre el mástil, entendiendo su estructura interválica. |
-| **O-04** | Afinador multiafinación | Ofrecer un afinador gratuito que soporte la afinación estándar, afinaciones alternativas comunes y afinaciones personalizadas (la mayoría de afinadores online son de pago o solo estándar). |
+| **O-04** | Afinador multiafinación | Ofrecer un afinador gratuito con afinación estándar, alternativas comunes y personalizadas. |
 
 ---
 
-## 2. Leyenda
+## 2. Cómo leer este documento
 
 **Prioridad:** `Alta` (imprescindible) · `Media` (importante, no bloqueante) · `Baja` (deseable)
-**Fase:** versión del roadmap en la que se implementa (ver sección 14)
-**Estado:** `Pendiente` · `Parcial` (existe algo en el HTML actual) · `Cumplido` · `En revisión`
+
+**Fase:** versión del roadmap en la que se entrega (ver sección 15)
+
+**Implementado:** existe y funciona en el código fuente actual. `Sí` · `Parcial` · `No`
+
+**Publicado:** existe y funciona en la URL pública que usa el usuario final. `Sí` · `No`
+
+Esta separación existe porque un requisito implementado pero no desplegado no aporta valor a nadie. Mientras la columna Publicado siga en `No` de forma generalizada, la prioridad del proyecto es desplegar, no añadir funcionalidad.
+
+> **Estado global a 15/09/2026:** la V1 está implementada en local pero **no publicada**. Ninguna funcionalidad nueva llega todavía al usuario final.
 
 ---
 
 ## 3. Requisitos generales y de producto
 
-| ID | Requisito | Prioridad | Fase | Estado | Notas de desarrollo |
-|----|-----------|-----------|------|--------|---------------------|
-| **G-01** | La aplicación se llamará *Trasteando* (alternativa a decidir: *Trasting*). El nombre aparecerá en el splash, en el título de la pestaña y en el manifiesto PWA. | Alta | V1 | Pendiente | Decisión de naming pendiente. Afecta a `<title>`, manifest y nombre del icono. |
-| **G-02** | La app se estructura en tres áreas principales: **Aprendizaje** (mástil), **Escalas** y **Afinador**, accesibles desde una navegación principal. | Alta | V1 | Parcial | El HTML actual tiene navegación por modos pero sin Escalas ni Afinador. |
-| **G-03** | La app debe funcionar sin conexión una vez cargada (al menos el modo libre y el juego). | Media | V5 | Pendiente | Requiere Service Worker + cacheo de los samples de audio. |
-| **G-04** | La app debe ser instalable en el móvil como PWA (icono en pantalla de inicio, pantalla completa). | Alta | V1 | Parcial | El manifiesto ya existe en el HTML actual. Falta verificar en dispositivo real. |
+| ID | Requisito | Prioridad | Fase | Implementado | Publicado | Notas |
+|----|-----------|-----------|------|--------------|-----------|-------|
+| **G-01** | La aplicación se llama *Trasteando*. El nombre aparece en la pantalla de entrada, el título de la pestaña y el manifiesto PWA. | Alta | V1 | Sí | No | Naming cerrado: se descarta *Trasting*. |
+| **G-02** | La app se estructura en áreas accesibles desde una navegación principal: Libre, Adivinar, Afinador y Escalas. | Alta | V1 | Sí | No | Escalas presente pero deshabilitada hasta V3. |
+| **G-03** | La app funciona sin conexión una vez cargada. | Media | V4 | No | No | Requiere Service Worker. **Depende de S-07**: cachear audio de terceros es frágil, autoalojarlo lo hace trivial. |
+| **G-04** | La app es instalable en el móvil como PWA. | Alta | V1 | Parcial | No | Manifiesto presente. Falta verificar la instalación en un dispositivo real. |
+| **G-05** | *(nuevo)* La interfaz cumple unos mínimos de accesibilidad: foco de teclado visible, respeto a `prefers-reduced-motion`, contraste suficiente y etiquetas accesibles en los controles solo-icono. | Media | V2 | Parcial | No | El código ya respeta `prefers-reduced-motion` y usa `:focus-visible` y `aria-label` en varios controles. Falta auditoría completa. Se fija ahora porque reformar accesibilidad más tarde sale caro. |
+| **G-06** | *(nuevo)* El proyecto documenta sus dependencias externas y la licencia de cada recurso de terceros que distribuye. | Media | V1 | No | No | Incluye Tone.js (MIT) y los samples de audio (ver S-07). |
 
 ---
 
 ## 4. Nomenclatura y notación
 
-| ID | Requisito | Prioridad | Fase | Estado | Notas de desarrollo |
-|----|-----------|-----------|------|--------|---------------------|
-| **N-01** | El usuario podrá alternar entre nomenclatura **clásica/latina** (Do, Re, Mi…) y **anglosajona** (C, D, E…). | Alta | V1 | Cumplido | Ya implementado en el HTML actual. |
-| **N-02** | El cambio de nomenclatura estará disponible en el **menú de configuración**. | Alta | V1 | Pendiente | Requiere crear el menú de configuración como tal. |
-| **N-03** | El cambio de nomenclatura estará **además** accesible directamente desde la interfaz principal, sin entrar en el menú. | Alta | V1 | Cumplido | Ya existe botón directo en la barra superior. |
-| **N-04** | La nomenclatura seleccionada se aplicará de forma consistente en todos los modos: mástil, juego, escalas, afinador y pentagrama. | Alta | V1 | Parcial | Verificar consistencia al añadir nuevos módulos. |
-| **N-05** | La nomenclatura seleccionada persistirá entre sesiones. | Media | V2 | Pendiente | `localStorage`. |
+| ID | Requisito | Prioridad | Fase | Implementado | Publicado | Notas |
+|----|-----------|-----------|------|--------------|-----------|-------|
+| **N-01** | Alternancia entre nomenclatura latina (Do, Re, Mi…) y anglosajona (C, D, E…). | Alta | V1 | Sí | No | — |
+| **N-02** | El cambio de nomenclatura está en el menú de configuración. | Alta | V1 | Sí | No | — |
+| **N-03** | El cambio de nomenclatura está **además** en la interfaz principal, sin abrir el menú. | Alta | V1 | Sí | No | Chip en la barra de acceso rápido. |
+| **N-04** | La nomenclatura se aplica de forma consistente en mástil, juego, afinador y pentagrama. | Alta | V1 | Sí | No | Verificar de nuevo al añadir Escalas. |
+| **N-05** | La nomenclatura persiste entre sesiones. | Media | V1 | Sí | No | `localStorage`. |
 
 ---
 
-## 5. Diapasón — contenido y comportamiento
+## 5. Diapasón
 
-| ID | Requisito | Prioridad | Fase | Estado | Notas de desarrollo |
-|----|-----------|-----------|------|--------|---------------------|
-| **D-01** | La pantalla principal muestra un **diagrama del mástil** de guitarra de 6 cuerdas. | Alta | V1 | Cumplido | — |
-| **D-02** | Cada cuerda muestra, al inicio (izquierda), la **nota de la cuerda al aire**. | Alta | V1 | Cumplido | Debe actualizarse dinámicamente si se cambia la afinación (ver A-08). |
-| **D-03** | Cada traste muestra su **número**, alineado exactamente sobre la franja donde se pulsa (no desplazado). | Alta | V1 | **Parcial — con defecto conocido** | Bug identificado: en la versión publicada el número aparece decalado una posición. Corregido en `index_v2.html` (pendiente de integrar). |
-| **D-04** | La numeración de trastes se podrá **mostrar u ocultar** mediante una opción. | Media | V2 | Pendiente | Toggle en configuración y/o acceso rápido. |
-| **D-05** | Al pulsar una posición del mástil, se emite el **sonido de esa nota**. | Alta | V1 | Cumplido | — |
-| **D-06** | Al pulsar una posición, aparece el **nombre de la nota** (en la nomenclatura activa) sobre el traste pulsado. | Alta | V1 | Cumplido | — |
-| **D-07** | El mástil mostrará los marcadores de posición habituales de una guitarra (trastes 3, 5, 7, 9, 12, 15, 17, 19, 21, 24). | Media | V1 | Cumplido | — |
+| ID | Requisito | Prioridad | Fase | Implementado | Publicado | Notas |
+|----|-----------|-----------|------|--------------|-----------|-------|
+| **D-01** | Diagrama del mástil de 6 cuerdas. | Alta | V1 | Sí | No | — |
+| **D-02** | Cada cuerda muestra a la izquierda su nota al aire, derivada de la afinación activa. | Alta | V1 | Sí | No | Se actualiza automáticamente al cambiar de afinación (ver A-10). |
+| **D-03** | Cada traste muestra su número alineado exactamente sobre la franja donde se pulsa. | Alta | V1 | Sí | No | Corregido: la fila de números comparte las mismas variables de ancho (`--label-w`, `--nut-w`, `--fret-w`) que las celdas del mástil. |
+| **D-04** | La numeración de trastes se puede mostrar u ocultar. | Media | V1 | Sí | No | Ver V-09: al ocultarla se pierde la referencia de posición. |
+| **D-05** | Al pulsar una posición suena esa nota. | Alta | V1 | Sí | No | — |
+| **D-06** | Al pulsar una posición aparece el nombre de la nota en la nomenclatura activa. | Alta | V1 | Sí | No | — |
+| **D-07** | Marcadores de posición en los trastes habituales (3, 5, 7, 9, 12, 15, 17, 19, 21, 24). | Media | V1 | Sí | No | — |
 
 ---
 
 ## 6. Sonido
 
-| ID | Requisito | Prioridad | Fase | Estado | Notas de desarrollo |
-|----|-----------|-----------|------|--------|---------------------|
-| **S-01** | El sonido emitido debe corresponder a una guitarra real, no a un sintetizador genérico. | Alta | V1 | Cumplido | Implementado con Tone.js + samples reales (`guitar-nylon`). |
-| **S-02** | El usuario podrá elegir el timbre entre **guitarra clásica (nylon)** y **guitarra acústica (acero)**. | Alta | V2 | Pendiente | Ambos sample packs existen en el mismo repositorio (`guitar-nylon` / `guitar-acoustic`). Cambio de timbre = recargar el Sampler con otra `baseUrl`. Coste: nueva descarga (~1-2 MB) al cambiar. |
-| **S-03** | La selección de timbre estará disponible en el **menú de configuración**. | Alta | V2 | Pendiente | — |
-| **S-04** | Si los samples no pueden cargarse, la app debe seguir sonando mediante síntesis (degradación elegante). | Media | V1 | Cumplido | Fallback Karplus-Strong ya implementado. |
-| **S-05** | El primer sonido requiere una interacción explícita del usuario (pantalla de entrada). | Alta | V1 | Cumplido | Restricción de los navegadores (autoplay policy), no evitable. |
-| **S-06** | El timbre seleccionado persistirá entre sesiones. | Media | V2 | Pendiente | `localStorage`. |
+| ID | Requisito | Prioridad | Fase | Implementado | Publicado | Notas |
+|----|-----------|-----------|------|--------------|-----------|-------|
+| **S-01** | El sonido corresponde a una guitarra real, no a un sintetizador genérico. | Alta | V1 | Sí | No | Tone.js + samples. **Su fiabilidad depende hoy de un tercero: ver S-07.** |
+| **S-02** | El usuario elige entre guitarra clásica (nylon) y acústica (acero). | Alta | V1 | Sí | No | Cambiar de timbre descarga un set de muestras nuevo, con aviso en pantalla. |
+| **S-03** | La selección de timbre está en el menú de configuración. | Alta | V1 | Sí | No | — |
+| **S-04** | Si los samples no cargan, la app sigue sonando por síntesis. | Media | V1 | Sí | No | Karplus-Strong con filtros que imitan la caja de resonancia. |
+| **S-05** | El primer sonido requiere una interacción explícita del usuario. | Alta | V1 | Sí | No | Impuesto por la política de autoplay de los navegadores. |
+| **S-06** | El timbre persiste entre sesiones. | Media | V1 | Sí | No | — |
+| **S-07** | *(nuevo)* Los samples de audio se alojan en el repositorio propio, con licencia verificada y documentada. | **Alta** | **V1** | No | No | Ver análisis en la sección 16. No bloquea el despliegue inicial de V1, pero sí la publicación en tiendas (V4), y facilita mucho G-03. |
 
 ---
 
 ## 7. Pentagrama
 
-| ID | Requisito | Prioridad | Fase | Estado | Notas de desarrollo |
-|----|-----------|-----------|------|--------|---------------------|
-| **P-01** | Al pulsar cualquier nota en el mástil, esa nota se representa en un **pentagrama** en pantalla. | Alta | V1 | Cumplido | Clave de sol con octavación (8 abajo), como es convención en guitarra. |
-| **P-02** | El pentagrama se podrá **mostrar u ocultar** desde el menú de configuración. | Alta | V1 | Cumplido | Ya existe el botón; falta moverlo/duplicarlo en el menú de configuración. |
-| **P-03** | El pentagrama estará disponible en todos los modos de aprendizaje (libre, juego, escalas). | Media | V2 | Parcial | Verificar al añadir nuevos modos. |
-| **P-04** | En el afinador, al seleccionar una afinación se mostrará un pentagrama indicando las notas asignadas a cada cuerda. | Media | V3 | Pendiente | Requiere renderizar 6 notas simultáneas, no una sola. Extensión del renderizador actual. |
+| ID | Requisito | Prioridad | Fase | Implementado | Publicado | Notas |
+|----|-----------|-----------|------|--------------|-----------|-------|
+| **P-01** | Al pulsar una nota en el mástil, se representa en el pentagrama. | Alta | V1 | Sí | No | Clave de sol octavada, convención de guitarra. |
+| **P-02** | El pentagrama se puede mostrar u ocultar. | Alta | V1 | Sí | No | Disponible en configuración y en acceso rápido. |
+| **P-03** | El pentagrama está disponible en todos los modos de aprendizaje. | Media | V1 | Parcial | No | Libre y Adivinar sí. Escalas pendiente (V3). |
+| **P-04** | En el afinador, la afinación seleccionada se muestra como seis notas en un pentagrama. | Media | V1 | Sí | No | — |
 
 ---
 
 ## 8. Modo Libre
 
-| ID | Requisito | Prioridad | Fase | Estado | Notas de desarrollo |
-|----|-----------|-----------|------|--------|---------------------|
-| **L-01** | El modo por defecto al abrir la app es el **diapasón libre**: mástil completo, exploración sin restricciones. | Alta | V1 | Cumplido | — |
-| **L-02** | En modo libre se muestran los nombres de todas las notas del mástil (o al menos de la pulsada). | Alta | V1 | Cumplido | Revisar si se quieren todas visibles siempre o solo la pulsada. **Decisión pendiente.** |
-| **L-03** | Opción **"Mostrar iguales"**: al pulsar una nota, se señalan de forma discreta las demás posiciones que producen **exactamente la misma nota** (mismo pitch, no todas las notas del mismo nombre). | Media | V2 | Pendiente | Distinción importante: mismo MIDI, no misma clase de nota. Marcado visual secundario (menos prominente que la nota pulsada). |
+| ID | Requisito | Prioridad | Fase | Implementado | Publicado | Notas |
+|----|-----------|-----------|------|--------------|-----------|-------|
+| **L-01** | El modo por defecto al abrir la app es el diapasón libre. | Alta | V1 | Sí | No | — |
+| **L-02** | El usuario decide si ve el nombre de todas las notas del mástil o solo de la que pulsa. | Alta | V1 | Sí | No | **Decisión cerrada:** no es binario fijo, es un ajuste. Por defecto solo la pulsada, para no convertir el mástil en una chuleta permanente. |
+| **L-03** | Al pulsar una nota se señalan discretamente las demás posiciones que producen **exactamente la misma nota** (mismo pitch, no misma clase de nota). | Media | V1 | Sí | No | Señal deliberadamente más tenue que la nota pulsada. |
 
 ---
 
-## 9. Modo Juego (Guess)
+## 9. Modo Adivinar
 
-| ID | Requisito | Prioridad | Fase | Estado | Notas de desarrollo |
-|----|-----------|-----------|------|--------|---------------------|
-| **J-01** | El modo juego reproduce una **nota aleatoria** y el usuario debe pulsar su posición en el mástil. | Alta | V2 | Pendiente | Base ya implementada en `index_v2.html` (sin integrar). |
-| **J-02** | Se considera acierto **cualquier posición** del mástil que produzca esa nota exacta. | Alta | V2 | Pendiente | — |
-| **J-03** | Tras acertar, se señalan discretamente las **demás posiciones válidas** para reforzar el aprendizaje. | Media | V2 | Pendiente | Reutiliza la lógica de L-03. |
-| **J-04** | **Pista opcional 1:** mostrar el nombre de la nota que suena. | Alta | V2 | Pendiente | — |
-| **J-05** | **Pista opcional 2:** mostrar la cuerda o cuerdas en las que puede encontrarse la nota. | Alta | V2 | Pendiente | — |
-| **J-06** | Las pistas se activan/desactivan **desde la propia interfaz del diapasón** (checkbox o desplegable), sin entrar en el menú de configuración. | Alta | V2 | Pendiente | Requisito de UX explícito: acceso inmediato. |
-| **J-07** | Contador de **racha** de aciertos consecutivos, visible durante el juego. | Alta | V2 | Pendiente | — |
-| **J-08** | El **récord** de racha más larga se almacena de forma persistente (sobrevive al cierre de la app o del navegador). | Alta | V2 | Pendiente | `localStorage`. **Nota:** no funciona en previsualizaciones de artefactos de Claude; sí en GitHub Pages y en local. |
-| **J-09** | Feedback visual claro e inmediato de acierto y de error. | Alta | V2 | Pendiente | — |
-| **J-10** | Al fallar, indicar cuál era la posición correcta. | Media | V2 | Pendiente | **Decisión pendiente:** ¿el fallo rompe la racha siempre, o hay margen? |
+| ID | Requisito | Prioridad | Fase | Implementado | Publicado | Notas |
+|----|-----------|-----------|------|--------------|-----------|-------|
+| **J-01** | Reproduce una nota aleatoria y el usuario busca su posición en el mástil. | Alta | V1 | Sí | No | Con botón para repetir el sonido. |
+| **J-02** | Se acepta como acierto cualquier posición que produzca esa nota exacta. | Alta | V1 | Sí | No | — |
+| **J-03** | Tras acertar se señalan las demás posiciones válidas. | Media | V1 | Sí | No | Reutiliza la lógica de L-03. |
+| **J-04** | Pista opcional: nombre de la nota que suena. | Alta | V1 | Sí | No | — |
+| **J-05** | Pista opcional: cuerda o cuerdas donde puede encontrarse. | Alta | V1 | Sí | No | — |
+| **J-06** | Las pistas se activan desde la propia interfaz, sin abrir el menú. | Alta | V1 | Sí | No | Chips en la barra de acceso rápido, visibles solo en este modo. Con ambas pistas activas el ejercicio equivale a "busca esta nota en esta cuerda"; sin ninguna, a "adivina de oído". |
+| **J-07** | Contador de racha visible durante el juego. | Alta | V1 | Sí | No | — |
+| **J-08** | El récord de racha más larga persiste entre sesiones. | Alta | V1 | Sí | No | `localStorage`. No funciona en previsualizaciones de artefactos; probar en local o en la URL publicada. |
+| **J-09** | Feedback visual inmediato de acierto y de error. | Alta | V1 | Sí | No | Color en la posición pulsada más destello en la barra del reto. |
+| **J-10** | Al fallar se indica cuál era la posición correcta. | Media | V1 | **No** | No | **Decisión cerrada:** el fallo rompe la racha siempre, sin margen. Falta implementar la revelación de la respuesta correcta tras fallar. |
+| **J-11** | *(nuevo)* Definir si el récord es único o independiente por afinación. | Media | V2 | No | No | Hoy es único y global, de modo que una racha en DADGAD compite con una en estándar aunque la dificultad no sea comparable. **Decisión abierta.** |
 
 ---
 
 ## 10. Escalas
 
-| ID | Requisito | Prioridad | Fase | Estado | Notas de desarrollo |
-|----|-----------|-----------|------|--------|---------------------|
-| **E-01** | Menú desplegable para seleccionar una **escala** a practicar (tónica + tipo de escala). | Alta | V4 | Pendiente | Definir catálogo inicial: mayor, menor natural, pentatónica mayor/menor, blues. **Decisión pendiente.** |
-| **E-02** | Soporte para variantes de digitación, por ejemplo **escala en octavas**. | Media | V4 | Pendiente | Ejemplo citado: escala de Sol en octavas. |
-| **E-03** | **Submodo "Mostrar":** la app ilumina las notas que componen la escala sobre el mástil. | Alta | V4 | Pendiente | — |
-| **E-04** | En el submodo Mostrar, se indica sobre cada traste el nombre de la nota y la **separación interválica** respecto a la anterior (tono / semitono). | Alta | V4 | Pendiente | Etiquetas tipo `T — T — ST — T — T — T — ST`. |
-| **E-05** | **Submodo "Práctica libre":** el usuario recorre la escala sin ayuda; si pulsa una nota que no pertenece a la escala, se marca error y se ilumina la nota correcta. | Alta | V4 | Pendiente | **Decisión pendiente:** ¿se valida el orden de la escala o solo la pertenencia a ella? |
-| **E-06** | Guiado nota a nota en el submodo Mostrar, para recorrer la escala progresivamente. | Media | V4 | Pendiente | — |
+| ID | Requisito | Prioridad | Fase | Implementado | Publicado | Notas |
+|----|-----------|-----------|------|--------------|-----------|-------|
+| **E-01** | Selección de escala a practicar (tónica + tipo). | Alta | V3 | No | No | Catálogo inicial por definir. |
+| **E-02** | El generador de escalas opera **únicamente en afinación estándar** en la primera entrega. | Alta | V3 | No | No | **Alcance acotado.** Extenderlo a las otras seis afinaciones pasa a E-02b. |
+| **E-02b** | Soporte de escalas en afinaciones alternativas y variantes de digitación (por ejemplo, escala en octavas). | Media | Posterior | No | No | Fuera del alcance de V3. |
+| **E-03** | Submodo Mostrar: la app ilumina las notas que componen la escala. | Alta | V3 | No | No | — |
+| **E-04** | En Mostrar se indica el nombre de cada nota y la separación interválica respecto a la anterior. | Alta | V3 | No | No | Etiquetas tipo `T — T — ST — T — T — T — ST`. |
+| **E-05** | Submodo Práctica: valida **únicamente la pertenencia** de la nota a la escala. Al pulsar una ajena, marca error e ilumina las correctas. | Alta | V3 | No | No | **Alcance acotado.** No valida orden ni digitación. |
+| **E-05b** | Validación del orden de la escala y de patrones de digitación concretos. | Media | Posterior | No | No | Fuera del alcance de V3. |
+| **E-06** | Guiado nota a nota en el submodo Mostrar. | Media | V3 | No | No | — |
 
 ---
 
 ## 11. Afinador
 
-| ID | Requisito | Prioridad | Fase | Estado | Notas de desarrollo |
-|----|-----------|-----------|------|--------|---------------------|
-| **A-01** | Modo **afinador por referencia**: la app reproduce la nota de cada cuerda para que el usuario afine de oído. | Alta | V3 | Pendiente | Implementación sencilla: reutiliza el motor de audio existente. Es el primer escalón del afinador. |
-| **A-02** | Modo **afinador por micrófono**: la app capta el sonido de la cuerda e indica si hay que subir o bajar el tono. | Alta | V3 | Pendiente | **Complejidad media-alta.** Requiere `getUserMedia` + detección de pitch (autocorrelación o algoritmo YIN sobre Web Audio API). Necesita contexto seguro: funciona en HTTPS (GitHub Pages ✓) y en `localhost` (Live Server ✓); **no funciona abriendo el archivo con doble clic** (`file://`). Requiere permiso explícito del usuario. |
-| **A-03** | Indicador visual claro de desviación: cuánto y en qué dirección (sostenido / bemol / afinado). | Alta | V3 | Pendiente | Medida estándar en *cents*. Umbral de "afinado" típico: ±5 cents. |
-| **A-04** | **Detección automática de cuerda**: la app asume la cuerda cuya nota esté más próxima a la detectada. | Alta | V3 | Pendiente | Limitación conocida y asumida: con una cuerda muy desafinada puede identificar la cuerda equivocada. Comportamiento estándar del sector. |
-| **A-05** | **Selección manual de cuerda**: el usuario puede fijar qué cuerda está tocando, para que el afinador la use como referencia aunque esté muy desviada. | Alta | V3 | Pendiente | Resuelve la limitación de A-04. |
-| **A-06** | Soporte para **afinación estándar** (EADGBE). | Alta | V3 | Pendiente | — |
-| **A-07** | Soporte para **afinaciones alternativas predefinidas**: al menos las 5 más comunes (p. ej. Drop D, Open G, Open D, DADGAD, Medio tono abajo). | Alta | V3 | Pendiente | **Decisión pendiente:** confirmar el listado exacto. |
-| **A-08** | Soporte para **afinación personalizada**: el usuario ajusta cada cuerda subiendo o bajando semitonos. | Alta | V3 | Pendiente | Interfaz sugerida: controles +/- por cuerda con feedback en pentagrama. |
-| **A-09** | Al seleccionar una afinación, se muestra un **pentagrama con las notas asignadas a cada cuerda**. | Media | V3 | Pendiente | Ver P-04. |
-| **A-10** | La afinación activa debe poder aplicarse también a los **modos de aprendizaje**, de modo que el mástil refleje las notas reales de esa afinación. | Alta | V3 | Pendiente | Implica que la afinación es estado global de la app, no local del afinador. Afecta a D-02 y a toda la lógica de cálculo de notas. |
-| **A-11** | La afinación seleccionada persistirá entre sesiones. | Media | V3 | Pendiente | `localStorage`. |
+| ID | Requisito | Prioridad | Fase | Implementado | Publicado | Notas |
+|----|-----------|-----------|------|--------------|-----------|-------|
+| **A-01** | Afinador por referencia: la app reproduce la nota de cada cuerda para afinar de oído. | Alta | V1 | Sí | No | Este es el MVP real del afinador. |
+| **A-02** | Afinador por micrófono: capta la cuerda e indica si subir o bajar. | Alta | V2 | No | No | `getUserMedia` + detección de pitch. Exige contexto seguro: funciona en HTTPS y en `localhost`, **no con `file://`**. |
+| **A-02-CA** | *(nuevo)* Criterios de aceptación de A-02: precisión de detección ±2 cents en silencio razonable, latencia menor de 300 ms, y funcionamiento con ruido de fondo explícitamente fuera de la primera entrega. | Alta | V2 | No | No | La precisión de detección debe ser mejor que el umbral de "afinado" de A-03, o el indicador no sería fiable dentro de su propio margen. |
+| **A-03** | Indicador visual de desviación en cents, con umbral de afinado en ±5 cents. | Alta | V2 | No | No | — |
+| **A-04** | Detección automática de cuerda por proximidad a la nota detectada. | Alta | V2 | No | No | Limitación asumida: con una cuerda muy desafinada puede acertar la cuerda equivocada. |
+| **A-05** | Selección manual de cuerda, que prevalece sobre A-04. | Alta | V2 | No | No | Resuelve la limitación anterior. |
+| **A-06** | Afinación estándar (E A D G B E). | Alta | V1 | Sí | No | — |
+| **A-07** | Cinco afinaciones alternativas predefinidas. | Alta | V1 | Sí | No | **Decisión cerrada:** Drop D, medio tono abajo, Open G, Open D y DADGAD. |
+| **A-08** | Afinación personalizada ajustando cada cuerda por semitonos. | Alta | V1 | Sí | No | Cualquier ajuste convierte la afinación en personalizada sin alterar los presets. |
+| **A-09** | Al seleccionar una afinación se muestran sus notas en un pentagrama. | Media | V1 | Sí | No | Ver P-04. |
+| **A-10** | La afinación activa se aplica también a los modos de aprendizaje. | Alta | V1 | Sí | No | Resuelto en origen: ninguna nota está escrita a mano, todas derivan de la afinación activa, y la propagación ocurre en un único punto del código. |
+| **A-11** | La afinación persiste entre sesiones. | Media | V1 | Sí | No | — |
 
 ---
 
-## 12. Visualización y adaptación de pantalla
+## 12. Visualización
 
-| ID | Requisito | Prioridad | Fase | Estado | Notas de desarrollo |
-|----|-----------|-----------|------|--------|---------------------|
-| **V-01** | En **móvil**, los modos de mástil (libre, juego, escalas) se orientan preferentemente en **horizontal**. | Alta | V2 | Pendiente | **Decisión pendiente:** ¿forzar horizontal (bloqueo de orientación), o solo sugerirlo con un aviso? El bloqueo tiene soporte limitado en iOS. |
-| **V-02** | El **afinador** debe funcionar tanto en vertical como en horizontal. | Alta | V3 | Pendiente | Su contenido es más compacto y no requiere apaisado. |
-| **V-03** | En **escritorio**, el mástil se muestra apaisado por defecto, aprovechando el ancho disponible. | Alta | V2 | **Parcial — con defecto conocido** | Defecto identificado: actualmente solo se ven los trastes que caben, sin aprovechar bien el espacio. |
-| **V-04** | Control de **zoom (+/−)** que determina qué porción del mástil se ve. Sustituye a un selector numérico de trastes. | Alta | V2 | Pendiente | Implementación: variable CSS `--fret-w` ajustable. A mayor zoom, menos trastes visibles y más anchos. |
-| **V-05** | Cuando no cabe el mástil completo, el usuario puede **desplazarse lateralmente** (scroll / deslizar el dedo) para alcanzar el resto de trastes. | Alta | V1 | Cumplido | Ya implementado. |
-| **V-06** | El ancho de traste **no cambia** al desplazarse: el zoom fija el tamaño y el scroll solo mueve la ventana de visión. | Alta | V2 | Pendiente | Aclaración explícita del usuario. |
-| **V-07** | En navegador de escritorio, el mástil se **readapta automáticamente** al redimensionar la ventana. | Alta | V2 | Parcial | Existe listener de `resize`; revisar comportamiento con zoom. |
-| **V-08** | El nivel de zoom seleccionado persistirá entre sesiones. | Baja | V2 | Pendiente | `localStorage`. |
-
----
-
-## 13. Configuración, navegación e interfaz
-
-| ID | Requisito | Prioridad | Fase | Estado | Notas de desarrollo |
-|----|-----------|-----------|------|--------|---------------------|
-| **C-01** | Existirá un **menú de configuración** accesible desde cualquier pantalla. | Alta | V2 | Pendiente | — |
-| **C-02** | El menú de configuración contendrá como mínimo: nomenclatura (N-02), mostrar/ocultar pentagrama (P-02), timbre de guitarra (S-03), numeración de trastes (D-04), afinación activa (A-10). | Alta | V2 | Pendiente | Lista ampliable. |
-| **C-03** | Los ajustes de uso frecuente tendrán **acceso rápido desde la interfaz principal**, sin abrir el menú: nomenclatura (N-03) y pistas del juego (J-06). | Alta | V2 | Parcial | Nomenclatura ya cumplido. |
-| **C-04** | Navegación principal clara entre las tres áreas: Aprendizaje, Escalas, Afinador. | Alta | V2 | Parcial | El HTML actual tiene pestañas de modo, pero no cubre las tres áreas definitivas. |
-| **C-05** | Todos los ajustes del usuario persistirán entre sesiones. | Media | V2 | Pendiente | `localStorage` centralizado. |
-| **C-06** | **[PENDIENTE DE DEFINIR]** Detalle de la interfaz: estructura de menús, jerarquía de botones, flujos de navegación, qué lleva a cada sitio. | Alta | V2 | **Sin especificar** | El usuario ha indicado que este bloque está pendiente de desarrollar. Requiere sesión dedicada, idealmente con wireframes o descripción pantalla a pantalla. |
+| ID | Requisito | Prioridad | Fase | Implementado | Publicado | Notas |
+|----|-----------|-----------|------|--------------|-----------|-------|
+| **V-01** | En móvil se **sugiere** la orientación horizontal con un aviso discreto; **no se fuerza** con bloqueo de orientación. | Alta | V2 | Parcial | No | **Decisión cerrada.** El bloqueo tiene mal soporte en iOS. El comportamiento actual (menos trastes visibles en vertical) es la solución adoptada, no un parche. Falta el aviso. |
+| **V-02** | El afinador funciona en vertical y en horizontal. | Alta | V1 | Sí | No | Su contenido es compacto y no requiere apaisado. |
+| **V-03** | En escritorio el mástil aprovecha el ancho disponible. | Alta | V1 | Sí | No | Arranca mostrando el mástil completo en pantallas anchas. |
+| **V-04** | Control de zoom que determina qué porción del mástil se ve. | Alta | V1 | Sí | No | Se expresa como número de trastes a la vista, de 3 a 24. |
+| **V-05** | Cuando el mástil no cabe, el usuario se desplaza lateralmente. | Alta | V1 | Sí | No | — |
+| **V-06** | El ancho de traste no cambia al desplazarse: el zoom fija el tamaño y el scroll mueve la ventana. | Alta | V1 | Sí | No | — |
+| **V-07** | El mástil se readapta al redimensionar la ventana. | Alta | V1 | Sí | No | — |
+| **V-08** | El nivel de zoom persiste entre sesiones. | Baja | V1 | Sí | No | — |
+| **V-09** | *(nuevo)* Si el usuario oculta la numeración de trastes (D-04) y el mástil no cabe entero, debe conservar alguna referencia de en qué tramo del mástil está. | Media | V2 | No | No | Con la numeración activa el problema no existe: la fila de números se desplaza junto al mástil. Solución mínima propuesta: al ocultarla, mantener visibles solo los números de los trastes con marcador (3, 5, 7, 9, 12…). Se descarta el minimapa por desproporcionado. |
 
 ---
 
-## 14. Roadmap por versiones
+## 13. Configuración y navegación
 
-La estrategia es entregar valor funcional en cada versión, empezando por lo que ya existe y añadiendo complejidad de forma incremental.
-
-### V1 — Base funcional publicada *(casi completa)*
-Mástil libre operativo, sonido real de guitarra, nomenclatura conmutable, pentagrama, numeración de trastes correcta, scroll lateral, PWA instalable.
-**Bloqueantes:** corregir D-03 (numeración decalada), integrar mejoras de layout, publicar en GitHub Pages.
-
-### V2 — Juego y control del usuario
-Modo juego completo con pistas y racha persistente, "mostrar iguales", menú de configuración, selección de timbre, zoom y adaptación de pantalla, persistencia general de ajustes.
-
-### V3 — Afinador
-Afinador por referencia (A-01) primero, después afinador por micrófono (A-02). Afinaciones predefinidas y personalizadas. Propagación de la afinación al resto de la app (A-10).
-
-### V4 — Escalas
-Catálogo de escalas, submodo Mostrar con intervalos, submodo Práctica con validación de errores.
-
-### V5 — Pulido y distribución
-Funcionamiento offline (Service Worker), optimización de carga de samples, accesibilidad, posible empaquetado para tiendas de aplicaciones.
+| ID | Requisito | Prioridad | Fase | Implementado | Publicado | Notas |
+|----|-----------|-----------|------|--------------|-----------|-------|
+| **C-01** | Menú de configuración accesible desde cualquier pantalla. | Alta | V1 | Sí | No | Panel deslizante desde la cabecera. |
+| **C-02** | El menú contiene nomenclatura, pentagrama, timbre, numeración de trastes, ver todas las notas, señalar iguales y afinación activa. | Alta | V1 | Sí | No | — |
+| **C-03** | Los ajustes frecuentes tienen acceso rápido sin abrir el menú. | Alta | V1 | Sí | No | Nomenclatura, pentagrama y las dos pistas del juego. |
+| **C-04** | Navegación principal clara entre las áreas de la app. | Alta | V1 | Sí | No | Barra inferior con cuatro destinos. |
+| **C-05** | Todos los ajustes persisten entre sesiones. | Media | V1 | Sí | No | Un único objeto de estado serializado. |
+| **C-06** | Especificación detallada de la interfaz: estructura de menús, jerarquía de controles y flujos de navegación. | Alta | V2 | No | No | **Sin especificar.** Requiere sesión dedicada. La V1 resuelve la navegación de forma razonable, pero sin criterio documentado para crecer. |
 
 ---
 
-## 15. Riesgos y complejidades identificadas
+## 14. Despliegue
 
-| Riesgo | Impacto | Mitigación propuesta |
-|--------|---------|----------------------|
-| Detección de pitch por micrófono (A-02) es el componente técnicamente más complejo del proyecto. | Alto | Entregar primero A-01 (afinador por referencia), que da valor inmediato. Abordar A-02 como incremento aislado. |
-| El micrófono exige contexto seguro (HTTPS o localhost). | Medio | Ya resuelto por diseño: GitHub Pages sirve por HTTPS. Documentar que no funcionará con `file://`. |
-| Cambiar el timbre (S-02) implica descargar un nuevo set de samples. | Bajo | Precargar ambos al inicio, o avisar de la carga al cambiar. |
-| La afinación como estado global (A-10) afecta a toda la lógica de cálculo de notas. | Alto | Diseñar desde ya la afinación como dato central del que derivan todas las notas, en lugar de tenerla fija. Refactor preventivo. |
-| `localStorage` no funciona en previsualizaciones de artefactos de Claude. | Bajo | Probar siempre la persistencia en Live Server o GitHub Pages, nunca en la previsualización. |
-| Bloqueo de orientación en móvil (V-01) tiene soporte irregular, especialmente en iOS. | Medio | Diseñar un layout que funcione aceptablemente en vertical, y sugerir horizontal sin forzarlo. |
+| ID | Requisito | Prioridad | Fase | Implementado | Publicado | Notas |
+|----|-----------|-----------|------|--------------|-----------|-------|
+| **X-01** | El código de la V1 está en el repositorio remoto. | Alta | V1 | Parcial | — | El repositorio existe con la versión antigua. Falta subir la V1. |
+| **X-02** | GitHub Pages está activo y sirve la app en una URL pública. | Alta | V1 | No | — | Es el paso que convierte todas las columnas "Publicado" en `Sí`. |
+| **X-03** | La app está verificada en un móvil real, instalada desde la pantalla de inicio. | Alta | V1 | No | — | Cierra G-04. |
 
 ---
 
-## 16. Decisiones abiertas
+## 15. Roadmap
 
-1. **Nombre definitivo:** *Trasteando* o *Trasting*.
-2. **L-02:** ¿en modo libre se muestran los nombres de todas las notas del mástil de forma permanente, o solo la pulsada?
-3. **J-10:** ¿un fallo rompe la racha siempre?
+Se simplifica de cinco versiones a cuatro. La antigua V2 (juego y control del usuario) y la antigua V3 (afinador por referencia) ya están implementadas y se absorben en V1.
+
+### V1 — Núcleo *(implementado, sin publicar)*
+Mástil libre, sonido real con dos timbres, nomenclatura conmutable, pentagrama, modo Adivinar completo con pistas y récord, zoom y adaptación de pantalla, menú de configuración con persistencia, y afinador por referencia con siete afinaciones y propagación al mástil.
+
+**Para cerrar V1 falta:** publicar (X-01, X-02, X-03), autoalojar los samples (S-07), revelar la posición correcta al fallar (J-10) y documentar las licencias de terceros (G-06).
+
+### V2 — Afinador por micrófono y pulido
+Detección de pitch con criterios de aceptación medibles, indicador en cents, detección y selección de cuerda. Además: aviso de orientación (V-01), referencia de posición al ocultar números (V-09), decisión sobre el récord por afinación (J-11), auditoría de accesibilidad (G-05) y especificación de interfaz (C-06).
+
+Va sola porque es la única pieza que introduce tecnología nueva en el proyecto.
+
+### V3 — Escalas
+Catálogo de escalas en afinación estándar, submodo Mostrar con intervalos, submodo Práctica validando pertenencia. Alcance deliberadamente acotado: sin validación de orden ni afinaciones alternativas.
+
+### V4 — Offline y distribución
+Service Worker y cacheo de recursos, optimización de carga, posible empaquetado para tiendas de aplicaciones. Depende de que S-07 esté resuelto.
+
+---
+
+## 16. Riesgos
+
+| Riesgo | Impacto | Estado | Mitigación |
+|--------|---------|--------|------------|
+| **Dependencia de samples de terceros.** El audio se carga de un repositorio personal ajeno, sin versión fijada. Si cambia de estructura o desaparece, S-01 se rompe sin que toquemos nuestro código. | Alto | **Abierto** | S-07: autoalojar. Ver análisis abajo. |
+| **Licencia del audio sin verificar.** Existen referencias contradictorias sobre si esos samples son de dominio público o CC-BY con atribución obligatoria. | Medio | **Abierto** | Verificar antes de decidir la opción de S-07. Irrelevante para publicar una web; relevante para tiendas de aplicaciones. |
+| **La detección de pitch es el componente más complejo del proyecto.** | Alto | Mitigado | A-01 ya entrega el valor de "afinador" sin micrófono. A-02 va aislado en V2 con criterios de aceptación cerrados. |
+| **La afinación como estado global afecta a todo el cálculo de notas.** | Alto | **Resuelto** | Diseñado así desde el origen. Ninguna nota escrita a mano; todo deriva de la afinación activa. |
+| **Escalas sin alcance definido podía dispararse en esfuerzo.** | Medio | **Resuelto** | E-02 y E-05 acotados; lo demás movido a E-02b y E-05b. |
+| **Documento y código desincronizados**, con riesgo de planificar sobre trabajo ya hecho. | Medio | **Resuelto** | Modelo de estado en dos columnas y reconciliación en cada cierre de versión. |
+| `localStorage` no funciona en previsualizaciones de artefactos. | Bajo | Conocido | Probar la persistencia siempre en local o en la URL publicada. |
+
+### Análisis de S-07: opciones para el audio
+
+| Opción | Esfuerzo | Resultado |
+|--------|----------|-----------|
+| **A.** Autoalojar los samples actuales tras verificar su licencia pieza por pieza. | Bajo | Resuelve la disponibilidad. Solo resuelve la licencia si la verificación sale limpia. |
+| **B.** Sustituirlos por samples de licencia inequívoca (CC0 o dominio público confirmado) y autoalojarlos. | Medio | Audio real y sin ambigüedad legal, sin necesidad de grabar nada. |
+| **C.** Grabar samples propios de guitarra de nylon y de acero. | Alto | Cero dependencias y timbre diferenciado, pero es un proyecto en sí mismo: instrumento, micrófono, sala silenciosa y edición nota a nota. |
+| **D.** Usar el sintetizador como motor principal. | Nulo | Contradice S-01 tal como está redactado. |
+
+**Recomendación:** opción **B**. El peso ronda los 2 MB por timbre, irrelevante para GitHub Pages. La opción C queda como mejora de producto si el proyecto crece.
+
+---
+
+## 17. Decisiones abiertas
+
+1. ~~Nombre definitivo~~ — **Cerrada:** Trasteando.
+2. ~~L-02: todas las notas visibles o solo la pulsada~~ — **Cerrada:** ajuste del usuario, por defecto solo la pulsada.
+3. ~~J-10: si un fallo rompe la racha~~ — **Cerrada:** sí, siempre.
 4. **E-01:** catálogo inicial de escalas a soportar.
-5. **E-05:** en la práctica de escalas, ¿se valida el orden de las notas o solo su pertenencia a la escala?
-6. **A-07:** listado definitivo de las 5 afinaciones alternativas.
-7. **V-01:** ¿se fuerza la orientación horizontal en móvil o solo se sugiere?
-8. **C-06:** especificación completa de la interfaz y la navegación.
+5. ~~E-05: validar orden o pertenencia~~ — **Cerrada:** solo pertenencia en V3.
+6. ~~A-07: listado de afinaciones alternativas~~ — **Cerrada:** Drop D, medio tono abajo, Open G, Open D y DADGAD.
+7. ~~V-01: forzar o sugerir orientación~~ — **Cerrada:** sugerir.
+8. **C-06:** especificación completa de interfaz y navegación.
+9. **S-07:** elegir entre las opciones A, B o C para el audio.
+10. **J-11:** si el récord de racha es único o independiente por afinación.
 
 ---
 
-*Documento gestionado por el chat de Desarrollo. Los chats de auditoría pueden leerlo y proponer cambios, pero no modificarlo directamente.*
+*Documento gestionado por el chat de Desarrollo. Los chats de auditoría lo leen y proponen cambios; no lo modifican.*
