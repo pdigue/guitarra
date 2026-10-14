@@ -1,8 +1,10 @@
 # Trasteando — Modo acelerado con agentes
 
-**Versión:** 1.0 · **Fecha:** 14 de octubre de 2026
-**Relacionado con:** `roadmap.md` v3.0 (sustituye a su pista T si se activa) · `matriz-cumplimiento.md` v1.0 · `requisitos.md` v1.2
+**Versión:** 1.1 · **Fecha:** 14 de octubre de 2026
+**Relacionado con:** `roadmap.md` v3.1 (pista T activa) · `matriz-cumplimiento.md` v1.1 · `requisitos.md` v1.3
 **Gestiona:** chat de Desarrollo
+
+> ✅ **Activado el 14/10/2026.** Decisiones tomadas: modo por bloques (F1–F3, Sesión 1 con el móvil, F4–F6, Sesión 2 con la guitarra, F7) · audio S-07 opción A · móvil de referencia iPhone · un informe didáctico por fase. La iteración 0 está hecha: ver `docs/iteraciones/IT-00.md`.
 
 ---
 
@@ -63,7 +65,7 @@ flowchart LR
 
 | Fase | El agente lo hace solo | Necesita tu decisión | Necesita tu prueba física |
 |---|---|---|---|
-| **F1** | Subir la 0.1.2, pasar el banco a `node --test`, `docs/`, etiqueta | — | F1.1, salvo que conectes la app de escritorio y lo haga yo en tu navegador |
+| **F1** | Subir la app, pasar el banco a `node --test`, `docs/`, etiqueta | — | F1.1, salvo que conectes la app de escritorio y lo haga yo en tu navegador |
 | **F2** | Reproductor propio, audio dentro del archivo, muestras intermedias | Opción de audio | Calidad del sonido y prueba en cada plataforma |
 | **F3** | Diseño apaisado, accesibilidad técnica, propuesta de interfaz | Aprobar la interfaz y la paleta | Quince minutos de uso en el móvil |
 | **F4** | Módulos, pruebas, detector de tono con banco de señales conocidas, interfaz del afinador | Récord único o por afinación | Afinar una guitarra real |
@@ -105,7 +107,9 @@ Tres agentes autónomos editando a la vez se pisarían. La separación que aport
 ```
 guitarra/
 ├── index.html                      la app
+├── README.md                       qué es y cómo se abre
 ├── CHANGELOG.md                    qué cambió en cada versión
+├── CREDITOS.md                     origen y licencia de lo que no es nuestro
 ├── CLAUDE.md                       reglas del proyecto para cualquier agente
 ├── .claude/agents/
 │   ├── auditor-requisitos.md       auditor de solo lectura
@@ -116,11 +120,16 @@ guitarra/
 │   ├── matriz-cumplimiento.md      y su versión .xlsx
 │   ├── automatizacion.md           este documento
 │   ├── auditorias/                 AR-nn y AT-nn
-│   └── iteraciones/                IT-nn, el informe didáctico de cada iteración
-├── tests/
-│   ├── dom-minimo.js               DOM de prueba sin dependencias
-│   └── banco.test.js               las 28 comprobaciones actuales, ampliables
-└── samples/                        audio propio, desde F2
+│   ├── iteraciones/                IT-nn, el informe didáctico de cada iteración
+│   └── cuadernos/                  cuadernos de aprendizaje
+├── samples/                        audio propio, desde F2.1
+│   ├── nylon/  acoustic/           una muestra cada pocos semitonos
+│   └── afinacion.json              afinación medida de cada muestra
+├── herramientas/
+│   └── medir-afinacion.py          mide en qué nota suena cada muestra
+└── tests/
+    ├── dom-minimo.js               navegador simulado, sin dependencias
+    └── banco.test.js               pruebas automáticas, ampliables
 ```
 
 ---
@@ -129,11 +138,14 @@ guitarra/
 
 ### `CLAUDE.md`
 
+Es el archivo que está en la raíz del repositorio.
+
 ```markdown
 # Trasteando — reglas del proyecto
 
 PWA para aprender el mástil de la guitarra, practicar escalas y afinar.
 Cliente: Pablo Díaz Guerra. Está aprendiendo a programar: explica, no solo hagas.
+Idioma: español en todo (código comentado, commits, informes y respuestas).
 
 ## Documentos que mandan
 - docs/requisitos.md — qué debe hacer el producto. Fuente de verdad del alcance.
@@ -141,6 +153,15 @@ Cliente: Pablo Díaz Guerra. Está aprendiendo a programar: explica, no solo hag
 - docs/matriz-cumplimiento.md — criterio de aceptación de cada requisito. Es el contrato.
 - docs/automatizacion.md — ciclo de iteración y paradas.
 - CHANGELOG.md — qué cambió en cada versión.
+- CREDITOS.md — origen y licencia de todo lo que no es nuestro.
+
+## Decisiones vigentes
+- Modo acelerado por bloques: F1–F3 sin parar salvo en las paradas, sesión con
+  el móvil, F4–F6, sesión con la guitarra, F7.
+- Audio (S-07): opción A, las muestras actuales alojadas en samples/ con
+  licencia verificada y atribución.
+- Móvil de referencia: iPhone.
+- Explicaciones: un informe didáctico por fase en docs/iteraciones/.
 
 ## Reglas
 1. Nunca trabajes en main. Una rama por etapa: auto/F<fase>.<etapa>-<tema>.
@@ -158,7 +179,9 @@ Cliente: Pablo Díaz Guerra. Está aprendiendo a programar: explica, no solo hag
    concepto ilustra, para un principiante.
 8. Para y pregunta en las paradas de docs/automatizacion.md §3. No publiques,
    no fusiones en main, no pagues, no borres historial sin aprobación explícita.
-9. Cero dependencias nuevas sin justificarlo en el informe.
+9. Cero dependencias nuevas sin justificarlo en el informe. La app y el banco de
+   pruebas no instalan nada; las herramientas de herramientas/ pueden necesitar
+   Python, y lo dicen en su cabecera.
 ```
 
 ### `.claude/agents/auditor-requisitos.md`
@@ -221,16 +244,16 @@ y la lista de pruebas físicas pendientes.
 
 ## 9. Plan para arrancar ya
 
-| Paso | Quién | Qué |
-|---|---|---|
-| **0** | Tú | Tomar las decisiones iniciales: modo, audio, móvil y nivel de explicación |
-| **1** | Tú | Autorizar que esta conversación se conecte a `pdigue/guitarra` con permiso de escritura |
-| **2** | Agente | Iteración 0: estructura del repositorio, `docs/`, kit, banco como `node --test`, primer *pull request* |
-| **3** | Agente | F1 → F3 con el ciclo, parando solo en decisiones |
-| **4** | Tú | Sesión con el móvil: pruebas de F2.5 y F3.3 juntas |
-| **5** | Agente | F4 → F6 con el ciclo |
-| **6** | Tú | Sesión con la guitarra: F4.3; revisión de lo pendiente |
-| **7** | Tú y el agente | F7: publicar y, si se decide, tiendas |
+| Paso | Quién | Qué | Estado |
+|---|---|---|:---:|
+| **0** | Tú | Tomar las decisiones iniciales: modo, audio, móvil y nivel de explicación | ✅ 14/10 |
+| **1** | Tú | Autorizar que esta conversación se conecte a `pdigue/guitarra` con permiso de escritura, o abrirla desde el ordenador para subir los cambios con tu propio Git | ⏳ |
+| **2** | Agente | Iteración 0: estructura del repositorio, `docs/`, kit, banco como `node --test`, primer *pull request* | 🔨 todo listo en local; el *pull request*, al completar el paso 1 |
+| **3** | Agente | F1 → F3 con el ciclo, parando solo en decisiones | ⏳ F1 y F2.1 hechas |
+| **4** | Tú | Sesión 1, con el iPhone y el ordenador: lista de F1.1, F2.5 y F3.3 juntas | ⬜ |
+| **5** | Agente | F4 → F6 con el ciclo | ⬜ |
+| **6** | Tú | Sesión 2, con la guitarra: F4.3 y F5.4; revisión de lo pendiente | ⬜ |
+| **7** | Tú y el agente | F7: publicar y, si se decide, tiendas | ⬜ |
 
 ---
 
@@ -246,4 +269,11 @@ y la lista de pruebas físicas pendientes.
 
 ---
 
-*Documento gestionado por el chat de Desarrollo. Si se activa el modo acelerado, el roadmap pasará a la v3.1 indicándolo.*
+## 11. Control de cambios
+
+| Versión | Fecha | Cambios |
+|---|---|---|
+| **1.1** | 14/10/2026 | Modo acelerado activado, con las decisiones tomadas. El banco se ejecuta con `node --test`: con Node 22, `node --test tests/` falla porque intenta abrir la carpeta como un archivo. El `CLAUDE.md` del kit es ahora el del repositorio, con las decisiones vigentes. Estado del plan de arranque. |
+| 1.0 | 14/10/2026 | Primera versión. |
+
+*Documento gestionado por el chat de Desarrollo.*
