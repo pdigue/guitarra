@@ -1,0 +1,182 @@
+{
+ "acoustic": {
+  "E2.mp3": {
+   "nota": "E2",
+   "midi": 40,
+   "hz_esperada": 82.41,
+   "hz_medida": 82.32,
+   "cents": -1.9,
+   "pico_dbfs": -2.9,
+   "segundos": 10.87,
+   "bytes": 260448,
+   "sha256": "917820984d1bb0b7712b4f2c42a9694efbb2479ccede45aa78af73811fc6818d"
+  },
+  "A2.mp3": {
+   "nota": "A2",
+   "midi": 45,
+   "hz_esperada": 110.0,
+   "hz_medida": 110.06,
+   "cents": 1.0,
+   "pico_dbfs": -3.0,
+   "segundos": 11.55,
+   "bytes": 276724,
+   "sha256": "43e339bcd75f5f26336be8e1e59b131a0bf06dbf66f588f1c59a8d9faf53613f"
+  },
+  "D3.mp3": {
+   "nota": "D3",
+   "midi": 50,
+   "hz_esperada": 146.83,
+   "hz_medida": 146.62,
+   "cents": -2.5,
+   "pico_dbfs": -3.0,
+   "segundos": 12.85,
+   "bytes": 308024,
+   "sha256": "861b74a32a9159eea675ebd6ba0e5d3fa331b2c744dddd9ca1151073a3974fc0"
+  },
+  "G3.mp3": {
+   "nota": "G3",
+   "midi": 55,
+   "hz_esperada": 196.0,
+   "hz_medida": 195.52,
+   "cents": -4.2,
+   "pico_dbfs": -3.0,
+   "segundos": 5.75,
+   "bytes": 137752,
+   "sha256": "8a8ddf06e2d4824f5086e6ad0cf32371da6afc594bf2efd9bb5ec9a2dfe9c040"
+  },
+  "B3.mp3": {
+   "nota": "B3",
+   "midi": 59,
+   "hz_esperada": 246.94,
+   "hz_medida": 246.87,
+   "cents": -0.5,
+   "pico_dbfs": -3.1,
+   "segundos": 5.04,
+   "bytes": 120850,
+   "sha256": "2ab73ca750ca539a76c7ddaf7a3be2aac1436cd59ffc65525bf4adbb47c56488"
+  },
+  "E4.mp3": {
+   "nota": "E4",
+   "midi": 64,
+   "hz_esperada": 329.63,
+   "hz_medida": 330.48,
+   "cents": 4.5,
+   "pico_dbfs": -3.0,
+   "segundos": 4.57,
+   "bytes": 109582,
+   "sha256": "3b02f5448695ac92f257ea9e36ba77be1b1b4a08f62a549b95c7ea9f5303ce14"
+  },
+  "A4.mp3": {
+   "nota": "A4",
+   "midi": 69,
+   "hz_esperada": 440.0,
+   "hz_medida": 440.7,
+   "cents": 2.8,
+   "pico_dbfs": -3.1,
+   "segundos": 4.08,
+   "bytes": 97688,
+   "sha256": "1f8263f10e24509d8d0bb82c7dd873bfe7da5354ba0333f23ebfc0f02076361a"
+  },
+  "D5.mp3": {
+   "nota": "D5",
+   "midi": 74,
+   "hz_esperada": 587.33,
+   "hz_medida": 587.97,
+   "cents": 1.9,
+   "pico_dbfs": -3.0,
+   "segundos": 3.27,
+   "bytes": 78282,
+   "sha256": "c9d74d19e672780b7b6e9eb4468b31b5fee6642f20df724198b232f7c78af4f1"
+  }
+ },
+ "nylon": {
+  "E2.mp3": {
+   "nota": "E2",
+   "midi": 40,
+   "hz_esperada": 82.41,
+   "hz_medida": 82.27,
+   "cents": -2.8,
+   "pico_dbfs": -3.0,
+   "segundos": 5.28,
+   "bytes": 126484,
+   "sha256": "af94c24ff1726e3dfb6edb3459ece1332820f32db1554e0509a9c5c815e93a35"
+  },
+  "A2.mp3": {
+   "nota": "A2",
+   "midi": 45,
+   "hz_esperada": 110.0,
+   "hz_medida": 110.05,
+   "cents": 0.8,
+   "pico_dbfs": -3.1,
+   "segundos": 5.28,
+   "bytes": 126484,
+   "sha256": "0e20a4c2cb8451919121c19815f8fe9b2a3003ee823a26a55790dd16bd640ea8"
+  },
+  "D3.mp3": {
+   "nota": "D3",
+   "midi": 50,
+   "hz_esperada": 146.83,
+   "hz_medida": 146.63,
+   "cents": -2.4,
+   "pico_dbfs": -3.0,
+   "segundos": 5.28,
+   "bytes": 126484,
+   "sha256": "aaeb2afa295e5d1733fe5b475851d590b56d7dfe26d841cb56272cd6867716c6"
+  },
+  "G3.mp3": {
+   "nota": "G3",
+   "midi": 55,
+   "hz_esperada": 196.0,
+   "hz_medida": 196.3,
+   "cents": 2.6,
+   "pico_dbfs": -3.1,
+   "segundos": 3.19,
+   "bytes": 76404,
+   "sha256": "85cbc7aeb84956c5b30333d73fedb57f1c393d04302684566ca77523015a6449"
+  },
+  "B3.mp3": {
+   "nota": "B3",
+   "midi": 59,
+   "hz_esperada": 246.94,
+   "hz_medida": 246.85,
+   "cents": -0.6,
+   "pico_dbfs": -3.1,
+   "segundos": 3.19,
+   "bytes": 76404,
+   "sha256": "9e4b3df9cda03761dc093b910000bfc68083d9ce40605fdd2af370140521f2cd"
+  },
+  "E4.mp3": {
+   "nota": "E4",
+   "midi": 64,
+   "hz_esperada": 329.63,
+   "hz_medida": 329.24,
+   "cents": -2.1,
+   "pico_dbfs": -3.0,
+   "segundos": 3.19,
+   "bytes": 76404,
+   "sha256": "3f95d206021f8935d79da1f1b5bffe45c17f8dbfb598148e6a3ac4999cb0fa0b"
+  },
+  "A4.mp3": {
+   "nota": "A4",
+   "midi": 69,
+   "hz_esperada": 440.0,
+   "hz_medida": 439.96,
+   "cents": -0.2,
+   "pico_dbfs": -3.0,
+   "segundos": 3.19,
+   "bytes": 76404,
+   "sha256": "3436e55cf99281a40467dce558ea3009b929080d837193492fb110b7afd348e7"
+  },
+  "E5.mp3": {
+   "nota": "E5",
+   "midi": 76,
+   "hz_esperada": 659.26,
+   "hz_medida": 658.32,
+   "cents": -2.4,
+   "pico_dbfs": -3.0,
+   "segundos": 1.52,
+   "bytes": 36340,
+   "sha256": "9ab5b711d43f7bd0cf5a7ec2c5d5a382c701b0258341a0a4483ccb377c4fd63c"
+  }
+ }
+}
