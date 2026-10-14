@@ -1,583 +1,427 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 2.0
-**Fecha:** 15 de septiembre de 2026
-**Documentos relacionados:** `requisitos.md` · `auditoria-requisitos-trasteando.md` · `auditoria-tecnica-01.md`
-**Gestionado por:** chat de Desarrollo
+**Versión:** 3.0 · **Fecha:** 14 de octubre de 2026
+**Válido para:** app `0.1.2` · `requisitos.md` v1.2 · `CHANGELOG.md`
+**Gestiona:** chat de Desarrollo
 
-> **Cambio principal respecto a la v1.0:** el proyecto se desarrolla **en local de principio a fin**. La publicación en web pública y la valoración de tiendas de aplicaciones se trasladan a la última fase. Las fases intermedias producen una app usable en ordenador y móvil sin depender de internet ni de servicios externos.
-
----
-
-## 1. Cómo está organizado este documento
-
-El proyecto avanza en **siete fases (F1–F7)**. Cada fase se divide en **etapas** con la forma `F2.3`, y cada etapa declara cuatro cosas:
-
-- **Qué se hace** — el trabajo concreto.
-- **Requisitos que cierra** — los IDs de `requisitos.md` que pasan a cumplidos.
-- **Cómo se valida** — la prueba que demuestra que está hecho. Sin prueba, la etapa no está terminada.
-- **Aprendizaje** — el concepto técnico que se explica al abordarla, porque este proyecto también es un vehículo de formación.
-
-Entre fases hay **checkpoints de auditoría** (`CP-n`): el estado se congela, se pasa a los chats auditores y no se avanza hasta haber leído sus informes y decidido qué se acepta.
-
-**Estados de una etapa:** `Pendiente` · `En curso` · `Hecha` · `Validada` · `Descartada`
+> Este documento da el rumbo a todas las conversaciones del proyecto: qué fases hay, qué requisitos cierra cada etapa, cómo se valida, cuándo se consulta a los auditores y qué hará falta para lanzar. El paso a paso detallado de cada etapa, con su teoría, se hace en el chat de Desarrollo.
 
 ---
 
-## 2. Concepto clave: los tres modos de ejecución
+## 1. Estado de un vistazo
 
-Esta distinción gobierna todo el roadmap. No es un detalle: determina qué funcionalidad es posible en cada momento.
+📍 **Estás aquí:** F1.1 — probar la versión `0.1.2` en Live Server.
 
-| Modo | Cómo se abre | Qué permite | Qué NO permite |
-|------|--------------|-------------|----------------|
-| **`file://`** | Doble clic sobre el archivo | Todo lo que esté contenido en el propio archivo | Descargar recursos externos (ni siquiera de la carpeta de al lado), micrófono, funcionamiento offline gestionado |
-| **`http://localhost`** | Live Server en el ordenador | Absolutamente todo, igual que si estuviera publicado | Nada; pero solo existe mientras el ordenador esté encendido |
-| **`https://`** | Publicado en internet | Todo, desde cualquier dispositivo y sin el ordenador | — |
+| Fase | Objetivo | Versión | Dónde se usa | Etapas | Progreso |
+|------|----------|:---:|---|:---:|---|
+| **F1** | Base local verificada | 0.1.x | 💻 Live Server | 4 | `▰▰▱▱▱▱▱▱` 1/4 |
+| **F2** | Sonido propio y archivo autónomo | 0.2.x | 📁 Archivo en cualquier dispositivo | 5 | `▱▱▱▱▱▱▱▱` 0/5 |
+| **F3** | Interfaz y adaptación | 0.3.x | 📁 Archivo | 4 | `▱▱▱▱▱▱▱▱` 0/4 |
+| **F4** | Afinador por micrófono | 0.4.x | 💻 Live Server | 4 | `▱▱▱▱▱▱▱▱` 0/4 |
+| **F5** | Escalas | 0.5.x | 📁 Archivo | 5 | `▱▱▱▱▱▱▱▱` 0/5 |
+| **F6** | Preparación para distribución | 0.6.x | 💻 Live Server | 4 | `▱▱▱▱▱▱▱▱` 0/4 |
+| **F7** | Publicación y lanzamiento | **1.0.0** | 🌐 Web y tiendas | 5 | `▱▱▱▱▱▱▱▱` 0/5 |
+| **T** | Automatización con agentes *(opcional)* | — | 🤖 Repositorio | 5 | `▱▱▱▱▱▱▱▱` 0/5 |
 
-**Consecuencias que condicionan el roadmap:**
-
-1. Para que un archivo funcione **realmente autónomo** (doble clic, móvil, sin internet), el audio debe ir **dentro** del propio HTML. Esto se resuelve en F2.
-2. El **afinador por micrófono exige contexto seguro**. Funciona en `localhost` y en `https`, nunca en `file://`. Por eso F4 se desarrolla y se usa con Live Server, y no llega al móvil de forma autónoma hasta F7.
-3. El **funcionamiento offline gestionado** (Service Worker) también exige contexto seguro, por eso vive en F6.
-
-**Git y GitHub no son lo mismo.** El historial de versiones es local y no requiere internet. Tener el código en GitHub tampoco publica nada: la app solo se vuelve pública al activar GitHub Pages, que es F7. Durante F1–F6 el repositorio funciona como respaldo privado.
-
----
-
-## 3. Panorama general
-
-| Fase | Objetivo | Modo de ejecución | Etapas | Checkpoint |
-|------|----------|-------------------|--------|------------|
-| **F1** | Base local sólida y verificada | Live Server | F1.1 – F1.4 | — |
-| **F2** | Sonido propio de calidad, archivo autónomo | `file://` ✅ | F2.1 – F2.4 | CP-1 |
-| **F3** | Interfaz y adaptación a ordenador y móvil | `file://` ✅ | F3.1 – F3.4 | CP-2 |
-| **F4** | Afinador por micrófono | Live Server | F4.1 – F4.4 | CP-3 |
-| **F5** | Escalas | `file://` ✅ | F5.1 – F5.5 | CP-4 |
-| **F6** | Preparación para distribución | Live Server | F6.1 – F6.3 | — |
-| **F7** | Publicación | `https://` | F7.1 – F7.5 | CP-5 |
-
-La columna «Modo de ejecución» indica dónde se desarrolla. ✅ señala las fases que producen un archivo que puedes llevarte al móvil y abrir sin nada más.
+**Leyenda de estados:** ⬜ pendiente · ⏳ en curso · 🔨 hecha (sin validar) · ✅ validada · ⛔ descartada
 
 ---
 
-# F1 — Base local sólida
+## 2. Mapa del recorrido
 
-**Objetivo.** Verificar que las dieciséis correcciones de la auditoría técnica funcionan, y recuperar el control de versiones para no volver a perder trabajo.
+```mermaid
+flowchart LR
+  F1["F1 · Base local<br/>0.1.x · 💻"]:::now --> CP1{{CP-1}}
+  CP1 --> F2["F2 · Sonido propio<br/>0.2.x · 📁"]
+  F2 --> CP2{{CP-2}} --> F3["F3 · Interfaz<br/>0.3.x · 📁"]
+  F3 --> CP3{{CP-3}} --> F4["F4 · Micrófono<br/>0.4.x · 💻"]
+  F4 --> CP4{{CP-4}} --> F5["F5 · Escalas<br/>0.5.x · 📁"]
+  F5 --> CP5{{CP-5}} --> F6["F6 · Preparación<br/>0.6.x · 💻"]
+  F6 --> CP6{{"CP-6<br/>¿lanzamos?"}} --> F7["F7 · Publicación<br/>1.0.0 · 🌐"]
+  subgraph T["Pista T · automatización con agentes (opcional)"]
+    direction LR
+    T1["T1 docs al repo"] --> T2["T2 agente + reglas"] --> T3["T3 auditores<br/>de solo lectura"] --> T4["T4 ramas y<br/>pull requests"] --> T5["T5 auditoría<br/>automática"]
+  end
+  F1 -.-> T1
+  F3 -.-> T2
+  F4 -.-> T4
+  classDef now fill:#e8a45c,color:#1a1006,stroke:#c9853f,stroke-width:2px
+```
 
-**Estado al terminar.** La app funciona correctamente en el ordenador con Live Server, y cada cambio queda registrado en el historial.
-
----
-
-### F1.1 — Verificar las correcciones críticas
-
-**Estado:** Pendiente
-
-**Qué se hace.** Probar en Live Server la versión corregida. No se toca código salvo que algo falle.
-
-| Comprobación | Origen | Cómo se prueba |
-|---|---|---|
-| Al abrir Afinador, el mástil desaparece | AUD-01 | Cambiar de pestaña |
-| La nota suena sin retardo perceptible | AUD-03 | Pulsar repetidamente |
-| El pentagrama dibuja agudos con marca 8va | AUD-05 | 1ª cuerda, trastes 12 y 24 |
-| El pentagrama dibuja graves con 8vb | AUD-05 | Bajar la 6ª cuerda al mínimo |
-| Restablecer recarga el timbre correcto | AUD-08 | Poner acústica, restablecer, escuchar |
-| Cambiar nomenclatura tras 3 s actualiza el lector | AUD-08 | Pulsar nota, esperar, cambiar a C D E |
-| El zoom no salta de tramo | AUD-13 | Ir al traste 15 y hacer zoom |
-| La etiqueta de zoom dice la verdad | AUD-12 | Ventana estrecha, pulsar − hasta el tope |
-
-**Cómo se valida.** Todas las filas marcadas. Lo que dependa de táctil se pospone a F3.
-
-**Aprendizaje.** Las herramientas de desarrollo del navegador: consola de errores, pestaña de red, simulador de dispositivos. Por qué `localhost` y `file://` se comportan distinto.
+*El diagrama se ve como dibujo en GitHub y en el panel visual del proyecto. En otros visores aparece como texto.*
 
 ---
 
-### F1.2 — Recuperar Git y el control de versiones
+## 3. Los tres modos de ejecución
 
-**Estado:** Pendiente
+Esta distinción gobierna el orden del roadmap: decide qué funcionalidad es posible en cada fase.
 
-**Qué se hace.** Retomar Git desde los fundamentos y hacer el ciclo completo: consultar estado, preparar cambios, confirmarlos y respaldarlos.
+| Modo | Cómo se abre | Lo que permite | Lo que no permite |
+|------|--------------|----------------|-------------------|
+| 📁 **Archivo** (`file://`) | Doble clic sobre el `.html` | Todo lo que vaya **dentro** del propio archivo | Leer otros archivos locales (ni los de la misma carpeta), micrófono, Service Worker, instalar como app. Lo que venga de internet depende de tener conexión y de que el servidor lo permita |
+| 💻 **Local** (`http://localhost`) | Live Server en el ordenador | Todo, igual que publicado | Solo existe mientras el ordenador está encendido, y solo en ese ordenador |
+| 🌐 **Web** (`https://`) | Publicada en internet | Todo, desde cualquier dispositivo | — |
 
-**Requisitos que cierra:** X-01.
+**Tres consecuencias:**
 
-**Cómo se valida.** `git log --oneline` muestra el commit nuevo, y el repositorio remoto refleja el cambio.
+1. Para que la app funcione **de verdad sin conexión abriendo el archivo**, el audio tiene que ir dentro del HTML. Se resuelve en F2.
+2. El **micrófono** exige contexto seguro: `localhost` o `https`. Un móvil que entra por WiFi al Live Server del ordenador (`http://192.168…`) **no** es contexto seguro, así que ahí tampoco funciona. El afinador por micrófono se usa en el ordenador durante F4 y llega al móvil en F7.
+3. En **iPhone**, abrir un HTML desde la app Archivos muestra una vista previa que no ejecuta JavaScript. El modo archivo probablemente no sirva en iOS; se confirma en F2.5.
 
-**Aprendizaje.** Qué es un repositorio y qué contiene la carpeta `.git`. Los tres estados de un archivo y por qué existe el intermedio. Comandos de consulta (`status`, `log`, `diff`, `remote -v`) frente a comandos de escritura (`add`, `commit`, `push`). Cómo escribir un mensaje de commit útil. **Por qué tener código en GitHub no es publicar la app.**
-
----
-
-### F1.3 — Revelar la respuesta correcta al fallar
-
-**Estado:** Pendiente
-
-**Qué se hace.** Completar el único requisito funcional del núcleo que quedó sin implementar: al fallar en modo Adivinar, mostrar dónde estaba la nota.
-
-**Requisitos que cierra:** J-10.
-
-**Cómo se valida.** Fallar a propósito y comprobar que se iluminan las posiciones correctas antes del siguiente reto.
-
-**Aprendizaje.** Cómo se diseña el refuerzo en una herramienta de aprendizaje: un error debe enseñar, no solo penalizar.
+**Respaldar no es publicar.** Tener el código en GitHub es un respaldo privado de hecho: nadie lo encuentra ni lo usa como app. La app solo se vuelve pública al activar GitHub Pages, en F7.1.
 
 ---
 
-### F1.4 — Cierre de F1
+## 4. Versiones y control de cambios
 
-**Qué se hace.** Reconciliar `requisitos.md`, etiquetar la versión en Git, actualizar cuadernos de aprendizaje.
+Cada pieza del proyecto lleva su propio número, y todas se citan entre sí.
 
-**Aprendizaje.** Qué son las etiquetas en Git y por qué se marcan las versiones.
+| Qué | Pauta | Dónde se registra | Ejemplo |
+|---|---|---|---|
+| **App** | `0.‹fase›.‹corrección›`, y `1.0.0` al lanzar | `CHANGELOG.md` y en Ajustes de la app | `0.1.2` = fase F1, tercera entrega |
+| **Requisitos** | `1.x` | Sección 2 de `requisitos.md` | v1.2 |
+| **Roadmap** | `x.0` | Sección 12 de este documento | v3.0 |
+| **Cierre de fase** | Etiqueta de Git `v0.‹fase›.‹corrección›` | Repositorio | `v0.1.2` |
+| **Auditorías** | `AR-nn` requisitos · `AT-nn` técnica | Carpeta de auditorías del proyecto | AR-01, AT-01 |
 
----
-
-# F2 — Sonido propio y archivo autónomo
-
-**Objetivo.** Eliminar toda dependencia externa de audio y conseguir que el archivo funcione por sí solo en cualquier dispositivo, incluido el móvil abriéndolo directamente.
-
-**Por qué esta fase va aquí.** Es lo que convierte el proyecto en algo que puedes llevarte contigo. Además resuelve un riesgo abierto: hoy el sonido depende del GitHub Pages personal de otra persona.
-
-**Decisión previa requerida:** opción de autoalojamiento del audio (`requisitos.md`, análisis de S-07).
+**Trazabilidad en ambos sentidos.** Cada requisito indica su etapa y la versión en que se implementó; cada etapa de este roadmap lista los requisitos que cierra; cada entrada del `CHANGELOG.md` cita sus requisitos. La sección 15 de `requisitos.md` es la matriz completa.
 
 ---
 
-### F2.1 — Elegir y verificar la fuente de audio
+# FASES
 
-**Estado:** Pendiente
+## F1 — Base local verificada · `0.1.x` · 💻
 
-**Qué se hace.** Decidir entre las opciones del análisis de S-07: reutilizar los samples actuales verificando su licencia, sustituirlos por una librería de licencia inequívoca, o grabar samples propios. Descargar los archivos y documentar su procedencia.
+**Objetivo:** confirmar que el núcleo funciona y recuperar el control de versiones para no volver a perder trabajo.
+**Cierre de fase:** etiqueta `v0.1.x` en Git y los ~58 requisitos del núcleo en ✅ validado.
 
-**Requisitos que cierra:** parte de S-07, y G-06.
+| Etapa | Qué se hace | Requisitos | Cómo se valida | Aprenderás | Estado |
+|---|---|---|---|---|:---:|
+| **F1.1** | Probar la `0.1.2` en Live Server con la lista de abajo | G-01, G-02, N-01…N-05, D-01…D-03, D-05…D-07, S-01…S-06, P-01, P-02, P-04, L-01…L-03, J-01…J-09, A-01, A-06…A-11, V-02…V-08, C-01…C-05 | Lista de 14 comprobaciones | Herramientas del navegador (F12): consola, red, simulador de dispositivos | ⏳ |
+| **F1.2** | Retomar Git desde cero y subir la `0.1.2` | X-01 | `git log` muestra el commit nuevo y GitHub lo refleja | Repositorio, carpeta `.git`, los tres estados de un archivo, comandos de consulta y de escritura, mensajes de commit | ⬜ |
+| **F1.3** | Revelar la respuesta al fallar y correcciones de revisión | G-10, D-04, J-10, J-12, V-09 | Banco automático (28/28) y comprobaciones 9–12 de F1.1 | Cómo se diseña el refuerzo en una herramienta de aprendizaje | 🔨 0.1.2 |
+| **F1.4** | Cierre: documentos a `docs/`, etiqueta de versión, cuadernos al día, decisión sobre la pista T | X-01 | `git tag` muestra `v0.1.2`; el repositorio tiene `docs/` | Etiquetas de Git y registro de cambios | ⬜ |
 
-**Cómo se valida.** Existe un `CREDITOS.md` con el origen y la licencia de cada archivo. Los archivos suenan correctamente al reproducirlos sueltos.
+### Lista de comprobación de F1.1
 
-**Aprendizaje.** Qué es un CDN y cuándo conviene o no depender de uno. Licencias de contenido: dominio público, CC0, CC-BY, y por qué importan de cara a F7. Qué es la frecuencia de muestreo y cómo afecta al peso y a la calidad.
+| # | Comprobación | Origen |
+|:---:|---|---|
+| 1 | Al abrir Afinador, el mástil desaparece | AUD-01 |
+| 2 | La nota suena al instante al pulsar | AUD-03 |
+| 3 | 1ª cuerda, trastes 12 y 24: la nota aparece en el pentagrama, con 8va en el 24 | AUD-05 |
+| 4 | Bajar la 6ª cuerda al mínimo en el afinador: la nota aparece con 8vb | AUD-05 |
+| 5 | Poner Acústica, Restablecer: vuelve a sonar la clásica | AUD-08 |
+| 6 | Pulsar una nota, esperar 3 s, cambiar a C D E: el nombre cambia | AUD-08 |
+| 7 | Ir al traste 15 y hacer zoom: la vista sigue en el 15 | AUD-13 |
+| 8 | Ventana estrecha y − hasta el tope: la etiqueta dice los trastes que caben | AUD-12 |
+| 9 | 🆕 Fallar en Adivinar: se marca el fallo, se iluminan las posiciones correctas y suena la nota buscada | J-10 |
+| 10 | 🆕 Con «Ver todas las notas» activo: en Libre se ven todos los nombres, en Adivinar no | J-12 |
+| 11 | 🆕 Numeración en «Guía»: solo 3, 5, 7, 9, 12… | D-04, V-09 |
+| 12 | 🆕 Ajustes muestra «Trasteando 0.1.2» | G-10 |
+| 13 | El récord y los ajustes sobreviven a recargar la página | J-08, C-05 |
+| 14 | Recorrido completo por las cuatro pestañas y Ajustes sin errores en la consola | General |
 
----
+### 🔍 CP-1 — Checkpoint ligero tras F1
 
-### F2.2 — Sampler propio sin Tone.js
-
-**Estado:** Pendiente
-
-**Qué se hace.** Sustituir Tone.js por un reproductor de muestras propio, de unas cincuenta líneas, usando Web Audio directamente. Carga los samples, los decodifica y ajusta el tono para las notas intermedias.
-
-**Requisitos que cierra:** consolida S-01, S-04. Resuelve AUD-07.
-
-**Cómo se valida.** La app suena igual o mejor que antes, sin ninguna referencia a un dominio externo. El retardo al pulsar es menor que con Tone.js.
-
-**Aprendizaje.** Qué es la Web Audio API y cómo se construye un grafo de audio. Qué significa decodificar audio y qué es un buffer. Cómo se transporta una nota cambiando la velocidad de reproducción, y por qué eso degrada el sonido si el salto es grande. Por qué reducir dependencias mejora el control sobre el producto.
-
----
-
-### F2.3 — Incrustar el audio en el archivo
-
-**Estado:** Pendiente
-
-**Qué se hace.** Codificar los samples dentro del propio HTML para que no haya que descargar nada. El resultado es un archivo único de unos tres megas que funciona en cualquier sitio.
-
-**Requisitos que cierra:** completa S-07. Habilita el uso en móvil sin servidor.
-
-**Cómo se valida.** **La prueba definitiva de esta fase:** copiar el archivo al móvil, abrirlo con doble clic sin conexión a internet, y comprobar que suena la guitarra real.
-
-**Aprendizaje.** Qué es la codificación en base64 y por qué un archivo binario puede vivir dentro de un archivo de texto. El compromiso entre autonomía y peso. Por qué esta técnica es adecuada para una herramienta personal y no para una web de gran alcance.
-
----
-
-### F2.4 — Calidad del registro agudo
-
-**Estado:** Pendiente
-
-**Qué se hace.** La nota más aguda del mástil está a catorce semitonos de la muestra más cercana, lo que suena metálico. Añadir muestras intermedias para reducir la distancia máxima de transporte.
-
-**Requisitos que cierra:** consolida S-01.
-
-**Cómo se valida.** Recorrer la 1ª cuerda del traste 0 al 24 y comprobar que no hay ningún salto de calidad audible.
-
-**Aprendizaje.** Por qué un sampler necesita varias muestras repartidas por el registro. Qué es el aliasing y por qué transportar mucho degrada el sonido.
-
----
-
-## 🔍 CP-1 — Checkpoint del sonido y la autonomía
-
-**Qué se congela:** el archivo autónomo funcionando en ordenador y móvil.
-
-**Al auditor técnico:** revisar el sampler propio, la gestión de memoria al incrustar audio y el rendimiento de arranque. Verificar que no queda ninguna dependencia externa en tiempo de ejecución.
-
-**Al auditor de requisitos:** valorar la calidad del sonido frente a O-01 y S-01, y si el peso del archivo es aceptable para el uso previsto.
-
----
-
-# F3 — Interfaz y adaptación a ambos dispositivos
-
-**Objetivo.** Que la app sea igual de cómoda en un ordenador y en un móvil, en ambas orientaciones. Hoy en móvil horizontal el mástil se queda con unos setenta píxeles de altura para seis cuerdas.
-
----
-
-### F3.1 — Especificar la interfaz y la navegación
-
-**Estado:** Pendiente · **Bloquea al resto de F3 y a toda F5**
-
-**Qué se hace.** La sesión de diseño pendiente desde el principio del proyecto: describir pantalla a pantalla la estructura de menús, la jerarquía de controles y los flujos de navegación, para ordenador y para móvil en ambas orientaciones.
-
-**Requisitos que cierra:** C-06. Desbloquea V-01.
-
-**Cómo se valida.** Existe un `interfaz.md` con cada pantalla y sus transiciones, revisado por el auditor de requisitos en su faceta de experiencia de usuario.
-
-**Aprendizaje.** Qué es un wireframe y por qué dibujar antes de programar ahorra tiempo. Jerarquía visual y arquitectura de información. Cómo distinguir ajustes frecuentes de ocasionales.
-
----
-
-### F3.2 — Layout apaisado y aviso de orientación
-
-**Estado:** Pendiente · Depende de F3.1
-
-**Qué se hace.** Layout alternativo para pantallas bajas en horizontal. Aviso discreto que sugiere girar el móvil, sin forzarlo.
-
-**Requisitos que cierra:** V-01. Resuelve AUD-04.
-
-**Cómo se valida.** En un móvil apaisado real, cada cuerda tiene al menos cuarenta píxeles de altura y los puntos son cómodos de pulsar.
-
-**Aprendizaje.** Diseño responsive de verdad: media queries, unidades relativas, y cuándo hace falta un layout distinto en lugar de estirar el mismo.
-
----
-
-### F3.3 — Prueba táctil en dispositivo real
-
-**Estado:** Pendiente
-
-**Qué se hace.** Sesión de uso real de al menos quince minutos con la guitarra delante, en el móvil, usando el archivo autónomo de F2.
-
-| Comprobación | Origen |
+| | |
 |---|---|
-| Desplazar el mástil no rompe la racha en Adivinar | AUD-02 |
-| Los objetivos táctiles son cómodos en ambas orientaciones | V-01, V-04 |
-| El sonido no va con retardo | AUD-03 |
-| El récord sobrevive a cerrar y reabrir | J-08 |
-| Girar el móvil no pierde el zoom elegido | V-08 |
-| El afinador por referencia sirve para afinar de verdad | A-01 |
-
-**Cómo se valida.** Todas las filas marcadas, más una nota escrita de lo que resulte incómodo.
-
-**Aprendizaje.** Por qué probar en dispositivo real es irreemplazable. Eventos de puntero frente a ratón y tacto. Qué es la latencia percibida.
+| **Qué se congela** | App `0.1.2`, `requisitos.md` v1.2, este roadmap v3.0 |
+| **Auditor de requisitos** | Coherencia entre los tres documentos; huecos en la sección de plataformas; si el orden local-primero perjudica algún objetivo |
+| **Auditor técnico** | Revisión del cambio `0.1.1 → 0.1.2`; validez del banco de pruebas; viabilidad del audio dentro del archivo (F2.3) |
+| **Salida** | Informes AR-02 y AT-02 en el proyecto; el chat de Desarrollo decide y actualiza |
 
 ---
 
-### F3.4 — Accesibilidad y paleta de colores
+## F2 — Sonido propio y archivo autónomo · `0.2.x` · 📁
 
-**Estado:** Pendiente · **Decisión previa requerida** (paleta de referencia)
+**Objetivo:** que el sonido no dependa de nadie y que el archivo funcione solo, sin servidor ni conexión.
+**Decisión previa:** opción de audio de S-07 (A, B o C).
 
-**Qué se hace.** Navegación del mástil por teclado, anuncios para lectores de pantalla, y resolver la paleta por nota, que hoy tiene varios pares casi indistinguibles.
+| Etapa | Qué se hace | Requisitos | Cómo se valida | Aprenderás | Estado |
+|---|---|---|---|---|:---:|
+| **F2.1** | Elegir la fuente de audio, descargarla y documentar su licencia | S-07, G-06 | `CREDITOS.md` con origen y licencia de cada archivo; todos suenan sueltos | Qué es un CDN; licencias de contenido (dominio público, CC0, CC-BY); formato y frecuencia de muestreo | ⬜ |
+| **F2.2** | Sustituir Tone.js por un reproductor de muestras propio, de unas cincuenta líneas | S-01 | Ninguna petición a dominios ajenos (F12 → Red); suena igual o mejor; menos retardo | Web Audio API: grafo de audio, decodificar, buffers, cambiar el tono variando la velocidad | ⬜ |
+| **F2.3** | Meter el audio dentro del propio HTML | S-07, G-07 | En modo avión y con doble clic suena la guitarra real | Codificación base64; compromiso entre autonomía y peso | ⬜ |
+| **F2.4** | Añadir muestras intermedias para el registro agudo | S-01 | Recorrer la 1ª cuerda del 0 al 24 sin saltos de calidad | Por qué un sampler necesita varias muestras; qué degrada el sonido al transportar | ⬜ |
+| **F2.5** | Probar el archivo autónomo en cada plataforma | G-07, PL-01, PL-02, PL-03 | Tabla de resultados: Windows, Android e iPhone | Cómo abre cada sistema un archivo local, y por qué iOS es distinto | ⬜ |
 
-**Requisitos que cierra:** G-05. Resuelve AUD-09, AUD-10.
+### 🔍 CP-2 — Checkpoint del sonido
 
-**Cómo se valida.** Recorrer la app entera solo con teclado. Verificar contrastes con herramienta automática. Comprobar con un simulador de daltonismo que dos notas de trastes contiguos se distinguen.
-
-**Aprendizaje.** Qué es la accesibilidad web y por qué no es un extra. Roles y atributos ARIA. Qué significa el contraste 4,5:1. Por qué el color no debe ser nunca el único portador de información.
-
----
-
-## 🔍 CP-2 — Checkpoint de interfaz
-
-**Al auditor de requisitos:** contrastar la interfaz contra `interfaz.md` y contra los objetivos de aprendizaje. Es el checkpoint donde más peso tiene su faceta de experiencia de usuario.
-
-**Al auditor técnico:** revisar el layout responsive, la accesibilidad y el rendimiento en dispositivos modestos.
-
----
-
-# F4 — Afinador por micrófono
-
-**Objetivo.** Cerrar O-04, el segundo gran objetivo del producto.
-
-> **Restricción de esta fase.** El micrófono exige contexto seguro. Se desarrolla y se usa con **Live Server en el ordenador**. En el móvil no estará disponible de forma autónoma hasta F7, o conectando el móvil al Live Server del ordenador por WiFi. Es una limitación del navegador, no del código.
-
-**Por qué va sola.** Es la única pieza del proyecto que introduce tecnología nueva. Mezclarla con otro trabajo haría imposible saber qué rompió qué.
+| | |
+|---|---|
+| **Auditor técnico** | Reproductor propio, memoria y tiempo de arranque con el audio incrustado; que no quede ninguna dependencia externa |
+| **Auditor de requisitos** | Calidad del sonido frente a S-01; si el peso del archivo es aceptable; resultado de iOS y alternativas |
 
 ---
 
-### F4.1 — Reestructurar el proyecto en módulos
+## F3 — Interfaz y adaptación · `0.3.x` · 📁
 
-**Estado:** Pendiente
+**Objetivo:** igual de cómoda en ordenador y en móvil, en las dos orientaciones.
 
-**Qué se hace.** Pasar del archivo único a módulos separados: teoría musical, motor de audio, estado, interfaz y modos. Introducir un almacén de estado con suscripciones que elimine la propagación manual, origen de seis bugs en la auditoría.
+| Etapa | Qué se hace | Requisitos | Cómo se valida | Aprenderás | Estado |
+|---|---|---|---|---|:---:|
+| **F3.1** | Especificar la interfaz pantalla a pantalla. **Bloquea F3.2 y toda F5** | C-06 | `interfaz.md` revisado por el auditor de requisitos | Wireframes, jerarquía visual, arquitectura de información | ⬜ |
+| **F3.2** | Diseño apaisado y aviso discreto para girar el móvil | V-01 | En horizontal, cada cuerda tiene al menos 40 px | Diseño adaptable: media queries, unidades relativas | ⬜ |
+| **F3.3** | Quince minutos de uso real en el móvil, con la guitarra delante | Validación en móvil de los requisitos de F1.1 | Lista táctil y notas de lo incómodo | Eventos de puntero; latencia percibida | ⬜ |
+| **F3.4** | Accesibilidad completa y paleta de colores | G-05 | Recorrer la app solo con teclado; contraste 4,5:1; simulador de daltonismo | ARIA, contraste, por qué el color no debe ser la única señal | ⬜ |
 
-**Requisitos que cierra:** ninguno directamente. Resuelve AUD-19, AUD-20, AUD-21.
-
-**Cómo se valida.** La app funciona igual que antes. Existen pruebas automáticas de las funciones de teoría musical que pasan con `node --test`.
-
-**Aprendizaje.** Qué son los módulos y cómo se importan. Por qué separar lógica pura de código que toca la pantalla. Qué es el estado de una aplicación y por qué propagarlo a mano genera errores. Qué es una prueba automática y por qué las funciones puras son las fáciles de probar.
-
-> **Nota sobre autonomía.** Los módulos no funcionan con `file://`. Durante F4 el desarrollo es con Live Server. En F6 se reconstruye un archivo autónomo a partir de los módulos, de modo que se conserven las dos formas de uso.
-
----
-
-### F4.2 — Detector de tono
-
-**Estado:** Pendiente
-
-**Qué se hace.** Detección de frecuencia con algoritmo YIN o MPM sobre Web Audio, en un hilo aparte para no bloquear la interfaz. Sin interfaz todavía: solo el motor y su banco de pruebas.
-
-**Requisitos que cierra:** parte de A-02, y A-02-CA.
-
-**Cómo se valida.** Banco de pruebas reproducible: reproducir samples desafinados una cantidad conocida y comprobar precisión de ±2 cents y latencia menor de 300 ms. **Sin este banco, la etapa no se da por terminada.**
-
-**Aprendizaje.** Qué es la frecuencia fundamental y por qué los armónicos de una guitarra engañan a los algoritmos ingenuos. Qué son los cents. Por qué hay que desactivar la cancelación de eco y el control automático de ganancia. Qué es un hilo de trabajo y por qué el audio no puede compartirlo con la interfaz.
+### 🔍 CP-3 — Checkpoint de interfaz
+Peso principal en el **auditor de requisitos** como experto en experiencia de usuario: contraste con `interfaz.md`. El **técnico** revisa el diseño adaptable y el rendimiento en móviles modestos.
 
 ---
 
-### F4.3 — Interfaz del afinador
+## F4 — Afinador por micrófono · `0.4.x` · 💻
 
-**Estado:** Pendiente
+**Objetivo:** cerrar el segundo gran objetivo del producto (O-04).
+**Restricción:** se desarrolla y usa en el ordenador con Live Server. En el móvil llega en F7.
 
-**Qué se hace.** Indicador de desviación, detección automática de cuerda, selección manual, gestión del permiso de micrófono.
+| Etapa | Qué se hace | Requisitos | Cómo se valida | Aprenderás | Estado |
+|---|---|---|---|---|:---:|
+| **F4.1** | Partir el archivo en módulos y crear pruebas automáticas | G-08 | La app funciona igual; `node --test` pasa. El banco de la `0.1.2` es la semilla | Módulos, estado de una aplicación, pruebas automáticas | ⬜ |
+| **F4.2** | Detector de tono en un hilo aparte, con banco de pruebas | A-02-CA | ±2 cents y menos de 300 ms sobre muestras desafinadas a propósito | Frecuencia fundamental y armónicos; cents; hilos de trabajo | ⬜ |
+| **F4.3** | Interfaz del afinador: aguja, detección y selección de cuerda, permiso de micrófono | A-02, A-03, A-04, A-05 | Afinar una guitarra real en estándar y en una alternativa; caso de cuerda muy desafinada | Permisos del navegador; suavizado para que la aguja no tiemble | ⬜ |
+| **F4.4** | Cierre y decisión del récord | J-11 | Etiqueta `v0.4.x`; decisión anotada | — | ⬜ |
 
-**Requisitos que cierra:** A-02, A-03, A-04, A-05.
-
-**Cómo se valida.** Afinar una guitarra real de principio a fin usando solo la app, en afinación estándar y en una alternativa. Probar el caso difícil: cuerda muy desafinada con selección manual.
-
-**Aprendizaje.** Cómo se piden permisos al navegador y por qué exigen contexto seguro. Diseño de indicadores en tiempo real: suavizado e histéresis para que la aguja no tiemble.
-
----
-
-### F4.4 — Cierre de F4
-
-Reconciliación de requisitos, etiqueta de versión, cuadernos. Decidir J-11: si el récord de racha es único o por afinación.
+### 🔍 CP-4 — Checkpoint del afinador
+**Técnico:** detector, banco de pruebas y arquitectura modular. **Requisitos:** comparación con afinadores comerciales frente a O-04.
 
 ---
 
-## 🔍 CP-3 — Checkpoint del afinador
+## F5 — Escalas · `0.5.x` · 📁
 
-**Al auditor técnico:** revisar el detector, el banco de pruebas y la arquitectura modular. Verificar el comportamiento en iOS, donde activar el micrófono ha alterado históricamente el enrutado del audio.
+**Objetivo:** cerrar O-03 con alcance acotado. Fuera: validar el orden (E-05b) y otras afinaciones (E-02b).
+**Decisión previa:** catálogo inicial de escalas.
 
-**Al auditor de requisitos:** verificar que el afinador cumple O-04 y compararlo con afinadores comerciales.
+| Etapa | Qué se hace | Requisitos | Cómo se valida | Aprenderás | Estado |
+|---|---|---|---|---|:---:|
+| **F5.1** | Cambiar cómo se representa una nota para que Si♭ y La♯ no sean lo mismo. **Bloquea el resto de F5** | Habilita P-03, E-03, E-04 | Cada escala mayor y menor usa siete letras distintas | Por qué dos notas que suenan igual se escriben distinto | ⬜ |
+| **F5.2** | Catálogo y generador de escalas | E-01, E-02 | Contraste con una referencia externa; pruebas de intervalos | Una escala como patrón de intervalos | ⬜ |
+| **F5.3** | Submodo Mostrar, con intervalos y guiado | P-03, E-03, E-04, E-06 | Comparación con diagramas de referencia | Tono y semitono | ⬜ |
+| **F5.4** | Submodo Práctica | E-05 | Sesión real con la guitarra | — | ⬜ |
+| **F5.5** | Cierre | — | Etiqueta `v0.5.x` | — | ⬜ |
 
----
-
-# F5 — Escalas
-
-**Objetivo.** Cerrar O-03 con alcance deliberadamente acotado.
-
-**Excluido explícitamente:** validación del orden de las notas (E-05b) y escalas en afinaciones distintas de la estándar (E-02b).
-
----
-
-### F5.1 — Modelo de deletreo de notas
-
-**Estado:** Pendiente · **Bloquea al resto de F5**
-
-**Qué se hace.** Cambiar la representación interna de una nota. Hoy es un número MIDI con nombre sacado de una tabla que solo tiene sostenidos, y eso es musicalmente incorrecto para escalas: Fa mayor contiene Si bemol, no La sostenido, y en el pentagrama van en posiciones distintas.
-
-**Requisitos que cierra:** ninguno directamente. Resuelve AUD-22 y habilita E-03, E-04, P-03.
-
-**Cómo se valida.** Pruebas automáticas: cada escala mayor y menor de las doce tónicas usa siete letras distintas sin repetir.
-
-**Aprendizaje.** Por qué La sostenido y Si bemol no son lo mismo aunque suenen igual. Cómo representar una nota sin perder su escritura. Por qué un modelo de datos equivocado obliga a reescribir código aparentemente lejano.
+### 🔍 CP-5 — Checkpoint de escalas
+Ambos auditores, con atención a la corrección musical: es donde un error pasa desapercibido más tiempo.
 
 ---
 
-### F5.2 — Catálogo de escalas
+## F6 — Preparación para distribución · `0.6.x` · 💻
 
-**Estado:** Pendiente · **Decisión previa requerida** (catálogo inicial)
+**Objetivo:** dejar todo listo para lanzar, verificado en local.
 
-**Qué se hace.** Definir e implementar el catálogo: mayor, menor natural, pentatónicas y blues como mínimo. Generador de posiciones por algoritmo, no almacenadas como datos.
+| Etapa | Qué se hace | Requisitos | Cómo se valida | Aprenderás | Estado |
+|---|---|---|---|---|:---:|
+| **F6.1** | Generar el archivo autónomo a partir de los módulos | G-08 | El archivo generado funciona con doble clic y sin conexión | Código fuente frente a artefacto distribuible; proceso de construcción | ⬜ |
+| **F6.2** | Service Worker para funcionar sin conexión desde la web | G-03 | Cargar, activar modo avión y seguir usándola | Qué es un Service Worker; estrategias y versiones de caché | ⬜ |
+| **F6.3** | Manifiesto propio e iconos | G-04 | El navegador ofrece instalarla; Lighthouse la da por instalable | Qué es una PWA y qué declara un manifiesto | ⬜ |
+| **F6.4** | Documentación pública y legal: README, licencia del código, créditos y privacidad | G-06, G-11 | Los cuatro documentos existen y son coherentes | Licencias de software; privacidad por diseño | ⬜ |
 
-**Requisitos que cierra:** E-01, E-02.
-
-**Cómo se valida.** Contrastar las escalas generadas contra una referencia externa fiable. Pruebas automáticas de los intervalos de cada tipo.
-
-**Aprendizaje.** Qué es una escala en términos de intervalos y por qué se puede generar con un algoritmo en lugar de escribirla a mano doce veces.
-
----
-
-### F5.3 — Submodo Mostrar
-
-**Estado:** Pendiente
-
-**Qué se hace.** Iluminar las notas de la escala sobre el mástil, con el nombre y la separación interválica respecto al grado anterior. Guiado nota a nota.
-
-**Requisitos que cierra:** E-03, E-04, E-06. Completa P-03.
-
-**Cómo se valida.** Comparar con un diagrama de referencia. Comprobar que los intervalos se indican por grado de la escala, no por posición en el mástil.
-
-**Aprendizaje.** La diferencia entre tono y semitono y por qué la estructura interválica define el carácter de una escala.
+### 🚦 CP-6 — Puerta de lanzamiento
+Último checkpoint **antes** de publicar, no después. Ambos auditores revisan el producto completo contra la lista de lanzamiento de la sección 6. Salida: **sí, no, o sí con condiciones**.
 
 ---
 
-### F5.4 — Submodo Práctica
+## F7 — Publicación y lanzamiento · `1.0.0` · 🌐
 
-**Estado:** Pendiente
+**Objetivo:** distribuir lo que ya funciona. En esta fase no se añade funcionalidad.
 
-**Qué se hace.** El usuario recorre la escala sin ayuda. Al pulsar una nota ajena, error e iluminación de las correctas. Solo pertenencia, no orden.
-
-**Requisitos que cierra:** E-05.
-
-**Cómo se valida.** Sesión de práctica real con la guitarra, comprobando que el feedback llega a tiempo y ayuda.
-
----
-
-### F5.5 — Cierre de F5
-
-Reconciliación, etiqueta, cuadernos.
+| Etapa | Qué se hace | Requisitos | Cómo se valida | Aprenderás | Estado |
+|---|---|---|---|---|:---:|
+| **F7.1** | Activar GitHub Pages | X-02 | La URL carga desde un dispositivo ajeno | Alojamiento estático, HTTPS, caché del navegador | ⬜ |
+| **F7.2** | Instalarla y usarla en Android, iPhone y Windows. El micrófono llega al móvil | G-04, PL-01, PL-02, PL-03, X-03 | Afinar una guitarra con el móvil y el ordenador apagado | Diferencias reales entre plataformas | ⬜ |
+| **F7.3** | Optimizar la carga | — | Lighthouse: usable en menos de 3 s en conexión móvil lenta | Métricas de rendimiento web | ⬜ |
+| **F7.4** | Decidir tiendas y empaquetar | G-09 | Documento de decisión y, si se aprueba, ficha enviada a revisión | Empaquetado de una PWA; qué pide cada tienda | ⬜ |
+| **F7.5** | Lanzar la `1.0.0` y hacer retrospectiva | — | Etiqueta `v1.0.0`; documento de lecciones aprendidas | — | ⬜ |
 
 ---
 
-## 🔍 CP-4 — Checkpoint de escalas
+## 5. Pista T — Automatización con agentes *(opcional)*
 
-Ambos auditores revisan el módulo. Especial atención a la corrección musical, que es donde un error pasa desapercibido más tiempo.
+**Idea:** un agente conectado al repositorio que programa, prueba y documenta, con auditores que revisan y tú aprobando cada cambio. **Cuándo:** no antes de dominar Git a mano (F1.2). Automatizar lo que aún no entiendes te quita justo lo que buscas: el control sobre el producto.
 
----
+| Etapa | Cuándo | Qué se hace | Cómo se valida |
+|---|---|---|---|
+| **T1** | Con F1.4 | El repositorio pasa a ser la fuente única de verdad: código, `docs/`, `CHANGELOG.md` y auditorías | Cualquier chat o agente puede leerlo todo desde GitHub |
+| **T2** | Inicio de F3 | Conectar un agente al repositorio con un archivo de reglas del proyecto (`CLAUDE.md`): explicar cada cambio, no tocar nunca `main` directamente, actualizar el registro de cambios y avisar de todo cambio en requisitos | El agente completa una etapa pequeña siguiendo las reglas |
+| **T3** | Inicio de F3 | Definir los dos auditores como subagentes con permisos **solo de lectura** (`.claude/agents/`) | Un auditor intenta editar y no puede |
+| **T4** | Con F4.1 | Trabajo por ramas y *pull requests*; las pruebas automáticas como puerta de entrada; `main` protegida | Ningún cambio llega a `main` sin pruebas en verde y tu aprobación |
+| **T5** | Con F4.1 o después | Revisión automática de cada *pull request* por los auditores y tareas programadas | Cada PR recibe su informe sin intervención manual |
 
-# F6 — Preparación para distribución
+**Flujo objetivo:**
 
-**Objetivo.** Dejar el proyecto listo para publicar, sin publicar todavía. Todo se verifica en local.
+```mermaid
+flowchart LR
+  U(("Tú")) -->|"encargo"| D["Agente desarrollador"]
+  D -->|"rama + pruebas"| PR["Pull request"]
+  PR --> AR["Auditor de requisitos<br/>solo lectura"]
+  PR --> AT["Auditor técnico<br/>solo lectura"]
+  AR -->|"informe"| U
+  AT -->|"informe"| U
+  U -->|"apruebas"| M["main"]
+  M -->|"F7"| W["Web pública"]
+```
 
----
-
-### F6.1 — Reconstruir el archivo autónomo
-
-**Estado:** Pendiente
-
-**Qué se hace.** Generar, a partir de los módulos de F4.1, un archivo único autónomo equivalente. Así se conservan las dos formas de uso: el proyecto modular para desarrollar y el archivo suelto para llevárselo.
-
-**Cómo se valida.** El archivo generado funciona con doble clic en el móvil, sin conexión, con todas las funcionalidades salvo el micrófono.
-
-**Aprendizaje.** Qué es un proceso de construcción y por qué el código que se escribe no siempre es el que se distribuye. Diferencia entre código fuente y artefacto distribuible.
-
----
-
-### F6.2 — Service Worker y funcionamiento offline
-
-**Estado:** Pendiente
-
-**Qué se hace.** Precarga versionada de la app y caché bajo demanda de los samples, guardando solo el timbre en uso.
-
-**Requisitos que cierra:** G-03.
-
-**Cómo se valida.** Con Live Server: cargar la app, activar el modo avión y comprobar que sigue funcionando por completo.
-
-**Aprendizaje.** Qué es un Service Worker y por qué es distinto del resto del código. Estrategias de caché. Por qué el versionado de la caché es imprescindible para no dejar a los usuarios con una versión antigua para siempre.
+**Un agente o varios.** Uno que construye y dos que revisan, no tres autónomos. Varios agentes editando a la vez se pisan; la separación útil es entre quien escribe y quien revisa, y esa separación se garantiza con permisos, no con buena voluntad. Tú sigues siendo el que aprueba: leer cada *pull request* con su explicación es, además, una forma excelente de aprender.
 
 ---
 
-### F6.3 — Manifiesto e iconos
+## 6. Inventario de lanzamiento — todo lo necesario al final
 
-**Estado:** Pendiente
+Lo que hará falta tener en F7, más allá del HTML en VS Code y el código en GitHub.
 
-**Qué se hace.** Manifiesto real en archivo propio, iconos PNG de 192 y 512 píxeles, versión adaptable y versión para iOS.
-
-**Requisitos que cierra:** G-04.
-
-**Cómo se valida.** Con Live Server, el navegador ofrece instalar la app. La auditoría Lighthouse la da como instalable.
-
-**Aprendizaje.** Qué es una PWA y en qué se diferencia de una app nativa y de una híbrida. Qué declara un manifiesto y por qué cada campo importa. Qué es Lighthouse.
-
----
-
-# F7 — Publicación
-
-**Objetivo.** Hacer la app accesible públicamente y valorar su salida a tiendas de aplicaciones.
-
-> **Esta es la última fase por diseño.** Todo lo anterior se ha desarrollado y validado en local. Aquí no se añade funcionalidad: se distribuye lo que ya funciona.
-
----
-
-### F7.1 — Publicar en web
-
-**Estado:** Pendiente
-
-**Qué se hace.** Activar GitHub Pages sobre el repositorio y obtener la URL pública.
-
-**Requisitos que cierra:** X-02.
-
-**Cómo se valida.** La URL carga desde un dispositivo ajeno al proyecto, con todas las funcionalidades.
-
-**Aprendizaje.** Qué es el alojamiento estático y en qué se diferencia de un servidor con backend. Por qué esta app no necesita servidor propio ni tiene coste recurrente. Qué significa HTTPS. Cómo funciona la caché del navegador.
-
----
-
-### F7.2 — Verificación completa en dispositivo
-
-**Estado:** Pendiente
-
-**Qué se hace.** Instalar la app publicada en el móvil como icono y usarla en condiciones reales. **Es aquí donde el afinador por micrófono queda disponible en el móvil por primera vez.**
-
-**Requisitos que cierra:** X-03. Confirma G-04, y A-02 a A-05 en móvil.
-
-**Cómo se valida.** Afinar una guitarra con el móvil, sin el ordenador encendido.
-
----
-
-### F7.3 — Optimización de carga
-
-**Estado:** Pendiente
-
-**Qué se hace.** Revisión del peso descargado y del tiempo hasta que se puede interactuar. En la versión publicada el audio no va incrustado, sino cacheado por el Service Worker.
-
-**Cómo se valida.** Medición con Lighthouse. Objetivo: interacción posible en menos de tres segundos en conexión móvil lenta.
-
-**Aprendizaje.** Cómo se mide el rendimiento web y qué métricas importan. Por qué la versión distribuida por web y la versión autónoma tienen estrategias de carga opuestas.
-
----
-
-### F7.4 — Valoración de tiendas de aplicaciones
-
-**Estado:** Pendiente · **Decisión de producto**
-
-**Qué se hace.** Evaluar el empaquetado de la PWA para Play Store y App Store. Solo es viable si el audio se resolvió con licencia limpia en F2.1.
-
-**Cómo se valida.** Documento de decisión con costes, esfuerzo y requisitos de cada tienda.
-
-**Aprendizaje.** Qué es el empaquetado de una PWA y qué herramientas existen. Qué exige cada tienda, cuánto cuesta y qué implica el proceso de revisión. Por qué la licencia del contenido importa aquí y no importaba antes.
-
----
-
-### F7.5 — Cierre del proyecto base
-
-Etiqueta final, documentación, decisión sobre continuidad.
-
----
-
-## 🔍 CP-5 — Checkpoint final
-
-Auditoría completa de ambos chats sobre el producto publicado.
-
----
-
-## Anexo A — Métodos de validación
-
-| Método | En qué consiste | Dónde se usa |
-|--------|-----------------|--------------|
-| **Lista de comprobación manual** | Recorrer casos concretos marcando cada uno | F1.1, F3.3 |
-| **Prueba en dispositivo real** | Usar la app como usuario, con la guitarra delante | F2.3, F3.3, F4.3, F5.4, F7.2 |
-| **Prueba de autonomía** | Abrir el archivo sin conexión y sin servidor | F2.3, F6.1 |
-| **Prueba automática** | Funciones puras verificadas con `node --test` | F4.1, F5.1, F5.2 |
-| **Banco de pruebas reproducible** | Entradas conocidas con resultado esperado | F4.2 |
-| **Auditoría de herramienta** | Lighthouse, verificadores de contraste | F3.4, F6.3, F7.3 |
-| **Contraste con referencia externa** | Comparar escalas y afinaciones con fuentes fiables | F5.2, F5.3 |
-| **Checkpoint de auditoría** | Informe de los chats auditores sobre el estado congelado | CP-1 a CP-5 |
-
----
-
-## Anexo B — Decisiones pendientes y cuándo hay que tomarlas
-
-| Decisión | Bloquea a | Plazo |
+### Archivos del proyecto
+| Archivo | Para qué | Etapa |
 |---|---|---|
-| Opción de autoalojamiento del audio | F2.1 | Antes de F2 |
-| Paleta de colores de referencia | F3.4 | Antes de F3.4 |
-| Especificación de interfaz | F3.2 y toda F5 | Antes de F3.2 |
-| Récord único o por afinación | F4.4 | Antes de F4.4 |
-| Catálogo inicial de escalas | F5.2 | Antes de F5.2 |
-| Publicar en tiendas o quedarse en web | F7.4 | Antes de F7.4 |
+| `index.html` (o los módulos y su construcción) | La app | F4.1 · F6.1 |
+| `samples/` | Audio propio | F2.1 |
+| `manifest.webmanifest` + iconos 192 px, 512 px, adaptable y de iOS | Instalar como app | F6.3 |
+| `sw.js` | Funcionar sin conexión | F6.2 |
+| `privacidad.html` | Política de privacidad; la exigen las tiendas | F6.4 |
+| `README.md`, `LICENSE`, `CREDITOS.md`, `CHANGELOG.md` | Qué es, cómo se usa, de quién es cada cosa, qué cambió | F6.4 |
+| `docs/requisitos.md`, `docs/roadmap.md`, `docs/auditorias/` | Gobierno del proyecto | F1.4 |
+| `.well-known/assetlinks.json` en la raíz del dominio | Verificación de la app de Android | F7.4 |
+
+### Herramientas
+| Herramienta | Para qué | ¿Ya la tienes? |
+|---|---|:---:|
+| VS Code + Live Server | Editar y probar en local | ✅ |
+| Git + cuenta de GitHub | Historial, respaldo y publicación | ✅ |
+| Node.js | Pruebas automáticas y construcción | ⬜ F4.1 |
+| Chrome con Lighthouse | Auditar PWA y rendimiento | ✅ |
+| PWABuilder (web, gratuita) | Empaquetar la PWA para las tiendas | ⬜ F7.4 |
+| **Un Mac con Xcode** | Imprescindible para compilar y enviar a App Store | ⬜ solo si hay App Store |
+
+### Cuentas y costes
+| Cuenta | Coste | Notas |
+|---|---|---|
+| GitHub con GitHub Pages | Gratis | Ya la tienes |
+| Microsoft Store (Partner Center) | Gratis para particulares desde septiembre de 2025 | — |
+| Google Play Console | Cuota única de alta (25 USD según la ayuda de Google; confirmar al registrarse) | Las cuentas personales nuevas deben hacer una prueba cerrada con al menos 12 personas durante 14 días antes de publicar |
+| Apple Developer Program | 99 USD al año | Revisión de Apple; riesgo de rechazo si la app no aporta más que una web |
+| Dominio propio | Opcional, del orden de 10–15 € al año | Alternativa gratuita para Android: repositorio de usuario `pdigue.github.io` |
+
+### Legal y contenido
+- Licencia verificada de cada sample (S-07) y créditos publicados (G-06).
+- Licencia del código elegida.
+- Política de privacidad: qué no se recoge y que el micrófono se procesa en el dispositivo (G-11).
+- Comprobar que el nombre *Trasteando* no choca con una marca o app existente.
+
+### Fichas de tienda
+Capturas de pantalla por tipo de dispositivo, icono grande, descripción corta y larga, clasificación por edades, formulario de seguridad de datos (Google) y de privacidad (Apple), correo y web de soporte.
+
+### Pruebas antes de publicar
+Prueba cerrada de Google Play, TestFlight en iOS si procede, y verificación en dispositivo de cada plataforma (F7.2).
+
+**Fuentes de las cuotas:** [Microsoft Store: registro gratuito para particulares](https://blogs.windows.com/windowsdeveloper/2025/09/10/free-developer-registration-for-individual-developers-on-microsoft-store/) · [Windows Central: Apple sigue cobrando 99 USD al año](https://www.windowscentral.com/microsoft/windows-11/microsoft-store-drops-fees-for-individual-developers-apple-still-charges-usd99-per-year/) · [Ayuda de Google Play: requisitos de prueba para cuentas personales](https://support.google.com/googleplay/android-developer/answer/14151465) · [Ayuda de Google Play: alta en Play Console](https://support.google.com/googleplay/android-developer/answer/6112435)
 
 ---
 
-## Anexo C — Riesgos vivos
+## 7. Gobierno del proyecto
+
+### Quién hace qué
+
+| Chat | Responsabilidad | Puede escribir en el proyecto |
+|---|---|:---:|
+| **Desarrollo** | Construye la app, mantiene requisitos, roadmap y registro de cambios, decide sobre las propuestas de los auditores | ✅ Es el único que lo hace |
+| **Auditor de requisitos** | Cuestiona requisitos, roadmap y experiencia de usuario; propone cambios | ❌ Por instrucción, no por permiso técnico |
+| **Auditor técnico** | Cuestiona código, arquitectura, rendimiento y viabilidad del roadmap | ❌ Por instrucción, no por permiso técnico |
+| **Tú** | Diriges, apruebas, transmites informes entre chats, pruebas en dispositivo | ✅ |
+
+### Qué ve cada uno
+
+| Documento | Desarrollo | Auditor req. | Auditor téc. |
+|---|:---:|:---:|:---:|
+| Archivos del proyecto: `requisitos.md`, `roadmap.md`, `CHANGELOG.md`, `index.html`, auditorías, imagen de colores | ✅ | ✅ | ✅ |
+| Su propia conversación | ✅ | ✅ | ✅ |
+| Las conversaciones de los otros chats | ❌ | ❌ | ❌ |
+| Archivos subidos solo a un chat | Solo ese chat | Solo ese chat | Solo ese chat |
+| El repositorio de GitHub | Si se le conecta, o con la URL | Con la URL | Con la URL |
+
+### Cómo fluye la información
+
+```mermaid
+flowchart TB
+  U(("Tú"))
+  subgraph P["Archivos del proyecto · estado compartido"]
+    R["requisitos.md"]
+    RM["roadmap.md"]
+    CL["CHANGELOG.md"]
+    APP["index.html"]
+    AU["auditorías AR-nn y AT-nn"]
+  end
+  DEV["Chat Desarrollo"] -->|"escribe"| P
+  P -->|"leen"| AREQ["Auditor de requisitos"]
+  P -->|"leen"| ATEC["Auditor técnico"]
+  AREQ -->|"informe"| U
+  ATEC -->|"informe"| U
+  U -->|"traslada el informe"| DEV
+  DEV -->|"guarda el informe y decide"| AU
+  DEV -->|"respaldo"| GH[("GitHub")]
+```
+
+**Protocolo de un checkpoint:** el chat de Desarrollo congela el estado y actualiza los archivos del proyecto → abres cada auditor con «Checkpoint CP-n, lee los archivos del proyecto» → cada uno entrega su informe → lo traes a Desarrollo → Desarrollo lo guarda como `AR-nn` o `AT-nn`, decide qué acepta, qué rechaza con motivo y qué aplaza, actualiza los documentos y te avisa de cada cambio en requisitos.
+
+---
+
+## 8. Métodos de validación
+
+| Método | En qué consiste | Dónde |
+|---|---|---|
+| Lista de comprobación manual | Recorrer casos concretos marcando cada uno | F1.1, F3.3 |
+| Banco de pruebas automático | Escenarios ejecutados por código, con resultado esperado | F1.3, F4.1, F4.2 |
+| Prueba en dispositivo real | Usar la app como usuario, con la guitarra delante | F2.5, F3.3, F4.3, F5.4, F7.2 |
+| Prueba de autonomía | Abrir el archivo sin conexión y sin servidor | F2.3, F2.5, F6.1 |
+| Auditoría con herramienta | Lighthouse, verificadores de contraste, simulador de daltonismo | F3.4, F6.3, F7.3 |
+| Contraste con referencia externa | Escalas y afinaciones frente a fuentes fiables | F5.2, F5.3 |
+| Checkpoint de auditoría | Informe de los chats auditores sobre el estado congelado | CP-1 a CP-6 |
+
+---
+
+## 9. Decisiones pendientes
+
+| Decisión | Bloquea | Plazo |
+|---|---|---|
+| Opción de audio de S-07 (A, B o C) | F2.1 | Antes de F2 |
+| Móvil de referencia: Android o iPhone | F2.5 | Antes de F2.5 |
+| ¿Activar la pista T? | T1–T5 | Al cerrar F1 |
+| Especificación de interfaz | F3.2 y F5 | Antes de F3.2 |
+| Paleta de colores por nota | F3.4 | Antes de F3.4 |
+| Récord único o por afinación | F4.4 | Antes de F4.4 |
+| Catálogo de escalas | F5.2 | Antes de F5.2 |
+| Licencia del código | F6.4 | Antes de F6.4 |
+| Tiendas y orden | F7.4 | Antes de F7.4 |
+
+---
+
+## 10. Riesgos del recorrido
 
 | Riesgo | Fase | Señal de alarma | Plan |
 |---|---|---|---|
-| El archivo autónomo resulta demasiado pesado | F2.3 | Tarda en abrir en el móvil | Reducir calidad de muestra o número de samples; medir antes de decidir |
-| El detector de tono no alcanza la precisión pedida | F4.2 | El banco de pruebas falla tras dos intentos de ajuste | Entregar F4 sin micrófono; A-01 ya cubre el objetivo mínimo |
-| La reestructuración en módulos rompe cosas | F4.1 | Bugs que no existían antes | Se hace justo después de un checkpoint, con versión anterior etiquetada |
-| Los módulos rompen la autonomía del archivo | F4.1 | Deja de funcionar con doble clic | Asumido y planificado: F6.1 reconstruye el archivo autónomo |
-| El micrófono se comporta distinto en iOS | F4.3 | El audio de salida cambia al activar el micrófono | Verificar en dispositivo real al principio de F4.2 |
-| La especificación de interfaz se pospone | F3.1 | Se empieza F5 sin ella | Es bloqueante declarada |
-| El alcance de escalas se dispara | F5.2–F5.4 | Aparecen digitaciones, modos o arpegios no previstos | E-02b y E-05b están fuera del alcance por escrito |
+| El archivo con el audio dentro pesa demasiado | F2.3 | Tarda en abrir en el móvil | Menos muestras o menor calidad; medir antes de decidir |
+| iPhone no ejecuta el archivo local | F2.5 | Vista previa sin JavaScript | Navegador de una app de terceros, o despliegue de pruebas |
+| El detector de tono no alcanza la precisión | F4.2 | El banco falla tras dos intentos | Entregar F4 sin micrófono: A-01 ya cubre el mínimo |
+| Los módulos rompen el modo archivo | F4.1 | Deja de funcionar con doble clic | Asumido: F6.1 reconstruye el archivo autónomo |
+| La especificación de interfaz se pospone | F3.1 | Se empieza F5 sin ella | Bloqueante declarado |
+| El alcance de Escalas se dispara | F5 | Aparecen digitaciones o arpegios | E-02b y E-05b fuera por escrito |
+| App Store rechaza la app | F7.4 | Rechazo por funcionalidad mínima | Empezar por Google Play y Microsoft Store |
+| Automatizar demasiado pronto | Pista T | Cambios que no sabes explicar | Pista T solo tras F1.2 y con aprobación humana |
 
 ---
+
+## 11. Cómo usar este roadmap en cada conversación
+
+- **Chat de Desarrollo:** «Etapa F2.1. Paso a paso con teoría».
+- **Auditores:** «Checkpoint CP-2. Lee los archivos del proyecto».
+- **Cualquier chat nuevo:** este documento y `requisitos.md` bastan para situarse.
+
+---
+
+## 12. Control de cambios del roadmap
+
+| Versión | Fecha | Cambios |
+|---|---|---|
+| **3.0** | 14/10/2026 | Estado de un vistazo y diagramas. Columna *Requisitos* en cada etapa, enlazada con la columna *Etapa* de `requisitos.md` v1.2. Nueva etapa F2.5 (autonomía por plataforma). F6.4 amplía documentación con licencia y privacidad. CP-1 pasa a después de F1 y CP-6 se convierte en puerta de lanzamiento **antes** de publicar. Nuevas secciones: versiones y control de cambios, pista T de automatización, inventario de lanzamiento y gobierno del proyecto. **Corrección:** la v2.0 decía que el micrófono funcionaría desde el móvil conectado por WiFi al ordenador; no es así, porque esa conexión no es contexto seguro. **Precisión:** en modo archivo, lo bloqueado es leer archivos locales; lo que venga de internet depende de la conexión y del servidor. |
+| 2.0 | 15/09/2026 | Desarrollo local de principio a fin y publicación al final. Siete fases. |
+| 1.0 | 15/09/2026 | Primera versión, con publicación temprana. |
 
 *Documento gestionado por el chat de Desarrollo. Se revisa al cerrar cada fase.*
