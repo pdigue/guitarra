@@ -479,7 +479,7 @@ select { flex:1; background:var(--surface); border:1px solid var(--line2); color
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.1.2';
+const APP_VERSION = '0.1.3';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -635,8 +635,16 @@ function displayStrings(){
    3. AUDIO
    ============================================================ */
 
-const SAMPLE_MAP = { "E2":"E2.mp3","A2":"A2.mp3","D3":"D3.mp3","G3":"G3.mp3",
-                     "B3":"B3.mp3","E4":"E4.mp3","A4":"A4.mp3","D5":"D5.mp3" };
+/* Qué muestra grabada corresponde a cada nota, por timbre. Entre dos muestras,
+   el sampler transporta la más cercana. Cada archivo está medido (S-08,
+   samples/afinacion.json): el D5 de nylon del repositorio original suena en
+   Re#5, un semitono alto, así que en nylon se usa el E5. */
+const SAMPLE_MAPS = {
+  nylon:    { E2:'E2.mp3', A2:'A2.mp3', D3:'D3.mp3', G3:'G3.mp3',
+              B3:'B3.mp3', E4:'E4.mp3', A4:'A4.mp3', E5:'E5.mp3' },
+  acoustic: { E2:'E2.mp3', A2:'A2.mp3', D3:'D3.mp3', G3:'G3.mp3',
+              B3:'B3.mp3', E4:'E4.mp3', A4:'A4.mp3', D5:'D5.mp3' }
+};
 const SAMPLE_BASE = "https://nbrosowsky.github.io/tonejs-instruments/samples/";
 
 let audioCtx = null, audioReady = false;
@@ -673,10 +681,10 @@ async function loadSampler(timbre){
   let next = null;
   try {
     await Tone.start();
-    const folder = timbre === 'acoustic' ? 'guitar-acoustic/' : 'guitar-nylon/';
+    const kind = timbre === 'acoustic' ? 'acoustic' : 'nylon';
     next = new Tone.Sampler({
-      urls: SAMPLE_MAP,
-      baseUrl: SAMPLE_BASE + folder,
+      urls: SAMPLE_MAPS[kind],
+      baseUrl: SAMPLE_BASE + 'guitar-' + kind + '/',
       release: 1.2,
       volume: -3
     }).toDestination();

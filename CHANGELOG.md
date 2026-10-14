@@ -6,7 +6,8 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.1.2** | 14/10/2026 | F1.3 | Proyecto de Claude · pendiente de subir a GitHub (F1.2) |
+| **0.1.3** | 14/10/2026 | F1 · hallazgo de F2.1 | Rama `auto/F1-iteracion-0` · pendiente de subir a GitHub |
+| 0.1.2 | 14/10/2026 | F1.3 | Rama `auto/F1-iteracion-0` · superada |
 | 0.1.1 | 15/09/2026 | F1 · auditoría AT-01 | Superada |
 | 0.1.0 | 14/09/2026 | Núcleo | Superada |
 | 0.0.2 | — | — | Propuesta de Fable 5, no integrada |
@@ -17,6 +18,20 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.1.3] — 14/10/2026 · Hallazgo de la etapa F2.1
+
+### Corregido
+- **S-01 · S-08** · En el timbre de guitarra clásica, todas las notas desde el Do5 hacia arriba sonaban medio tono altas: desde el traste 8 de la 1ª cuerda, el 13 de la 2ª, el 17 de la 3ª y el 22 de la 4ª. La muestra que el repositorio de origen llama `D5.mp3` suena en realidad en Re♯5, y el sampler la usaba para todo ese registro. Ahora se usa `E5.mp3`, medida y afinada. Afectaba también a la nota que suena en Adivinar.
+
+### Cambiado
+- Cada timbre tiene su propia lista de muestras (`SAMPLE_MAPS`), en lugar de compartir una.
+
+### Verificado
+- Medición de la afinación de las 16 muestras en uso: todas a menos de 5 cents de su nota (`samples/afinacion.json`).
+- Banco automático: 12 pruebas en verde con `node --test`. La nueva comprueba que la app solo usa muestras medidas, afinadas e idénticas a las del repositorio.
 
 ---
 
@@ -38,7 +53,7 @@ Nada todavía.
 - Quien tuviera apagado «Números de traste» en la 0.1.1 pasa automáticamente al modo *No*. El récord y el resto de ajustes se conservan.
 
 ### Verificado
-- Banco de 28 comprobaciones automáticas: arranque, migración de ajustes, numeración, Adivinar (acierto, fallo, revelación, arrastre), cambio de afinación durante una revelación y restablecer. Resultado: 28/28. Durante la prueba apareció y se corrigió un fallo en la migración de ajustes.
+- Banco de 28 comprobaciones automáticas: arranque, migración de ajustes, numeración, Adivinar (acierto, fallo, revelación, arrastre), cambio de afinación durante una revelación y restablecer. Resultado: 28/28. Durante la prueba apareció y se corrigió un fallo en la migración de ajustes. Desde el 14/10 forma parte del repositorio como `tests/banco.test.js`.
 
 ---
 

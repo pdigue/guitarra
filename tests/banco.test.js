@@ -5,6 +5,8 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('path');
+const fs = require('fs');
+const crypto = require('crypto');
 const { boot, sleep } = require('./dom-minimo');
 
 const APP = path.join(__dirname, '..', 'index.html');
@@ -131,4 +133,22 @@ test('pentagrama: ninguna nota del rango posible se sale del dibujo (P-01)', () 
       const y = staffY(fitOctave(m).drawMidi); if (y < 4 || y > 124) n++; }
     return n; })()`);
   assert.equal(fuera, 0);
+});
+
+test('la app solo usa muestras medidas y afinadas, y son las del repositorio (S-08, S-07)', () => {
+  const A = boot(APP);
+  const mapas = JSON.parse(A.ev('JSON.stringify(SAMPLE_MAPS)'));
+  const carpeta = path.join(__dirname, '..', 'samples');
+  const medida = JSON.parse(fs.readFileSync(path.join(carpeta, 'afinacion.json'), 'utf8'));
+  assert.deepEqual(Object.keys(mapas).sort(), ['acoustic', 'nylon']);
+  for (const [timbre, mapa] of Object.entries(mapas)){
+    for (const [nota, archivo] of Object.entries(mapa)){
+      const m = medida[timbre] && medida[timbre][archivo];
+      assert.ok(m, `samples/${timbre}/${archivo} no está medido`);
+      assert.equal(m.nota, nota, `${timbre}/${archivo} se usaría como ${nota}`);
+      assert.ok(Math.abs(m.cents) <= 5, `${timbre}/${archivo} se desvía ${m.cents} cents`);
+      const sha = crypto.createHash('sha256').update(fs.readFileSync(path.join(carpeta, timbre, archivo))).digest('hex');
+      assert.equal(sha, m.sha256, `${timbre}/${archivo} no es el archivo medido`);
+    }
+  }
 });
