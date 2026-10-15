@@ -29,6 +29,7 @@ MUESTRAS = RAIZ / 'samples'
 NOTAS = {'C': 0, 'Cs': 1, 'D': 2, 'Ds': 3, 'E': 4, 'F': 5, 'Fs': 6,
          'G': 7, 'Gs': 8, 'A': 9, 'As': 10, 'B': 11}
 SR = 44100
+NOMBRES = ['C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs', 'A', 'As', 'B']
 
 
 def midi_de(nombre):
@@ -72,8 +73,11 @@ def main():
             esperada = 440 * 2 ** ((midi - 69) / 12)
             medida = fundamental(x)
             cents = 1200 * np.log2(medida / esperada)
+            midi_medido = int(round(69 + 12 * np.log2(medida / 440)))
             filas[ruta.name] = {
                 'nota': ruta.stem, 'midi': midi,
+                'nota_medida': NOMBRES[midi_medido % 12] + str(midi_medido // 12 - 1),
+                'midi_medido': midi_medido,
                 'hz_esperada': round(esperada, 2), 'hz_medida': round(float(medida), 2),
                 'cents': round(float(cents), 1),
                 'pico_dbfs': round(float(20 * np.log10(np.max(np.abs(x)) + 1e-12)), 1),
@@ -82,7 +86,7 @@ def main():
                 'sha256': hashlib.sha256(ruta.read_bytes()).hexdigest(),
             }
             f = filas[ruta.name]
-            print(f"{carpeta.name:9s} {f['nota']:4s} {f['hz_medida']:8.2f} Hz  {f['cents']:+6.1f} cents")
+            print(f"{carpeta.name:9s} {f['nota']:4s} suena {f['nota_medida']:4s} {f['hz_medida']:8.2f} Hz  {f['cents']:+6.1f} cents")
         resultado[carpeta.name] = filas
     salida = MUESTRAS / 'afinacion.json'
     salida.write_text(json.dumps(resultado, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')

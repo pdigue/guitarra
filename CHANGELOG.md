@@ -6,7 +6,8 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.1.3** | 14/10/2026 | F1 · hallazgo de F2.1 | Rama `auto/F1-iteracion-0` · pendiente de subir a GitHub |
+| **0.1.4** | 15/10/2026 | F1 · auditoría CP-1 | Rama `auto/F1-iteracion-0` · pendiente de subir a GitHub |
+| 0.1.3 | 14/10/2026 | F1 · hallazgo de F2.1 | Rama `auto/F1-iteracion-0` · superada |
 | 0.1.2 | 14/10/2026 | F1.3 | Rama `auto/F1-iteracion-0` · superada |
 | 0.1.1 | 15/09/2026 | F1 · auditoría AT-01 | Superada |
 | 0.1.0 | 14/09/2026 | Núcleo | Superada |
@@ -21,6 +22,20 @@ Nada todavía.
 
 ---
 
+## [0.1.4] — 15/10/2026 · Auditoría técnica CP-1 (AT-02)
+
+### Corregido
+- **S-02** · Con la guitarra clásica cargada, elegir Acústica y volver a Clásica antes de que terminase la descarga dejaba sonando la acústica, aunque Ajustes dijera «Clásica». Toda elección invalida ahora las descargas anteriores. El CHANGELOG de la 0.1.1 lo daba por corregido, pero solo en un sentido.
+- **J-01** · Salir de Adivinar y volver en menos de un tercio de segundo hacía sonar el reto dos veces.
+- **J-07** · Tocar la pestaña Adivinar estando ya en ella ponía la racha a 0.
+- En el iPhone, el audio podía quedarse mudo tras una llamada, al bloquear la pantalla o al cambiar de app. Ahora se reanuda en cada pulsación. Se confirma en la Sesión 1.
+
+### Verificado
+- Banco: 15 pruebas en verde y 1 pendiente a propósito (la app aún descarga el audio de fuera; se cierra en F2.2). Las tres nuevas fallan con la 0.1.3 y pasan con la 0.1.4.
+- La prueba de afinación compara ahora con la frecuencia medida de cada muestra, no con el nombre del archivo.
+
+---
+
 ## [0.1.3] — 14/10/2026 · Hallazgo de la etapa F2.1
 
 ### Corregido
@@ -31,7 +46,7 @@ Nada todavía.
 
 ### Verificado
 - Medición de la afinación de las 16 muestras en uso: todas a menos de 5 cents de su nota (`samples/afinacion.json`).
-- Banco automático: 12 pruebas en verde con `node --test`. La nueva comprueba que la app solo usa muestras medidas, afinadas e idénticas a las del repositorio.
+- Banco automático: 12 pruebas en verde con `node --test`. La nueva comprueba que las muestras asignadas están medidas y afinadas.
 
 ---
 

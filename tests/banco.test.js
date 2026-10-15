@@ -9,7 +9,9 @@ const fs = require('fs');
 const crypto = require('crypto');
 const { boot, sleep } = require('./dom-minimo');
 
-const APP = path.join(__dirname, '..', 'index.html');
+// APP_HTML permite pasar el banco a otra versión, por ejemplo para comprobar que una
+// prueba nueva falla con la versión anterior a la corrección.
+const APP = process.env.APP_HTML || path.join(__dirname, '..', 'index.html');
 const sinErrores = A => A.errors.filter(e => !/AudioContext|muestras/.test(e));
 
 test('arranque: mástil, numeración, versión y panel (D-01, G-10)', () => {
@@ -135,7 +137,10 @@ test('pentagrama: ninguna nota del rango posible se sale del dibujo (P-01)', () 
   assert.equal(fuera, 0);
 });
 
-test('la app solo usa muestras medidas y afinadas, y son las del repositorio (S-08, S-07)', () => {
+// Nota científica ('Fs3') → número MIDI (66).
+const midiDe = n => 12 * (+n.slice(-1) + 1) + ['C','Cs','D','Ds','E','F','Fs','G','Gs','A','As','B'].indexOf(n.slice(0, -1));
+
+test('cada muestra que la app asigna a una nota suena en esa nota, ±5 cents (S-08)', () => {
   const A = boot(APP);
   const mapas = JSON.parse(A.ev('JSON.stringify(SAMPLE_MAPS)'));
   const carpeta = path.join(__dirname, '..', 'samples');
@@ -145,10 +150,54 @@ test('la app solo usa muestras medidas y afinadas, y son las del repositorio (S-
     for (const [nota, archivo] of Object.entries(mapa)){
       const m = medida[timbre] && medida[timbre][archivo];
       assert.ok(m, `samples/${timbre}/${archivo} no está medido`);
-      assert.equal(m.nota, nota, `${timbre}/${archivo} se usaría como ${nota}`);
-      assert.ok(Math.abs(m.cents) <= 5, `${timbre}/${archivo} se desvía ${m.cents} cents`);
+      // La comparación es con la frecuencia medida, no con el nombre del archivo.
+      const cents = 1200 * Math.log2(m.hz_medida / (440 * 2 ** ((midiDe(nota) - 69) / 12)));
+      assert.ok(Math.abs(cents) <= 5, `${timbre}/${archivo} se usa como ${nota} y se desvía ${cents.toFixed(1)} cents`);
       const sha = crypto.createHash('sha256').update(fs.readFileSync(path.join(carpeta, timbre, archivo))).digest('hex');
       assert.equal(sha, m.sha256, `${timbre}/${archivo} no es el archivo medido`);
     }
   }
+});
+
+// Hoy la app descarga las muestras de SAMPLE_BASE (otro dominio). Hasta F2.2 la
+// prueba anterior vale para las copias de samples/, que son las mismas (sha256).
+test.todo('la app usa las muestras de samples/ y ninguna dirección externa (S-07, F2.2)');
+
+/** Tone.js simulado: las descargas acaban cuando la prueba quiere. */
+const toneFalso = `globalThis.__pend = []; globalThis.Tone = {
+  start: async () => {}, immediate: () => 0,
+  loaded: () => new Promise(r => __pend.push(r)),
+  Sampler: class { constructor(o){ this.url = o.baseUrl; } toDestination(){ return this; }
+                   dispose(){ this.disposed = true; } triggerAttackRelease(){} }
+};`;
+
+test('cambiar de timbre deprisa deja instalado el último elegido (S-02, AT-02 #1)', async () => {
+  const A = boot(APP);
+  A.ev(toneFalso);
+  const p0 = A.ev("loadSampler('nylon')"); await sleep(0); A.ev('__pend.shift()()'); await p0;
+  assert.equal(A.ev('samplerTimbre'), 'nylon');
+  const pa = A.ev("setTimbre('acoustic')"); await sleep(0);   // descarga lenta en curso
+  await A.ev("setTimbre('nylon')");                           // vuelta inmediata
+  A.ev('__pend.shift()()'); await pa;                          // termina la acústica
+  assert.equal(A.ev('state.timbre'), 'nylon');
+  assert.equal(A.ev('samplerTimbre'), 'nylon');
+  assert.match(A.ev('sampler.url'), /nylon/);
+});
+
+test('el reto suena una sola vez aunque se cambie de pestaña deprisa (J-01, AT-02 #5)', async () => {
+  const A = boot(APP);
+  A.ev('globalThis.__plays = 0; playMidi = () => { __plays++; };');
+  const tab = s => A.doc.querySelector('.tab[data-screen="' + s + '"]');
+  tab('guess').click(); tab('free').click(); tab('guess').click();
+  await sleep(600);
+  assert.equal(A.ev('__plays'), 1);
+});
+
+test('tocar la pestaña activa no reinicia la racha (J-07, AT-02 #6)', async () => {
+  const A = boot(APP);
+  const tab = A.doc.querySelector('.tab[data-screen="guess"]');
+  tab.click(); await sleep(50);
+  A.ev('streak = 3');
+  tab.click();
+  assert.equal(A.ev('streak'), 3);
 });

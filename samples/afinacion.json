@@ -3,6 +3,8 @@
   "E2.mp3": {
    "nota": "E2",
    "midi": 40,
+   "nota_medida": "E2",
+   "midi_medido": 40,
    "hz_esperada": 82.41,
    "hz_medida": 82.32,
    "cents": -1.9,
@@ -14,6 +16,8 @@
   "A2.mp3": {
    "nota": "A2",
    "midi": 45,
+   "nota_medida": "A2",
+   "midi_medido": 45,
    "hz_esperada": 110.0,
    "hz_medida": 110.06,
    "cents": 1.0,
@@ -25,6 +29,8 @@
   "D3.mp3": {
    "nota": "D3",
    "midi": 50,
+   "nota_medida": "D3",
+   "midi_medido": 50,
    "hz_esperada": 146.83,
    "hz_medida": 146.62,
    "cents": -2.5,
@@ -36,6 +42,8 @@
   "G3.mp3": {
    "nota": "G3",
    "midi": 55,
+   "nota_medida": "G3",
+   "midi_medido": 55,
    "hz_esperada": 196.0,
    "hz_medida": 195.52,
    "cents": -4.2,
@@ -47,6 +55,8 @@
   "B3.mp3": {
    "nota": "B3",
    "midi": 59,
+   "nota_medida": "B3",
+   "midi_medido": 59,
    "hz_esperada": 246.94,
    "hz_medida": 246.87,
    "cents": -0.5,
@@ -58,6 +68,8 @@
   "E4.mp3": {
    "nota": "E4",
    "midi": 64,
+   "nota_medida": "E4",
+   "midi_medido": 64,
    "hz_esperada": 329.63,
    "hz_medida": 330.48,
    "cents": 4.5,
@@ -69,6 +81,8 @@
   "A4.mp3": {
    "nota": "A4",
    "midi": 69,
+   "nota_medida": "A4",
+   "midi_medido": 69,
    "hz_esperada": 440.0,
    "hz_medida": 440.7,
    "cents": 2.8,
@@ -80,6 +94,8 @@
   "D5.mp3": {
    "nota": "D5",
    "midi": 74,
+   "nota_medida": "D5",
+   "midi_medido": 74,
    "hz_esperada": 587.33,
    "hz_medida": 587.97,
    "cents": 1.9,
@@ -93,6 +109,8 @@
   "E2.mp3": {
    "nota": "E2",
    "midi": 40,
+   "nota_medida": "E2",
+   "midi_medido": 40,
    "hz_esperada": 82.41,
    "hz_medida": 82.27,
    "cents": -2.8,
@@ -104,6 +122,8 @@
   "A2.mp3": {
    "nota": "A2",
    "midi": 45,
+   "nota_medida": "A2",
+   "midi_medido": 45,
    "hz_esperada": 110.0,
    "hz_medida": 110.05,
    "cents": 0.8,
@@ -115,6 +135,8 @@
   "D3.mp3": {
    "nota": "D3",
    "midi": 50,
+   "nota_medida": "D3",
+   "midi_medido": 50,
    "hz_esperada": 146.83,
    "hz_medida": 146.63,
    "cents": -2.4,
@@ -126,6 +148,8 @@
   "G3.mp3": {
    "nota": "G3",
    "midi": 55,
+   "nota_medida": "G3",
+   "midi_medido": 55,
    "hz_esperada": 196.0,
    "hz_medida": 196.3,
    "cents": 2.6,
@@ -137,6 +161,8 @@
   "B3.mp3": {
    "nota": "B3",
    "midi": 59,
+   "nota_medida": "B3",
+   "midi_medido": 59,
    "hz_esperada": 246.94,
    "hz_medida": 246.85,
    "cents": -0.6,
@@ -148,6 +174,8 @@
   "E4.mp3": {
    "nota": "E4",
    "midi": 64,
+   "nota_medida": "E4",
+   "midi_medido": 64,
    "hz_esperada": 329.63,
    "hz_medida": 329.24,
    "cents": -2.1,
@@ -159,6 +187,8 @@
   "A4.mp3": {
    "nota": "A4",
    "midi": 69,
+   "nota_medida": "A4",
+   "midi_medido": 69,
    "hz_esperada": 440.0,
    "hz_medida": 439.96,
    "cents": -0.2,
@@ -170,6 +200,8 @@
   "E5.mp3": {
    "nota": "E5",
    "midi": 76,
+   "nota_medida": "E5",
+   "midi_medido": 76,
    "hz_esperada": 659.26,
    "hz_medida": 658.32,
    "cents": -2.4,

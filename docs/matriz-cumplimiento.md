@@ -1,26 +1,26 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 1.1 · **Fecha:** 14 de octubre de 2026 · **Base:** `requisitos.md` v1.3 · app `0.1.3` · `roadmap.md` v3.1  
+**Versión:** 1.1 · **Fecha:** 15 de octubre de 2026 · **Base:** `requisitos.md` v1.3 · app `0.1.4` · `roadmap.md` v3.1  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
 
-**Cambios en la 1.1:** S-08 nuevo y primer requisito verificado (medición de la afinación de las muestras). S-07 y G-06 pasan a *Cumple parcialmente* con `CREDITOS.md`. Las evidencias del banco apuntan a `tests/` (`node --test`). Nueva comprobación F1.1 #15.
+**Cambios en la 1.1:** S-08 nuevo, verificado parcialmente hasta que la app use sus propias muestras (F2.2). Criterios revisados en CP-1: S-01, S-08, G-03, G-06 y A-02-CA. S-07 y G-06 pasan a *Cumple parcialmente* con `CREDITOS.md`. Las evidencias del banco apuntan a `tests/` (`node --test`). Nueva comprobación F1.1 #15.
 
 | Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 91 | 59 | 12 | 18 | 2 | 1 | 16 |
+| 91 | 59 | 12 | 18 | 2 | 0 | 17 |
 
 | ID | Etapa | Método | Criterio de aceptación | Declaración | Evidencia | Verificación | Origen |
 |---|---|:---:|---|---|---|---|---|
 | **G-01** | F1.1 | I | El nombre «Trasteando» aparece en la pantalla de entrada, en la pestaña del navegador y en el manifiesto. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **G-02** | F1.1 | D | La barra inferior muestra Libre, Adivinar, Afinador y Escalas; cada destino activo abre su vista y Escalas aparece deshabilitada. | Cumple | F1.1 #1 y #14 | Pendiente | Cliente · listado 14/09 |
-| **G-03** | F6.2 | T | Tras una primera carga desde la web y con el modo avión activado, la app abre y suena. | No cumple | — | Pendiente | Cliente · listado 14/09 |
+| **G-03** | F6.2 · F7.2 | T | F6.2: tras una primera carga en localhost y sin red, la app abre y suena. F7.2: lo mismo desde la web publicada. | No cumple | — | Pendiente | Cliente · listado 14/09 |
 | **G-04** | F6.3 · F7.2 | D | Desde la web publicada, el navegador ofrece instalarla y abre a pantalla completa desde el icono. | Cumple parcialmente | — | Pendiente | Cliente · listado 14/09 |
 | **G-05** | F3.4 | I+T | Todo control es alcanzable con teclado y muestra el foco; contrastes ≥ 4,5:1 medidos; el movimiento se reduce con prefers-reduced-motion. | Cumple parcialmente | — | Pendiente | Desarrollo · v1.1 |
-| **G-06** | F2.1 · F6.4 | I | CREDITOS.md lista cada recurso de terceros con su origen y su licencia. | Cumple parcialmente | CREDITOS.md (F2.1). Falta mostrarlo en la app (F6.4) | Verificado parcialmente | Desarrollo · v1.1 |
+| **G-06** | F2.1 · F6.4 | I | CREDITOS.md lista cada recurso de terceros con su origen y su licencia, y la app muestra el texto de atribución en Ajustes. | Cumple parcialmente | CREDITOS.md (F2.1). Falta mostrarlo en la app (F6.4) | Verificado parcialmente | Desarrollo · v1.1 |
 | **G-07** | F2.3 · F2.5 | T | Con el ordenador en modo avión, abrir el archivo con doble clic: suenan las muestras reales y funcionan Libre, Adivinar y el afinador por referencia. | Cumple parcialmente | — | Pendiente | Cliente · 15/09 |
 | **G-08** | F4.1 · F6.1 | T | El archivo autónomo generado y la web publicada superan el mismo banco de pruebas. | Cumple parcialmente | — | Pendiente | Cliente · 15/09 |
 | **G-09** | F7.4 | I | Ficha enviada a revisión en al menos una tienda, o decisión documentada de no hacerlo. | No cumple | — | Pendiente | Cliente · 14/10 |
@@ -41,14 +41,14 @@
 | **D-05** | F1.1 | D | Pulsar una posición reproduce su nota sin retardo perceptible. | Cumple | F1.1 #2 | Pendiente | Cliente · listado 14/09 |
 | **D-06** | F1.1 | D | Al pulsar aparece el nombre de la nota sobre la posición. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **D-07** | F1.1 | I | Marcas simples en los trastes 3, 5, 7, 9, 15, 17, 19 y 21, y dobles en 12 y 24. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
-| **S-01** | F1.1 · F2.2 · F2.4 | D | Con conexión suenan las muestras, no el sintetizador; en la pestaña Red se ven descargadas. | Cumple | F1.1 #14 y #15 | Pendiente | Cliente · listado 14/09 |
+| **S-01** | F1.1 · F2.2 · F2.4 | D | Al pulsar cualquier posición suena una muestra grabada, no el sintetizador Karplus-Strong. | Cumple | F1.1 #14 y #15 | Pendiente | Cliente · listado 14/09 |
 | **S-02** | F1.1 | D | Elegir Acústica cambia el timbre audible y elegir Clásica lo devuelve. | Cumple | F1.1 #5 | Pendiente | Cliente · listado 14/09 |
 | **S-03** | F1.1 | I | El selector de timbre está en Ajustes. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **S-04** | F1.1 | T | Sin conexión, la app suena con el sintetizador y lo avisa en la pantalla de entrada. | Cumple | — | Pendiente | Cliente · listado 14/09 |
 | **S-05** | F1.1 | D | No suena nada antes de pulsar «Empezar». | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **S-06** | F1.1 | D | Tras recargar se mantiene el timbre elegido. | Cumple | F1.1 #13 | Pendiente | Cliente · listado 14/09 |
 | **S-07** | F2.1 · F2.3 | I | Ninguna petición de audio sale del dominio propio, y CREDITOS.md documenta origen y licencia. | Cumple parcialmente | CREDITOS.md y samples/ (F2.1). La app aún descarga el audio de fuera | Verificado parcialmente | AR-01 |
-| **S-08** | F2.1 · F2.4 | T | Cada muestra en uso, medida con herramientas/medir-afinacion.py, se desvía como mucho ±5 cents de la nota que indica su nombre; el banco comprueba que la app solo usa muestras medidas e idénticas a las del repositorio. | Cumple | samples/afinacion.json · Banco (node --test): muestras | Verificado | Desarrollo · medición F2.1 |
+| **S-08** | F2.1 · F2.2 · F2.4 | T | Medida con herramientas/medir-afinacion.py, cada muestra que usa la app suena a ±5 cents de la nota a la que está asignada; el banco lo comprueba contra la frecuencia medida y la huella sha256 de cada archivo. | Cumple | samples/afinacion.json · Banco (node --test): muestras. Falta que la app use samples/ (F2.2) | Verificado parcialmente | Desarrollo · medición F2.1 |
 | **P-01** | F1.1 | A | Toda posición del mástil, en cualquier afinación permitida, se dibuja dentro del pentagrama. | Cumple | Análisis 15/09: ninguna nota fuera en todo el rango · F1.1 #3 y #4 | Verificado parcialmente | Cliente · listado 14/09 |
 | **P-02** | F1.1 | D | El pentagrama se oculta y se muestra desde el chip y desde Ajustes. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **P-03** | F5.3 | D | El pentagrama funciona en Libre, Adivinar y Escalas. | Cumple parcialmente | — | Pendiente | Cliente · listado 14/09 |
@@ -78,7 +78,7 @@
 | **E-06** | F5.3 | D | El guiado avanza nota a nota por la escala. | No cumple | — | Pendiente | Cliente · listado 14/09 |
 | **A-01** | F1.1 | D | Pulsar cada cuerda en el afinador reproduce su nota de referencia. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **A-02** | F4.3 | D | Con una guitarra real, el afinador indica subir o bajar hasta dejarla afinada, en estándar y en una alternativa. | No cumple | — | Pendiente | Cliente · listado 14/09 |
-| **A-02-CA** | F4.2 | T | Banco de pruebas: error ≤ ±2 cents y latencia < 300 ms sobre muestras desafinadas una cantidad conocida. | No cumple | — | Pendiente | AR-01 |
+| **A-02-CA** | F4.2 | T | Banco de pruebas: error ≤ ±2 cents y latencia < 300 ms sobre muestras desafinadas una cantidad conocida, tomando como referencia su frecuencia medida en samples/afinacion.json. | No cumple | — | Pendiente | AR-01 |
 | **A-03** | F4.3 | D | La aguja indica la desviación en cents y marca «afinado» dentro de ±5 cents. | No cumple | — | Pendiente | Cliente · listado 14/09 |
 | **A-04** | F4.3 | T | Con la cuerda a menos de un semitono de su nota, el afinador identifica la cuerda correcta. | No cumple | — | Pendiente | Cliente · listado 14/09 |
 | **A-05** | F4.3 | D | Con una cuerda fijada a mano, el afinador la usa como referencia aunque esté muy desafinada. | No cumple | — | Pendiente | Cliente · listado 14/09 |
