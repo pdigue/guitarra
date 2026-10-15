@@ -5,6 +5,7 @@ Cliente: Pablo Díaz Guerra. Está aprendiendo a programar: explica, no solo hag
 Idioma: español en todo (código comentado, commits, informes y respuestas).
 
 ## Documentos que mandan
+- docs/compatibilidad.md — qué capacidades usa la app y qué hace donde faltan.
 - docs/requisitos.md — qué debe hacer el producto. Fuente de verdad del alcance.
 - docs/roadmap.md — en qué orden se construye y cómo se valida cada etapa.
 - docs/matriz-cumplimiento.md — criterio de aceptación de cada requisito. Es el contrato.
@@ -19,6 +20,9 @@ Idioma: español en todo (código comentado, commits, informes y respuestas).
   licencia verificada y atribución.
 - Móvil de referencia: iPhone.
 - Explicaciones: un informe didáctico por fase en docs/iteraciones/.
+- Despliegue de pruebas en GitHub Pages, sin anunciar, desde una rama propia,
+  antes de la Sesión 1. La publicación oficial sigue en F7.1.
+- Sin Android de pruebas por ahora: simulador de Chrome hasta tener uno.
 
 ## Reglas
 1. Nunca trabajes en main. Una rama por etapa: auto/F<fase>.<etapa>-<tema>.
@@ -39,3 +43,6 @@ Idioma: español en todo (código comentado, commits, informes y respuestas).
 9. Cero dependencias nuevas sin justificarlo en el informe. La app y el banco de
    pruebas no instalan nada; las herramientas de herramientas/ pueden necesitar
    Python, y lo dicen en su cabecera.
+10. Diseña para Windows, Android e iPhone a la vez (PL-04): solo estándares web,
+    detecta capacidades y no sistemas, y anota cada capacidad nueva con su
+    alternativa en docs/compatibilidad.md. El iPhone marca el mínimo.
