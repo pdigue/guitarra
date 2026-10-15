@@ -225,7 +225,7 @@ async function record(page, midi, file){
     await ip.screenshot({ path: path.join(OUT, name + '.jpg'), quality: 60, type: 'jpeg' });
     const m = await ip.evaluate(() => ({ visibles: maxVisibleFrets(), ancho: innerWidth, alto: innerHeight,
       cuerda: document.querySelector('.fret-cell').getBoundingClientRect().height }));
-    check('M', `Móvil (${name}): abre, suena y se pulsa sin errores`, ierr.length === 0, `${m.ancho}×${m.alto}, alto de cuerda ${m.cuerda.toFixed(0)} px, caben hasta ${m.visibles} trastes`);
+    check('M', `Móvil (${name}): abre, se pulsa sin errores y cada cuerda mide 16 px o más`, ierr.length === 0 && m.cuerda >= 16, `${m.ancho}×${m.alto}, alto de cuerda ${m.cuerda.toFixed(0)} px, caben hasta ${m.visibles} trastes`);
     await ictx.close();
   }
 

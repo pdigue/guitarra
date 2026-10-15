@@ -6,7 +6,8 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.1.4** | 15/10/2026 | F1 · auditoría CP-1 | Rama `auto/F1-iteracion-0` · pendiente de subir a GitHub |
+| **0.1.5** | 15/10/2026 | F1 · verificación V-01 | Rama `auto/F1-apaisado` |
+| 0.1.4 | 15/10/2026 | F1 · auditoría CP-1 | `main`, fusionada el 15/10 |
 | 0.1.3 | 14/10/2026 | F1 · hallazgo de F2.1 | Rama `auto/F1-iteracion-0` · superada |
 | 0.1.2 | 14/10/2026 | F1.3 | Rama `auto/F1-iteracion-0` · superada |
 | 0.1.1 | 15/09/2026 | F1 · auditoría AT-01 | Superada |
@@ -19,6 +20,17 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.1.5] — 15/10/2026 · Verificación en navegador (V-01)
+
+### Corregido
+- **V-01 · PL-04** · Con el móvil en horizontal, al mástil le quedaban 3 píxeles por cuerda en un iPhone 13 y ninguno en un iPhone SE: no se podía usar. Arreglo provisional hasta el diseño apaisado de F3.2: en pantallas bajas y apaisadas, las pestañas pasan a una columna a la izquierda, la cabecera comparte fila con los atajos y el pentagrama encoge.
+
+### Verificado
+- En Chromium, alto de cada cuerda en horizontal: iPhone 13, 29 px en Libre y 21 en Adivinar; iPhone SE, 25 y 17; Pixel 7, 32 y 24; iPad Mini, 68 y 59. En vertical no cambia nada (iPhone 13: 51 px). Sin errores en la consola.
+- Banco automático: 15 en verde y 1 pendiente.
 
 ---
 
