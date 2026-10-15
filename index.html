@@ -291,6 +291,31 @@ select { flex:1; background:var(--surface); border:1px solid var(--line2); color
   .staff-svg { height:96px; }
   .note-name { font-size:34px; min-height:34px; }
 }
+
+/* Móvil en horizontal (0.1.5, provisional hasta el diseño de F3.2).
+   Con todo apilado, al mástil le quedaban 3 px por cuerda en un iPhone.
+   Las pestañas pasan a una columna a la izquierda, la cabecera comparte fila
+   con los atajos y el pentagrama encoge: así cada cuerda conserva 20 px o más. */
+@media (orientation:landscape) and (max-height:520px){
+  body { display:grid; grid-template-columns:auto auto minmax(0,1fr);
+         grid-template-rows:auto auto auto minmax(0,1fr); }
+  .tabbar { grid-column:1; grid-row:1 / -1; flex-direction:column; justify-content:center;
+            border-top:none; border-right:1px solid var(--line); padding:0 0 env(safe-area-inset-bottom); }
+  .tab { flex:0 0 auto; padding:8px 6px; min-width:64px; }
+  .header { grid-column:2; grid-row:1; padding:4px 6px 4px 10px; gap:8px; border-bottom:none; }
+  .brand { font-size:16px; }
+  .icon-btn { width:32px; height:32px; }
+  .quickbar { grid-column:3; grid-row:1; padding:4px 8px; border-bottom:none; }
+  .challenge { grid-column:2 / -1; grid-row:2; padding-top:4px; padding-bottom:4px; }
+  .display { grid-column:2 / -1; grid-row:3; max-height:72px; border-top:1px solid var(--line); }
+  .display.hidden { border-top:none; }
+  .display-inner { padding:2px 14px; }
+  .staff-svg { height:66px; }
+  .note-name { font-size:28px; min-height:28px; }
+  #board-area, #tuner { grid-column:2 / -1; grid-row:4; min-height:0; }
+  .zoombar { padding:3px 10px; }
+  .zoom-btn { height:26px; }
+}
 </style>
 </head>
 <body>
@@ -479,7 +504,7 @@ select { flex:1; background:var(--surface); border:1px solid var(--line2); color
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.1.4';
+const APP_VERSION = '0.1.5';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
