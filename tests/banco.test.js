@@ -140,48 +140,82 @@ test('pentagrama: ninguna nota del rango posible se sale del dibujo (P-01)', () 
 // Nota científica ('Fs3') → número MIDI (66).
 const midiDe = n => 12 * (+n.slice(-1) + 1) + ['C','Cs','D','Ds','E','F','Fs','G','Gs','A','As','B'].indexOf(n.slice(0, -1));
 
+const medida = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'samples', 'afinacion.json'), 'utf8'));
+const hz = midi => 440 * 2 ** ((midi - 69) / 12);
+
 test('cada muestra que la app asigna a una nota suena en esa nota, ±5 cents (S-08)', () => {
   const A = boot(APP);
   const mapas = JSON.parse(A.ev('JSON.stringify(SAMPLE_MAPS)'));
   const carpeta = path.join(__dirname, '..', 'samples');
-  const medida = JSON.parse(fs.readFileSync(path.join(carpeta, 'afinacion.json'), 'utf8'));
   assert.deepEqual(Object.keys(mapas).sort(), ['acoustic', 'nylon']);
   for (const [timbre, mapa] of Object.entries(mapas)){
-    for (const [nota, archivo] of Object.entries(mapa)){
+    for (const [nota, [archivo, cents]] of Object.entries(mapa)){
       const m = medida[timbre] && medida[timbre][archivo];
       assert.ok(m, `samples/${timbre}/${archivo} no está medido`);
       // La comparación es con la frecuencia medida, no con el nombre del archivo.
-      const cents = 1200 * Math.log2(m.hz_medida / (440 * 2 ** ((midiDe(nota) - 69) / 12)));
-      assert.ok(Math.abs(cents) <= 5, `${timbre}/${archivo} se usa como ${nota} y se desvía ${cents.toFixed(1)} cents`);
+      const real = 1200 * Math.log2(m.hz_medida / hz(midiDe(nota)));
+      assert.ok(Math.abs(real) <= 5, `${timbre}/${archivo} se usa como ${nota} y se desvía ${real.toFixed(1)} cents`);
+      assert.ok(Math.abs(cents - m.cents) < 0.05, `${timbre}/${archivo}: la app corrige ${cents} cents y la medición dice ${m.cents}`);
       const sha = crypto.createHash('sha256').update(fs.readFileSync(path.join(carpeta, timbre, archivo))).digest('hex');
       assert.equal(sha, m.sha256, `${timbre}/${archivo} no es el archivo medido`);
     }
   }
 });
 
-// Hoy la app descarga las muestras de SAMPLE_BASE (otro dominio). Hasta F2.2 la
-// prueba anterior vale para las copias de samples/, que son las mismas (sha256).
-test.todo('la app usa las muestras de samples/ y ninguna dirección externa (S-07, F2.2)');
+test('la app no descarga nada de otros servidores (S-07, F2.2)', () => {
+  const src = fs.readFileSync(APP, 'utf8');
+  const urls = [...new Set(src.match(/https?:\/\/[^\s"'`)<>]+/g) || [])];
+  // El espacio de nombres de SVG parece una dirección, pero el navegador no la descarga.
+  assert.deepEqual(urls.filter(u => u !== 'http://www.w3.org/2000/svg'), []);
+  const A = boot(APP);
+  assert.equal(A.ev('SAMPLE_BASE'), 'samples/');
+});
 
-/** Tone.js simulado: las descargas acaban cuando la prueba quiere. */
-const toneFalso = `globalThis.__pend = []; globalThis.Tone = {
-  start: async () => {}, immediate: () => 0,
-  loaded: () => new Promise(r => __pend.push(r)),
-  Sampler: class { constructor(o){ this.url = o.baseUrl; } toDestination(){ return this; }
-                   dispose(){ this.disposed = true; } triggerAttackRelease(){} }
-};`;
+/** Descargas simuladas: acaban cuando la prueba quiere, con 1000 muestras de silencio y luego sonido. */
+const cargaFalsa = `globalThis.__pend = [];
+  globalThis.__buf = { sampleRate: 44100, getChannelData: () => { const d = new Float32Array(2000); d.fill(0.5, 1000); return d; } };
+  fetchAndDecode = url => new Promise(r => __pend.push(() => r(__buf)));`;
+const terminarCargas = A => A.ev('while (__pend.length) __pend.shift()()');
 
 test('cambiar de timbre deprisa deja instalado el último elegido (S-02, AT-02 #1)', async () => {
   const A = boot(APP);
-  A.ev(toneFalso);
-  const p0 = A.ev("loadSampler('nylon')"); await sleep(0); A.ev('__pend.shift()()'); await p0;
+  A.ev(cargaFalsa);
+  const p0 = A.ev("loadSamples('nylon')"); await sleep(0); terminarCargas(A); await p0;
   assert.equal(A.ev('samplerTimbre'), 'nylon');
   const pa = A.ev("setTimbre('acoustic')"); await sleep(0);   // descarga lenta en curso
   await A.ev("setTimbre('nylon')");                           // vuelta inmediata
-  A.ev('__pend.shift()()'); await pa;                          // termina la acústica
+  terminarCargas(A); await pa;                                 // termina la acústica
   assert.equal(A.ev('state.timbre'), 'nylon');
   assert.equal(A.ev('samplerTimbre'), 'nylon');
-  assert.match(A.ev('sampler.url'), /nylon/);
+});
+
+test('todas las notas posibles suenan en su frecuencia, en los dos timbres (S-01, S-08, F2.2)', async () => {
+  const A = boot(APP);
+  A.ev(cargaFalsa);
+  for (const timbre of ['nylon', 'acoustic']){
+    const p = A.ev(`loadSamples('${timbre}')`); await sleep(0); terminarCargas(A); await p;
+    const [min, max] = A.ev('[MIN_TUNING_MIDI, MAX_TUNING_MIDI + NUM_FRETS]');
+    let peor = 0, transporte = 0;
+    for (let midi = min; midi <= max; midi++){
+      const s = JSON.parse(A.ev(`(() => { const s = pickSample(${midi}); return JSON.stringify({ midi: s.midi, rate: playbackRateFor(${midi}, s) }); })()`));
+      const archivo = Object.values(JSON.parse(A.ev('JSON.stringify(SAMPLE_MAPS)'))[timbre]).find(([f]) => midiDe(f.slice(0, -4)) === s.midi)[0];
+      // Frecuencia que sonará = frecuencia medida de la grabación × velocidad.
+      const error = 1200 * Math.log2(medida[timbre][archivo].hz_medida * s.rate / hz(midi));
+      peor = Math.max(peor, Math.abs(error));
+      transporte = Math.max(transporte, Math.abs(midi - s.midi));
+    }
+    assert.ok(peor <= 0.5, `${timbre}: una nota se desvía ${peor.toFixed(2)} cents`);
+    // Hoy llega a +17 en nylon y +19 en acústica con una afinación personalizada
+    // muy aguda; F2.4 lo reducirá añadiendo muestras.
+    assert.ok(transporte <= 19, `${timbre}: transporte máximo ${transporte} semitonos`);
+  }
+});
+
+test('se salta el silencio inicial de cada grabación (AT-02 #4)', () => {
+  const A = boot(APP);
+  A.ev(cargaFalsa);
+  const offset = A.ev('soundStart(__buf)');
+  assert.ok(Math.abs(offset - (1000 / 44100 - 0.002)) < 1e-6, `empieza en ${offset}`);
 });
 
 test('el reto suena una sola vez aunque se cambie de pestaña deprisa (J-01, AT-02 #5)', async () => {
