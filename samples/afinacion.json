@@ -209,6 +209,19 @@
    "segundos": 1.52,
    "bytes": 36340,
    "sha256": "9ab5b711d43f7bd0cf5a7ec2c5d5a382c701b0258341a0a4483ccb377c4fd63c"
+  },
+  "As5.mp3": {
+   "nota": "As5",
+   "midi": 82,
+   "nota_medida": "As5",
+   "midi_medido": 82,
+   "hz_esperada": 932.33,
+   "hz_medida": 926.94,
+   "cents": -10.0,
+   "pico_dbfs": -3.0,
+   "segundos": 1.62,
+   "bytes": 38844,
+   "sha256": "8b58374042aa47d7aef055afca8492a0e25faeecee9ac44fb098afff53e6cb97"
   }
  }
 }

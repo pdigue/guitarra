@@ -143,7 +143,7 @@ const midiDe = n => 12 * (+n.slice(-1) + 1) + ['C','Cs','D','Ds','E','F','Fs','G
 const medida = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'samples', 'afinacion.json'), 'utf8'));
 const hz = midi => 440 * 2 ** ((midi - 69) / 12);
 
-test('cada muestra que la app asigna a una nota suena en esa nota, ±5 cents (S-08)', () => {
+test('cada grabación es la nota a la que se asigna y su desviación está medida (S-08)', () => {
   const A = boot(APP);
   const mapas = JSON.parse(A.ev('JSON.stringify(SAMPLE_MAPS)'));
   const carpeta = path.join(__dirname, '..', 'samples');
@@ -154,7 +154,9 @@ test('cada muestra que la app asigna a una nota suena en esa nota, ±5 cents (S-
       assert.ok(m, `samples/${timbre}/${archivo} no está medido`);
       // La comparación es con la frecuencia medida, no con el nombre del archivo.
       const real = 1200 * Math.log2(m.hz_medida / hz(midiDe(nota)));
-      assert.ok(Math.abs(real) <= 5, `${timbre}/${archivo} se usa como ${nota} y se desvía ${real.toFixed(1)} cents`);
+      // Menos de medio semitono: es esa nota y no la de al lado (lo que falló con el D5 de nylon).
+      // La desviación que tenga la corrige la app; la prueba siguiente mide el resultado.
+      assert.ok(Math.abs(real) < 50, `${timbre}/${archivo} se usa como ${nota} pero suena a ${real.toFixed(1)} cents: es otra nota`);
       assert.ok(Math.abs(cents - m.cents) < 0.05, `${timbre}/${archivo}: la app corrige ${cents} cents y la medición dice ${m.cents}`);
       const sha = crypto.createHash('sha256').update(fs.readFileSync(path.join(carpeta, timbre, archivo))).digest('hex');
       assert.equal(sha, m.sha256, `${timbre}/${archivo} no es el archivo medido`);
@@ -195,7 +197,7 @@ test('todas las notas posibles suenan en su frecuencia, en los dos timbres (S-01
   for (const timbre of ['nylon', 'acoustic']){
     const p = A.ev(`loadSamples('${timbre}')`); await sleep(0); terminarCargas(A); await p;
     const [min, max] = A.ev('[MIN_TUNING_MIDI, MAX_TUNING_MIDI + NUM_FRETS]');
-    let peor = 0, transporte = 0;
+    let peor = 0, transporte = 0, transporteEstandar = 0;
     for (let midi = min; midi <= max; midi++){
       const s = JSON.parse(A.ev(`(() => { const s = pickSample(${midi}); return JSON.stringify({ midi: s.midi, rate: playbackRateFor(${midi}, s) }); })()`));
       const archivo = Object.values(JSON.parse(A.ev('JSON.stringify(SAMPLE_MAPS)'))[timbre]).find(([f]) => midiDe(f.slice(0, -4)) === s.midi)[0];
@@ -203,11 +205,15 @@ test('todas las notas posibles suenan en su frecuencia, en los dos timbres (S-01
       const error = 1200 * Math.log2(medida[timbre][archivo].hz_medida * s.rate / hz(midi));
       peor = Math.max(peor, Math.abs(error));
       transporte = Math.max(transporte, Math.abs(midi - s.midi));
+      if (midi >= 40 && midi <= 88) transporteEstandar = Math.max(transporteEstandar, Math.abs(midi - s.midi));
     }
     assert.ok(peor <= 0.5, `${timbre}: una nota se desvía ${peor.toFixed(2)} cents`);
     // Hoy llega a +17 en nylon y +19 en acústica con una afinación personalizada
     // muy aguda; F2.4 lo reducirá añadiendo muestras.
     assert.ok(transporte <= 19, `${timbre}: transporte máximo ${transporte} semitonos`);
+    // F2.4: en afinación estándar (Mi2 a Mi6), nylon ≤ 6; la acústica no tiene grabaciones
+    // por encima del D5 y se queda en 14.
+    assert.ok(transporteEstandar <= (timbre === 'nylon' ? 6 : 14), `${timbre}: ${transporteEstandar} semitonos en afinación estándar`);
   }
 });
 
