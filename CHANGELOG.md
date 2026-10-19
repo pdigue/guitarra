@@ -6,7 +6,8 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.1.5** | 15/10/2026 | F1 · verificación V-01 | Rama `auto/F1-apaisado` |
+| **0.2.0** | 19/10/2026 | F2.2 | Rama `auto/F2.2-reproductor` |
+| 0.1.5 | 15/10/2026 | F1 · verificación V-01 | `main`, etiqueta `v0.1.5` |
 | 0.1.4 | 15/10/2026 | F1 · auditoría CP-1 | `main`, fusionada el 15/10 |
 | 0.1.3 | 14/10/2026 | F1 · hallazgo de F2.1 | Rama `auto/F1-iteracion-0` · superada |
 | 0.1.2 | 14/10/2026 | F1.3 | Rama `auto/F1-iteracion-0` · superada |
@@ -20,6 +21,24 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.2.0] — 19/10/2026 · Etapa F2.2: reproductor propio
+
+### Cambiado
+- **S-01 · S-07** · La app suena con un reproductor propio y sus grabaciones de `samples/`. Ya no usa Tone.js ni descarga nada de otros servidores.
+- **S-08** · Cada nota corrige la pequeña desviación medida de su grabación. Grabadas en el navegador, las 22 notas comprobadas (cuerdas al aire y 1ª cuerda hasta el traste 24, en los dos timbres) suenan a menos de 1 cent; antes, hasta 4,5.
+- Se salta el silencio con el que empiezan algunas grabaciones, de hasta 52 ms: la nota arranca antes.
+- **PL-04** · En Safari 16.4 o posterior la app pide sonar aunque el interruptor de silencio del iPhone esté puesto. Se confirma en tu iPhone.
+- Solo el timbre activo ocupa memoria; como mucho suenan 8 notas a la vez.
+
+### Retroceso temporal
+- **G-07** · Al abrir la app con doble clic suena el sintetizador: los navegadores no dejan a una página local leer otros archivos, y antes las grabaciones llegaban de internet. Con Live Server y en la web suena la guitarra. Se arregla en F2.3, al meter el audio en el propio archivo.
+
+### Verificado
+- Banco: 18 de 18. Nuevas: ninguna dirección externa, todas las notas posibles en su frecuencia (±0,5 cents) en los dos timbres, y el silencio inicial se salta.
+- En navegador: las 15 comprobaciones de F1.1, móvil en vertical y apaisado, y 22 notas grabadas y medidas (V-02).
 
 ---
 

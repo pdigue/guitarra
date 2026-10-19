@@ -18,7 +18,8 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 |---|---|:---:|:---:|:---:|---|
 | Web Audio | Todo el sonido | ✅ | ✅ | ✅ | Sin alternativa: es la base |
 | Reanudar el audio tras una interrupción | Volver a sonar tras una llamada o un bloqueo | ✅ | ✅ | ⚠️ iOS lo deja en `interrupted` | `wakeAudio()` lo reanuda en cada nota (0.1.4) |
-| Sonar con el interruptor de silencio puesto | Que suene el iPhone en silencio | — | — | ⚠️ Web Audio se calla | `navigator.audioSession.type = 'playback'` en F2.2, si existe; si no, aviso en la pantalla de entrada |
+| Sonar con el interruptor de silencio puesto | Que suene el iPhone en silencio | — | — | ⚠️ Web Audio se calla | Desde la 0.2.0, `navigator.audioSession.type = 'playback'` si existe (Safari 16.4+). Se confirma en el iPhone; si no basta, aviso en la pantalla de entrada |
+| Leer las grabaciones del proyecto (`fetch`) | Cargar el audio | ✅ local y web | ✅ local y web | ✅ local y web | Con doble clic (`file://`) no se puede: suena el sintetizador hasta F2.3 |
 | Eventos de puntero | Pulsar y arrastrar el mástil | ✅ | ✅ | ✅ | — |
 | `localStorage` | Guardar ajustes y récord | ✅ | ✅ | ✅ | Si falla, la app funciona sin guardar |
 | Vibración | Respuesta al fallar en Adivinar | — | ✅ | ❌ | Se omite; el color y el destello bastan (J-09) |
