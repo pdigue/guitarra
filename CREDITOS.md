@@ -30,7 +30,8 @@ Este es el texto que acompaña a la app cuando se distribuya. Antes de publicar
 > of Iowa Electronic Music Studios. Ambos editados por Nicholaus P. Brosowsky en
 > *tonejs-instruments* (github.com/nbrosowsky/tonejs-instruments), licencia
 > CC BY 3.0 (creativecommons.org/licenses/by/3.0). Trasteando los usa sin
-> modificar.
+> modificar, salvo en el archivo autónomo, donde van recortados a 4,5 s con un
+> fundido final y recodificados a 128 kbps.
 
 ---
 

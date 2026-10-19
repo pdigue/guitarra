@@ -503,7 +503,7 @@ select { flex:1; background:var(--surface); border:1px solid var(--line2); color
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.2.0';
+const APP_VERSION = '0.2.1';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -710,13 +710,31 @@ function midiOfName(n){
   return 12 * (+n.slice(-1) + 1) + ['C','Cs','D','Ds','E','F','Fs','G','Gs','A','As','B'].indexOf(n.slice(0, -1));
 }
 
+/** Convierte los bytes de un mp3 en sonido. Forma con funciones de respuesta: la única que entienden los Safari antiguos. */
+function decodeData(data){
+  return new Promise((ok, ko) => audioCtx.decodeAudioData(data, ok, ko));
+}
+
 /** Descarga y decodifica una grabación. Va aparte para poder simularla en las pruebas. */
 async function fetchAndDecode(url){
   const res = await fetch(url);
   if (!res.ok) throw new Error(url + ': ' + res.status);
-  const data = await res.arrayBuffer();
-  // Forma con funciones de respuesta: la única que entienden los Safari antiguos.
-  return new Promise((ok, ko) => audioCtx.decodeAudioData(data, ok, ko));
+  return decodeData(await res.arrayBuffer());
+}
+
+/**
+ * En el archivo autónomo (dist/trasteando.html, F2.3) cada grabación viaja
+ * dentro de la propia página, en base64: texto que representa bytes. Así
+ * suena con doble clic y sin conexión, donde un archivo local no puede leer
+ * otros. Si la grabación no está dentro, devuelve null y se descarga.
+ */
+function embeddedAudio(kind, name){
+  const el = document.getElementById('audio-' + kind + '-' + name);
+  if (!el) return null;
+  const bin = atob(el.textContent.trim());
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes.buffer;
 }
 
 /**
@@ -747,7 +765,8 @@ async function loadSamples(timbre){
   const kind = timbre === 'acoustic' ? 'acoustic' : 'nylon';
   try {
     const loaded = await Promise.all(Object.entries(SAMPLE_MAPS[kind]).map(async ([name, [file, cents]]) => {
-      const buffer = await fetchAndDecode(SAMPLE_BASE + kind + '/' + file);
+      const inside = embeddedAudio(kind, name);
+      const buffer = inside ? await decodeData(inside) : await fetchAndDecode(SAMPLE_BASE + kind + '/' + file);
       return { midi: midiOfName(name), buffer, cents, offset: soundStart(buffer) };
     }));
     if (req !== samplerRequest) return 'stale';

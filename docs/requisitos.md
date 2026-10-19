@@ -1,7 +1,7 @@
 # Trasteando — Especificación de Requisitos
 
-**Versión del documento:** 1.5 · **Fecha:** 19 de octubre de 2026  
-**Válido para:** app `0.2.0` · `roadmap.md` v3.3 · `matriz-cumplimiento` v1.3 · fase en curso **F2**, en modo acelerado  
+**Versión del documento:** 1.6 · **Fecha:** 19 de octubre de 2026  
+**Válido para:** app `0.2.1` · `roadmap.md` v3.4 · `matriz-cumplimiento` v1.4 · fase en curso **F2**, en modo acelerado  
 **Repositorio:** github.com/pdigue/guitarra, carpeta `docs/` · **Gestiona:** chat de Desarrollo  
 **Tipo de producto:** aplicación web progresiva (PWA), desarrollada en local y publicada al final del roadmap
 
@@ -11,14 +11,14 @@
 
 | Total | ✅ Implementados | 🟡 Parciales | ⬜ Pendientes | ✅ Validados |
 |:---:|:---:|:---:|:---:|:---:|
-| 92 | 59 | 13 | 20 | 1 |
+| 92 | 60 | 12 | 20 | 1 |
 
 > Un requisito implementado no cuenta como cumplido hasta superar su prueba. El primero validado es **S-08**, en la 0.2.0: la app usa sus grabaciones medidas y el banco y la grabación en el navegador lo demuestran. La validación en dispositivo llega con la sesión de pruebas en el iPhone y el ordenador (F1.1, F2.5 y F3.3 juntas, al cerrar F3).
 
 | Fase | Objetivo | Requisitos | Implementados |
 |------|----------|:---:|-----------|
 | **F1** | Base local verificada | 59 | `▰▰▰▰▰▰▰▰▰▰` 58/59 |
-| **F2** | Sonido propio y archivo autónomo | 9 | `▰▰▱▱▱▱▱▱▱▱` 2/9 |
+| **F2** | Sonido propio y archivo autónomo | 9 | `▰▰▰▱▱▱▱▱▱▱` 3/9 |
 | **F3** | Interfaz y adaptación | 4 | `▱▱▱▱▱▱▱▱▱▱` 0/4 |
 | **F4** | Afinador por micrófono | 7 | `▱▱▱▱▱▱▱▱▱▱` 0/7 |
 | **F5** | Escalas | 7 | `▱▱▱▱▱▱▱▱▱▱` 0/7 |
@@ -34,16 +34,24 @@
 
 | Versión | Fecha | App | Roadmap | Resumen | Origen |
 |---|---|:---:|:---:|---|---|
-| **1.5** | 19/10/2026 | 0.2.0 | 3.3 | Reproductor propio (F2.2): S-08 validado, la app ya no descarga nada de fuera. 0 nuevos y 4 modificados: 92 en total. | Etapa F2.2 |
+| **1.6** | 19/10/2026 | 0.2.1 | 3.4 | Archivo autónomo (F2.3): G-07 implementado. 0 nuevos y 3 modificados: 92 en total. | Etapa F2.3 |
+| 1.5 | 19/10/2026 | 0.2.0 | 3.3 | Reproductor propio (F2.2): S-08 validado, la app ya no descarga nada de fuera. 0 nuevos y 4 modificados: 92 en total. | Etapa F2.2 |
 | 1.4 | 15/10/2026 | 0.1.4 | 3.2 | Dos decisiones cerradas: despliegue de pruebas y Android. 1 nuevo (PL-04) y 2 modificados: 92 en total. | Tus decisiones del 15/10 |
 | 1.3 | 15/10/2026 | 0.1.4 | 3.1 | Tres decisiones cerradas: audio (opción A), móvil de referencia (iPhone) y modo acelerado. 1 nuevo (S-08) y 6 modificados: 91 en total. | Iteración 0, medición de F2.1 y auditoría CP-1 |
 | 1.2 | 14/10/2026 | 0.1.2 | 3.0 | Fases F1–F7. Columnas *Validado*, *Etapa* y *Desde*. Sección de plataformas. 9 nuevos y 12 modificados: 90 en total. | Tu aprobación del 14/10 y revisión de código |
 | 1.1 | 15/09/2026 | 0.1.1 | 2.0 | Reconciliación de estados. 11 nuevos (S-07, V-09, J-11, G-05, G-06, A-02-CA, E-02b, E-05b, X-01 a X-03): 81 en total. Seis decisiones cerradas. | Auditoría de requisitos AR-01 |
 | 1.0 | 14/09/2026 | 0.1.0 | — | Primera versión: 70 requisitos en 11 categorías. | Tu listado inicial |
 
+### Detalle de la versión 1.6
+
+**Requisitos modificados ✏️** — G-07, G-08, S-07
+- **G-07:** implementado en la 0.2.1 con `dist/trasteando.html`, la app con el audio dentro. Se cierra el retroceso de la 0.2.0. Falta probarlo en cada plataforma (F2.5).
+- **G-08:** las dos formas de distribución existen ya de verdad, y el banco vigila que el autónomo esté al día.
+- **S-07:** la revisión de la licencia del pack de nylon, que estaba prevista antes de F2.3 y sigue pendiente, pasa a ser condición antes de publicar (F7).
+
 ### Detalle de la versión 1.5
 
-**Requisitos modificados ✏️** — G-07, S-01, S-07, S-08
+**Requisitos modificados** — G-07, S-01, S-07, S-08
 - **S-08:** validado. Es el primer requisito que supera su prueba: la app usa sus grabaciones medidas y corrige su desviación.
 - **S-01:** suena con el reproductor propio; las 22 notas grabadas en el navegador, a menos de 1 cent.
 - **S-07:** la app ya no descarga audio de fuera. Sigue parcial hasta meter el audio en el archivo (F2.3) y revisar la licencia del pack de nylon.
@@ -138,8 +146,8 @@
 | **G-04** | La app es instalable como PWA (icono en la pantalla de inicio, pantalla completa). | Alta | F6.3 · F7.2 | 🟡 | ⬜ | 0.1.0 | Manifiesto incrustado como `data:` URL. Falta un archivo de manifiesto propio con iconos PNG (F6.3) y verificarla instalada desde la web publicada (F7.2): instalar solo es posible desde `https`. |
 | **G-05** | La interfaz cumple unos mínimos de accesibilidad: foco de teclado visible, respeto a `prefers-reduced-motion`, contraste suficiente y etiquetas accesibles en los controles solo-icono. | Media | F3.4 | 🟡 | ⬜ | 0.1.1 | Hecho: foco visible, movimiento reducido, interruptores con `role="switch"` (0.1.1), `aria-pressed` en los selectores y aviso del reto para lectores de pantalla (0.1.2). Falta: recorrer el mástil con teclado y auditar el contraste. |
 | **G-06** | El proyecto documenta sus dependencias externas y la licencia de cada recurso de terceros que distribuye, y la app muestra los créditos. | Media | F2.1 · F6.4 | 🟡 | ⬜ | — | `CREDITOS.md` (F2.1): origen, licencia, huella `sha256` y texto de atribución de cada muestra de audio, y Tone.js (MIT). Falta mostrar los créditos dentro de la app y elegir la licencia del propio código (F6.4). |
-| **G-07** ✏️ | **Modo archivo autónomo:** la app funciona completa —salvo el afinador por micrófono— abriendo el archivo directamente (`file://`), sin servidor y sin conexión. | Alta | F2.3 · F2.5 | 🟡 | ⬜ | 0.1.0 | Se completa al incrustar el audio en el archivo (F2.3). **Retroceso temporal desde la 0.2.0:** al abrir con doble clic suena el sintetizador, porque los navegadores no dejan a una página local leer otros archivos; antes, con conexión, sonaban las grabaciones descargadas. Con Live Server y en la web suena la guitarra. En iPhone puede no ser viable: ver PL-03. |
-| **G-08** | El proyecto conserva **dos formas de distribución** equivalentes: el archivo autónomo (para llevárselo) y la web publicada (para instalarla como PWA). | Media | F4.1 · F6.1 | 🟡 | ⬜ | 0.1.0 | Hoy se cumple de forma trivial: todo es un único archivo. Se vuelve exigente al pasar a módulos (F4.1), que no funcionan con `file://`; F6.1 genera el archivo autónomo a partir de ellos. |
+| **G-07** ✏️ | **Modo archivo autónomo:** la app funciona completa —salvo el afinador por micrófono— abriendo el archivo directamente (`file://`), sin servidor y sin conexión. | Alta | F2.3 · F2.5 | ✅ | ⬜ | 0.2.1 | Desde la 0.2.1 es `dist/trasteando.html`: la app con sus 16 grabaciones dentro, recortadas a 4,5 s (1,42 MB). Abierto desde disco y sin conexión en Chromium abre en 0,6 s, suena con la guitarra real y no intenta ninguna conexión (V-03). `index.html` no lleva el audio dentro: con doble clic suena el sintetizador. Falta probarlo en cada plataforma (F2.5). En iPhone no es viable: ver PL-03. |
+| **G-08** ✏️ | El proyecto conserva **dos formas de distribución** equivalentes: el archivo autónomo (para llevárselo) y la web publicada (para instalarla como PWA). | Media | F4.1 · F6.1 | 🟡 | ⬜ | 0.1.0 | Desde la 0.2.1 hay dos formas reales: `index.html` para servir (Live Server y web) y `dist/trasteando.html`, generado a partir de él con `herramientas/generar-autonomo.py`. El banco comprueba que el autónomo está al día con `index.html`. Se vuelve más exigente al pasar a módulos (F4.1); F6.1 generará el archivo autónomo a partir de ellos. |
 | **G-09** | La app podrá distribuirse por **tiendas oficiales** —Google Play, Microsoft Store y, si compensa, App Store— empaquetando la PWA publicada. | Media | F7.4 | ⬜ | ⬜ | — | Decisión de producto en F7.4. Exige S-07 con licencia limpia, G-11 y la web publicada (X-02). Cuentas, costes y archivos necesarios: roadmap, *Inventario de lanzamiento*. |
 | **G-10** | **Control de versiones de la app:** cada versión tiene número propio con la pauta `0.‹fase›.‹corrección›` —`1.0.0` en el lanzamiento—, se registra en `CHANGELOG.md` y se muestra en Ajustes. | Alta | F1.3 | ✅ | ⬜ | 0.1.2 | Vincula cada versión con su fase del roadmap. Cada fase cerrada se marca además con una etiqueta de Git (F1.4). |
 | **G-11** | **Privacidad:** la app no recoge ni envía datos personales; el sonido del micrófono se analiza solo en el dispositivo. Una política de privacidad pública lo declara. | Alta | F6.4 | ⬜ | ⬜ | — | Las tiendas exigen política de privacidad, y el micrófono la hace necesaria también por transparencia. Hoy la app ya no envía nada: solo guarda ajustes en el propio navegador. |
@@ -202,14 +210,14 @@
 
 | ID | Requisito | Prior. | Etapa | Impl. | Valid. | Desde | Notas |
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
-| **S-01** ✏️ | El sonido corresponde a una guitarra real, no a un sintetizador genérico. | Alta | F1.1 · F2.2 · F2.4 | ✅ | ⬜ | 0.1.0 | Desde la 0.2.0 suena con un reproductor propio y las grabaciones de `samples/`, sin Tone.js (F2.2). Grabado en el navegador, de la 6ª al aire al traste 24 de la 1ª y en los dos timbres, cada nota suena a menos de 1 cent de su frecuencia. La 0.1.3 corrigió el registro agudo de la guitarra clásica, que sonaba medio tono alto (S-08). |
+| **S-01** | El sonido corresponde a una guitarra real, no a un sintetizador genérico. | Alta | F1.1 · F2.2 · F2.4 | ✅ | ⬜ | 0.1.0 | Desde la 0.2.0 suena con un reproductor propio y las grabaciones de `samples/`, sin Tone.js (F2.2). Grabado en el navegador, de la 6ª al aire al traste 24 de la 1ª y en los dos timbres, cada nota suena a menos de 1 cent de su frecuencia. La 0.1.3 corrigió el registro agudo de la guitarra clásica, que sonaba medio tono alto (S-08). |
 | **S-02** | El usuario elige entre guitarra clásica (nylon) y acústica (acero). | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Cambiar de timbre descarga otro set de muestras, con aviso. Desde 0.1.2, dos cambios seguidos ya no muestran el mensaje de la carga descartada. |
 | **S-03** | La selección de timbre está en el menú de configuración. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
 | **S-04** | Si los samples no cargan, la app sigue sonando por síntesis. | Media | F1.1 | ✅ | ⬜ | 0.1.0 | Karplus-Strong con filtros que imitan la caja de resonancia. Desde 0.1.1 cada nota se calcula una sola vez y se reutiliza. |
 | **S-05** | El primer sonido requiere una interacción explícita del usuario. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Lo impone la política de reproducción automática de los navegadores. |
 | **S-06** | El timbre persiste entre sesiones. | Media | F1.1 | ✅ | ⬜ | 0.1.0 | — |
-| **S-07** ✏️ | Los samples de audio se alojan en el propio proyecto, con licencia verificada y documentada. | Alta | F2.1 · F2.3 | 🟡 | ⬜ | — | **Opción A, decidida el 14/10.** Hecho: licencias verificadas y los 16 archivos en `samples/`, con `CREDITOS.md` (F2.1); desde la 0.2.0 la app los usa y no descarga nada de otros servidores (F2.2). Falta meterlos en el archivo (F2.3) y confirmar, antes de F2.3, que todos los sonidos del pack de nylon comparten la licencia comprobada en uno de ellos. |
-| **S-08** ✏️ | Cada muestra que usa la app suena en la nota a la que está asignada, con una desviación máxima de **±5 cents**. | Alta | F2.1 · F2.2 · F2.4 | ✅ | ✅ | 0.1.3 | Origen: la medición de F2.1 encontró que el `D5.mp3` de nylon suena en Re♯5 (+101 cents); con la 0.1.2, todo el registro agudo de la guitarra clásica sonaba medio tono alto. Sostiene también la precisión del afinador por referencia (A-01). **Validado en la 0.2.0:** la app usa las copias medidas de `samples/` y corrige su desviación; el banco lo comprueba para todas las notas posibles y la grabación en el navegador lo confirma (V-02). F2.4 lo aplica a cada muestra nueva. |
+| **S-07** ✏️ | Los samples de audio se alojan en el propio proyecto, con licencia verificada y documentada. | Alta | F2.1 · F2.3 | 🟡 | ⬜ | — | **Opción A, decidida el 14/10.** Hecho: licencias verificadas y los 16 archivos en `samples/`, con `CREDITOS.md` (F2.1); desde la 0.2.0 la app los usa y no descarga nada de otros servidores (F2.2). Desde la 0.2.1 van también dentro del archivo autónomo (F2.3). Falta confirmar que todos los sonidos del pack de nylon comparten la licencia comprobada en uno de ellos: estaba previsto antes de F2.3 y pasa a ser condición **antes de publicar (F7)**. |
+| **S-08** | Cada muestra que usa la app suena en la nota a la que está asignada, con una desviación máxima de **±5 cents**. | Alta | F2.1 · F2.2 · F2.4 | ✅ | ✅ | 0.1.3 | Origen: la medición de F2.1 encontró que el `D5.mp3` de nylon suena en Re♯5 (+101 cents); con la 0.1.2, todo el registro agudo de la guitarra clásica sonaba medio tono alto. Sostiene también la precisión del afinador por referencia (A-01). **Validado en la 0.2.0:** la app usa las copias medidas de `samples/` y corrige su desviación; el banco lo comprueba para todas las notas posibles y la grabación en el navegador lo confirma (V-02). F2.4 lo aplica a cada muestra nueva. |
 
 ---
 
