@@ -65,6 +65,7 @@ distingue de oído.
 | `samples/nylon/B3.mp3` | B3 | -0,6 | 75 KB | `9e4b3df9cda0` | quartertone (Freesound) → Brosowsky | CC BY 4.0 → CC BY 3.0 |
 | `samples/nylon/E4.mp3` | E4 | -2,1 | 75 KB | `3f95d206021f` | quartertone (Freesound) → Brosowsky | CC BY 4.0 → CC BY 3.0 |
 | `samples/nylon/A4.mp3` | A4 | -0,2 | 75 KB | `3436e55cf992` | quartertone (Freesound) → Brosowsky | CC BY 4.0 → CC BY 3.0 |
+| `samples/nylon/As5.mp3` | As5 | -10,0 | 38 KB | `8b58374042aa` | quartertone (Freesound) → Brosowsky | CC BY 4.0 → CC BY 3.0 |
 | `samples/nylon/E5.mp3` | E5 | -2,4 | 35 KB | `9ab5b711d43f` | quartertone (Freesound) → Brosowsky | CC BY 4.0 → CC BY 3.0 |
 | `samples/acoustic/E2.mp3` | E2 | -1,9 | 254 KB | `917820984d1b` | Univ. de Iowa (MIS) → Brosowsky | Sin restricciones → CC BY 3.0 |
 | `samples/acoustic/A2.mp3` | A2 | +1,0 | 270 KB | `43e339bcd75f` | Univ. de Iowa (MIS) → Brosowsky | Sin restricciones → CC BY 3.0 |
@@ -75,7 +76,7 @@ distingue de oído.
 | `samples/acoustic/A4.mp3` | A4 | +2,8 | 95 KB | `1f8263f10e24` | Univ. de Iowa (MIS) → Brosowsky | Sin restricciones → CC BY 3.0 |
 | `samples/acoustic/D5.mp3` | D5 | +1,9 | 76 KB | `c9d74d19e672` | Univ. de Iowa (MIS) → Brosowsky | Sin restricciones → CC BY 3.0 |
 
-**Total:** 16 archivos, 2,0 MB.
+**Total:** 17 archivos, 2,1 MB. El As5 de nylon (F2.4) se desvía -10,0 cents; la app lo corrige al reproducirlo.
 
 ### Archivo descartado
 

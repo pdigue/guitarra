@@ -503,7 +503,7 @@ select { flex:1; background:var(--surface); border:1px solid var(--line2); color
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.2.1';
+const APP_VERSION = '0.2.2';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -666,10 +666,14 @@ function displayStrings(){
    Qué grabación corresponde a cada nota, por timbre, y cuánto se desvía de su
    nota según la medición (cents; 100 cents = 1 semitono; S-08 y
    samples/afinacion.json). Entre dos grabaciones se transporta la más cercana.
-   El D5 de nylon del repositorio de origen suena en Re#5: en nylon va el E5. */
+   El D5 de nylon del repositorio de origen suena en Re#5: en nylon va el E5.
+   El As5 de nylon (F2.4) acerca el registro agudo: en afinación estándar
+   ninguna nota se transporta más de 6 semitonos. La acústica no tiene
+   grabaciones por encima del D5. */
 const SAMPLE_MAPS = {
   nylon:    { E2:['E2.mp3',-2.8], A2:['A2.mp3',0.8], D3:['D3.mp3',-2.4], G3:['G3.mp3',2.6],
-              B3:['B3.mp3',-0.6], E4:['E4.mp3',-2.1], A4:['A4.mp3',-0.2], E5:['E5.mp3',-2.4] },
+              B3:['B3.mp3',-0.6], E4:['E4.mp3',-2.1], A4:['A4.mp3',-0.2], E5:['E5.mp3',-2.4],
+              As5:['As5.mp3',-10.0] },
   acoustic: { E2:['E2.mp3',-1.9], A2:['A2.mp3',1.0], D3:['D3.mp3',-2.5], G3:['G3.mp3',-4.2],
               B3:['B3.mp3',-0.5], E4:['E4.mp3',4.5], A4:['A4.mp3',2.8], D5:['D5.mp3',1.9] }
 };

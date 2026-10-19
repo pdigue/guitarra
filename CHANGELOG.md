@@ -6,7 +6,8 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.2.1** | 19/10/2026 | F2.3 | Rama `auto/F2.3-autonomo` |
+| **0.2.2** | 19/10/2026 | F2.4 | Rama `auto/F2.4-agudos` |
+| 0.2.1 | 19/10/2026 | F2.3 | `main`, aprobada el 19/10 |
 | 0.2.0 | 19/10/2026 | F2.2 | `main`, aprobada tras la escucha en el iPhone |
 | 0.1.5 | 15/10/2026 | F1 · verificación V-01 | `main`, etiqueta `v0.1.5` |
 | 0.1.4 | 15/10/2026 | F1 · auditoría CP-1 | `main`, fusionada el 15/10 |
@@ -22,6 +23,19 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.2.2] — 19/10/2026 · Etapa F2.4: registro agudo
+
+### Cambiado
+- **S-01 · S-08** · La guitarra clásica tiene una grabación más, La♯5, para las notas agudas. En afinación estándar ninguna nota se transporta ya más de 6 semitonos: el traste 24 de la 1ª cuerda pasa de +12 a +6 y suena menos artificial. La grabación se desvía 10 cents y la app lo corrige al reproducirla.
+- La acústica no tiene grabaciones por encima del Re5 en la fuente elegida: su traste 24 sigue transportando 14 semitonos.
+- `dist/trasteando.html` regenerado: 1,46 MB.
+
+### Verificado
+- Banco: 20 de 20. Comprueba ahora que cada grabación es la nota asignada, que todas las notas suenan a ±0,5 cents tras la corrección y los límites de transporte de cada timbre.
+- Archivo autónomo desde disco y sin conexión: abre en 0,3 s; cuerdas al aire y trastes 12 y 24 de la 1ª, a menos de 1 cent (V-04).
 
 ---
 

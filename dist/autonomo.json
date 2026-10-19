@@ -1,6 +1,6 @@
 {
- "version": "0.2.1",
- "bytes": 1424042,
+ "version": "0.2.2",
+ "bytes": 1460057,
  "limite": 1500000,
  "muestras": [
   {
@@ -82,6 +82,16 @@
    "cents_original": -2.4,
    "cents_recortada": -2.4,
    "sha256": "5f3228ea965bf6c948c0162223d7dfc7066500f9c618f337192fb0b3c9782269"
+  },
+  {
+   "timbre": "nylon",
+   "nota": "As5",
+   "archivo": "As5.mp3",
+   "bytes": 26793,
+   "segundos": 1.62,
+   "cents_original": -10.0,
+   "cents_recortada": -10.0,
+   "sha256": "1736523720225fb0ee1fc7a1b65c2edc8b90398283915fd5dc32d938d05f5c85"
   },
   {
    "timbre": "acoustic",
