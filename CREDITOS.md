@@ -3,7 +3,7 @@
 Todo lo que Trasteando usa y no hemos creado nosotros, de dónde sale y con qué
 licencia. Lo exige el requisito **G-06** y, para el audio, **S-07**.
 
-**Última revisión:** 14/10/2026
+**Última revisión:** 19/10/2026
 
 ---
 

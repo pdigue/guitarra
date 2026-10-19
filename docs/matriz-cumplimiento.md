@@ -1,11 +1,13 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 1.5 · **Fecha:** 19 de octubre de 2026 · **Base:** `requisitos.md` v1.7 · app `0.2.2` · `roadmap.md` v3.5  
+**Versión:** 1.6 · **Fecha:** 19 de octubre de 2026 · **Base:** `requisitos.md` v1.8 · app `0.2.3` · `roadmap.md` v3.6  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
+
+**Cambios en la 1.6:** CP-2: G-07 con límites revisados; X-01 cumple; escucha del cliente en S-01.
 
 **Cambios en la 1.5:** criterio de S-08 según su nueva redacción.
 
@@ -19,7 +21,7 @@
 
 | Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 92 | 60 | 12 | 18 | 2 | 1 | 19 |
+| 92 | 61 | 11 | 18 | 2 | 1 | 21 |
 
 | ID | Etapa | Método | Criterio de aceptación | Declaración | Evidencia | Verificación | Origen |
 |---|---|:---:|---|---|---|---|---|
@@ -29,7 +31,7 @@
 | **G-04** | F6.3 · F7.2 | D | Desde la web publicada, el navegador ofrece instalarla y abre a pantalla completa desde el icono. | Cumple parcialmente | — | Pendiente | Cliente · listado 14/09 |
 | **G-05** | F3.4 | I+T | Todo control es alcanzable con teclado y muestra el foco; contrastes ≥ 4,5:1 medidos; el movimiento se reduce con prefers-reduced-motion. | Cumple parcialmente | — | Pendiente | Desarrollo · v1.1 |
 | **G-06** | F2.1 · F6.4 | I | CREDITOS.md lista cada recurso de terceros con su origen y su licencia, y la app muestra el texto de atribución en Ajustes. | Cumple parcialmente | CREDITOS.md (F2.1). Falta mostrarlo en la app (F6.4) | Verificado parcialmente | Desarrollo · v1.1 |
-| **G-07** | F2.3 · F2.5 | T | Con el ordenador en modo avión, abrir el archivo con doble clic: suenan las muestras reales y funcionan Libre, Adivinar y el afinador por referencia. | Cumple | V-03: dist/trasteando.html desde disco y sin conexión en Chromium, abre en 0,6 s y suena a menos de 1 cent · Banco (node --test): autónomo al día y sin descargas | Verificado parcialmente | Cliente · 15/09 |
+| **G-07** | F2.3 · F2.5 | T | En Windows (y Android cuando lo haya), con el ordenador en modo avión, dist/trasteando.html abre con doble clic en ≤ 3 s, suenan las grabaciones y funcionan Libre, Adivinar y el afinador por referencia. Audio ≤ 1,45 MB y archivo ≤ 2 MB. | Cumple | V-03 y V-04: desde disco y sin conexión en Chromium, abre en 0,3 s y suena a menos de 1 cent · Banco (node --test): autónomo al día, con su audio, huellas y límites | Verificado parcialmente | Cliente · 15/09 |
 | **G-08** | F4.1 · F6.1 | T | El archivo autónomo generado y la web publicada superan el mismo banco de pruebas. | Cumple parcialmente | — | Verificado parcialmente | Cliente · 15/09 |
 | **G-09** | F7.4 | I | Ficha enviada a revisión en al menos una tienda, o decisión documentada de no hacerlo. | No cumple | — | Pendiente | Cliente · 14/10 |
 | **G-10** | F1.3 | I | Ajustes muestra la versión; CHANGELOG.md tiene una entrada por versión; existe la etiqueta de Git de cada cierre de fase. | Cumple | Banco (node --test) · CHANGELOG.md · F1.1 #12 | Verificado parcialmente | Cliente · 14/10 |
@@ -50,7 +52,7 @@
 | **D-05** | F1.1 | D | Pulsar una posición reproduce su nota sin retardo perceptible. | Cumple | F1.1 #2 | Pendiente | Cliente · listado 14/09 |
 | **D-06** | F1.1 | D | Al pulsar aparece el nombre de la nota sobre la posición. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **D-07** | F1.1 | I | Marcas simples en los trastes 3, 5, 7, 9, 15, 17, 19 y 21, y dobles en 12 y 24. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
-| **S-01** | F1.1 · F2.2 · F2.4 | D | Al pulsar cualquier posición suena una muestra grabada, no el sintetizador Karplus-Strong. | Cumple | F1.1 #14 y #15 | Pendiente | Cliente · listado 14/09 |
+| **S-01** | F1.1 · F2.2 · F2.4 | D | Al pulsar cualquier posición suena una muestra grabada, no el sintetizador Karplus-Strong. | Cumple | F1.1 #14 y #15 · V-05: escucha del cliente en su iPhone (0.2.0, 19/10) | Verificado parcialmente | Cliente · listado 14/09 |
 | **S-02** | F1.1 | D | Elegir Acústica cambia el timbre audible y elegir Clásica lo devuelve. | Cumple | F1.1 #5 | Pendiente | Cliente · listado 14/09 |
 | **S-03** | F1.1 | I | El selector de timbre está en Ajustes. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **S-04** | F1.1 | T | Sin conexión, la app suena con el sintetizador y lo avisa en la pantalla de entrada. | Cumple | — | Pendiente | Cliente · listado 14/09 |
@@ -112,7 +114,7 @@
 | **C-04** | F1.1 | D | La barra inferior lleva a cada área con un toque. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **C-05** | F1.1 | T | Todos los ajustes persisten tras recargar, y unos ajustes corruptos o antiguos no rompen la app. | Cumple | Banco (node --test): migración · F1.1 #13 | Verificado parcialmente | Cliente · listado 14/09 |
 | **C-06** | F3.1 | I | interfaz.md aprobado por el cliente y revisado por el auditor de requisitos. | No cumple | — | Pendiente | Cliente · listado 14/09 |
-| **X-01** | F1.2 · F1.4 | I | GitHub muestra la última versión y la etiqueta de cierre de fase. | Cumple parcialmente | Rama local auto/F1-iteracion-0, sin subir | Pendiente | Desarrollo · v1.1 |
+| **X-01** | F1.2 · F1.4 | I | GitHub muestra la última versión en main, entrada por pull request aprobado, y la etiqueta de cierre de fase. | Cumple | PR #1 a #5 fusionados · etiqueta v0.1.5 | Verificado parcialmente | Desarrollo · v1.1 |
 | **X-02** | F7.1 | D | La URL pública carga la app desde un dispositivo ajeno al proyecto. | No cumple | — | Pendiente | Desarrollo · v1.1 |
 | **X-03** | F7.2 | D | La app instalada desde la web funciona en un Android, un iPhone y un Windows reales. | No cumple | — | Pendiente | Desarrollo · v1.1 |
 

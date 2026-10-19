@@ -6,7 +6,8 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.2.2** | 19/10/2026 | F2.4 | Rama `auto/F2.4-agudos` |
+| **0.2.3** | 19/10/2026 | F2 · auditoría CP-2 | Rama `auto/CP-2-correcciones` |
+| 0.2.2 | 19/10/2026 | F2.4 | `main`, aprobada el 19/10 |
 | 0.2.1 | 19/10/2026 | F2.3 | `main`, aprobada el 19/10 |
 | 0.2.0 | 19/10/2026 | F2.2 | `main`, aprobada tras la escucha en el iPhone |
 | 0.1.5 | 15/10/2026 | F1 · verificación V-01 | `main`, etiqueta `v0.1.5` |
@@ -23,6 +24,20 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.2.3] — 19/10/2026 · Auditoría CP-2 (AR-03, AT-03)
+
+### Corregido
+- **C-05 · S-02** · Restablecer desde la acústica dejaba el aviso en «Guitarra acústica» aunque el selector ya marcara la clásica, y si fallaba la carga sonaba la acústica.
+- En Windows, el archivo autónomo se daba por desfasado aunque estuviera al día: Git cambiaba los saltos de línea. Ahora son iguales en todos los sistemas.
+
+### Cambiado
+- **G-07** · Límites del archivo autónomo: el audio, 1,45 MB como mucho; el archivo entero, 2 MB, para dejar sitio a las fases siguientes. Hoy: 1,38 y 1,46 MB.
+
+### Verificado
+- Banco: 24 de 24. Nuevas, con un contexto de audio simulado: cada nota arranca sin silencio, a su velocidad y con su envolvente; con más de 8 notas se apaga la más antigua; el audio interrumpido se reanuda. También el restablecer, y las huellas del audio incrustado.
 
 ---
 

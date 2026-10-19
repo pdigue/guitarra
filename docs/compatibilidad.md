@@ -1,6 +1,6 @@
 # Trasteando — Compatibilidad entre sistemas operativos
 
-**Versión:** 1.0 · **Fecha:** 15 de octubre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
+**Versión:** 1.1 · **Fecha:** 19 de octubre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
 
 La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este documento lista cada capacidad del navegador que usa o usará, cómo se comporta en cada sistema y qué hace la app donde falta. Se revisa en cada etapa que añada una capacidad nueva.
 
@@ -18,7 +18,7 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 |---|---|:---:|:---:|:---:|---|
 | Web Audio | Todo el sonido | ✅ | ✅ | ✅ | Sin alternativa: es la base |
 | Reanudar el audio tras una interrupción | Volver a sonar tras una llamada o un bloqueo | ✅ | ✅ | ⚠️ iOS lo deja en `interrupted` | `wakeAudio()` lo reanuda en cada nota (0.1.4) |
-| Sonar con el interruptor de silencio puesto | Que suene el iPhone en silencio | — | — | ⚠️ Web Audio se calla | Desde la 0.2.0, `navigator.audioSession.type = 'playback'` si existe (Safari 16.4+). Se confirma en el iPhone; si no basta, aviso en la pantalla de entrada |
+| Sonar con el interruptor de silencio puesto | Que suene el iPhone en silencio | — | — | ⚠️ Web Audio se calla | Desde la 0.2.0, `navigator.audioSession.type = 'playback'` si existe (Safari 16.4+). **Confirmado por el cliente en su iPhone el 19/10 (V-05).** Efecto: al sonar, la app interrumpe la música de otras apps |
 | Leer las grabaciones del proyecto (`fetch`) | Cargar el audio | ✅ local y web | ✅ local y web | ✅ local y web | Con doble clic (`file://`) no se puede: por eso `dist/trasteando.html` lleva el audio dentro (0.2.1) |
 | Eventos de puntero | Pulsar y arrastrar el mástil | ✅ | ✅ | ✅ | — |
 | `localStorage` | Guardar ajustes y récord | ✅ | ✅ | ✅ | Si falla, la app funciona sin guardar |
@@ -33,6 +33,13 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 | Pantalla completa | Ocultar las barras del navegador | ✅ | ✅ | ❌ en Safari | La app instalada ya abre a pantalla completa |
 
 ✅ funciona · ⚠️ con matices · ❌ no disponible · — no aplica
+
+## Control de cambios
+
+| Versión | Fecha | Cambios |
+|---|---|---|
+| **1.1** | 19/10/2026 | Lectura de grabaciones (`fetch`) y archivo autónomo (0.2.0 y 0.2.1). Interruptor de silencio confirmado en el iPhone y su efecto sobre otras apps (CP-2). |
+| 1.0 | 15/10/2026 | Primera versión (PL-04). |
 
 ## Cómo se verifica
 
