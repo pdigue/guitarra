@@ -13,7 +13,7 @@ licencia. Lo exige el requisito **G-06** y, para el audio, **S-07**.
 |---|---|---|---|
 | Muestras de guitarra clásica (nylon) | quartertone, en Freesound; editadas por Nicholaus P. Brosowsky | CC BY 4.0 el original · CC BY 3.0 la edición | Copia exacta en `samples/nylon/` |
 | Muestras de guitarra acústica (acero) | University of Iowa Electronic Music Studios; editadas por Nicholaus P. Brosowsky | Uso sin restricciones el original · CC BY 3.0 la edición | Copia exacta en `samples/acoustic/` |
-| Tone.js 14.8.49 | Yotam Mann y colaboradores | MIT | Se carga desde cdnjs hasta que F2.2 lo sustituya por un reproductor propio |
+| Tone.js 14.8.49 | Yotam Mann y colaboradores | MIT | Usado hasta la 0.1.5. Desde la 0.2.0 la app tiene su propio reproductor y no lo carga |
 
 **CC BY** permite copiar, modificar y distribuir, también con fines comerciales,
 con una condición: citar al autor, la obra, la licencia y si se hicieron cambios.

@@ -1,11 +1,13 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 1.2 · **Fecha:** 15 de octubre de 2026 · **Base:** `requisitos.md` v1.4 · app `0.1.4` · `roadmap.md` v3.2  
+**Versión:** 1.3 · **Fecha:** 19 de octubre de 2026 · **Base:** `requisitos.md` v1.5 · app `0.2.0` · `roadmap.md` v3.3  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
+
+**Cambios en la 1.3:** S-08 verificado con la 0.2.0; evidencias nuevas en S-01, S-07 y S-08.
 
 **Cambios en la 1.2:** PL-04 nuevo (adaptabilidad entre sistemas, evidencia en `docs/compatibilidad.md`).
 
@@ -13,7 +15,7 @@
 
 | Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 92 | 59 | 13 | 18 | 2 | 0 | 18 |
+| 92 | 59 | 13 | 18 | 2 | 1 | 17 |
 
 | ID | Etapa | Método | Criterio de aceptación | Declaración | Evidencia | Verificación | Origen |
 |---|---|:---:|---|---|---|---|---|
@@ -50,8 +52,8 @@
 | **S-04** | F1.1 | T | Sin conexión, la app suena con el sintetizador y lo avisa en la pantalla de entrada. | Cumple | — | Pendiente | Cliente · listado 14/09 |
 | **S-05** | F1.1 | D | No suena nada antes de pulsar «Empezar». | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **S-06** | F1.1 | D | Tras recargar se mantiene el timbre elegido. | Cumple | F1.1 #13 | Pendiente | Cliente · listado 14/09 |
-| **S-07** | F2.1 · F2.3 | I | Ninguna petición de audio sale del dominio propio, y CREDITOS.md documenta origen y licencia. | Cumple parcialmente | CREDITOS.md y samples/ (F2.1). La app aún descarga el audio de fuera | Verificado parcialmente | AR-01 |
-| **S-08** | F2.1 · F2.2 · F2.4 | T | Medida con herramientas/medir-afinacion.py, cada muestra que usa la app suena a ±5 cents de la nota a la que está asignada; el banco lo comprueba contra la frecuencia medida y la huella sha256 de cada archivo. | Cumple | samples/afinacion.json · Banco (node --test): muestras. Falta que la app use samples/ (F2.2) | Verificado parcialmente | Desarrollo · medición F2.1 |
+| **S-07** | F2.1 · F2.3 | I | Ninguna petición de audio sale del dominio propio, y CREDITOS.md documenta origen y licencia. | Cumple parcialmente | CREDITOS.md y samples/ (F2.1) · Banco (node --test): ninguna dirección externa (0.2.0) | Verificado parcialmente | AR-01 |
+| **S-08** | F2.1 · F2.2 · F2.4 | T | Medida con herramientas/medir-afinacion.py, cada muestra que usa la app suena a ±5 cents de la nota a la que está asignada; el banco lo comprueba contra la frecuencia medida y la huella sha256 de cada archivo. | Cumple | samples/afinacion.json · Banco (node --test): muestras y todas las notas · V-02: 22 notas grabadas en el navegador, a menos de 1 cent | Verificado | Desarrollo · medición F2.1 |
 | **P-01** | F1.1 | A | Toda posición del mástil, en cualquier afinación permitida, se dibuja dentro del pentagrama. | Cumple | Análisis 15/09: ninguna nota fuera en todo el rango · F1.1 #3 y #4 | Verificado parcialmente | Cliente · listado 14/09 |
 | **P-02** | F1.1 | D | El pentagrama se oculta y se muestra desde el chip y desde Ajustes. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **P-03** | F5.3 | D | El pentagrama funciona en Libre, Adivinar y Escalas. | Cumple parcialmente | — | Pendiente | Cliente · listado 14/09 |

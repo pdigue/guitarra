@@ -1,9 +1,11 @@
 // Comprueba la lista de F1.1 del roadmap en un Chromium real (Playwright).
-// Herramienta de desarrollo: necesita Playwright con Chromium y una copia local
-// de Tone.js en la ruta TONE (el entorno del agente no llega a cdnjs). Sirve la
-// app como Live Server, redirige el audio a samples/, recorre las 15
-// comprobaciones, emula un iPhone en vertical y apaisado, y graba las notas de
-// los trastes 7, 8 y 12 para medir su afinación con medir-afinacion.py.
+// Herramienta de desarrollo: necesita Playwright con Chromium. Sirve la app
+// como Live Server, recorre las 15 comprobaciones, emula móviles en vertical y
+// apaisado, anota cualquier petición a otro servidor y graba lo que suena
+// (cuerdas al aire y 1ª cuerda hasta el traste 24, en los dos timbres) para
+// medir su afinación con medir-afinacion.py.
+// Desde la 0.2.0 la app no usa nada externo. Para comparar con versiones
+// anteriores, que usaban Tone.js, hace falta una copia local en TONE_JS.
 // Uso: node herramientas/comprobar-en-navegador.js <repo> index.html <salida>
 
 const { chromium, devices } = require('playwright');
@@ -61,16 +63,18 @@ async function start(page, url){
 // Graba la salida de audio mientras suena una nota (MediaRecorder, en webm).
 async function record(page, midi, file){
   const b64 = await page.evaluate(async (midi) => {
-    const raw = Tone.getContext().rawContext;
+    const tone = typeof Tone !== 'undefined';
+    const raw = tone ? Tone.getContext().rawContext : audioCtx;
+    const out = tone ? Tone.getDestination() : audioOut;
     const dest = raw.createMediaStreamDestination();
-    Tone.getDestination().connect(dest);
+    out.connect(dest);
     const rec = new MediaRecorder(dest.stream), chunks = [];
     rec.ondataavailable = e => chunks.push(e.data);
     const done = new Promise(r => rec.onstop = r);
     rec.start(); await new Promise(r => setTimeout(r, 150));
     playMidi(midi, 1.4);
     await new Promise(r => setTimeout(r, 1500));
-    rec.stop(); await done; Tone.getDestination().disconnect(dest);
+    rec.stop(); await done; out.disconnect(dest);
     const buf = new Uint8Array(await new Blob(chunks).arrayBuffer());
     let s = ''; for (let i = 0; i < buf.length; i++) s += String.fromCharCode(buf[i]);
     return btoa(s);
@@ -99,8 +103,16 @@ async function record(page, midi, file){
   // 2. Suena al instante: de la pulsación a la orden de sonar
   await page.evaluate(() => {
     window.__t = {}; document.addEventListener('pointerdown', () => { __t.down = performance.now(); }, true);
-    const orig = sampler.triggerAttackRelease.bind(sampler);
-    sampler.triggerAttackRelease = (...a) => { __t.play = performance.now(); __t.when = a[2]; __t.now = Tone.immediate(); return orig(...a); };
+    if (typeof Tone !== 'undefined'){
+      const orig = sampler.triggerAttackRelease.bind(sampler);
+      sampler.triggerAttackRelease = (...a) => { __t.play = performance.now(); __t.when = a[2]; __t.now = Tone.immediate(); return orig(...a); };
+    } else {
+      const orig = AudioBufferSourceNode.prototype.start;
+      AudioBufferSourceNode.prototype.start = function(when, ...r){
+        if (this.buffer && this.buffer.length > 1){ __t.play = performance.now(); __t.when = when; __t.now = audioCtx.currentTime; }
+        return orig.call(this, when, ...r);
+      };
+    }
   });
   await cell(45, 5).click();
   const lat = await page.evaluate(() => ({ ms: __t.play - __t.down, ahead: __t.when - __t.now }));
@@ -204,8 +216,16 @@ async function record(page, midi, file){
   // 15. Afinación real del sonido: 1ª cuerda, trastes 7, 8 y 12 en clásica
   await page.setViewportSize({ width: 1280, height: 800 });
   const recs = {};
-  for (const [fret, midi] of [[7, 71], [8, 72], [12, 76]]) recs[fret] = await record(page, midi, path.join(OUT, 'nylon-' + midi));
-  check(15, 'Grabadas las notas de los trastes 7, 8 y 12 (se miden aparte)', Object.values(recs).every(n => n > 50000), JSON.stringify(recs));
+  // Cuerdas al aire y 1ª cuerda en los trastes 7, 8, 12, 17 y 24, en los dos timbres.
+  const notas = [40, 45, 50, 55, 59, 64, 71, 72, 76, 81, 88];
+  for (const timbre of ['nylon', 'acoustic']){
+    await page.evaluate(t => setTimbre(t), timbre);
+    await page.waitForFunction(t => samplerTimbre === t, timbre, { timeout: 15000 });
+    await sleep(2500);
+    for (const midi of notas) recs[timbre + '-' + midi] = await record(page, midi, path.join(OUT, timbre + '-' + midi));
+  }
+  await page.evaluate(() => setTimbre('nylon'));
+  check(15, `Grabadas ${Object.keys(recs).length} notas en los dos timbres (se miden aparte)`, Object.values(recs).every(n => n > 50000), Object.keys(recs).length + ' grabaciones');
 
   // 14. Recorrido sin errores
   for (const s of ['free', 'guess', 'tuner', 'free']){ await page.click(`.tab[data-screen="${s}"]`); await sleep(300); }

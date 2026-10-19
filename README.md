@@ -8,7 +8,7 @@ Guerra, en desarrollo local; se publicará al final del roadmap.
 
 | Modo | Cómo | Qué funciona |
 |---|---|---|
-| Archivo | Doble clic en `index.html` | Todo, con sonido real si hay conexión (sintetizado si no) |
+| Archivo | Doble clic en `index.html` | Todo, con sonido sintetizado hasta F2.3 |
 | Local | VS Code → clic derecho en `index.html` → *Open with Live Server* | Todo |
 | En el iPhone | Con Live Server encendido, abrir en Safari `http://<IP del ordenador>:5500` | Todo salvo micrófono e instalación |
 
