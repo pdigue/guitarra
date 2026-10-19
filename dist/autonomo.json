@@ -1,0 +1,167 @@
+{
+ "version": "0.2.1",
+ "bytes": 1424042,
+ "limite": 1500000,
+ "muestras": [
+  {
+   "timbre": "nylon",
+   "nota": "E2",
+   "archivo": "E2.mp3",
+   "bytes": 73186,
+   "segundos": 4.5,
+   "cents_original": -2.8,
+   "cents_recortada": -2.8,
+   "sha256": "241c5a11c6550c3d8e64467d70fba65b265ec5774c73e1cacd6f7bbe694b6a1a"
+  },
+  {
+   "timbre": "nylon",
+   "nota": "A2",
+   "archivo": "A2.mp3",
+   "bytes": 73186,
+   "segundos": 4.5,
+   "cents_original": 0.8,
+   "cents_recortada": 0.8,
+   "sha256": "21d9d2590f31e62481bbf569b714c2a3c1709894028b426cd800492b57191466"
+  },
+  {
+   "timbre": "nylon",
+   "nota": "D3",
+   "archivo": "D3.mp3",
+   "bytes": 73186,
+   "segundos": 4.5,
+   "cents_original": -2.4,
+   "cents_recortada": -2.4,
+   "sha256": "47a80ed9a26cd1e1b6181a512f7591a49796bcfb51a4ea82df75296abf08283a"
+  },
+  {
+   "timbre": "nylon",
+   "nota": "G3",
+   "archivo": "G3.mp3",
+   "bytes": 51871,
+   "segundos": 3.19,
+   "cents_original": 2.6,
+   "cents_recortada": 2.6,
+   "sha256": "499036e0a395ee2d988cd5f586e984b67001f1bd9b0449ff1315fdcd111eeb41"
+  },
+  {
+   "timbre": "nylon",
+   "nota": "B3",
+   "archivo": "B3.mp3",
+   "bytes": 51871,
+   "segundos": 3.19,
+   "cents_original": -0.6,
+   "cents_recortada": -0.6,
+   "sha256": "7dece97eeae3e39773e50674e65fa2ca024376fa2a73eb1c5e0cb931b557533e"
+  },
+  {
+   "timbre": "nylon",
+   "nota": "E4",
+   "archivo": "E4.mp3",
+   "bytes": 51871,
+   "segundos": 3.19,
+   "cents_original": -2.1,
+   "cents_recortada": -2.1,
+   "sha256": "0462339fec0779f4d60aadf1cf2f65e12036c69e968f292486be70cb87e0fba7"
+  },
+  {
+   "timbre": "nylon",
+   "nota": "A4",
+   "archivo": "A4.mp3",
+   "bytes": 51871,
+   "segundos": 3.19,
+   "cents_original": -0.2,
+   "cents_recortada": -0.2,
+   "sha256": "98d7a408b4fdc3b83e772e988eacba386bcb3b2833425678a6dd2de9cc123557"
+  },
+  {
+   "timbre": "nylon",
+   "nota": "E5",
+   "archivo": "E5.mp3",
+   "bytes": 25121,
+   "segundos": 1.52,
+   "cents_original": -2.4,
+   "cents_recortada": -2.4,
+   "sha256": "5f3228ea965bf6c948c0162223d7dfc7066500f9c618f337192fb0b3c9782269"
+  },
+  {
+   "timbre": "acoustic",
+   "nota": "E2",
+   "archivo": "E2.mp3",
+   "bytes": 73186,
+   "segundos": 4.5,
+   "cents_original": -1.9,
+   "cents_recortada": -1.9,
+   "sha256": "8beb43bac362dbc9270dcd7eb3c9524e02474ca7dd3bb35f98de1b3d118545d4"
+  },
+  {
+   "timbre": "acoustic",
+   "nota": "A2",
+   "archivo": "A2.mp3",
+   "bytes": 73186,
+   "segundos": 4.5,
+   "cents_original": 1.0,
+   "cents_recortada": 1.0,
+   "sha256": "c52e2e0ac40a9ecdc35c57711b0e024ca5d406497206d1a77aea0bcbe976f8e0"
+  },
+  {
+   "timbre": "acoustic",
+   "nota": "D3",
+   "archivo": "D3.mp3",
+   "bytes": 73186,
+   "segundos": 4.5,
+   "cents_original": -2.5,
+   "cents_recortada": -2.5,
+   "sha256": "c9214a37a5ca460f4a844bb11a7e45728418e8ac33f35440df20298f94216a11"
+  },
+  {
+   "timbre": "acoustic",
+   "nota": "G3",
+   "archivo": "G3.mp3",
+   "bytes": 73186,
+   "segundos": 4.5,
+   "cents_original": -4.2,
+   "cents_recortada": -4.2,
+   "sha256": "ba3c7eaadc3b22241dd90c4fccabae6847b292d7fe5427481a2cde8ae1acf59b"
+  },
+  {
+   "timbre": "acoustic",
+   "nota": "B3",
+   "archivo": "B3.mp3",
+   "bytes": 73186,
+   "segundos": 4.5,
+   "cents_original": -0.5,
+   "cents_recortada": -0.5,
+   "sha256": "3b8a01fc877b71003f912f536968ec8d8f3b0ea1f5f5ff130bf4ebee72277be1"
+  },
+  {
+   "timbre": "acoustic",
+   "nota": "E4",
+   "archivo": "E4.mp3",
+   "bytes": 73186,
+   "segundos": 4.5,
+   "cents_original": 4.5,
+   "cents_recortada": 4.5,
+   "sha256": "968e5e000cf3caf73e1409b228c944a1adaa210ce585060e0ba2c56dece0b726"
+  },
+  {
+   "timbre": "acoustic",
+   "nota": "A4",
+   "archivo": "A4.mp3",
+   "bytes": 66081,
+   "segundos": 4.08,
+   "cents_original": 2.8,
+   "cents_recortada": 2.8,
+   "sha256": "e4e222c2ba8eac9a41882387cec2c7b612db234c8bc2dfd3e426ca39e5fd94b7"
+  },
+  {
+   "timbre": "acoustic",
+   "nota": "D5",
+   "archivo": "D5.mp3",
+   "bytes": 53124,
+   "segundos": 3.27,
+   "cents_original": 1.9,
+   "cents_recortada": 1.9,
+   "sha256": "a3aa90fb427198a6d1215105bf478106d4642d4ddb9415b8189e682f01048951"
+  }
+ ]
+}

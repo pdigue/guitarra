@@ -218,6 +218,37 @@ test('se salta el silencio inicial de cada grabación (AT-02 #4)', () => {
   assert.ok(Math.abs(offset - (1000 / 44100 - 0.002)) < 1e-6, `empieza en ${offset}`);
 });
 
+test('con el audio dentro de la página no descarga nada (G-07, F2.3)', async () => {
+  const A = boot(APP);
+  A.ev(cargaFalsa);
+  A.ev(`globalThis.__descargas = 0;
+    fetchAndDecode = async () => { __descargas++; return __buf; };
+    decodeData = async () => __buf;
+    for (const nota of Object.keys(SAMPLE_MAPS.nylon)){
+      const el = document.createElement('script');
+      el.setAttribute('id', 'audio-nylon-' + nota); el.textContent = btoa('mp3 de prueba');
+      document.body.appendChild(el);
+    }`);
+  assert.equal(await A.ev("loadSamples('nylon')"), true);
+  assert.equal(A.ev('__descargas'), 0);
+});
+
+test('el archivo autónomo existe, está al día con index.html y pesa 1,5 MB o menos (G-07, G-08, F2.3)', () => {
+  const dist = path.join(__dirname, '..', 'dist', 'trasteando.html');
+  const pagina = fs.readFileSync(dist, 'utf8');
+  assert.ok(fs.statSync(dist).size <= 1_500_000, `pesa ${fs.statSync(dist).size} bytes`);
+  const i = pagina.indexOf('<!-- AUDIO INCRUSTADO: inicio'), f = pagina.indexOf('<!-- AUDIO INCRUSTADO: fin -->');
+  assert.ok(i > 0 && f > i, 'faltan las marcas del audio incrustado');
+  const sinAudio = pagina.slice(0, i) + pagina.slice(f + '<!-- AUDIO INCRUSTADO: fin -->\n'.length);
+  assert.equal(sinAudio, fs.readFileSync(APP, 'utf8'), 'dist/trasteando.html no se ha regenerado tras cambiar index.html');
+  const ids = [...pagina.slice(i, f).matchAll(/id="audio-(\w+)-(\w+)"/g)].map(m => m[1] + '-' + m[2]).sort();
+  const A = boot(APP);
+  const mapas = JSON.parse(A.ev('JSON.stringify(SAMPLE_MAPS)'));
+  assert.deepEqual(ids, Object.entries(mapas).flatMap(([t, m]) => Object.keys(m).map(n => t + '-' + n)).sort());
+  const urls = [...new Set(pagina.match(/https?:\/\/[^\s"'`)<>]+/g) || [])].filter(u => u !== 'http://www.w3.org/2000/svg');
+  assert.deepEqual(urls, []);
+});
+
 test('el reto suena una sola vez aunque se cambie de pestaña deprisa (J-01, AT-02 #5)', async () => {
   const A = boot(APP);
   A.ev('globalThis.__plays = 0; playMidi = () => { __plays++; };');

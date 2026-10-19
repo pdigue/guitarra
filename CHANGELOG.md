@@ -6,7 +6,8 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.2.0** | 19/10/2026 | F2.2 | Rama `auto/F2.2-reproductor` |
+| **0.2.1** | 19/10/2026 | F2.3 | Rama `auto/F2.3-autonomo` |
+| 0.2.0 | 19/10/2026 | F2.2 | `main`, aprobada tras la escucha en el iPhone |
 | 0.1.5 | 15/10/2026 | F1 · verificación V-01 | `main`, etiqueta `v0.1.5` |
 | 0.1.4 | 15/10/2026 | F1 · auditoría CP-1 | `main`, fusionada el 15/10 |
 | 0.1.3 | 14/10/2026 | F1 · hallazgo de F2.1 | Rama `auto/F1-iteracion-0` · superada |
@@ -21,6 +22,21 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.2.1] — 19/10/2026 · Etapa F2.3: archivo autónomo
+
+### Añadido
+- **G-07 · G-08** · `dist/trasteando.html`: la app con sus 16 grabaciones dentro. Con doble clic y sin conexión suena la guitarra real. Pesa 1,42 MB: cada grabación va recortada a 4,5 s con un fundido final y a 128 kbps, sin cambiar su afinación. Lo genera `herramientas/generar-autonomo.py` a partir de `index.html`; el banco avisa si se queda desfasado.
+- La app usa el audio de dentro de la página cuando lo tiene, y si no, lo descarga de `samples/`.
+
+### Corregido
+- El retroceso de la 0.2.0: para usarla con doble clic, abre `dist/trasteando.html`. `index.html` sigue siendo la versión para Live Server y la web.
+
+### Verificado
+- Banco: 20 de 20. Nuevas: con el audio dentro no se descarga nada, y el autónomo está al día, pesa 1,5 MB o menos y no contiene direcciones externas.
+- En Chromium, desde disco y sin conexión: abre en 0,6 s, el sonido está listo en 0,5 s, ningún intento de conexión, y las notas grabadas suenan a menos de 1 cent (V-03).
 
 ---
 

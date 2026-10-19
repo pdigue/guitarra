@@ -1,11 +1,13 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 1.3 · **Fecha:** 19 de octubre de 2026 · **Base:** `requisitos.md` v1.5 · app `0.2.0` · `roadmap.md` v3.3  
+**Versión:** 1.4 · **Fecha:** 19 de octubre de 2026 · **Base:** `requisitos.md` v1.6 · app `0.2.1` · `roadmap.md` v3.4  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
+
+**Cambios en la 1.4:** G-07 y G-08 verificados parcialmente con el archivo autónomo.
 
 **Cambios en la 1.3:** S-08 verificado con la 0.2.0; evidencias nuevas en S-01, S-07 y S-08.
 
@@ -15,7 +17,7 @@
 
 | Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 92 | 59 | 13 | 18 | 2 | 1 | 17 |
+| 92 | 60 | 12 | 18 | 2 | 1 | 19 |
 
 | ID | Etapa | Método | Criterio de aceptación | Declaración | Evidencia | Verificación | Origen |
 |---|---|:---:|---|---|---|---|---|
@@ -25,8 +27,8 @@
 | **G-04** | F6.3 · F7.2 | D | Desde la web publicada, el navegador ofrece instalarla y abre a pantalla completa desde el icono. | Cumple parcialmente | — | Pendiente | Cliente · listado 14/09 |
 | **G-05** | F3.4 | I+T | Todo control es alcanzable con teclado y muestra el foco; contrastes ≥ 4,5:1 medidos; el movimiento se reduce con prefers-reduced-motion. | Cumple parcialmente | — | Pendiente | Desarrollo · v1.1 |
 | **G-06** | F2.1 · F6.4 | I | CREDITOS.md lista cada recurso de terceros con su origen y su licencia, y la app muestra el texto de atribución en Ajustes. | Cumple parcialmente | CREDITOS.md (F2.1). Falta mostrarlo en la app (F6.4) | Verificado parcialmente | Desarrollo · v1.1 |
-| **G-07** | F2.3 · F2.5 | T | Con el ordenador en modo avión, abrir el archivo con doble clic: suenan las muestras reales y funcionan Libre, Adivinar y el afinador por referencia. | Cumple parcialmente | — | Pendiente | Cliente · 15/09 |
-| **G-08** | F4.1 · F6.1 | T | El archivo autónomo generado y la web publicada superan el mismo banco de pruebas. | Cumple parcialmente | — | Pendiente | Cliente · 15/09 |
+| **G-07** | F2.3 · F2.5 | T | Con el ordenador en modo avión, abrir el archivo con doble clic: suenan las muestras reales y funcionan Libre, Adivinar y el afinador por referencia. | Cumple | V-03: dist/trasteando.html desde disco y sin conexión en Chromium, abre en 0,6 s y suena a menos de 1 cent · Banco (node --test): autónomo al día y sin descargas | Verificado parcialmente | Cliente · 15/09 |
+| **G-08** | F4.1 · F6.1 | T | El archivo autónomo generado y la web publicada superan el mismo banco de pruebas. | Cumple parcialmente | — | Verificado parcialmente | Cliente · 15/09 |
 | **G-09** | F7.4 | I | Ficha enviada a revisión en al menos una tienda, o decisión documentada de no hacerlo. | No cumple | — | Pendiente | Cliente · 14/10 |
 | **G-10** | F1.3 | I | Ajustes muestra la versión; CHANGELOG.md tiene una entrada por versión; existe la etiqueta de Git de cada cierre de fase. | Cumple | Banco (node --test) · CHANGELOG.md · F1.1 #12 | Verificado parcialmente | Cliente · 14/10 |
 | **G-11** | F6.4 | I | La política de privacidad está publicada y la app no envía ninguna petición con datos del usuario (pestaña Red). | No cumple | — | Pendiente | Desarrollo · v1.2 |

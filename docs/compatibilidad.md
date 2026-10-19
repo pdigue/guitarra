@@ -19,12 +19,12 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 | Web Audio | Todo el sonido | ✅ | ✅ | ✅ | Sin alternativa: es la base |
 | Reanudar el audio tras una interrupción | Volver a sonar tras una llamada o un bloqueo | ✅ | ✅ | ⚠️ iOS lo deja en `interrupted` | `wakeAudio()` lo reanuda en cada nota (0.1.4) |
 | Sonar con el interruptor de silencio puesto | Que suene el iPhone en silencio | — | — | ⚠️ Web Audio se calla | Desde la 0.2.0, `navigator.audioSession.type = 'playback'` si existe (Safari 16.4+). Se confirma en el iPhone; si no basta, aviso en la pantalla de entrada |
-| Leer las grabaciones del proyecto (`fetch`) | Cargar el audio | ✅ local y web | ✅ local y web | ✅ local y web | Con doble clic (`file://`) no se puede: suena el sintetizador hasta F2.3 |
+| Leer las grabaciones del proyecto (`fetch`) | Cargar el audio | ✅ local y web | ✅ local y web | ✅ local y web | Con doble clic (`file://`) no se puede: por eso `dist/trasteando.html` lleva el audio dentro (0.2.1) |
 | Eventos de puntero | Pulsar y arrastrar el mástil | ✅ | ✅ | ✅ | — |
 | `localStorage` | Guardar ajustes y récord | ✅ | ✅ | ✅ | Si falla, la app funciona sin guardar |
 | Vibración | Respuesta al fallar en Adivinar | — | ✅ | ❌ | Se omite; el color y el destello bastan (J-09) |
 | Atributo `inert` | Que el panel cerrado no reciba el foco | ✅ | ✅ | ✅ | — |
-| Abrir el archivo con doble clic (`file://`) | Modo archivo autónomo (G-07) | ✅ | ⚠️ a verificar | ❌ la app Archivos no ejecuta JavaScript | En iPhone, la web o la app instalada |
+| Abrir el archivo con doble clic (`file://`) | Modo archivo autónomo (G-07) | ✅ con `dist/trasteando.html` (0.2.1) | ⚠️ a verificar | ❌ la app Archivos no ejecuta JavaScript | En iPhone, la web o la app instalada |
 | Instalar como app | Icono en la pantalla de inicio (G-04) | ✅ Edge, Chrome | ✅ | ✅ «Añadir a pantalla de inicio» | — |
 | Icono de la app instalada | Que se vea el icono propio | ✅ | ✅ | ⚠️ exige PNG; hoy es SVG | Iconos PNG en F6.3 |
 | Service Worker | Funcionar sin conexión desde la web (G-03) | ✅ | ✅ | ✅ | Solo con `https` o `localhost` |
