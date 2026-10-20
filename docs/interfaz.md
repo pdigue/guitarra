@@ -1,7 +1,7 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 1.3 · **Fecha:** 20 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0). Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4 (ver el control de cambios).
-**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.3.1` · `requisitos.md` v1.13 · `roadmap.md` v3.11
+**Versión:** 1.4 · **Fecha:** 20 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0). Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
+**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.3.2` · `requisitos.md` v1.14 · `roadmap.md` v3.12
 **Revisión:** auditoría de requisitos AR-04 (`auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
 
@@ -155,7 +155,7 @@ Las cuatro áreas pasan a la cabecera como pestañas, y desaparece la barra infe
 - **Mástil con teclado:** el mástil es un único punto de parada del tabulador. Dentro, **← →** cambian de traste, **↑ ↓** de cuerda, **Intro** o **Espacio** tocan la nota, e **Inicio** / **Fin** van al primer y al último traste visibles. Si la posición se sale de la vista, el mástil se desplaza solo. Técnica: *roving tabindex*, con el mástil anunciado como una cuadrícula (`role="grid"`).
 - **Foco visible** en todo: anillo discontinuo de 3 px, como en el boceto C1.
 - **Lectores de pantalla:** cada posición se anuncia («Sol 3, cuarta cuerda, traste 5») y los resultados del reto y del afinador se leen solos (`aria-live`). Los botones que solo tienen icono (⚙, ▶, −, +, 𝄞) llevan nombre.
-- **Tamaño de toque:** en pantallas táctiles, **ningún control ni casilla del mástil mide menos de 40 × 40 px**. Los bocetos lo cumplen y la herramienta lo comprueba. Para las casillas, **el zoom no deja que un traste mida menos de 40 px**: en el iPhone en vertical caben como mucho **7 trastes** a la vez; en horizontal, de 10 a 12 según el ancho; con ratón, hasta 24 como hoy. Si el zoom guardado (V-08) pide trastes más pequeños, se muestran los que caben, y lo guardado se conserva para que al girar el móvil vuelva el zoom elegido.
+- **Tamaño de toque:** en pantallas táctiles, **ningún control ni casilla del mástil mide menos de 40 × 40 px**. Los bocetos lo cumplen y la herramienta lo comprueba. Para las casillas, **la vista por defecto usa trastes de 40 px o más**. Si quieres ver más, **«+» enseña más trastes** y «−» menos, y con el dedo los trastes pueden estrecharse hasta 28 px: en el iPhone con Safari, hasta 11 a la vista en vertical y 15 en horizontal. Con ratón, hasta 24, como siempre. Si el zoom guardado (V-08) pide trastes más pequeños, se muestran los que caben, y lo guardado se conserva para que al girar el móvil vuelva el zoom elegido.
 - **Movimiento:** con `prefers-reduced-motion`, sin destellos ni animaciones de desplazamiento.
 - **Contraste:** 4,5:1 en textos, comprobado con herramienta en F3.4.
 
@@ -220,7 +220,8 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.3** | 20/10/2026 | §10: paleta decidida en F3.4 (7 naturales bien distintas y sostenidos derivados) y puntos secundarios con contorno. |
+| **1.4** | 20/10/2026 | §9: «+» enseña más trastes y «−» menos; con el dedo se pueden pedir trastes de hasta 28 px (tu comentario del 20/10). |
+| 1.3 | 20/10/2026 | §10: paleta decidida en F3.4 (7 naturales bien distintas y sostenidos derivados) y puntos secundarios con contorno. |
 | 1.2 | 20/10/2026 | Tras AR-05 y AT-04: en vertical, la navegación nunca se sale y los 40 px por cuerda se garantizan desde 660 px de alto (§7); en horizontal, de 10 a 12 trastes según el ancho; en el panel de Adivinar, Do Re Mi y 𝄞 arriba, como en Libre; el zoom guardado se conserva. El gesto de bajar para cerrar Ajustes pasa a F3.4. |
 | 1.1 | 20/10/2026 | Medido en F3.2 (V-06): con la cejuela de 40 px, caben como mucho 7 trastes en el iPhone en vertical y 10 en horizontal (antes se estimaban 8 y 11). Solo cambian esas cifras. |
 | 1.0 | 20/10/2026 | Aprobada por el cliente. Cambios aplicados en `requisitos.md` v1.11. |

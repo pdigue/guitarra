@@ -1,7 +1,7 @@
 # Trasteando — Especificación de Requisitos
 
-**Versión del documento:** 1.13 · **Fecha:** 20 de octubre de 2026  
-**Válido para:** app `0.3.1` · `roadmap.md` v3.11 · `matriz-cumplimiento` v1.11 · fase en curso **F3**, en modo acelerado  
+**Versión del documento:** 1.14 · **Fecha:** 20 de octubre de 2026  
+**Válido para:** app `0.3.2` · `roadmap.md` v3.12 · `matriz-cumplimiento` v1.12 · fase en curso **F3**, en modo acelerado  
 **Repositorio:** github.com/pdigue/guitarra, carpeta `docs/` · **Gestiona:** chat de Desarrollo  
 **Tipo de producto:** aplicación web progresiva (PWA), desarrollada en local y publicada al final del roadmap
 
@@ -34,7 +34,8 @@
 
 | Versión | Fecha | App | Roadmap | Resumen | Origen |
 |---|---|:---:|:---:|---|---|
-| **1.13** | 20/10/2026 | 0.3.1 | 3.11 | Etapa F3.4: G-05 implementado y paleta decidida. 0 nuevos y 2 modificados: 93 en total. | Tu decisión del 20/10, AR-06 y AT-05 |
+| **1.14** | 20/10/2026 | 0.3.2 | 3.12 | Zoom: «+» enseña más trastes y se pueden pedir trastes de hasta 28 px con el dedo. 0 nuevos y 2 modificados: 93 en total. | Tu comentario del 20/10 |
+| 1.13 | 20/10/2026 | 0.3.1 | 3.11 | Etapa F3.4: G-05 implementado y paleta decidida. 0 nuevos y 2 modificados: 93 en total. | Tu decisión del 20/10, AR-06 y AT-05 |
 | 1.12 | 20/10/2026 | 0.3.0 | 3.10 | Etapa F3.2: V-01 y C-07 implementados. 0 nuevos y 8 modificados: 93 en total. | Etapa F3.2, AR-05 y AT-04 |
 | 1.11 | 20/10/2026 | 0.2.3 | 3.9 | Interfaz aprobada (F3.1): C-06 validado. 1 nuevo (C-07) y 8 modificados: 93 en total. | Tu aprobación de `interfaz.md` |
 | 1.10 | 20/10/2026 | 0.2.3 | 3.8 | Licencia del pack de nylon completa: S-07 implementado y validado. 0 nuevos y 1 modificado: 92 en total. | Tu comprobación en Freesound |
@@ -49,9 +50,15 @@
 | 1.1 | 15/09/2026 | 0.1.1 | 2.0 | Reconciliación de estados. 11 nuevos (S-07, V-09, J-11, G-05, G-06, A-02-CA, E-02b, E-05b, X-01 a X-03): 81 en total. Seis decisiones cerradas. | Auditoría de requisitos AR-01 |
 | 1.0 | 14/09/2026 | 0.1.0 | — | Primera versión: 70 requisitos en 11 categorías. | Tu listado inicial |
 
+### Detalle de la versión 1.14
+
+**Requisitos modificados ✏️** — G-05, V-04
+- **V-04:** «+» enseña más trastes y «−» menos. Con el dedo, la vista por defecto sigue con trastes de 40 px, pero puedes pedir más trastes, de hasta 28 px.
+- **G-05:** la regla de 40 × 40 px admite esa excepción: los trastes más estrechos solo aparecen si tú los pides.
+
 ### Detalle de la versión 1.13
 
-**Requisitos modificados ✏️** — G-05, L-03
+**Requisitos modificados** — G-05, L-03
 - **G-05:** implementado en la 0.3.1: teclado, contraste, movimiento reducido, tamaños táctiles y paleta. Su criterio en la matriz añade los umbrales de la paleta.
 - **L-03:** las posiciones del mismo sonido llevan contorno y, con «Ver todas las notas», un anillo exterior.
 
@@ -213,7 +220,7 @@
 | **G-02** | La app se organiza en áreas accesibles desde una navegación principal: Libre, Adivinar, Afinador y Escalas. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Escalas visible pero deshabilitada hasta F5. |
 | **G-03** | La app funciona sin conexión una vez cargada **desde la web**. | Media | F6.2 · F7.2 | ⬜ | ⬜ | — | Service Worker en F6.2, decidido el 20/10: en la Sesión 1 el iPhone no prueba la app sin conexión. Depende de S-07. Se valida en dos pasos: en `localhost` en F6.2 y desde la web publicada en F7.2 (CP-1). En modo archivo (G-07) la autonomía se consigue de otra forma: el audio va dentro del archivo. |
 | **G-04** | La app es instalable como PWA (icono en la pantalla de inicio, pantalla completa). | Alta | F6.3 · F7.2 | 🟡 | ⬜ | 0.1.0 | Manifiesto incrustado como `data:` URL. Falta un archivo de manifiesto propio con iconos PNG (F6.3) y verificarla instalada desde la web publicada (F7.2): instalar solo es posible desde `https`. |
-| **G-05** ✏️ | La interfaz cumple unos mínimos de accesibilidad: foco de teclado visible, respeto a `prefers-reduced-motion`, contraste suficiente y etiquetas accesibles en los controles solo-icono. | Media | F3.4 | ✅ | ⬜ | 0.1.1 | **Hecho en la 0.3.1** (F3.4, V-07). Con el teclado se llega a todo y el foco se ve; el mástil es una cuadrícula (`role="grid"`) que se recorre con las flechas y se toca con Intro; en Adivinar ninguna casilla anuncia su nota (J-12). Todos los textos a 4,5:1 o más, medidos en Chromium sobre su fondo real (con la 0.3.0 había 205 por debajo). Con «reducir movimiento» nada se anima. Con el dedo, controles y casillas de 40 × 40 px, también en Ajustes; la fila entera cambia su interruptor, y el asa cierra Ajustes deslizando. **Paleta por nota** con tu criterio del 20/10: 7 naturales bien separadas, también con daltonismo, y sostenidos derivados (`herramientas/paleta.py`). **Excepción** (AR-05): en vertical, por debajo de 660 px de alto, la navegación manda sobre los 40 px por cuerda. Falta probar con el dedo la fila y el asa en tu iPhone (Sesión 1). |
+| **G-05** ✏️ | La interfaz cumple unos mínimos de accesibilidad: foco de teclado visible, respeto a `prefers-reduced-motion`, contraste suficiente y etiquetas accesibles en los controles solo-icono. | Media | F3.4 | ✅ | ⬜ | 0.1.1 | **Hecho en la 0.3.1** (F3.4, V-07). Con el teclado se llega a todo y el foco se ve; el mástil es una cuadrícula (`role="grid"`) que se recorre con las flechas y se toca con Intro; en Adivinar ninguna casilla anuncia su nota (J-12). Todos los textos a 4,5:1 o más, medidos en Chromium sobre su fondo real (con la 0.3.0 había 205 por debajo). Con «reducir movimiento» nada se anima. Con el dedo, controles y casillas de 40 × 40 px, también en Ajustes (salvo si pides más trastes con «+», que pueden estrecharse hasta 28 px); la fila entera cambia su interruptor, y el asa cierra Ajustes deslizando. **Paleta por nota** con tu criterio del 20/10: 7 naturales bien separadas, también con daltonismo, y sostenidos derivados (`herramientas/paleta.py`). **Excepción** (AR-05): en vertical, por debajo de 660 px de alto, la navegación manda sobre los 40 px por cuerda. Falta probar con el dedo la fila y el asa en tu iPhone (Sesión 1). |
 | **G-06** | El proyecto documenta sus dependencias externas y la licencia de cada recurso de terceros que distribuye, y la app muestra los créditos. | Media | F2.1 · F6.4 | 🟡 | ⬜ | — | `CREDITOS.md` (F2.1): origen, licencia, huella `sha256` y texto de atribución de cada muestra de audio, y Tone.js (MIT). Falta mostrar los créditos dentro de la app y elegir la licencia del propio código (F6.4). |
 | **G-07** | **Modo archivo autónomo** en Windows y Android: la app funciona completa —salvo el afinador por micrófono— abriendo el archivo directamente (`file://`), sin servidor y sin conexión. En iPhone, donde no se pueden abrir páginas desde Archivos, la autonomía llega por G-03. | Alta | F2.3 · F2.5 | ✅ | ⬜ | 0.2.1 | `dist/trasteando.html`: la app con sus 17 grabaciones dentro (1,46 MB). Límites revisados en CP-2: el audio no pasa de 1,45 MB, y bajar su calidad exige tu escucha; el archivo entero no pasa de 2 MB, para dejar sitio al código de F3 a F6. Lo que cuenta para ti es que abra en ≤ 3 s en Windows: en Chromium tarda 0,3 s, y en tu PC se mide en la Sesión 1 (F2.5). Redacción limitada a Windows y Android tras AR-03. |
 | **G-08** | El proyecto conserva **dos formas de distribución** equivalentes: el archivo autónomo (para llevárselo) y la web publicada (para instalarla como PWA). | Media | F4.1 · F6.1 | 🟡 | ⬜ | 0.1.0 | Desde la 0.2.1 hay dos formas reales: `index.html` para servir (Live Server y web) y `dist/trasteando.html`, generado a partir de él con `herramientas/generar-autonomo.py`. El banco comprueba que el autónomo está al día con `index.html`. Se vuelve más exigente al pasar a módulos (F4.1); F6.1 generará el archivo autónomo a partir de ellos. |
@@ -307,7 +314,7 @@
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
 | **L-01** | El modo por defecto al abrir la app es el diapasón libre. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
 | **L-02** | El usuario decide si ve el nombre de todas las notas del mástil o solo el de la que pulsa. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Por defecto solo la pulsada, para no convertir el mástil en una chuleta permanente. En Adivinar no se aplica (J-12). |
-| **L-03** ✏️ | Al pulsar una nota se señalan discretamente las demás posiciones que producen **exactamente la misma nota** (mismo sonido, no misma clase de nota). | Media | F1.1 | ✅ | ⬜ | 0.1.0 | Desde la 0.3.1 se señalan con contorno, sin relleno, y con «Ver todas las notas» llevan además un anillo claro por fuera (AR-06). Señal deliberadamente más tenue que la nota pulsada. |
+| **L-03** | Al pulsar una nota se señalan discretamente las demás posiciones que producen **exactamente la misma nota** (mismo sonido, no misma clase de nota). | Media | F1.1 | ✅ | ⬜ | 0.1.0 | Desde la 0.3.1 se señalan con contorno, sin relleno, y con «Ver todas las notas» llevan además un anillo claro por fuera (AR-06). Señal deliberadamente más tenue que la nota pulsada. |
 
 ---
 
@@ -371,7 +378,7 @@
 | **V-01** | En móvil se **sugiere** la orientación horizontal con un aviso discreto; no se fuerza. | Alta | F3.2 | ✅ | ⬜ | 0.3.0 | **Hecho en la 0.3.0** según `interfaz.md` §7. En horizontal, raíl, mástil a todo el alto y panel: medido en Chromium, 52,8 px por cuerda en el iPhone con Safari (antes 28,8), 60,8 con la app instalada y 42,5 en un Android de 280 px de alto (V-06). El aviso para girar sale solo con el dedo, en vertical y en pantallas de menos de 600 px de ancho, en Libre y Adivinar (y Escalas desde F5), nunca en el Afinador; cerrado no vuelve y «Restablecer» lo recupera. Falta validarlo en tu iPhone (Sesión 1). El bloqueo de orientación tiene mal soporte en iOS, así que no se fuerza. |
 | **V-02** | El afinador funciona en vertical y en horizontal. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
 | **V-03** | En escritorio el mástil aprovecha el ancho disponible. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Arranca mostrando el mástil completo en pantallas anchas. |
-| **V-04** | Control de zoom que determina qué porción del mástil se ve. | Alta | F1.1 · F3.2 | ✅ | ⬜ | 0.1.0 | De 3 a 24 trastes a la vista. Desde 0.1.1 la etiqueta indica los trastes que caben de verdad, y el zoom conserva el tramo que estabas mirando. **Desde la 0.3.0**, con el dedo un traste nunca mide menos de 40 px (34 con ratón), y la cejuela, 40: en el iPhone en vertical caben como mucho 7 trastes y en horizontal de 10 a 12 según el ancho (V-06). Si el zoom guardado pide más, se muestran los que caben y la etiqueta lo dice, pero lo guardado se conserva para que al girar vuelva (V-08). |
+| **V-04** ✏️ | Control de zoom que determina qué porción del mástil se ve. | Alta | F1.1 · F3.2 | ✅ | ⬜ | 0.1.0 | De 3 a 24 trastes a la vista. Desde 0.1.1 la etiqueta indica los trastes que caben de verdad, y el zoom conserva el tramo que estabas mirando. **Desde la 0.3.0**, con el dedo la vista por defecto usa trastes de 40 px o más (34 con ratón), y la cejuela mide 40. **Desde la 0.3.2** (tu comentario del 20/10), «+» enseña más trastes y «−» menos, y con el dedo puedes pedir trastes de hasta 28 px: en el iPhone con Safari, hasta 11 a la vista en vertical y 15 en horizontal. Si el zoom guardado pide más, se muestran los que caben y la etiqueta lo dice, pero lo guardado se conserva para que al girar vuelva (V-08). |
 | **V-05** | Cuando el mástil no cabe, el usuario se desplaza lateralmente. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
 | **V-06** | El ancho de traste no cambia al desplazarse: el zoom fija el tamaño y el desplazamiento mueve la ventana. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
 | **V-07** | El mástil se readapta al redimensionar la ventana. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
