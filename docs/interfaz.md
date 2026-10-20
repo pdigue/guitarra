@@ -1,7 +1,7 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 1.1 · **Fecha:** 20 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026
-**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.2.3` · `requisitos.md` v1.11 · `roadmap.md` v3.9
+**Versión:** 1.2 · **Fecha:** 20 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0). Las versiones 1.1 y 1.2 no cambian el diseño: corrigen cifras medidas al construirlo y anotan dos detalles de F3.2 (ver el control de cambios).
+**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.3.0` · `requisitos.md` v1.12 · `roadmap.md` v3.10
 **Revisión:** auditoría de requisitos AR-04 (`auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
 
@@ -79,7 +79,7 @@ Un ajuste puede estar en dos niveles (la nomenclatura está en el 2 y en el 3); 
 
 ### Libre — boceto A1
 
-De arriba abajo: cabecera (nombre y ⚙), acceso rápido (**Do Re Mi**, **Pentagrama**), pentagrama con la nota leída a la derecha («Sol», «Sol3 · 196 Hz»), el aviso para girar (sección 7), el mástil y el zoom. La nota pulsada se rellena en color de acento; las otras posiciones de la misma nota (L-03) van solo con borde. El mástil ocupa el alto que sobra: cada cuerda mide entre 40 y 52 px.
+De arriba abajo: cabecera (nombre y ⚙), acceso rápido (**Do Re Mi**, **Pentagrama**), pentagrama con la nota leída a la derecha («Sol», «Sol3 · 196 Hz»), el aviso para girar (sección 7), el mástil y el zoom. La nota pulsada se rellena en color de acento; las otras posiciones de la misma nota (L-03) van solo con borde. El mástil ocupa el alto que sobra: cada cuerda mide entre 40 y 52 px en pantallas de 660 px de alto o más (§7).
 
 ### Adivinar — boceto A2
 
@@ -109,7 +109,7 @@ Fila superior: **Mostrar | Práctica**, tónica y tipo (E-01; el catálogo se de
 
 ### Ajustes — boceto A7
 
-Una hoja que sube desde abajo, con los grupos de hoy (Notación, Mástil, Sonido y afinación) y uno **nuevo, «Acerca de»**: Créditos y licencias (G-06, que exige que la app muestre los créditos), Privacidad (cuando exista la política, F6.4, G-11), Restablecer y el número de versión (G-10). En las filas con interruptor se toca la fila entera, que mide al menos 40 px de alto. Se cierra con el gesto de bajar, tocando fuera o con «atrás».
+Una hoja que sube desde abajo, con los grupos de hoy (Notación, Mástil, Sonido y afinación) y uno **nuevo, «Acerca de»**: Créditos y licencias (G-06, que exige que la app muestre los créditos), Privacidad (cuando exista la política, F6.4, G-11), Restablecer y el número de versión (G-10). En las filas con interruptor se toca la fila entera, que mide al menos 40 px de alto. Se cierra tocando fuera, con Escape o con «atrás»; el gesto de bajar llega en F3.4. Mientras está abierto, el resto de la página no responde (es un diálogo).
 
 ## 7. Móvil en horizontal (F3.2) — bocetos B1 a B6
 
@@ -126,11 +126,13 @@ La propuesta saca todo eso del alto del mástil: **raíl | mástil | panel**.
 | Área | Panel |
 |---|---|
 | Libre (B1) | Do Re Mi y 𝄞 (pentagrama) · pentagrama, si está activado · nota leída · zoom |
-| Adivinar (B2, B6) | ▶ con racha y récord · mensaje del reto · pistas Nombre y Cuerda con su resultado · Do Re Mi y 𝄞 · zoom |
+| Adivinar (B2, B6) | Do Re Mi y 𝄞 · ▶ con racha y récord · mensaje del reto · pistas Nombre y Cuerda · pentagrama, si está activado · zoom. *En la 0.3.0, Do Re Mi y 𝄞 van arriba como en Libre, para que nada cambie de sitio entre áreas (principio 3; AR-05 #4).* |
 | Escalas (B3) | Mostrar \| Práctica · tónica y tipo · paso a paso ◀ ▶ · **nota del paso y su intervalo**, que se ven aunque el pentagrama esté apagado (E-04) · pentagrama, si está activado · zoom |
 | Afinador (B4, B5) | Sin mástil ni panel: De oído en rejilla de 3 × 2 cuerdas con el pentagrama debajo; Micrófono con la aguja a la izquierda y cuerda, orden y botón de detener a la derecha |
 
-En horizontal, el botón de pentagrama del panel es el símbolo 𝄞, con su nombre para lectores de pantalla, porque «Pentagrama» no cabe junto a «Do Re Mi». Si el contenido del panel no cabe en el alto, **se desplaza el panel**; el mástil nunca.
+En horizontal, el botón de pentagrama del panel es el símbolo 𝄞, con su nombre para lectores de pantalla, porque «Pentagrama» no cabe junto a «Do Re Mi». Si el contenido del panel no cabe en el alto, **se desplaza el panel**; el mástil nunca, y el zoom se queda fijo abajo.
+
+**En vertical** el mástil también manda, con una regla añadida en F3.2 (AR-05 #1): **la barra de navegación nunca se sale de la pantalla**. Por eso los 40 px por cuerda en vertical se garantizan desde 660 px de alto (un iPhone de 6,1" con Safari mide 664). En pantallas más bajas, como el iPhone SE, el mástil encoge, el pentagrama se queda en 64 px y el aviso sugiere girar el móvil.
 
 **Medido en los bocetos:**
 
@@ -153,7 +155,7 @@ Las cuatro áreas pasan a la cabecera como pestañas, y desaparece la barra infe
 - **Mástil con teclado:** el mástil es un único punto de parada del tabulador. Dentro, **← →** cambian de traste, **↑ ↓** de cuerda, **Intro** o **Espacio** tocan la nota, e **Inicio** / **Fin** van al primer y al último traste visibles. Si la posición se sale de la vista, el mástil se desplaza solo. Técnica: *roving tabindex*, con el mástil anunciado como una cuadrícula (`role="grid"`).
 - **Foco visible** en todo: anillo discontinuo de 3 px, como en el boceto C1.
 - **Lectores de pantalla:** cada posición se anuncia («Sol 3, cuarta cuerda, traste 5») y los resultados del reto y del afinador se leen solos (`aria-live`). Los botones que solo tienen icono (⚙, ▶, −, +, 𝄞) llevan nombre.
-- **Tamaño de toque:** en pantallas táctiles, **ningún control ni casilla del mástil mide menos de 40 × 40 px**. Los bocetos lo cumplen y la herramienta lo comprueba. Para las casillas, **el zoom no deja que un traste mida menos de 40 px**: en el iPhone en vertical caben como mucho **7 trastes** a la vez; en horizontal, 10; con ratón, hasta 24 como hoy. Si el zoom guardado (V-08) da trastes más pequeños, se ajusta al límite al abrir.
+- **Tamaño de toque:** en pantallas táctiles, **ningún control ni casilla del mástil mide menos de 40 × 40 px**. Los bocetos lo cumplen y la herramienta lo comprueba. Para las casillas, **el zoom no deja que un traste mida menos de 40 px**: en el iPhone en vertical caben como mucho **7 trastes** a la vez; en horizontal, de 10 a 12 según el ancho; con ratón, hasta 24 como hoy. Si el zoom guardado (V-08) pide trastes más pequeños, se muestran los que caben, y lo guardado se conserva para que al girar el móvil vuelva el zoom elegido.
 - **Movimiento:** con `prefers-reduced-motion`, sin destellos ni animaciones de desplazamiento.
 - **Contraste:** 4,5:1 en textos, comprobado con herramienta en F3.4.
 
@@ -214,7 +216,8 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.1** | 20/10/2026 | Medido en F3.2 (V-06): con la cejuela de 40 px, caben como mucho 7 trastes en el iPhone en vertical y 10 en horizontal (antes se estimaban 8 y 11). Solo cambian esas cifras. |
+| **1.2** | 20/10/2026 | Tras AR-05 y AT-04: en vertical, la navegación nunca se sale y los 40 px por cuerda se garantizan desde 660 px de alto (§7); en horizontal, de 10 a 12 trastes según el ancho; en el panel de Adivinar, Do Re Mi y 𝄞 arriba, como en Libre; el zoom guardado se conserva. El gesto de bajar para cerrar Ajustes pasa a F3.4. |
+| 1.1 | 20/10/2026 | Medido en F3.2 (V-06): con la cejuela de 40 px, caben como mucho 7 trastes en el iPhone en vertical y 10 en horizontal (antes se estimaban 8 y 11). Solo cambian esas cifras. |
 | 1.0 | 20/10/2026 | Aprobada por el cliente. Cambios aplicados en `requisitos.md` v1.11. |
 | 0.2 | 20/10/2026 | Tras AR-04: horizontal rediseñado como raíl, mástil y panel (de 45 a 52 px por cuerda en el iPhone, y 42 px en un Android de 280 px de alto); acceso rápido también en horizontal; afinación visible en el modo Micrófono; zoom en Escalas; bocetos del Afinador en horizontal; controles de 40 × 40 px comprobados por la herramienta; redacción concreta de V-01, V-04, G-05 y C-07; notas de C-01 a C-04; privacidad en F6.4; intervalos con «ST». |
 | 0.1 | 20/10/2026 | Propuesta inicial (F3.1), con bocetos medidos. |

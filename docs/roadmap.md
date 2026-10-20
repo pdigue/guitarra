@@ -1,7 +1,7 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 3.9 · **Fecha:** 20 de octubre de 2026
-**Válido para:** app `0.2.3` · `requisitos.md` v1.11 · `matriz-cumplimiento` v1.9 · `interfaz.md` v1.0 · `compatibilidad.md` v1.1 · `automatizacion.md` v1.1 · `CHANGELOG.md`
+**Versión:** 3.10 · **Fecha:** 20 de octubre de 2026
+**Válido para:** app `0.3.0` · `requisitos.md` v1.12 · `matriz-cumplimiento` v1.10 · `interfaz.md` v1.2 · `compatibilidad.md` v1.2 · `automatizacion.md` v1.1 · `CHANGELOG.md`
 **Gestiona:** chat de Desarrollo
 
 > ⚡ **Modo acelerado activo desde el 14/10** (detalle en `automatizacion.md`). El agente ejecuta las etapas por bloques —F1 a F3, luego F4 a F6— y solo para en las decisiones. Las pruebas que necesitan tus manos se agrupan en dos sesiones: **Sesión 1** con el iPhone y el ordenador al cerrar F3, y **Sesión 2** con la guitarra al cerrar F6.
@@ -12,13 +12,13 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** F3.2, el diseño en horizontal. F3.1 cerrada: interfaz aprobada (`docs/interfaz.md` v1.0). F2 hecha salvo F2.5, que va a la Sesión 1.
+📍 **Estás aquí:** F3.2 hecha con la `0.3.0` (falta comprobarla en tu iPhone en la Sesión 1). Siguiente: F3.4, accesibilidad y paleta, que necesita antes tu decisión sobre la paleta. F3.3 y F2.5 van a la Sesión 1.
 
 | Fase | Objetivo | Versión | Dónde se usa | Etapas | Progreso |
 |------|----------|:---:|---|:---:|---|
 | **F1** | Base local verificada | 0.1.x | 💻 Live Server | 4 | `▰▰▰▰▰▰▱▱` 3/4 |
 | **F2** | Sonido propio y archivo autónomo | 0.2.x | 📁 Archivo en cualquier dispositivo | 5 | `▰▰▰▰▰▰▱▱` 4/5 |
-| **F3** | Interfaz y adaptación | 0.3.x | 📁 Archivo | 4 | `▱▱▱▱▱▱▱▱` 0/4 |
+| **F3** | Interfaz y adaptación | 0.3.x | 📁 Archivo | 4 | `▰▰▰▰▱▱▱▱` 2/4 |
 | **F4** | Afinador por micrófono | 0.4.x | 💻 Live Server | 4 | `▱▱▱▱▱▱▱▱` 0/4 |
 | **F5** | Escalas | 0.5.x | 📁 Archivo | 5 | `▱▱▱▱▱▱▱▱` 0/5 |
 | **F6** | Preparación para distribución | 0.6.x | 💻 Live Server | 4 | `▱▱▱▱▱▱▱▱` 0/4 |
@@ -169,9 +169,9 @@ Cada pieza del proyecto lleva su propio número, y todas se citan entre sí.
 | Etapa | Qué se hace | Requisitos | Cómo se valida | Aprenderás | Estado |
 |---|---|---|---|---|:---:|
 | **F3.1** | Especificar la interfaz pantalla a pantalla. **Bloquea F3.2 y toda F5**. En modo acelerado, el agente propone `interfaz.md` y **para** hasta que lo apruebes | C-06 | `interfaz.md` revisado por el auditor de requisitos y aprobado por ti | Wireframes, jerarquía visual, arquitectura de información | ✅ aprobada el 20/10 |
-| **F3.2** | Diseño apaisado (raíl, mástil y panel), aviso discreto para girar el móvil, zoom con trastes táctiles de al menos 40 px y botón «atrás» | PL-04, V-01, V-04, C-07 | En horizontal, con un alto útil de 268 px o más, cada cuerda mide al menos 40 px (iPhone en Safari e instalada; simulador de Android) | Diseño adaptable: media queries, unidades relativas | ⬜ |
+| **F3.2** | Diseño apaisado (raíl, mástil y panel), aviso discreto para girar el móvil, zoom con trastes táctiles de al menos 40 px y botón «atrás» | PL-04, V-01, V-04, C-07 | En horizontal, con un alto útil de 268 px o más, cada cuerda mide al menos 40 px (iPhone en Safari e instalada; simulador de Android) | Diseño adaptable: media queries, unidades relativas | ✅ `0.3.0` (V-06; en el iPhone, Sesión 1) |
 | **F3.3** | Quince minutos de uso real en el móvil, con la guitarra delante | Validación en móvil de los requisitos de F1.1 | Lista táctil y notas de lo incómodo | Eventos de puntero; latencia percibida | 📅 Sesión 1 |
-| **F3.4** | Accesibilidad completa y paleta de colores | G-05 | Recorrer la app solo con teclado; contraste 4,5:1; simulador de daltonismo | ARIA, contraste, por qué el color no debe ser la única señal | ⬜ |
+| **F3.4** | Accesibilidad completa y paleta de colores. Incluye lo que dejó F3.2: el mástil con teclado, que toda la fila de un interruptor responda al toque y el gesto de bajar para cerrar Ajustes | G-05 | Recorrer la app solo con teclado; contraste 4,5:1; simulador de daltonismo | ARIA, contraste, por qué el color no debe ser la única señal | ⬜ |
 
 ### 🔍 CP-3 — Checkpoint de interfaz
 Peso principal en el **auditor de requisitos** como experto en experiencia de usuario: contraste con `interfaz.md`. El **técnico** revisa el diseño adaptable y el rendimiento en móviles modestos.
@@ -398,6 +398,8 @@ flowchart TB
 
 **Añadido a la Sesión 1 tras CP-2:** escucha guiada de los trastes 15 a 24 de la 1ª cuerda en la acústica; una nota larga en `index.html` frente al archivo autónomo; un afinador externo sobre Mi2, Mi4 y Mi6 en cada timbre; el primer reto tras una llamada o un bloqueo, y tocar deprisa muchas notas.
 
+**Añadido a la Sesión 1 tras F3.2:** la app en horizontal en tu iPhone, en Safari y con la app instalada (que cada cuerda se toque cómoda y que nada quede tapado por la muesca); el aviso para girar, cerrarlo y que no vuelva; y el botón «atrás» con el ratón en Windows.
+
 **Dos comprobaciones cortas entre sesiones** (CP-1), para no esperar dos fases a oír un cambio de riesgo: 5 minutos en el iPhone tras F2.2, que sustituye todo el motor de audio, y 10 minutos con la guitarra en `localhost` tras F4.3.
 
 ---
@@ -450,7 +452,8 @@ flowchart TB
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **3.9** | 20/10/2026 | F3.1 cerrada con `interfaz.md` v1.0. F3.2 amplía su alcance (V-04, C-07) y su criterio (alto útil ≥ 268 px). |
+| **3.10** | 20/10/2026 | F3.2 hecha con la `0.3.0`, tras AR-05 y AT-04. F3.4 recoge lo que quedó de F3.2. Comprobaciones nuevas para la Sesión 1. |
+| 3.9 | 20/10/2026 | F3.1 cerrada con `interfaz.md` v1.0. F3.2 amplía su alcance (V-04, C-07) y su criterio (alto útil ≥ 268 px). |
 | 3.8 | 20/10/2026 | Licencia del pack de nylon completa: S-07 cerrado. |
 | 3.7 | 20/10/2026 | Dos decisiones cerradas: Service Worker en F6.2 y agudo de la acústica aceptado. F3.1 en curso. |
 | 3.6 | 19/10/2026 | CP-2: F2.1 y F2.4 cerradas, criterios de F2.3 y F2.5 revisados, despliegue de pruebas activo, comprobaciones nuevas para la Sesión 1 y dos decisiones abiertas. **Corrección:** la v3.2 prometía usar la app sin conexión en el iPhone durante la Sesión 1, y eso exige el Service Worker de F6.2. |
