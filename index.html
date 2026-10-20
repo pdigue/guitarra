@@ -10,6 +10,7 @@
 <meta name="theme-color" content="#140e09">
 <title>Trasteando</title>
 <link rel="manifest" href='data:application/manifest+json,{"name":"Trasteando","short_name":"Trasteando","start_url":".","display":"standalone","background_color":"%23140e09","theme_color":"%23140e09","orientation":"any"}'>
+<link rel="icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" rx="40" fill="%23140e09"/><circle cx="90" cy="90" r="52" fill="none" stroke="%23e8a45c" stroke-width="5"/><circle cx="90" cy="90" r="40" fill="none" stroke="%236b4f30" stroke-width="3" stroke-dasharray="4 5"/><line x1="38" y1="74" x2="142" y2="74" stroke="%23e8dfd3" stroke-width="1.4"/><line x1="38" y1="82" x2="142" y2="82" stroke="%23e8dfd3" stroke-width="1.8"/><line x1="38" y1="90" x2="142" y2="90" stroke="%23e8dfd3" stroke-width="2.2"/><line x1="38" y1="98" x2="142" y2="98" stroke="%23e8dfd3" stroke-width="2.6"/><line x1="38" y1="106" x2="142" y2="106" stroke="%23e8dfd3" stroke-width="3"/></svg>'>  <!-- sin él, el navegador pide favicon.ico y da 404 (Sesión 1, A16) -->
 <link rel="apple-touch-icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" rx="40" fill="%23140e09"/><circle cx="90" cy="90" r="52" fill="none" stroke="%23e8a45c" stroke-width="5"/><circle cx="90" cy="90" r="40" fill="none" stroke="%236b4f30" stroke-width="3" stroke-dasharray="4 5"/><line x1="38" y1="74" x2="142" y2="74" stroke="%23e8dfd3" stroke-width="1.4"/><line x1="38" y1="82" x2="142" y2="82" stroke="%23e8dfd3" stroke-width="1.8"/><line x1="38" y1="90" x2="142" y2="90" stroke="%23e8dfd3" stroke-width="2.2"/><line x1="38" y1="98" x2="142" y2="98" stroke="%23e8dfd3" stroke-width="2.6"/><line x1="38" y1="106" x2="142" y2="106" stroke="%23e8dfd3" stroke-width="3"/></svg>'>
 <style>
 /* ============================================================
@@ -118,6 +119,11 @@ button { font-family:inherit; color:inherit; }
 .btn-repeat { flex-shrink:0; background:var(--surface2); border:1px solid var(--line2);
   color:var(--amber); width:40px; height:40px; border-radius:10px; font-size:15px; cursor:pointer; }
 .btn-repeat:active { background:var(--line); }
+/* Al entrar en Adivinar nada suena hasta pulsar ▶ (Sesión 1, E06). */
+.btn-repeat.ready { background:var(--amber); color:#160f07; border-color:var(--amber); }
+@media (prefers-reduced-motion:no-preference){
+  .btn-repeat.ready { animation:invite 1.6s ease-in-out infinite; } }
+@keyframes invite { 0%,100%{ box-shadow:0 0 0 0 rgba(232,168,76,.55); } 50%{ box-shadow:0 0 0 7px rgba(232,168,76,0); } }
 .stats { flex-shrink:0; display:flex; flex-direction:column; align-items:flex-end;
   gap:1px; font-size:11px; font-variant-numeric:tabular-nums; }
 .stats .streak { color:var(--amber); font-weight:700; font-size:13px; }
@@ -212,6 +218,16 @@ button { font-family:inherit; color:inherit; }
   box-shadow:0 2px 6px rgba(0,0,0,.45), inset 0 1px 1px rgba(255,255,255,.28); }
 .fret-cell.correct .dot { opacity:1; transform:scale(1); box-shadow:0 0 0 3px var(--ok), 0 2px 8px rgba(0,0,0,.5); }
 .fret-cell.wrong .dot { opacity:1; transform:scale(1); box-shadow:0 0 0 3px var(--ko), 0 2px 8px rgba(0,0,0,.5); }
+/* Sesión 1 (A09): además del borde, relleno verde o rojo y una marca ✓ / ✗,
+   para que el resultado no dependa solo del color. */
+.board .fret-cell.correct .dot, .board .fret-cell.reveal .dot { background:var(--ok); color:#160f07; }
+.board .fret-cell.wrong .dot { background:var(--ko); color:#160f07; }
+.fret-cell.correct::after, .fret-cell.reveal::after, .fret-cell.wrong::after {
+  position:absolute; top:2px; right:2px; z-index:4; width:15px; height:15px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:900;
+  color:#160f07; pointer-events:none; }
+.fret-cell.correct::after, .fret-cell.reveal::after { content:'✓'; background:var(--ok); }
+.fret-cell.wrong::after { content:'✗'; background:var(--ko); }
 /* Tras un fallo: dónde estaba de verdad la nota (J-10). Late dos veces para
    llevar la vista hacia ella sin necesidad de leer nada. */
 .fret-cell.reveal .dot { opacity:1; transform:scale(1);
@@ -343,6 +359,10 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .sw.on::after { transform:translateX(19px); background:#1a1006; }
 .version { text-align:center; font-size:11px; color:var(--faint); margin:14px 0 0;
   font-variant-numeric:tabular-nums; }
+.sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+.audio-wake { flex-shrink:0; min-height:40px; padding:0 14px; border-radius:10px; cursor:pointer;
+  background:var(--surface2); border:1px solid var(--line2); color:var(--text); font:inherit; font-size:13px; font-weight:600; }
+.audio-wake:active { background:var(--line); }
 .reset { width:100%; min-height:44px; background:none; border:1px solid var(--line2); color:var(--ko);
   padding:11px; border-radius:10px; font-size:13px; cursor:pointer; }
 
@@ -613,6 +633,10 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
         <button data-v="acoustic">Acústica</button>
       </div>
     </div>
+    <div class="set-row">
+      <div class="txt">Estado del sonido<small id="audio-state">sin iniciar</small></div>
+      <button class="audio-wake" id="audio-wake">Reactivar sonido</button>
+    </div>
   </div>
 
   <div class="set-group">
@@ -625,6 +649,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 
   <div class="set-group">
     <button class="reset" id="set-reset">Restablecer todos los ajustes</button>
+    <button class="reset" id="set-clear-record">Borrar el récord de racha</button>
     <p class="version" id="app-version"></p>
   </div>
 </div>
@@ -634,7 +659,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.3.2';
+const APP_VERSION = '0.3.3';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -845,6 +870,7 @@ function unlockAudio(){
       audioOut = audioCtx.createGain();
       audioOut.gain.value = 0.7;
       audioOut.connect(audioCtx.destination);
+      audioCtx.onstatechange = updateAudioStatus;   // «Estado del sonido» al día (AT-06 #1)
     }
     // Safari 16.4+: con 'playback' suena aunque el interruptor de silencio del
     // iPhone esté puesto, como un reproductor de música. Donde no existe, se
@@ -984,6 +1010,111 @@ function playSample(midi, duration){
   return true;
 }
 
+/* --- El sonido y el segundo plano (Sesión 1: C07, C08 y D03) ---
+   Con el iPhone bloqueado seguía sonando lo que estaba programado (la nota de
+   la corrección), y a veces, al volver, el sonido se quedaba mudo hasta cerrar
+   la app. Ahora: al ocultarse la página se cortan las notas, se cancelan las
+   que iban a sonar y se pausa el audio; al volver se reanuda, y si iOS no lo
+   deja reanudar, el siguiente toque crea un contexto de audio nuevo. Además,
+   Ajustes enseña el estado del sonido y tiene un botón para reactivarlo.
+   Es un fallo conocido de Safari en las apps de pantalla de inicio (WebKit
+   291892): a veces el audio dice «activo» y no suena. Por eso el botón crea
+   un contexto nuevo sin preguntar; si ni así suena, cerrar la app lo arregla. */
+let needsRebuild = false;
+
+let rebuildOnNextGesture = false;
+let audioFallback = false;      // las grabaciones no recargaron: suena la sintetizada
+let lastRebuild = 0;
+
+/** Primero se intenta reanudar; si en 300 ms no lo consigue, el audio se rehace
+ *  en el siguiente toque. Un temporizador no es un gesto del usuario, e iOS
+ *  solo deja arrancar el sonido dentro de uno (AT-06 #2). */
+function recoverAudio(){
+  wakeAudio();
+  setTimeout(() => {
+    if (document.hidden || !audioCtx || audioCtx.state === 'running') return;
+    rebuildOnNextGesture = true;
+    updateAudioStatus();
+  }, 300);
+}
+
+/** Cada toque (al levantar el dedo, que es cuando iOS lo cuenta como gesto)
+ *  reanuda el audio y, si hace falta, lo rehace. */
+function onGesture(){
+  if (rebuildOnNextGesture){ rebuildOnNextGesture = false; rebuildAudio(); return; }
+  if (needsRebuild){ needsRebuild = false; recoverAudio(); return; }
+  wakeAudio();
+}
+
+/** Corta ya todas las notas que suenan. */
+function silenceAll(){
+  if (!audioCtx) return;
+  const t = audioCtx.currentTime;
+  voices.splice(0).forEach(v => {
+    try { v.g.gain.cancelScheduledValues(t); v.g.gain.setValueAtTime(0, t); v.src.stop(t + 0.02); } catch(e){}
+  });
+}
+
+/** Contexto de audio nuevo, con las grabaciones decodificadas otra vez para él.
+ *  Mientras cargan, suena la guitarra sintetizada. */
+function rebuildAudio(){
+  const now = Date.now();
+  if (now - lastRebuild < 1000) return;       // pulsaciones repetidas: una basta (AT-06 #6)
+  lastRebuild = now;
+  needsRebuild = false; rebuildOnNextGesture = false;
+  const old = audioCtx;
+  silenceAll();
+  audioCtx = null; audioOut = null;
+  try { if (old && old.state !== 'closed') old.close().catch(() => {}); } catch(e){}
+  unlockAudio();
+  samplerReady = false; samplerTimbre = null; samples = [];   // libera las grabaciones viejas
+  loadSamples(state.timbre).then(r => {
+    if (r === 'stale') return;
+    audioFallback = (r === false);
+    const note = document.getElementById('timbre-note');
+    if (note) note.textContent = r ? timbreText(state.timbre)
+      : 'No se pudieron cargar las grabaciones: suena la guitarra sintetizada.';
+    updateAudioStatus();
+  });
+  updateAudioStatus();
+}
+
+function timbreText(t){
+  return t === 'nylon' ? 'Guitarra clásica de cuerdas de nylon' : 'Guitarra acústica de cuerdas de acero';
+}
+
+const AUDIO_STATE = { running:'activo', suspended:'en pausa', interrupted:'interrumpido por el sistema', closed:'cerrado' };
+function updateAudioStatus(){
+  const el = document.getElementById('audio-state');
+  if (!el) return;
+  el.textContent = !audioCtx ? 'sin iniciar' :
+    (AUDIO_STATE[audioCtx.state] || audioCtx.state) +
+    (samplerReady ? '' : audioFallback ? ' · guitarra sintetizada' : ' · cargando las grabaciones') +
+    (rebuildOnNextGesture ? ' · se rehace al tocar' : '');
+}
+
+function onVisibility(){
+  if (document.hidden){
+    clearTimeout(playTimer);
+    if (screen === 'guess' && locked) clearTimeout(nextTimer);   // ni corrección ni reto con la pantalla apagada
+    silenceAll();
+    try { if (audioCtx && audioCtx.state === 'running') audioCtx.suspend().catch(() => {}); } catch(e){}
+  } else {
+    // resume() siempre, no wakeAudio(): si el suspend() de hace un instante aún
+    // no ha terminado, el estado dice 'running' y wakeAudio no haría nada (AT-06 #4).
+    try { if (audioCtx && audioCtx.state !== 'closed') audioCtx.resume().catch(() => {}); } catch(e){}
+    if (screen === 'guess'){
+      // Se retoma esperando a ▶: ese toque es el que iOS exige para
+      // reactivar el sonido, y no suena nada sin que lo pidas.
+      guessStarted = false;
+      if (locked) newChallenge(); else renderChallenge();
+    }
+    // Si iOS no deja reanudar, el próximo toque crea un contexto nuevo.
+    setTimeout(() => { if (audioCtx && audioCtx.state !== 'running') needsRebuild = true; updateAudioStatus(); }, 400);
+  }
+  updateAudioStatus();
+}
+
 /**
  * iOS deja el contexto de audio en 'interrupted' tras una llamada, al bloquear
  * la pantalla o al cambiar de app, y no lo reanuda solo (AT-02 #3).
@@ -995,6 +1126,7 @@ function wakeAudio(){
 }
 
 function playMidi(midi, duration){
+  if (needsRebuild){ needsRebuild = false; recoverAudio(); }   // dentro del toque que lo pide
   wakeAudio();
   try { if (playSample(midi, duration)) return; } catch(e){ console.error(e); }
   playSynth(midi);
@@ -1405,15 +1537,16 @@ function pressFret(cell, midi, rowIdx){
   cell.classList.add('active');
 
   const info = noteInfo(midi);
-  lastMidi = midi;
-  const nameEl = document.getElementById('note-name');
-  nameEl.textContent = noteName(midi);
-  nameEl.style.setProperty('--note-color', info.color);
-  nameEl.style.setProperty('--note-glow', info.color);
-  document.getElementById('note-oct').textContent = 'octava ' + info.octave;
-
   playMidi(midi);
-  showOnStaff(midi, info.color);
+  if (screen !== 'guess'){          // en Adivinar, el lector es de la nota buscada
+    lastMidi = midi;
+    const nameEl = document.getElementById('note-name');
+    nameEl.textContent = noteName(midi);
+    nameEl.style.setProperty('--note-color', info.color);
+    nameEl.style.setProperty('--note-glow', info.color);
+    document.getElementById('note-oct').textContent = 'octava ' + info.octave;
+    showOnStaff(midi, info.color);
+  }
 
   // Señal secundaria: dónde más suena exactamente esta misma nota.
   if (state.showEquals){
@@ -1505,6 +1638,13 @@ let streak = 0;
 let locked = false;
 let nextTimer = null;
 let playTimer = null;   // sonido del reto, 320 ms después de mostrarlo
+let guessStarted = false; // en cada visita, el primer sonido espera a ▶ (Sesión 1, E06)
+
+// Tiempos tras responder. La Sesión 1 (A09) pidió más margen entre la nota
+// que pulsaste y la corrección para poder compararlas.
+const REVEAL_DELAY = 1200;      // fallo → suena y se ilumina la nota buscada
+const NEXT_AFTER_REVEAL = 3000; // corrección → reto nuevo
+const NEXT_AFTER_HIT = 1500;    // acierto → reto nuevo
 
 function updateScore(){
   document.getElementById('st-streak').textContent = 'Racha ' + streak;
@@ -1544,16 +1684,54 @@ function newChallenge(){
   challenge = { midi };
   renderChallenge();
   clearTimeout(playTimer);
-  playTimer = setTimeout(playChallenge, 320);
+  if (guessStarted) playTimer = setTimeout(playChallenge, 320);
 }
 
 function playChallenge(){
   if (screen === 'guess' && challenge) playMidi(challenge.midi);
 }
 
+/** ▶: la primera vez empieza el juego; después repite el sonido. */
+function onRepeat(){
+  if (!guessStarted){ guessStarted = true; renderChallenge(); }
+  clearTimeout(playTimer);
+  playChallenge();
+}
+
+/** En Adivinar, la lectura grande y el pentagrama muestran la nota BUSCADA:
+ *  «?» mientras no se sabe y la nota cuando se acierta, se revela o la pista
+ *  de nota está activa. La nota pulsada ya se ve en su punto del mástil.
+ *  Antes mostraban la última nota pulsada y confundían (Sesión 1, E06). */
+function showGuessReader(){
+  const nameEl = document.getElementById('note-name');
+  const octEl = document.getElementById('note-oct');
+  const known = challenge && (challenge.revealed || challenge.solved || state.hintNote);
+  if (!known){
+    nameEl.innerHTML = '<span class="note-placeholder">?</span>';
+    octEl.textContent = 'nota buscada';
+    clearStaff();
+    return;
+  }
+  const i = noteInfo(challenge.midi);
+  nameEl.textContent = noteName(challenge.midi);
+  nameEl.style.setProperty('--note-color', i.color);
+  nameEl.style.setProperty('--note-glow', i.color);
+  octEl.textContent = 'buscada · octava ' + i.octave;
+  showOnStaff(challenge.midi, i.color);
+}
+
 function renderChallenge(){
   const box = document.getElementById('challenge-text');
+  const btn = document.getElementById('btn-repeat');
+  btn.classList.toggle('ready', !guessStarted);
+  btn.setAttribute('aria-label', guessStarted ? 'Repetir sonido' : 'Empezar: oír la nota');
   if (!challenge){ box.textContent = ''; return; }
+  showGuessReader();
+
+  if (!guessStarted){
+    box.innerHTML = '<b>Pulsa ▶ <span class="sr-only">(Empezar)</span> para oír la nota</b><br><span class="dim">y búscala en el mástil</span>';
+    return;
+  }
 
   if (challenge.revealed){
     const i = noteInfo(challenge.midi);
@@ -1579,7 +1757,7 @@ function renderChallenge(){
 }
 
 function evaluate(cell, midi, rowIdx){
-  if (locked || !challenge) return;
+  if (locked || !challenge || !guessStarted) return;   // antes de ▶ se explora sin puntuar
   const hit = (midi === challenge.midi);
   const box = document.getElementById('challenge');
   box.classList.remove('flash-ok','flash-ko');
@@ -1597,9 +1775,11 @@ function evaluate(cell, midi, rowIdx){
       const c = document.querySelector('.fret-cell[data-row="'+p.rowIdx+'"][data-fret="'+p.fret+'"]');
       if (c && c !== cell) c.classList.add('equal');
     });
+    challenge.solved = true;
+    showGuessReader();
     updateScore();
     clearTimeout(nextTimer);
-    nextTimer = setTimeout(newChallenge, 1500);
+    nextTimer = setTimeout(newChallenge, NEXT_AFTER_HIT);
   } else {
     // J-10: el fallo rompe la racha y enseña dónde estaba la nota.
     locked = true;
@@ -1621,8 +1801,8 @@ function evaluate(cell, midi, rowIdx){
         if (c) c.classList.add('reveal');
       });
       playMidi(target.midi);
-      nextTimer = setTimeout(newChallenge, 2300);
-    }, 650);
+      nextTimer = setTimeout(newChallenge, NEXT_AFTER_REVEAL);
+    }, REVEAL_DELAY);
   }
 }
 
@@ -1718,10 +1898,15 @@ function onTuningChanged(){
   applyZoom();
   renderTunerStrings();
   renderTunerStaff();
+  resetReader();
+  if (screen === 'guess') newChallenge();
+}
+
+function resetReader(){
+  lastMidi = null;
   clearStaff();
   document.getElementById('note-name').innerHTML = '<span class="note-placeholder">toca</span>';
   document.getElementById('note-oct').textContent = '';
-  if (screen === 'guess') newChallenge();
 }
 
 /* ============================================================
@@ -1752,9 +1937,11 @@ function setScreen(next){
 
   if (isGuess){
     streak = 0;
+    guessStarted = false;
     updateScore();
     newChallenge();
   } else {
+    if (challenge) resetReader();   // venimos de Adivinar: fuera la nota buscada
     challenge = null;
   }
   if (!isTuner) requestAnimationFrame(applyZoom);
@@ -1839,6 +2026,7 @@ function goTo(next){
 }
 function showSettings(opener){
   sheetOpener = opener || null;
+  updateAudioStatus();
   openSheet(true);
   if (canHistory) history.pushState({ screen, sheet:true }, '', '#' + SCREEN_HASH[screen]);
 }
@@ -1883,7 +2071,7 @@ function toggleNotation(){
   if (challenge) renderChallenge();
   // El lector de nota se refresca desde lastMidi: la clase .active se limpia
   // a los 2,2 s, así que consultar el DOM fallaba pasado ese tiempo.
-  if (lastMidi !== null)
+  if (lastMidi !== null && screen !== 'guess')
     document.getElementById('note-name').textContent = noteName(lastMidi);
   syncUI();
 }
@@ -1898,12 +2086,14 @@ async function setTimbre(timbre){
   note.textContent = 'Cargando muestras…';
   const ok = await loadSamples(timbre);
   // Llegó otra elección mientras tanto: manda la última.
-  if (ok === 'stale' || state.timbre !== timbre) return;
+  if (ok === 'stale' || state.timbre !== timbre){
+    // Otra carga la relevó (otra elección o «Reactivar sonido»); esa pone el texto.
+    if (samplerReady) note.textContent = timbreText(state.timbre);
+    return;
+  }
   if (ok){
-    note.textContent = timbre === 'nylon'
-      ? 'Guitarra clásica de cuerdas de nylon'
-      : 'Guitarra acústica de cuerdas de acero';
-    playMidi(activeTuning()[3], 1.6);
+    note.textContent = timbreText(timbre);
+    // Ya no suena una nota de muestra al elegir: sorprendía (Sesión 1, A14).
   } else {
     state.timbre = previous;
     save(); syncUI();
@@ -1993,7 +2183,7 @@ document.getElementById('qb-hint-string').addEventListener('click', () => {
   state.hintString = !state.hintString; save(); syncUI(); renderChallenge();
 });
 
-document.getElementById('btn-repeat').addEventListener('click', playChallenge);
+document.getElementById('btn-repeat').addEventListener('click', onRepeat);
 
 document.getElementById('zoom-in').addEventListener('click', () => zoom(-2));
 document.getElementById('zoom-out').addEventListener('click', () => zoom(2));
@@ -2033,10 +2223,19 @@ document.getElementById('set-equals').addEventListener('click', () => {
     onTuningChanged();
   });
 });
+document.getElementById('set-clear-record').addEventListener('click', () => {
+  if (!confirm('¿Borrar el récord de racha?')) return;
+  state.record = 0; save(); updateScore();
+});
+document.getElementById('audio-wake').addEventListener('click', rebuildAudio);
+document.addEventListener('visibilitychange', onVisibility);
+['pointerup', 'touchend', 'click'].forEach(t =>
+  document.addEventListener(t, onGesture, { capture:true, passive:true }));
 document.getElementById('set-reset').addEventListener('click', async () => {
-  if (!confirm('¿Restablecer todos los ajustes y borrar el récord?')) return;
-  const previousTimbre = state.timbre;
+  if (!confirm('¿Restablecer todos los ajustes? Tu récord se conserva.')) return;
+  const previousTimbre = state.timbre, record = state.record;
   state = sanitize({});
+  state.record = record;          // el récord es tuyo, no un ajuste (Sesión 1, A14)
   state.visibleFrets = defaultVisibleFrets();
   save();
   buildTuner();

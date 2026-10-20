@@ -182,20 +182,22 @@ async function record(page, midi, file){
   const adiv = await visNames();
   check(10, '«Ver todas las notas»: en Libre se ven, en Adivinar no', libre > 100 && adiv < 10, `celdas con nombre visible: Libre ${libre}, Adivinar ${adiv}`);
   await page.screenshot({ path: path.join(OUT, 'escritorio-adivinar.jpg'), quality: 60, type: 'jpeg' });
+  await page.click('#btn-repeat');            // desde la 0.3.3 el juego empieza con ▶
 
   // 9. Fallar en Adivinar
   await page.evaluate(() => { window.__plays = []; const o = playMidi; playMidi = (m, d) => { __plays.push(m); return o(m, d); }; });
   const target = await page.evaluate(() => challenge.midi);
   const wrongMidi = target === 45 ? 46 : 45;
   await page.locator(`.fret-cell[data-midi="${wrongMidi}"]`).first().click();
-  await sleep(900);
+  await sleep(1500);                          // la corrección llega a los 1,2 s (0.3.3)
+  await page.screenshot({ path: path.join(OUT, 'escritorio-adivinar-fallo.jpg'), quality: 70, type: 'jpeg' });
   const f9 = await page.evaluate(t => ({ wrong: document.querySelectorAll('.fret-cell.wrong').length,
     reveal: document.querySelectorAll('.fret-cell.reveal').length, expected: positionsFor(t).length,
     text: document.getElementById('challenge-text').textContent, plays: __plays.slice() }), target);
   check(9, 'Fallo: se marca, se iluminan las correctas y suena la buscada', f9.wrong === 1 && f9.reveal === f9.expected && f9.plays.includes(target) && /Era/.test(f9.text), `${f9.reveal}/${f9.expected} iluminadas; sonaron ${f9.plays.join(', ')}; «${f9.text.trim()}»`);
 
   // 13. Récord y ajustes tras recargar
-  await sleep(2600);
+  await sleep(3000);
   const t13 = await page.evaluate(() => challenge.midi);
   await page.locator(`.fret-cell[data-midi="${t13}"]`).first().click(); await sleep(200);
   const before = await page.evaluate(() => ({ record: state.record, fretNums: state.fretNums, showAll: state.showAllNotes }));

@@ -6,7 +6,8 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.3.2** | 20/10/2026 | F3 · tu comentario sobre el zoom | Rama `auto/F3.2-zoom` |
+| **0.3.3** | 20/10/2026 | F3.3 · correcciones de la Sesión 1 | Rama `auto/F3.3-sesion1` |
+| 0.3.2 | 20/10/2026 | F3 · tu comentario sobre el zoom | Rama `auto/F3.2-zoom` |
 | 0.3.1 | 20/10/2026 | F3.4 | `main`, fusionada el 20/10 (PR #9) |
 | 0.3.0 | 20/10/2026 | F3.2 | `main`, fusionada el 20/10 (PR #8) |
 | 0.2.3 | 19/10/2026 | F2 · auditoría CP-2 | `main`, fusionada el 20/10 |
@@ -27,6 +28,24 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.3.3] — 20/10/2026 · Correcciones de la Sesión 1
+
+### Corregido
+- **S-01 · PL-04** · *Sonido en el iPhone* (C07, C08 y D03). Con el iPhone bloqueado seguía sonando la corrección de un fallo, y a veces, al volver, el sonido se quedaba mudo hasta cerrar la app. Ahora, al ocultar la app se cortan las notas, se cancela lo que iba a sonar y se pausa el audio; al volver se reanuda y, si iOS no lo suelta, el siguiente toque crea un audio nuevo. Es un fallo conocido de Safari en las apps de pantalla de inicio (WebKit 291892), así que además **Ajustes enseña el estado del sonido y tiene «Reactivar sonido»**. Tras la auditoría AT-06, la recuperación ocurre **dentro de un toque** (al levantar el dedo), que es cuando iOS deja arrancar el sonido, y el estado de Ajustes se actualiza solo. Se confirma en la Sesión 2.
+- **General** · *Icono de la pestaña* (A16): el navegador pedía `favicon.ico` y daba un 404 en la consola. Ahora la página declara su icono.
+- **S-02** · Elegir guitarra ya no hace sonar una nota de muestra (A14).
+
+### Cambiado
+- **J-01** · Adivinar empieza con ▶: al entrar no suena nada hasta que lo pulsas, y ▶ aparece resaltado. Antes de ▶ puedes tocar el mástil sin que cuente (E06).
+- **J-01** · En Adivinar, la lectura grande y el pentagrama muestran la **nota buscada**: «?» hasta que aciertas o fallas, o la nota si tienes la pista de nombre. Antes mostraban la última que pulsaste e inducían a error (E06).
+- **J-10** · Al fallar, la corrección llega a los 1,2 s (antes 0,65) y el reto siguiente 3 s después, para que puedas comparar las dos notas. El fallo se rellena en rojo con ✗ y las posiciones correctas en verde con ✓ (A09).
+- **J-08 · C-05** · «Restablecer todos los ajustes» conserva tu récord. Para borrarlo hay un botón propio, «Borrar el récord de racha» (A14). No hacen falta usuarios: el récord vive en tu navegador.
+
+### Verificado
+- Banco: 39 de 39. Las 6 pruebas nuevas fallan con la 0.3.2 y pasan con la 0.3.3. `comprobar-disposicion.js` (14 pantallas), `comprobar-accesibilidad.js`, las 15 comprobaciones de F1.1 y el archivo autónomo, bien. Auditorías CP-3: AR-07 (requisitos) y AT-06 (técnica), sin hallazgos críticos; corregidos los altos y los medios.
 
 ---
 
