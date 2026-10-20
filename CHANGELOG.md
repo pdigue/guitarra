@@ -6,7 +6,8 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.2.3** | 19/10/2026 | F2 · auditoría CP-2 | Rama `auto/CP-2-correcciones` |
+| **0.3.0** | 20/10/2026 | F3.2 | Rama `auto/F3.2-horizontal` |
+| 0.2.3 | 19/10/2026 | F2 · auditoría CP-2 | `main`, fusionada el 20/10 |
 | 0.2.2 | 19/10/2026 | F2.4 | `main`, aprobada el 19/10 |
 | 0.2.1 | 19/10/2026 | F2.3 | `main`, aprobada el 19/10 |
 | 0.2.0 | 19/10/2026 | F2.2 | `main`, aprobada tras la escucha en el iPhone |
@@ -24,6 +25,30 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.3.0] — 20/10/2026 · Etapa F3.2: disposición en horizontal
+
+Primera versión de la fase F3. Aplica la interfaz aprobada (`docs/interfaz.md` v1.0).
+
+### Cambiado
+- **V-01 · PL-04** · Móvil en horizontal: pestañas en un raíl a la izquierda, el mástil con todo el alto y los controles en un panel a la derecha. Cada cuerda pasa de 29 a 53 px en el iPhone con Safari, y mide 42 px en un Android de 280 px de alto. El zoom se queda siempre a la vista, abajo del panel.
+- **C-03** · Adivinar: las pistas (Nombre, Cuerda) pasan a la tarjeta del reto. En horizontal, el chip del pentagrama muestra la clave de sol dibujada.
+- **C-04** · En pantallas amplias (ordenador, tableta) las cuatro áreas pasan a la cabecera como pestañas. Ajustes se abre como panel lateral en horizontal y en pantallas amplias.
+- **G-05** · Con el dedo, los botones miden al menos 40 × 40 px: chips, zoom, repetir, Ajustes, pestañas y los de las cuerdas del afinador. La cejuela (traste 0) pasa a 40 px. Los selectores e interruptores de Ajustes quedan para F3.4.
+- En vertical, si falta alto (Adivinar con el pentagrama), el pentagrama encoge antes que el mástil, y cada cuerda conserva 40 px.
+
+### Añadido
+- **V-01** · Aviso discreto para girar el móvil, solo con el dedo, en vertical y en pantallas de menos de 600 px, nunca en el Afinador. Si lo cierras, no vuelve; «Restablecer» lo recupera.
+- **V-04** · Con el dedo, un traste nunca mide menos de 40 px: en el iPhone en vertical caben como mucho 7 a la vez, y en horizontal, 10. Lo guardado no se pisa: al girar el móvil vuelve el zoom elegido (V-08).
+- **C-07** · El botón o gesto «atrás» cierra Ajustes o vuelve al área anterior. Cada área tiene su dirección (`#libre`, `#adivinar`…). Al abrir la app se entra siempre en Libre.
+- `herramientas/comprobar-disposicion.js`: mide la disposición en Chromium en diez pantallas de referencia y guarda capturas.
+
+### Verificado
+- Banco: 28 de 28. Nuevas: estructura de la interfaz, aviso para girar, límite de 40 px con el dedo y botón «atrás». Las cuatro fallan con la 0.2.3.
+- `comprobar-disposicion.js`: «Todo correcto» en las diez pantallas (V-06). Las 15 comprobaciones de F1.1 siguen bien en Chromium.
+- `dist/trasteando.html` regenerado: 1,47 MB.
 
 ---
 

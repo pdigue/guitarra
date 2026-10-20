@@ -1,6 +1,6 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 1.0 · **Fecha:** 20 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026
+**Versión:** 1.1 · **Fecha:** 20 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026
 **Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.2.3` · `requisitos.md` v1.11 · `roadmap.md` v3.9
 **Revisión:** auditoría de requisitos AR-04 (`auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
@@ -153,7 +153,7 @@ Las cuatro áreas pasan a la cabecera como pestañas, y desaparece la barra infe
 - **Mástil con teclado:** el mástil es un único punto de parada del tabulador. Dentro, **← →** cambian de traste, **↑ ↓** de cuerda, **Intro** o **Espacio** tocan la nota, e **Inicio** / **Fin** van al primer y al último traste visibles. Si la posición se sale de la vista, el mástil se desplaza solo. Técnica: *roving tabindex*, con el mástil anunciado como una cuadrícula (`role="grid"`).
 - **Foco visible** en todo: anillo discontinuo de 3 px, como en el boceto C1.
 - **Lectores de pantalla:** cada posición se anuncia («Sol 3, cuarta cuerda, traste 5») y los resultados del reto y del afinador se leen solos (`aria-live`). Los botones que solo tienen icono (⚙, ▶, −, +, 𝄞) llevan nombre.
-- **Tamaño de toque:** en pantallas táctiles, **ningún control ni casilla del mástil mide menos de 40 × 40 px**. Los bocetos lo cumplen y la herramienta lo comprueba. Para las casillas, **el zoom no deja que un traste mida menos de 40 px**: en el iPhone en vertical caben como mucho **8 trastes** a la vez; en horizontal, 11; con ratón, hasta 24 como hoy. Si el zoom guardado (V-08) da trastes más pequeños, se ajusta al límite al abrir.
+- **Tamaño de toque:** en pantallas táctiles, **ningún control ni casilla del mástil mide menos de 40 × 40 px**. Los bocetos lo cumplen y la herramienta lo comprueba. Para las casillas, **el zoom no deja que un traste mida menos de 40 px**: en el iPhone en vertical caben como mucho **7 trastes** a la vez; en horizontal, 10; con ratón, hasta 24 como hoy. Si el zoom guardado (V-08) da trastes más pequeños, se ajusta al límite al abrir.
 - **Movimiento:** con `prefers-reduced-motion`, sin destellos ni animaciones de desplazamiento.
 - **Contraste:** 4,5:1 en textos, comprobado con herramienta en F3.4.
 
@@ -193,7 +193,7 @@ Los bocetos usan un único acento para no decidir la paleta. Hay dos caminos, y 
 |---|---|
 | **C-06** | Pasa a implementado, con este documento en su versión 1.0. |
 | **V-01** | Criterio concreto del aviso: solo en pantallas táctiles en vertical (`pointer: coarse`, ancho < 600 px), en Libre, Adivinar y Escalas; nunca en el Afinador; cerrado, se guarda con los ajustes y «Restablecer» lo recupera. |
-| **V-04** | Añadido: con `pointer: coarse` un traste mide al menos 40 px, y el zoom guardado se ajusta a ese límite. Nota corregida: hoy, de 3 a 24 trastes; en el iPhone en vertical quedarán como mucho 8. |
+| **V-04** | Añadido: con `pointer: coarse` un traste mide al menos 40 px, y el zoom guardado se ajusta a ese límite. Nota corregida: hoy, de 3 a 24 trastes; en el iPhone en vertical quedarán como mucho 7. |
 | **G-05** | Añadido al criterio de la matriz: en pantallas táctiles, todo control y toda casilla del mástil mide al menos 40 × 40 px. |
 | **C-07** (nuevo, F3.2, prioridad media) | «Mientras haya un paso anterior en la sesión, el botón o gesto “atrás” del sistema cierra Ajustes o vuelve al área anterior; desde la primera área actúa el sistema. Al abrir se entra en Libre.» Se verifica a mano en Windows y en el simulador de Android de Chrome. |
 | **Criterio de F3.2** (roadmap y matriz de V-01) | «En horizontal, cada cuerda mide al menos 40 px **con un alto útil de 268 px o más**», medido en el iPhone (Safari e instalada) y en el simulador de Android. |
@@ -204,7 +204,7 @@ Los bocetos usan un único acento para no decidir la paleta. Hay dos caminos, y 
 Aprobada por ti el 20/10/2026, después de la auditoría AR-04. Lo que más pesaba de la decisión:
 
 1. **Horizontal:** raíl a la izquierda, mástil a todo el alto y los controles en un panel a la derecha. Se ven unos 10 trastes en vez de 12, a cambio de cuerdas de 52 px.
-2. **Trastes de al menos 40 px en pantallas táctiles:** en el iPhone en vertical, como mucho 8 trastes a la vez. Con ratón no cambia nada.
+2. **Trastes de al menos 40 px en pantallas táctiles:** en el iPhone en vertical, como mucho 7 trastes a la vez. Con ratón no cambia nada.
 3. **Pistas dentro de la tarjeta del reto.**
 4. **Afinador y Escalas con dos modos dentro de su pestaña.**
 
@@ -214,6 +214,7 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.0** | 20/10/2026 | Aprobada por el cliente. Cambios aplicados en `requisitos.md` v1.11. |
+| **1.1** | 20/10/2026 | Medido en F3.2 (V-06): con la cejuela de 40 px, caben como mucho 7 trastes en el iPhone en vertical y 10 en horizontal (antes se estimaban 8 y 11). Solo cambian esas cifras. |
+| 1.0 | 20/10/2026 | Aprobada por el cliente. Cambios aplicados en `requisitos.md` v1.11. |
 | 0.2 | 20/10/2026 | Tras AR-04: horizontal rediseñado como raíl, mástil y panel (de 45 a 52 px por cuerda en el iPhone, y 42 px en un Android de 280 px de alto); acceso rápido también en horizontal; afinación visible en el modo Micrófono; zoom en Escalas; bocetos del Afinador en horizontal; controles de 40 × 40 px comprobados por la herramienta; redacción concreta de V-01, V-04, G-05 y C-07; notas de C-01 a C-04; privacidad en F6.4; intervalos con «ST». |
 | 0.1 | 20/10/2026 | Propuesta inicial (F3.1), con bocetos medidos. |
