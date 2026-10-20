@@ -468,3 +468,80 @@ test('sin history, como el caso más pobre, la navegación y Ajustes funcionan (
   assert.equal(B.$('board-area').inert, false);
   assert.deepEqual(sinErrores(B), []);
 });
+
+// --- F3.4: paleta, contraste y teclado ---
+
+function luminancia(hex){
+  const c = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255)
+    .map(x => x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4);
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+}
+const contraste = (a, b) => { const [x, y] = [luminancia(a), luminancia(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+
+test('paleta: cada nota se lee con 4,5:1 y cada sostenido es un tono más claro de su natural (G-05, F3.4)', () => {
+  const A = boot(APP);
+  const colores = JSON.parse(A.ev('JSON.stringify(COLORS)'));
+  assert.equal(colores.length, 12);
+  for (const [i, c] of colores.entries()){
+    assert.ok(contraste(c, '#160f07') >= 4.5, `nota ${i}: texto del punto a ${contraste(c, '#160f07').toFixed(2)}:1`);
+    assert.ok(contraste(c, '#140e09') >= 4.5, `nota ${i}: como texto sobre el fondo a ${contraste(c, '#140e09').toFixed(2)}:1`);
+  }
+  for (const s of [1, 3, 6, 8, 10])
+    assert.ok(luminancia(colores[s]) > luminancia(colores[s - 1]), `el sostenido ${s} es más claro que su natural`);
+  assert.equal(new Set(colores).size, 12, 'doce colores distintos');
+});
+
+test('los grises de texto cumplen 4,5:1 sobre todos los fondos (G-05, F3.4)', () => {
+  const css = fs.readFileSync(APP, 'utf8');
+  const v = n => css.match(new RegExp('--' + n + ':(#[0-9a-f]{6})'))[1];
+  for (const texto of ['text', 'muted', 'faint', 'amber', 'ok', 'ko'])
+    for (const fondo of ['bg', 'surface', 'surface2'])
+      assert.ok(contraste(v(texto), v(fondo)) >= 4.5, `--${texto} sobre --${fondo}: ${contraste(v(texto), v(fondo)).toFixed(2)}:1`);
+  assert.ok(contraste(v('muted'), '#432c16') >= 4.5, 'los números de traste sobre la madera');
+});
+
+test('el mástil se maneja con teclado y en Adivinar no dice la nota (G-05, J-12)', () => {
+  const A = boot(APP);
+  const strings = A.$('strings');
+  assert.equal(strings.getAttribute('role'), 'grid');
+  const conCero = A.doc.querySelectorAll('.fret-cell[tabindex="0"]');
+  assert.equal(conCero.length, 1, 'un único punto de parada del tabulador');
+  const tecla = (key) => { const c = A.doc.querySelector('.fret-cell[tabindex="0"]'); strings.dispatchEvent({ type: 'keydown', key, target: c }); return A.doc.querySelector('.fret-cell[tabindex="0"]'); };
+  let c = tecla('ArrowRight');
+  assert.equal(c.dataset.fret, '1'); assert.equal(c.dataset.row, '0');
+  c = tecla('ArrowDown');
+  assert.equal(c.dataset.row, '1');
+  assert.match(c.getAttribute('aria-label'), /^Do4, 2ª cuerda, traste 1$/);
+  c = tecla('End');
+  assert.equal(c.dataset.fret, '24');
+  c = tecla('Home');
+  assert.equal(c.dataset.fret, '0');
+  assert.equal(A.doc.querySelectorAll('.fret-cell[tabindex="0"]').length, 1);
+  tecla('Enter');
+  assert.equal(A.$('note-name').textContent, 'Si', 'Intro toca la nota, como el dedo');
+  A.doc.querySelector('.tab[data-screen="guess"]').click();
+  c = A.doc.querySelector('.fret-cell[tabindex="0"]');
+  assert.equal(c.getAttribute('aria-label'), '2ª cuerda, al aire', 'en Adivinar no se anuncia la nota');
+  assert.deepEqual(sinErrores(A), []);
+});
+
+test('en Ajustes la fila entera cambia el interruptor, y el asa cierra deslizando (G-05)', async () => {
+  const A = boot(APP);
+  const antes = A.ev('state.showEquals');
+  A.$('set-equals').closest('.set-row').querySelector('.txt').click();
+  assert.equal(A.ev('state.showEquals'), !antes, 'tocar el texto de la fila cambia el interruptor');
+  A.$('set-equals').click();
+  assert.equal(A.ev('state.showEquals'), antes, 'el propio interruptor sigue funcionando, una sola vez');
+  A.$('btn-settings').click();
+  assert.ok(A.$('sheet').classList.contains('open'));
+  const asa = A.$('sheet-handle');
+  asa.dispatchEvent({ type: 'pointerdown', clientY: 100, pointerId: 7 });
+  asa.dispatchEvent({ type: 'pointermove', clientY: 140, pointerId: 7 });
+  await sleep(120);
+  asa.dispatchEvent({ type: 'pointerup', clientY: 140, pointerId: 7 });
+  assert.ok(A.$('sheet').classList.contains('open'), '40 px despacio no cierra');
+  asa.dispatchEvent({ type: 'pointerdown', clientY: 100, pointerId: 8 });
+  asa.dispatchEvent({ type: 'pointermove', clientY: 220, pointerId: 8 });
+  asa.dispatchEvent({ type: 'pointerup', clientY: 220, pointerId: 8 });
+  assert.ok(!A.$('sheet').classList.contains('open'), '120 px cierra');
+});

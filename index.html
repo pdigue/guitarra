@@ -28,8 +28,10 @@
   --amber:#e8a45c;
   --amber2:#c9853f;
   --text:#f2e8da;
-  --muted:#9c8a74;
-  --faint:#6b5a46;
+  /* Grises de texto con contraste ≥ 4,5:1 sobre todos los fondos (F3.4, G-05).
+     Antes, --faint se quedaba en 2,5:1. */
+  --muted:#af9e88;
+  --faint:#978670;
   --ok:#58c98a;
   --ko:#e86060;
 
@@ -93,7 +95,8 @@ button { font-family:inherit; color:inherit; }
 .quickbar::-webkit-scrollbar { display:none; }
 .chip { flex-shrink:0; background:var(--surface); border:1px solid var(--line);
   color:var(--muted); min-height:40px; min-width:40px; padding:0 14px; border-radius:20px;
-  font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap; transition:all .15s;
+  font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap;
+  transition:background-color .15s, border-color .15s, color .15s, transform .15s;   /* no el contorno de foco */
   display:inline-flex; align-items:center; justify-content:center; }
 /* El chip del pentagrama tiene dos rótulos: la palabra y, donde no cabe
    (panel en horizontal), la clave de sol dibujada. */
@@ -159,7 +162,7 @@ button { font-family:inherit; color:inherit; }
 .fret-nums.guide .fret-num:not(.key) { visibility:hidden; }
 .fn-spacer { width:var(--label-w); flex-shrink:0; }
 .fret-num { flex-shrink:0; width:var(--fret-w); text-align:center; line-height:17px;
-  font-size:10px; font-variant-numeric:tabular-nums; color:var(--faint); }
+  font-size:10px; font-variant-numeric:tabular-nums; color:var(--muted); }  /* sobre la madera */
 .fret-num.nut { width:var(--nut-w); }
 .fret-num.key { color:var(--amber); font-weight:700; }
 
@@ -177,6 +180,8 @@ button { font-family:inherit; color:inherit; }
 .fret-cell { position:relative; width:var(--fret-w); height:100%; flex-shrink:0;
   border-right:2px solid #8a7560; cursor:pointer;
   display:flex; align-items:center; justify-content:center; }
+.fret-cell:focus { outline:none; }
+.fret-cell:focus-visible { outline:3px dashed #fff; outline-offset:-5px; z-index:5; }
 .fret-cell.nut { width:var(--nut-w); border-right:4px solid #f0e0c8;
   background:rgba(240,224,200,.05); }
 .marker { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
@@ -190,11 +195,16 @@ button { font-family:inherit; color:inherit; }
 .fret-cell.active .dot { opacity:1; transform:scale(1); }
 .fret-cell.active::before { content:''; position:absolute; inset:4px; border-radius:50%;
   background:var(--dot); filter:blur(10px); opacity:.5; z-index:2; }
-/* Todas las notas visibles (ajuste opcional) */
-.board.show-all .dot { opacity:.34; transform:scale(.88); }
-.board.show-all .fret-cell.active .dot { opacity:1; transform:scale(1); }
-/* Posiciones equivalentes: señal secundaria, deliberadamente tenue */
-.fret-cell.equal .dot { opacity:.6; transform:scale(.82); box-shadow:0 0 0 2px rgba(255,255,255,.3); }
+/* Todas las notas visibles (ajuste opcional) y posiciones equivalentes: señal
+   secundaria con contorno, sin relleno. Antes eran puntos semitransparentes y
+   su nombre no llegaba al contraste mínimo (F3.4, G-05); así se leen igual de
+   bien y siguen pesando menos que la nota pulsada, que va rellena. */
+.board.show-all .dot, .fret-cell.equal .dot { opacity:1; background:rgba(20,14,9,.88);
+  color:var(--dot); box-shadow:inset 0 0 0 2px var(--dot); }
+.board.show-all .dot { transform:scale(.88); }
+.fret-cell.equal .dot { transform:scale(.92); }
+.board.show-all .fret-cell.active .dot { transform:scale(1); background:var(--dot); color:#160f07;
+  box-shadow:0 2px 6px rgba(0,0,0,.45), inset 0 1px 1px rgba(255,255,255,.28); }
 .fret-cell.correct .dot { opacity:1; transform:scale(1); box-shadow:0 0 0 3px var(--ok), 0 2px 8px rgba(0,0,0,.5); }
 .fret-cell.wrong .dot { opacity:1; transform:scale(1); box-shadow:0 0 0 3px var(--ko), 0 2px 8px rgba(0,0,0,.5); }
 /* Tras un fallo: dónde estaba de verdad la nota (J-10). Late dos veces para
@@ -296,8 +306,10 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   border-radius:var(--r) var(--r) 0 0; padding:8px 16px calc(20px + env(safe-area-inset-bottom));
   transform:translateY(102%); transition:transform .28s cubic-bezier(.3,.9,.3,1); }
 .sheet.open { transform:translateY(0); }
+.sheet-handle { touch-action:none; cursor:grab; padding-top:6px; }
 .grabber { width:38px; height:4px; border-radius:2px; background:var(--line2);
-  margin:6px auto 14px; }
+  margin:0 auto 14px; }
+.sheet.dragging { transition:none; }
 .sheet h3 { font-family:Georgia,serif; font-style:italic; font-weight:400; font-size:20px;
   color:var(--amber); margin:0 0 16px; }
 .set-group { margin-bottom:18px; }
@@ -305,6 +317,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .set-row { display:flex; align-items:center; justify-content:space-between;
   padding:10px 0; border-bottom:1px solid var(--line); gap:12px; }
 .set-row:last-child { border-bottom:none; }
+.set-row:has(.sw) { cursor:pointer; }   /* toda la fila cambia el interruptor */
 .set-row .txt { font-size:14px; }
 .set-row .txt small { display:block; font-size:11.5px; color:var(--muted); margin-top:2px; line-height:1.4; }
 .seg { display:flex; background:var(--surface2); border:1px solid var(--line2);
@@ -397,6 +410,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
            transform:translateX(102%); }
   .sheet.open { transform:none; }
   .grabber { display:none; }
+  .sheet-handle { touch-action:auto; cursor:auto; padding-top:0; }
 }
 </style>
 </head>
@@ -544,8 +558,10 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 <!-- ============ AJUSTES ============ -->
 <div class="sheet-bg" id="sheet-bg"></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
-  <div class="grabber"></div>
-  <h3 id="sheet-title">Ajustes</h3>
+  <div class="sheet-handle" id="sheet-handle">
+    <div class="grabber"></div>
+    <h3 id="sheet-title">Ajustes</h3>
+  </div>
 
   <div class="set-group">
     <span>Notación</span>
@@ -612,7 +628,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.3.0';
+const APP_VERSION = '0.3.1';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -623,8 +639,11 @@ const ANGLO = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 const LATIN = ['Do','Do#','Re','Re#','Mi','Fa','Fa#','Sol','Sol#','La','La#','Si'];
 
 // Un color por nota. Ayuda a reconocer patrones en el mástil de un vistazo.
-const COLORS = ['#e74c3c','#e67e22','#f39c12','#d4ac0d','#52be80','#16a085',
-                '#3498db','#5dade2','#7d3c98','#a569bd','#c0392b','#884ea0'];
+// Paleta por nota (F3.4, decisión del 20/10): las 7 naturales bien distintas,
+// también con daltonismo, y cada sostenido un tono más claro de su natural.
+// La genera y la comprueba herramientas/paleta.py: no la edites a mano.
+const COLORS = ['#feb893','#ffddcb','#6ec933','#96de71','#fee73f','#9095fd',
+                '#adb3fd','#e561c8','#f389d9','#ed4952','#f97676','#1be6eb'];
 
 const NUM_FRETS = 24;
 const MIN_FRET_W = 34;   // ancho mínimo de un traste con ratón
@@ -1174,13 +1193,19 @@ function buildBoard(){
     nums.appendChild(n);
   }
 
+  // El mástil es una cuadrícula para los lectores de pantalla y un único punto
+  // de parada del tabulador: dentro, las flechas mueven el foco (roving tabindex).
+  rows.setAttribute('role', 'grid');
+  rows.setAttribute('aria-label', 'Mástil. Flechas para moverte, Intro o Espacio para tocar');
   displayStrings().forEach((str, rowIdx) => {
     const row = document.createElement('div');
     row.className = 'string-row';
+    row.setAttribute('role', 'row');
     row.style.setProperty('--sth', str.thickness + 'px');
 
     const label = document.createElement('div');
     label.className = 'string-label';
+    label.setAttribute('role', 'rowheader');
     label.textContent = noteName(str.openMidi);
     row.appendChild(label);
 
@@ -1209,6 +1234,8 @@ function buildBoard(){
       cell.dataset.midi = midi;
       cell.dataset.row = rowIdx;
       cell.dataset.fret = f;
+      cell.setAttribute('role', 'gridcell');
+      cell.setAttribute('tabindex', '-1');
       // Sin listener por celda: los eventos se delegan una sola vez en #strings.
       frets.appendChild(cell);
     }
@@ -1216,7 +1243,68 @@ function buildBoard(){
     rows.appendChild(row);
   });
 
+  setRoving(kbPos.row, kbPos.fret);
   applyBoardFlags();
+}
+
+/* --- Mástil con teclado (G-05) ---
+   Solo una casilla tiene tabindex 0: la última visitada. Las flechas mueven
+   el foco, Inicio y Fin van al primer y al último traste a la vista, e Intro o
+   Espacio tocan la nota, igual que el dedo. */
+let kbPos = { row:0, fret:0 };
+
+function cellAt(row, fret){
+  return document.querySelector('.fret-cell[data-row="' + row + '"][data-fret="' + fret + '"]');
+}
+/** Lo que oye un lector de pantalla. En Adivinar no dice la nota: sería la respuesta (J-12). */
+function cellLabel(cell){
+  const row = +cell.dataset.row, fret = +cell.dataset.fret;
+  const str = displayStrings()[row];
+  const where = str.number + 'ª cuerda, ' + (fret === 0 ? 'al aire' : 'traste ' + fret);
+  const midi = +cell.dataset.midi;
+  return screen === 'guess' ? where : noteName(midi) + (Math.floor(midi / 12) - 1) + ', ' + where;
+}
+function setRoving(row, fret){
+  const old = cellAt(kbPos.row, kbPos.fret);
+  if (old) old.setAttribute('tabindex', '-1');
+  kbPos = { row, fret };
+  const cell = cellAt(row, fret);
+  if (cell){ cell.setAttribute('tabindex', '0'); cell.setAttribute('aria-label', cellLabel(cell)); }
+  return cell;
+}
+/** Primer y último traste que se ven enteros en la ventana del mástil. */
+function visibleFretRange(){
+  const scroll = document.getElementById('board-scroll');
+  if (typeof scroll.getBoundingClientRect !== 'function') return [0, NUM_FRETS];
+  const box = scroll.getBoundingClientRect();
+  const vis = [...document.querySelectorAll('.fret-cell[data-row="0"]')].filter(c => {
+    const r = c.getBoundingClientRect();
+    return r.left >= box.left + LABEL_W - 1 && r.right <= box.right + 1;
+  });
+  return vis.length ? [+vis[0].dataset.fret, +vis[vis.length - 1].dataset.fret] : [0, NUM_FRETS];
+}
+function bindBoardKeys(){
+  document.getElementById('strings').addEventListener('keydown', ev => {
+    const cell = ev.target.closest && ev.target.closest('.fret-cell');
+    if (!cell) return;
+    let row = +cell.dataset.row, fret = +cell.dataset.fret;
+    switch (ev.key){
+      case 'ArrowRight': fret = Math.min(NUM_FRETS, fret + 1); break;
+      case 'ArrowLeft':  fret = Math.max(0, fret - 1); break;
+      case 'ArrowDown':  row = Math.min(displayStrings().length - 1, row + 1); break;
+      case 'ArrowUp':    row = Math.max(0, row - 1); break;
+      case 'Home':       fret = visibleFretRange()[0]; break;
+      case 'End':        fret = visibleFretRange()[1]; break;
+      case 'Enter': case ' ': ev.preventDefault(); firePress(cell); return;
+      default: return;
+    }
+    ev.preventDefault();
+    const next = setRoving(row, fret);
+    if (next){
+      next.focus();
+      if (typeof next.scrollIntoView === 'function') next.scrollIntoView({ block:'nearest', inline:'nearest' });
+    }
+  });
 }
 
 /** Refresca solo los textos (al cambiar de nomenclatura no hay que reconstruir). */
@@ -1228,6 +1316,7 @@ function refreshNoteNames(){
   document.querySelectorAll('.string-label').forEach((l,i) => {
     l.textContent = noteName(strs[i].openMidi);
   });
+  setRoving(kbPos.row, kbPos.fret);
 }
 
 function applyBoardFlags(){
@@ -1264,6 +1353,7 @@ function bindBoardInput(){
     const cell = ev.target.closest('.fret-cell');
     if (!cell) return;
     pendingTap = { cell, x:ev.clientX, y:ev.clientY, id:ev.pointerId };
+    setRoving(+cell.dataset.row, +cell.dataset.fret);
     if (screen !== 'guess') firePress(cell);
   });
 
@@ -1639,6 +1729,7 @@ function setScreen(next){
   clearTimeout(nextTimer);
   clearTimeout(playTimer);
   applyBoardFlags();          // «ver todas las notas» depende del modo (J-12)
+  setRoving(kbPos.row, kbPos.fret);   // su etiqueta dice la nota o no, según el área
 
   if (isGuess){
     streak = 0;
@@ -1825,6 +1916,43 @@ document.getElementById('gate-btn').addEventListener('click', async () => {
   document.getElementById(id).addEventListener('click', ev => showSettings(ev.currentTarget));
 });
 document.getElementById('sheet-bg').addEventListener('click', hideSettings);
+
+// En Ajustes, tocar cualquier parte de una fila con interruptor lo cambia
+// (G-05): la fila es un blanco mucho mayor que el interruptor.
+document.getElementById('sheet').addEventListener('click', ev => {
+  const row = ev.target.closest('.set-row');
+  if (!row || ev.target.closest('button, select')) return;
+  row.querySelector('.sw')?.click();
+});
+
+// Cerrar Ajustes deslizando el asa hacia abajo (interfaz.md §6), solo cuando
+// es una hoja que sube desde abajo. Más de 80 px, o un gesto rápido, cierra.
+(function(){
+  const sheet = document.getElementById('sheet'), handle = document.getElementById('sheet-handle');
+  const grabber = handle.querySelector('.grabber');
+  let drag = null;
+  handle.addEventListener('pointerdown', ev => {
+    if (typeof getComputedStyle === 'function' && getComputedStyle(grabber).display === 'none') return;
+    drag = { y:ev.clientY, t:Date.now(), id:ev.pointerId, dy:0 };
+    sheet.classList.add('dragging');
+  });
+  handle.addEventListener('pointermove', ev => {
+    if (!drag || ev.pointerId !== drag.id) return;
+    drag.dy = Math.max(0, ev.clientY - drag.y);
+    sheet.style.transform = 'translateY(' + drag.dy + 'px)';
+  });
+  const end = () => {
+    if (!drag) return;
+    const rapido = drag.dy > 30 && drag.dy / Math.max(1, Date.now() - drag.t) > 0.5;
+    const cerrar = drag.dy > 80 || rapido;
+    drag = null;
+    sheet.classList.remove('dragging');
+    sheet.style.transform = '';
+    if (cerrar) hideSettings();
+  };
+  handle.addEventListener('pointerup', end);
+  handle.addEventListener('pointercancel', end);
+})();
 document.getElementById('rotate-close').addEventListener('click', () => {
   state.rotateHintClosed = true; save(); updateRotateHint();
 });
@@ -1934,6 +2062,7 @@ if (canHistory) history.replaceState({ screen:'free' }, '', '#libre');
 buildTuner();
 buildBoard();
 bindBoardInput();
+bindBoardKeys();
 clearStaff();
 syncUI();
 applyZoom();
