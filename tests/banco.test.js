@@ -351,3 +351,92 @@ test('tocar la pestaña activa no reinicia la racha (J-07, AT-02 #6)', async () 
   tab.click();
   assert.equal(A.ev('streak'), 3);
 });
+
+// --- F3.2: disposición, aviso para girar, zoom táctil y botón «atrás» ---
+
+const DEDO = { matchMedia: q => ({ matches: /coarse/.test(q) }) };    // pantalla táctil
+const RATON = { matchMedia: () => ({ matches: false }) };
+
+test('estructura de la interfaz aprobada: panel de controles y pistas dentro del reto (C-06, C-03, F3.2)', () => {
+  const A = boot(APP);
+  const dentro = (hijo, padre) => { for (let n = A.$(hijo); n; n = n.parentNode) if (n === A.$(padre)) return true; return false; };
+  for (const id of ['quickbar', 'challenge', 'display', 'zoombar']) assert.ok(dentro(id, 'panel'), id + ' va en el panel');
+  for (const id of ['board-area', 'rotate-hint', 'tuner']) assert.ok(!dentro(id, 'panel'), id + ' va fuera del panel');
+  for (const id of ['qb-hint-label', 'qb-hint-note', 'qb-hint-string']) assert.ok(dentro(id, 'challenge'), id + ' va en el reto');
+  assert.ok(A.$('btn-settings-rail').closest('.tabbar'), 'Ajustes también en el raíl');
+  assert.equal(A.$('qb-staff').getAttribute('aria-label'), 'Pentagrama', 'el chip con la clave tiene nombre');
+  // El Afinador no usa el panel: se oculta entero y vuelve al salir.
+  A.doc.querySelector('.tab[data-screen="tuner"]').click();
+  assert.equal(A.$('panel').hidden, true);
+  A.doc.querySelector('.tab[data-screen="free"]').click();
+  assert.equal(A.$('panel').hidden, false);
+  assert.deepEqual(sinErrores(A), []);
+});
+
+test('aviso para girar: solo con el dedo, en vertical, fuera del Afinador, y cerrado no vuelve (V-01)', async () => {
+  const A = boot(APP, null, DEDO);                  // 390 × 844: móvil en vertical
+  assert.equal(A.$('rotate-hint').hidden, false, 'sale en Libre');
+  A.doc.querySelector('.tab[data-screen="tuner"]').click();
+  assert.equal(A.$('rotate-hint').hidden, true, 'nunca en el Afinador');
+  A.doc.querySelector('.tab[data-screen="guess"]').click();
+  assert.equal(A.$('rotate-hint').hidden, false, 'sale en Adivinar');
+  A.$('rotate-close').click();
+  assert.equal(A.$('rotate-hint').hidden, true);
+  assert.equal(JSON.parse(A.store.get('trasteando.v1')).rotateHintClosed, true, 'se guarda con los ajustes');
+  const B = boot(APP, { rotateHintClosed: true }, DEDO);
+  assert.equal(B.$('rotate-hint').hidden, true, 'cerrado no vuelve al abrir otra vez');
+  B.$('set-reset').click();
+  await sleep(20);
+  assert.equal(B.$('rotate-hint').hidden, false, '«Restablecer» lo recupera');
+  assert.equal(boot(APP, null, RATON).$('rotate-hint').hidden, true, 'con ratón no sale');
+  assert.equal(boot(APP, null, Object.assign({ innerWidth: 844, innerHeight: 390 }, DEDO)).$('rotate-hint').hidden, true, 'en horizontal no sale');
+  assert.equal(boot(APP).$('rotate-hint').hidden, true, 'sin matchMedia, como el caso más pobre, no sale');
+});
+
+test('con el dedo un traste mide al menos 40 px; con ratón, 34 (V-04, G-05)', () => {
+  assert.equal(boot(APP, null, DEDO).ev('minFretW()'), 40);
+  assert.equal(boot(APP, null, RATON).ev('minFretW()'), 34);
+  assert.equal(boot(APP).ev('minFretW()'), 34, 'sin matchMedia se trata como ratón');
+  assert.equal(boot(APP).ev('NUT_W'), 40, 'la cejuela también se toca con el dedo');
+});
+
+test('botón «atrás»: vuelve al área anterior, cierra Ajustes y al abrir entra en Libre (C-07, L-01)', () => {
+  const pasos = [];
+  const historia = {
+    state: null,
+    pushState(st, _t, url){ this.state = st; pasos.push(['push', st, url]); },
+    replaceState(st, _t, url){ this.state = st; pasos.push(['replace', st, url]); },
+    back(){ pasos.push(['back']); }
+  };
+  // Los objetos nacen dentro del contexto de la app, con otro Object: se
+  // comparan por su contenido.
+  const plano = x => JSON.parse(JSON.stringify(x));
+  const A = boot(APP, null, { history: historia });
+  assert.deepEqual(plano(pasos[0]), ['replace', { screen: 'free' }, '#libre'], 'al abrir, Libre');
+  A.doc.querySelector('.tab[data-screen="guess"]').click();
+  assert.deepEqual(plano(pasos.at(-1)), ['push', { screen: 'guess' }, '#adivinar']);
+  const n = pasos.length;
+  A.doc.querySelector('.tab[data-screen="guess"]').click();
+  assert.equal(pasos.length, n, 'tocar la pestaña activa no apunta otro paso');
+  // «Atrás» del sistema: el navegador avisa con popstate y el estado anterior.
+  A.fireWin('popstate', { state: { screen: 'free' } });
+  assert.equal(A.ev('screen'), 'free');
+  assert.ok(A.doc.querySelector('.tab[data-screen="free"]').classList.contains('active'));
+  // Ajustes apunta su propio paso; «atrás» lo cierra sin cambiar de área.
+  A.$('btn-settings').click();
+  assert.ok(A.$('sheet').classList.contains('open'));
+  assert.equal(pasos.at(-1)[1].sheet, true);
+  A.fireWin('popstate', { state: { screen: 'free' } });
+  assert.ok(!A.$('sheet').classList.contains('open'), '«atrás» cierra Ajustes');
+  assert.equal(A.ev('screen'), 'free');
+  // Cerrar Ajustes tocando fuera deshace su paso con back(), sin acumular pasos.
+  A.$('btn-settings').click();
+  A.$('sheet-bg').click();
+  assert.deepEqual(plano(pasos.at(-1)), ['back']);
+  // Sin history, como el caso más pobre, todo funciona igual.
+  const B = boot(APP);
+  B.doc.querySelector('.tab[data-screen="guess"]').click();
+  B.$('btn-settings').click(); B.$('sheet-bg').click();
+  assert.ok(!B.$('sheet').classList.contains('open'));
+  assert.deepEqual(sinErrores(B), []);
+});
