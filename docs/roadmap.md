@@ -398,6 +398,8 @@ flowchart TB
 
 **Añadido a la Sesión 1 tras CP-2:** escucha guiada de los trastes 15 a 24 de la 1ª cuerda en la acústica; una nota larga en `index.html` frente al archivo autónomo; un afinador externo sobre Mi2, Mi4 y Mi6 en cada timbre; el primer reto tras una llamada o un bloqueo, y tocar deprisa muchas notas.
 
+**Protocolo de la Sesión 1:** `verificaciones/sesion-1-protocolo.md`: 41 pruebas en cinco bloques (ordenador con la web, ordenador con el archivo sin internet, iPhone con Safari, app instalada y con la guitarra), cada una con su resultado esperado. Los resultados se marcan en una página interactiva y pasan a `V-08`.
+
 **Añadido a la Sesión 1 tras F3.2:** la app en horizontal en tu iPhone, en Safari y con la app instalada (que cada cuerda se toque cómoda y que nada quede tapado por la muesca); el aviso para girar, cerrarlo y que no vuelva; y el botón «atrás» con el ratón en Windows.
 
 **Dos comprobaciones cortas entre sesiones** (CP-1), para no esperar dos fases a oír un cambio de riesgo: 5 minutos en el iPhone tras F2.2, que sustituye todo el motor de audio, y 10 minutos con la guitarra en `localhost` tras F4.3.
