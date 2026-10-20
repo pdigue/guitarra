@@ -1,6 +1,6 @@
 # Trasteando — Compatibilidad entre sistemas operativos
 
-**Versión:** 1.3 · **Fecha:** 20 de octubre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
+**Versión:** 1.4 · **Fecha:** 20 de octubre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
 
 La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este documento lista cada capacidad del navegador que usa o usará, cómo se comporta en cada sistema y qué hace la app donde falta. Se revisa en cada etapa que añada una capacidad nueva.
 
@@ -17,9 +17,11 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 | Capacidad | Para qué | Windows | Android | iPhone | Si falta |
 |---|---|:---:|:---:|:---:|---|
 | Web Audio | Todo el sonido | ✅ | ✅ | ✅ | Sin alternativa: es la base |
-| Reanudar el audio tras una interrupción | Volver a sonar tras una llamada o un bloqueo | ✅ | ✅ | ⚠️ iOS lo deja en `interrupted` | `wakeAudio()` lo reanuda en cada nota (0.1.4) |
+| Reanudar el audio tras una interrupción | Volver a sonar tras una llamada o un bloqueo | ✅ | ✅ | ⚠️ iOS lo deja en `interrupted` | `wakeAudio()` lo reanuda en cada nota (0.1.4). **Sesión 1 (20/10):** en la app instalada, a veces el audio se queda mudo aunque diga «activo» y solo vuelve cerrando la app (fallo de Safari, WebKit 291892). Desde la 0.3.3, si al volver no se reanuda, el siguiente toque crea un audio nuevo, y Ajustes tiene «Reactivar sonido» |
 | Sonar con el interruptor de silencio puesto | Que suene el iPhone en silencio | — | — | ⚠️ Web Audio se calla | Desde la 0.2.0, `navigator.audioSession.type = 'playback'` si existe (Safari 16.4+). **Confirmado por el cliente en su iPhone el 19/10 (V-05).** Efecto: al sonar, la app interrumpe la música de otras apps |
 | Leer las grabaciones del proyecto (`fetch`) | Cargar el audio | ✅ local y web | ✅ local y web | ✅ local y web | Con doble clic (`file://`) no se puede: por eso `dist/trasteando.html` lleva el audio dentro (0.2.1) |
+| Saber si la página está oculta (`visibilitychange`, `document.hidden`) | Callar y pausar el audio al bloquear o cambiar de app (0.3.3) | ✅ | ✅ | ✅ | Sin él, el sonido programado sonaría con la pantalla apagada, como en la 0.3.2 |
+| Pausar y cerrar el audio (`AudioContext.suspend()` y `close()`) | Pausar al ocultar y rehacer el audio si iOS lo deja atascado (0.3.3) | ✅ | ✅ | ✅ | Cada llamada va protegida: si falla, la app sigue con el audio que tenga |
 | Eventos de puntero | Pulsar y arrastrar el mástil | ✅ | ✅ | ✅ | — |
 | `localStorage` | Guardar ajustes y récord | ✅ | ✅ | ✅ | Si falla, la app funciona sin guardar |
 | Vibración | Respuesta al fallar en Adivinar | — | ✅ | ❌ | Se omite; el color y el destello bastan (J-09) |
@@ -44,7 +46,8 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.3** | 20/10/2026 | `:has()` y `scrollIntoView` con opciones (F3.4, 0.3.1). |
+| **1.4** | 20/10/2026 | `visibilitychange`, `suspend()` y `close()` del audio, y lo visto en el iPhone en la Sesión 1 (0.3.3). |
+| 1.3 | 20/10/2026 | `:has()` y `scrollIntoView` con opciones (F3.4, 0.3.1). |
 | 1.2 | 20/10/2026 | Tipo de puntero, historial, `grid` y `display: contents`, y `position: sticky` (F3.2, 0.3.0). |
 | 1.1 | 19/10/2026 | Lectura de grabaciones (`fetch`) y archivo autónomo (0.2.0 y 0.2.1). Interruptor de silencio confirmado en el iPhone y su efecto sobre otras apps (CP-2). |
 | 1.0 | 15/10/2026 | Primera versión (PL-04). |

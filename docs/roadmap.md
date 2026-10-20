@@ -1,6 +1,6 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 3.12 · **Fecha:** 20 de octubre de 2026
+**Versión:** 3.13 · **Fecha:** 20 de octubre de 2026
 **Válido para:** app `0.3.2` · `requisitos.md` v1.14 · `matriz-cumplimiento` v1.12 · `interfaz.md` v1.4 · `compatibilidad.md` v1.3 · `automatizacion.md` v1.1 · `CHANGELOG.md`
 **Gestiona:** chat de Desarrollo
 
@@ -12,7 +12,7 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** F3 hecha por mi parte: F3.1, F3.2 (`0.3.0`), F3.4 (`0.3.1`) y el zoom que pediste (`0.3.2`). Siguiente: la **Sesión 1** contigo, con el iPhone y el ordenador (F1.1, F2.5, F3.3 y lo añadido), y después CP-3 y F4.
+📍 **Estás aquí:** **Sesión 1 hecha** el 20/10 (`verificaciones/V-08`): 39 de 41 pruebas cumplen, 40 requisitos validados. Lo que salió se corrige en la `0.3.3`. Siguiente: CP-3 y F4 (afinador por micrófono). En la Sesión 2 se confirma que el sonido del iPhone ya no se queda mudo.
 
 | Fase | Objetivo | Versión | Dónde se usa | Etapas | Progreso |
 |------|----------|:---:|---|:---:|---|
@@ -101,7 +101,7 @@ Cada pieza del proyecto lleva su propio número, y todas se citan entre sí.
 
 | Etapa | Qué se hace | Requisitos | Cómo se valida | Aprenderás | Estado |
 |---|---|---|---|---|:---:|
-| **F1.1** | Probar la app en Live Server con la lista de abajo | G-01, G-02, N-01…N-05, D-01…D-03, D-05…D-07, S-01…S-06, P-01, P-02, P-04, L-01…L-03, J-01…J-09, A-01, A-06…A-11, V-02…V-08, C-01…C-05 | Lista de 15 comprobaciones | Herramientas del navegador (F12): consola, red, simulador de dispositivos | 📅 Sesión 1 |
+| **F1.1** | Probar la app en Live Server con la lista de abajo | G-01, G-02, N-01…N-05, D-01…D-03, D-05…D-07, S-01…S-06, P-01, P-02, P-04, L-01…L-03, J-01…J-09, A-01, A-06…A-11, V-02…V-08, C-01…C-05 | Lista de 15 comprobaciones | Herramientas del navegador (F12): consola, red, simulador de dispositivos | ✅ Sesión 1 (20/10, `V-08`): 19 pruebas en el PC; el 404 del icono, corregido en la `0.3.3` |
 | **F1.2** | Subir el repositorio a GitHub. En modo acelerado los commits los hace el agente; tú revisas y apruebas el *pull request* | X-01 | GitHub muestra la rama y el *pull request*; tú lo apruebas. **Parada antes de F2.2** (CP-1) | Repositorio, commits, ramas, *pull request*; leer un historial con `git log` | ✅ subido y aprobado (PR #1 y #2) |
 | **F1.3** | Revelar la respuesta al fallar y correcciones de revisión. La `0.1.3` corrige el registro agudo de la guitarra clásica | G-10, D-04, J-10, J-12, V-09 | Banco automático (15 pruebas con `node --test`) y comprobaciones 9–12 y 15 de F1.1 | Cómo se diseña el refuerzo en una herramienta de aprendizaje | 🔨 0.1.4 |
 | **F1.4** | Cierre: documentos a `docs/`, etiqueta de versión, cuadernos al día, decisión sobre la pista T | X-01 | El repositorio tiene `docs/`; `git tag` muestra `v0.1.5` | Etiquetas de Git y registro de cambios | ✅ `v0.1.5`, puesta el 19/10 |
@@ -151,7 +151,7 @@ Cada pieza del proyecto lleva su propio número, y todas se citan entre sí.
 | **F2.2** | Sustituir Tone.js por un reproductor de muestras propio, de unas cincuenta líneas | PL-04, S-01, S-08 | El banco recorre todas las notas del mástil en los dos timbres: muestra más transposición dan la frecuencia teórica, ±5 cents; ninguna dirección externa en el código; ninguna espera programada entre la pulsación y el sonido. Comprobación corta en el iPhone: 5 minutos de escucha comparada | Web Audio API: grafo de audio, decodificar, buffers, cambiar el tono variando la velocidad | ✅ 0.2.0, escuchada en tu iPhone el 19/10 |
 | **F2.3** | Meter el audio dentro del propio HTML | S-07, G-07 | En modo avión y con doble clic suena la guitarra real; el archivo autónomo abre en ≤ 3 s en Windows (Sesión 1); audio ≤ 1,45 MB y archivo ≤ 2 MB (CP-2). Lo genera una herramienta en `dist/`: `index.html` no lleva el audio dentro (AT-02) | Codificación base64; compromiso entre autonomía y peso | ✅ 0.2.1, aprobada el 19/10 · 1,42 MB, abre en 0,6 s (V-03) |
 | **F2.4** | Añadir muestras intermedias para el registro agudo | S-01, S-08 | En afinación estándar, la transposición máxima de nylon es ≤ 6 semitonos y la de la acústica la menor que permitan sus muestras, anotada; cada muestra nueva medida a ±5 cents | Por qué un sampler necesita varias muestras; qué degrada el sonido al transportar | ✅ 0.2.2 · nylon ≤ 6 semitonos, acústica 14 |
-| **F2.5** | Probar el archivo autónomo en cada plataforma | G-07, PL-01, PL-02, PL-03 | Windows: el archivo abre con doble clic en modo avión en ≤ 3 s. iPhone: el archivo no se ejecuta (a confirmar) y la web en `https` abre, suena y se instala. Android, cuando haya uno | Cómo abre cada sistema un archivo local, y por qué iOS es distinto | 📅 Sesión 1 |
+| **F2.5** | Probar el archivo autónomo en cada plataforma | G-07, PL-01, PL-02, PL-03 | Windows: el archivo abre con doble clic en modo avión en ≤ 3 s. iPhone: el archivo no se ejecuta (a confirmar) y la web en `https` abre, suena y se instala. Android, cuando haya uno | Cómo abre cada sistema un archivo local, y por qué iOS es distinto | ✅ Sesión 1 (20/10, `V-08`): Windows sin internet y la web en el iPhone, también instalada. Android sigue pendiente |
 
 ### 🔍 CP-2 — Checkpoint del sonido
 
@@ -170,7 +170,7 @@ Cada pieza del proyecto lleva su propio número, y todas se citan entre sí.
 |---|---|---|---|---|:---:|
 | **F3.1** | Especificar la interfaz pantalla a pantalla. **Bloquea F3.2 y toda F5**. En modo acelerado, el agente propone `interfaz.md` y **para** hasta que lo apruebes | C-06 | `interfaz.md` revisado por el auditor de requisitos y aprobado por ti | Wireframes, jerarquía visual, arquitectura de información | ✅ aprobada el 20/10 |
 | **F3.2** | Diseño apaisado (raíl, mástil y panel), aviso discreto para girar el móvil, zoom con trastes táctiles de al menos 40 px y botón «atrás» | PL-04, V-01, V-04, C-07 | En horizontal, con un alto útil de 268 px o más, cada cuerda mide al menos 40 px (iPhone en Safari e instalada; simulador de Android) | Diseño adaptable: media queries, unidades relativas | ✅ `0.3.0` (V-06; en el iPhone, Sesión 1) |
-| **F3.3** | Quince minutos de uso real en el móvil, con la guitarra delante | Validación en móvil de los requisitos de F1.1 | Lista táctil y notas de lo incómodo | Eventos de puntero; latencia percibida | 📅 Sesión 1 |
+| **F3.3** | Quince minutos de uso real en el móvil, con la guitarra delante | Validación en móvil de los requisitos de F1.1 | Lista táctil y notas de lo incómodo | Eventos de puntero; latencia percibida | ✅ Sesión 1 (20/10, `V-08`): tus notas, corregidas en la `0.3.3` o anotadas para después (C-08, S-09) |
 | **F3.4** | Accesibilidad completa y paleta de colores. Incluye lo que dejó F3.2: el mástil con teclado, que toda la fila de un interruptor responda al toque y el gesto de bajar para cerrar Ajustes | G-05 | Recorrer la app solo con teclado; contraste 4,5:1; simulador de daltonismo | ARIA, contraste, por qué el color no debe ser la única señal | ✅ `0.3.1` (V-07) |
 
 ### 🔍 CP-3 — Checkpoint de interfaz
@@ -453,7 +453,8 @@ flowchart TB
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **3.12** | 20/10/2026 | `0.3.2`: «+» enseña más trastes y con el dedo se pueden pedir trastes de hasta 28 px. Se audita en CP-3, junto con lo que salga de la Sesión 1. |
+| **3.13** | 20/10/2026 | Sesión 1 hecha (`V-08`): F1.1, F2.5 y F3.3 cerradas. La `0.3.3` corrige lo que salió: sonido en el iPhone, icono, Adivinar empieza con ▶, más tiempo para la corrección y el récord se conserva al restablecer. Nuevos para después: C-08 (personalización) y S-09 (timbre). |
+| 3.12 | 20/10/2026 | `0.3.2`: «+» enseña más trastes y con el dedo se pueden pedir trastes de hasta 28 px. Se audita en CP-3, junto con lo que salga de la Sesión 1. |
 | 3.11 | 20/10/2026 | F3.4 hecha con la `0.3.1`, tras AR-06 y AT-05. Paleta decidida. F3 queda a falta de la Sesión 1 (F3.3). |
 | 3.10 | 20/10/2026 | F3.2 hecha con la `0.3.0`, tras AR-05 y AT-04. F3.4 recoge lo que quedó de F3.2. Comprobaciones nuevas para la Sesión 1. |
 | 3.9 | 20/10/2026 | F3.1 cerrada con `interfaz.md` v1.0. F3.2 amplía su alcance (V-04, C-07) y su criterio (alto útil ≥ 268 px). |
