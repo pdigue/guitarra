@@ -14,7 +14,7 @@ Windows, en Chrome o Edge, con conexión. Repasa la lista de F1.1 y lo nuevo de 
 |---|---|---|---|---|
 | A01 | Abrir la app | Abre https://pdigue.github.io/guitarra/ y pulsa «Empezar». | Se ve el mástil en Libre. No aparece el aviso de «guitarra sintetizada». | G-01, L-01 |
 | A02 | Versión | Abre Ajustes (⚙) y baja hasta el final. | Pone «Trasteando 0.3.2». | G-10 |
-| A03 | Respuesta inmediata | Pulsa varias notas del mástil, a distintos ritmos. | Cada nota suena en el momento de pulsar, sin retraso que notes. | S-03 |
+| A03 | Respuesta inmediata | Pulsa varias notas del mástil, a distintos ritmos. | Cada nota suena en el momento de pulsar, sin retraso que notes. | D-05 *(corregido tras AR-07: decía S-03)* |
 | A04 | Afinación del agudo | Guitarra clásica. 1ª cuerda, trastes 7, 8 y 12. Compáralas con tu guitarra afinada. | Suenan Si, Do y Mi, iguales que en tu guitarra. El traste 8 no salta medio tono. | S-01, S-08 |
 | A05 | Pentagrama arriba del todo | 1ª cuerda: pulsa el traste 12 y luego el 24 (desplaza el mástil hasta él). | Las dos notas salen en el pentagrama; la del 24 con la marca «8va». | P-01 |
 | A06 | Cambiar la nomenclatura | Pulsa una nota, espera 3 segundos y pulsa el chip «Do Re Mi». | Pasa a «C D E» y el nombre grande de la nota cambia (por ejemplo, Mi → E). Vuelve a pulsarlo para dejarlo en Do Re Mi. | N-01, N-03, N-04 |

@@ -34,7 +34,7 @@ Nada todavía.
 ## [0.3.3] — 20/10/2026 · Correcciones de la Sesión 1
 
 ### Corregido
-- **S-01 · PL-04** · *Sonido en el iPhone* (C07, C08 y D03). Con el iPhone bloqueado seguía sonando la corrección de un fallo, y a veces, al volver, el sonido se quedaba mudo hasta cerrar la app. Ahora, al ocultar la app se cortan las notas, se cancela lo que iba a sonar y se pausa el audio; al volver se reanuda y, si iOS no lo suelta, el siguiente toque crea un audio nuevo. Es un fallo conocido de Safari en las apps de pantalla de inicio (WebKit 291892), así que además **Ajustes enseña el estado del sonido y tiene «Reactivar sonido»**. Se confirma en la Sesión 2.
+- **S-01 · PL-04** · *Sonido en el iPhone* (C07, C08 y D03). Con el iPhone bloqueado seguía sonando la corrección de un fallo, y a veces, al volver, el sonido se quedaba mudo hasta cerrar la app. Ahora, al ocultar la app se cortan las notas, se cancela lo que iba a sonar y se pausa el audio; al volver se reanuda y, si iOS no lo suelta, el siguiente toque crea un audio nuevo. Es un fallo conocido de Safari en las apps de pantalla de inicio (WebKit 291892), así que además **Ajustes enseña el estado del sonido y tiene «Reactivar sonido»**. Tras la auditoría AT-06, la recuperación ocurre **dentro de un toque** (al levantar el dedo), que es cuando iOS deja arrancar el sonido, y el estado de Ajustes se actualiza solo. Se confirma en la Sesión 2.
 - **General** · *Icono de la pestaña* (A16): el navegador pedía `favicon.ico` y daba un 404 en la consola. Ahora la página declara su icono.
 - **S-02** · Elegir guitarra ya no hace sonar una nota de muestra (A14).
 
@@ -45,7 +45,7 @@ Nada todavía.
 - **J-08 · C-05** · «Restablecer todos los ajustes» conserva tu récord. Para borrarlo hay un botón propio, «Borrar el récord de racha» (A14). No hacen falta usuarios: el récord vive en tu navegador.
 
 ### Verificado
-- Banco: 39 de 39. Las 6 pruebas nuevas fallan con la 0.3.2 y pasan con la 0.3.3. `comprobar-disposicion.js` (14 pantallas), `comprobar-accesibilidad.js`, las 15 comprobaciones de F1.1 y el archivo autónomo, bien.
+- Banco: 39 de 39. Las 6 pruebas nuevas fallan con la 0.3.2 y pasan con la 0.3.3. `comprobar-disposicion.js` (14 pantallas), `comprobar-accesibilidad.js`, las 15 comprobaciones de F1.1 y el archivo autónomo, bien. Auditorías CP-3: AR-07 (requisitos) y AT-06 (técnica), sin hallazgos críticos; corregidos los altos y los medios.
 
 ---
 

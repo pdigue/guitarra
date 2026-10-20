@@ -1,4 +1,6 @@
-# V-08 · Resultados de la Sesión 1
+# Informe V-08 · Resultados de la Sesión 1
+
+*No confundir con el requisito V-08 (el zoom guardado): los informes de verificación se numeran aparte.*
 
 **Fecha:** 20 de octubre de 2026 · **App probada:** `0.3.2` (web de pruebas y `dist/trasteando.html`) · **Quién:** Pablo, en su PC con Windows y su iPhone · **Protocolo:** `sesion-1-protocolo.md` (41 pruebas)
 
@@ -8,13 +10,21 @@
 
 | | Pruebas |
 |---|---|
-| Cumplen | 39 |
-| No cumplen | 1 (A16: icono de la pestaña) |
+| Cumplen | 37 |
+| No cumplen | 2 (A16: icono de la pestaña; C08: el sonido se quedó mudo) |
 | Pendientes | 2 (E05, lo dejas para más adelante; E06 son tus notas) |
 
-**Requisitos validados:** 40 (lista en `requisitos.md` v1.15). Con S-07, S-08 y C-06, ya son 43.
+**Requisitos validados:** 35 (lista en `requisitos.md` v1.15). Con S-07, S-08 y C-06, ya son 38.
 
-**Sin validar todavía, con motivo:** S-01 (el sonido se quedó mudo en el iPhone), A-01 y A-06 (afinar de oído, E05), y PL-01, PL-03 y G-04, que son parciales hasta publicar (F7.2).
+**Sin validar todavía, con motivo** (corregido tras la auditoría AR-07):
+- **J-01, J-08, J-10 y S-02:** lo esencial cumplió, pero la 0.3.3 los cambia a petición tuya; se confirman en la Sesión 2.
+- **S-01:** el sonido se quedó mudo en el iPhone (C08 y D03).
+- **G-10:** faltan las etiquetas de Git de los cierres de F2 y F3.
+- **A-01 y A-06:** afinar de oído (E05).
+- **PL-01, PL-03 y G-04:** parciales hasta publicar (F7.2).
+- **Sin prueba en este protocolo:** N-02, N-05, D-01 a D-03, D-07, S-04 a S-06, P-02, A-07, A-09 a A-11, V-02, V-03, V-08, C-02 y C-03. Los sostienen el banco y las 15 comprobaciones en Chromium; irán en una lista corta en la Sesión 2.
+
+**Corrección del protocolo:** A03 («Respuesta inmediata») llevaba la etiqueta S-03, pero prueba D-05; S-03 (el selector de timbre) lo valida A14.
 
 ## Resultados
 
@@ -34,7 +44,7 @@
 | C05 | Cumple | — | — |
 | C06 Los colores de las notas | Cumple | Alternativa: solo el nombre, más grande o en negrita; varias opciones de nota, traste y colores en un menú de personalización | C-08, para después |
 | C07 El primer reto tras bloquear | Cumple | No se queda mudo, pero la corrección suena con el iPhone bloqueado | **0.3.3:** al ocultar la app se corta y se cancela todo |
-| C08 Muchas notas deprisa | Cumple | La primera vez se quedó mudo, ni recargando; cerrar y abrir lo arregló | **0.3.3:** audio rehecho al volver si no responde, y «Reactivar sonido» en Ajustes |
+| C08 Muchas notas deprisa | **No cumple** (la marcaste como Cumple; el criterio era «sin cortes») | La primera vez se quedó mudo, ni recargando; cerrar y abrir lo arregló | **0.3.3:** audio rehecho al volver si no responde, y «Reactivar sonido» en Ajustes |
 | C09, D01, D02 | Cumple | — | — |
 | D03 Horizontal en la app instalada | Cumple | Se volvió a quedar mudo; cerrar y abrir lo arregló | Igual que C08 |
 | E01, E02 | Cumple | — | — |
@@ -47,11 +57,11 @@
 Es un fallo conocido de Safari en las apps de la pantalla de inicio ([WebKit 291892](https://bugs.webkit.org/show_bug.cgi?id=291892)): al volver de segundo plano, a veces el audio dice «activo» y no suena. Que recargar no lo arregle y cerrar la app sí apunta a eso. La 0.3.3 lo ataca por tres lados:
 
 1. Al ocultar la app (bloquear o cambiar de app) corta las notas, cancela lo programado y pausa el audio. Así tampoco suena nada con la pantalla apagada (C07).
-2. Al volver lo reanuda. Si a los 0,4 s no responde, el siguiente toque crea un audio nuevo.
+2. Al volver lo reanuda. Si a los 0,4 s no responde, lo intenta en tu siguiente toque y, si sigue sin responder, **lo rehace dentro del toque siguiente**: iOS solo deja arrancar el sonido dentro de un toque, al levantar el dedo (auditoría AT-06).
 3. Ajustes → Sonido enseña el estado («activo», «en pausa», «interrumpido por el sistema»…) y tiene **«Reactivar sonido»**, que crea un audio nuevo aunque diga «activo».
 
 No se puede reproducir en el ordenador, así que **se confirma en la Sesión 2**. Si vuelve a pasar, anota qué decía «Estado del sonido» y si «Reactivar sonido» lo arregló: así sabremos qué variante del fallo es.
 
 ## Comprobación de las correcciones
 
-Banco 39 de 39: las 6 pruebas nuevas fallan con la 0.3.2 y pasan con la 0.3.3. En Chromium: `comprobar-disposicion.js` (14 pantallas), `comprobar-accesibilidad.js` (el botón nuevo cumple 40 px y 4,5:1), las 15 comprobaciones de F1.1 y el archivo autónomo, todo bien.
+Banco 39 de 39: las 6 pruebas nuevas fallan con la 0.3.2 y pasan con la 0.3.3. Auditorías AR-07 y AT-06 (CP-3): sin hallazgos críticos; los altos de AR-07 y los medios de AT-06, corregidos. En Chromium: `comprobar-disposicion.js` (14 pantallas), `comprobar-accesibilidad.js` (el botón nuevo cumple 40 px y 4,5:1), las 15 comprobaciones de F1.1 y el archivo autónomo, todo bien.

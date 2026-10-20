@@ -355,7 +355,7 @@ test('al ocultar la app se corta el sonido y no se programa nada; al volver, Adi
   assert.equal(A.ev('needsRebuild'), false);
 });
 
-test('si iOS no deja reanudar el audio, el siguiente toque crea uno nuevo; «Reactivar sonido» lo hace siempre (C08, D03 de la Sesión 1)', async () => {
+test('si iOS no deja reanudar el audio, se rehace dentro del siguiente toque; «Reactivar sonido» lo hace siempre (C08, D03 de la Sesión 1, AT-06 #2)', async () => {
   const A = boot(APP);
   A.ev(audioFalso);
   A.ev(`globalThis.__creados = 0;
@@ -370,9 +370,18 @@ test('si iOS no deja reanudar el audio, el siguiente toque crea uno nuevo; «Rea
   assert.equal(A.ev('needsRebuild'), true);
   A.ev('playMidi(60)');
   await sleep(350);
+  assert.equal(A.ev('__creados'), 0, 'un temporizador no es un gesto: aún no se rehace');
+  assert.equal(A.ev('rebuildOnNextGesture'), true);
+  const toque = () => (A.doc.listeners.pointerup || []).forEach(f => f({ type: 'pointerup' }));
+  toque();
   assert.equal(A.ev('__ctx.cerrado'), true, 'el contexto atascado se cierra');
-  assert.equal(A.ev('__creados'), 1, 'y se crea uno nuevo');
+  assert.equal(A.ev('__creados'), 1, 'y se crea uno nuevo, dentro del toque');
   assert.equal(A.ev('audioCtx.state'), 'running');
+  // Si aun así naciera en pausa, el toque siguiente lo reanuda.
+  A.ev("audioCtx.state = 'suspended'; audioCtx.resume = function(){ this.state = 'running'; return Promise.resolve(); }");
+  toque();
+  assert.equal(A.ev('audioCtx.state'), 'running');
+  A.ev('lastRebuild = 0');            // el botón ignora pulsaciones a menos de 1 s de otra
   A.$('audio-wake').click();
   assert.equal(A.ev('__creados'), 2, 'el botón crea otro aunque diga «activo»');
   assert.match(A.$('audio-state').textContent, /activo/);
@@ -410,7 +419,7 @@ test('en Adivinar nada suena ni puntúa hasta pulsar ▶, y luego cada reto suen
   assert.equal(A.ev('__plays'), 2, '▶ hace sonar el reto');
   assert.ok(!A.$('btn-repeat').classList.contains('ready'));
   A.press(A.doc.querySelectorAll('.fret-cell').find(c => +c.dataset.midi === midi));
-  await sleep(1500 + 400);
+  await sleep(1500 + 600);
   assert.equal(A.ev('__plays'), 4, 'el reto siguiente suena solo, una vez');
   tab('free').click(); tab('guess').click();
   await sleep(400);

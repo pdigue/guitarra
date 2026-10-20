@@ -359,6 +359,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .sw.on::after { transform:translateX(19px); background:#1a1006; }
 .version { text-align:center; font-size:11px; color:var(--faint); margin:14px 0 0;
   font-variant-numeric:tabular-nums; }
+.sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
 .audio-wake { flex-shrink:0; min-height:40px; padding:0 14px; border-radius:10px; cursor:pointer;
   background:var(--surface2); border:1px solid var(--line2); color:var(--text); font:inherit; font-size:13px; font-weight:600; }
 .audio-wake:active { background:var(--line); }
@@ -888,6 +889,7 @@ function unlockAudio(){
       audioOut = audioCtx.createGain();
       audioOut.gain.value = 0.7;
       audioOut.connect(audioCtx.destination);
+      audioCtx.onstatechange = updateAudioStatus;   // «Estado del sonido» al día (AT-06 #1)
     }
     // Safari 16.4+: con 'playback' suena aunque el interruptor de silencio del
     // iPhone esté puesto, como un reproductor de música. Donde no existe, se
@@ -1039,11 +1041,28 @@ function playSample(midi, duration){
    un contexto nuevo sin preguntar; si ni así suena, cerrar la app lo arregla. */
 let needsRebuild = false;
 
-/** Primero se intenta reanudar dentro del toque; si en 300 ms no lo consigue,
- *  contexto nuevo (el siguiente toque lo pone en marcha). */
+let rebuildOnNextGesture = false;
+let audioFallback = false;      // las grabaciones no recargaron: suena la sintetizada
+let lastRebuild = 0;
+
+/** Primero se intenta reanudar; si en 300 ms no lo consigue, el audio se rehace
+ *  en el siguiente toque. Un temporizador no es un gesto del usuario, e iOS
+ *  solo deja arrancar el sonido dentro de uno (AT-06 #2). */
 function recoverAudio(){
   wakeAudio();
-  setTimeout(() => { if (audioCtx && audioCtx.state !== 'running') rebuildAudio(); }, 300);
+  setTimeout(() => {
+    if (document.hidden || !audioCtx || audioCtx.state === 'running') return;
+    rebuildOnNextGesture = true;
+    updateAudioStatus();
+  }, 300);
+}
+
+/** Cada toque (al levantar el dedo, que es cuando iOS lo cuenta como gesto)
+ *  reanuda el audio y, si hace falta, lo rehace. */
+function onGesture(){
+  if (rebuildOnNextGesture){ rebuildOnNextGesture = false; rebuildAudio(); return; }
+  if (needsRebuild){ needsRebuild = false; recoverAudio(); return; }
+  wakeAudio();
 }
 
 /** Corta ya todas las notas que suenan. */
@@ -1058,14 +1077,29 @@ function silenceAll(){
 /** Contexto de audio nuevo, con las grabaciones decodificadas otra vez para él.
  *  Mientras cargan, suena la guitarra sintetizada. */
 function rebuildAudio(){
+  const now = Date.now();
+  if (now - lastRebuild < 1000) return;       // pulsaciones repetidas: una basta (AT-06 #6)
+  lastRebuild = now;
+  needsRebuild = false; rebuildOnNextGesture = false;
   const old = audioCtx;
   silenceAll();
   audioCtx = null; audioOut = null;
   try { if (old && old.state !== 'closed') old.close().catch(() => {}); } catch(e){}
   unlockAudio();
-  samplerReady = false; samplerTimbre = null;
-  loadSamples(state.timbre).then(updateAudioStatus);
+  samplerReady = false; samplerTimbre = null; samples = [];   // libera las grabaciones viejas
+  loadSamples(state.timbre).then(r => {
+    if (r === 'stale') return;
+    audioFallback = (r === false);
+    const note = document.getElementById('timbre-note');
+    if (note) note.textContent = r ? timbreText(state.timbre)
+      : 'No se pudieron cargar las grabaciones: suena la guitarra sintetizada.';
+    updateAudioStatus();
+  });
   updateAudioStatus();
+}
+
+function timbreText(t){
+  return t === 'nylon' ? 'Guitarra clásica de cuerdas de nylon' : 'Guitarra acústica de cuerdas de acero';
 }
 
 const AUDIO_STATE = { running:'activo', suspended:'en pausa', interrupted:'interrumpido por el sistema', closed:'cerrado' };
@@ -1073,7 +1107,9 @@ function updateAudioStatus(){
   const el = document.getElementById('audio-state');
   if (!el) return;
   el.textContent = !audioCtx ? 'sin iniciar' :
-    (AUDIO_STATE[audioCtx.state] || audioCtx.state) + (samplerReady ? '' : ' · cargando las grabaciones');
+    (AUDIO_STATE[audioCtx.state] || audioCtx.state) +
+    (samplerReady ? '' : audioFallback ? ' · guitarra sintetizada' : ' · cargando las grabaciones') +
+    (rebuildOnNextGesture ? ' · se rehace al tocar' : '');
 }
 
 function onVisibility(){
@@ -1083,7 +1119,9 @@ function onVisibility(){
     silenceAll();
     try { if (audioCtx && audioCtx.state === 'running') audioCtx.suspend().catch(() => {}); } catch(e){}
   } else {
-    wakeAudio();
+    // resume() siempre, no wakeAudio(): si el suspend() de hace un instante aún
+    // no ha terminado, el estado dice 'running' y wakeAudio no haría nada (AT-06 #4).
+    try { if (audioCtx && audioCtx.state !== 'closed') audioCtx.resume().catch(() => {}); } catch(e){}
     if (screen === 'guess'){
       // Se retoma esperando a ▶: ese toque es el que iOS exige para
       // reactivar el sonido, y no suena nada sin que lo pidas.
@@ -1710,7 +1748,7 @@ function renderChallenge(){
   showGuessReader();
 
   if (!guessStarted){
-    box.innerHTML = '<b>Pulsa ▶ para oír la nota</b><br><span class="dim">y búscala en el mástil</span>';
+    box.innerHTML = '<b>Pulsa ▶ <span class="sr-only">(Empezar)</span> para oír la nota</b><br><span class="dim">y búscala en el mástil</span>';
     return;
   }
 
@@ -2007,6 +2045,7 @@ function goTo(next){
 }
 function showSettings(opener){
   sheetOpener = opener || null;
+  updateAudioStatus();
   openSheet(true);
   if (canHistory) history.pushState({ screen, sheet:true }, '', '#' + SCREEN_HASH[screen]);
 }
@@ -2066,11 +2105,13 @@ async function setTimbre(timbre){
   note.textContent = 'Cargando muestras…';
   const ok = await loadSamples(timbre);
   // Llegó otra elección mientras tanto: manda la última.
-  if (ok === 'stale' || state.timbre !== timbre) return;
+  if (ok === 'stale' || state.timbre !== timbre){
+    // Otra carga la relevó (otra elección o «Reactivar sonido»); esa pone el texto.
+    if (samplerReady) note.textContent = timbreText(state.timbre);
+    return;
+  }
   if (ok){
-    note.textContent = timbre === 'nylon'
-      ? 'Guitarra clásica de cuerdas de nylon'
-      : 'Guitarra acústica de cuerdas de acero';
+    note.textContent = timbreText(timbre);
     // Ya no suena una nota de muestra al elegir: sorprendía (Sesión 1, A14).
   } else {
     state.timbre = previous;
@@ -2207,6 +2248,8 @@ document.getElementById('set-clear-record').addEventListener('click', () => {
 });
 document.getElementById('audio-wake').addEventListener('click', rebuildAudio);
 document.addEventListener('visibilitychange', onVisibility);
+['pointerup', 'touchend', 'click'].forEach(t =>
+  document.addEventListener(t, onGesture, { capture:true, passive:true }));
 document.getElementById('set-reset').addEventListener('click', async () => {
   if (!confirm('¿Restablecer todos los ajustes? Tu récord se conserva.')) return;
   const previousTimbre = state.timbre, record = state.record;
