@@ -1,7 +1,7 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 3.5 · **Fecha:** 19 de octubre de 2026
-**Válido para:** app `0.2.2` · `requisitos.md` v1.7 · `matriz-cumplimiento` v1.5 · `compatibilidad.md` v1.0 · `automatizacion.md` v1.1 · `CHANGELOG.md`
+**Versión:** 3.6 · **Fecha:** 19 de octubre de 2026
+**Válido para:** app `0.2.3` · `requisitos.md` v1.8 · `matriz-cumplimiento` v1.6 · `compatibilidad.md` v1.0 · `automatizacion.md` v1.1 · `CHANGELOG.md`
 **Gestiona:** chat de Desarrollo
 
 > ⚡ **Modo acelerado activo desde el 14/10** (detalle en `automatizacion.md`). El agente ejecuta las etapas por bloques —F1 a F3, luego F4 a F6— y solo para en las decisiones. Las pruebas que necesitan tus manos se agrupan en dos sesiones: **Sesión 1** con el iPhone y el ordenador al cerrar F3, y **Sesión 2** con la guitarra al cerrar F6.
@@ -12,7 +12,7 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** F2.1 a F2.4 hechas (`0.2.2`); F2.5 se hace en la Sesión 1. Siguiente: la auditoría CP-2 sobre el sonido y, después, F3.1, la propuesta de interfaz, que se para hasta tu aprobación.
+📍 **Estás aquí:** F2 hecha salvo F2.5, que va a la Sesión 1; CP-2 superado con la `0.2.3`. Siguiente: F3.1, la propuesta de interfaz, que se para hasta tu aprobación.
 
 | Fase | Objetivo | Versión | Dónde se usa | Etapas | Progreso |
 |------|----------|:---:|---|:---:|---|
@@ -135,6 +135,7 @@ Cada pieza del proyecto lleva su propio número, y todas se citan entre sí.
 | **Auditor técnico** | Revisión del cambio `0.1.1 → 0.1.3`; validez del banco de pruebas; viabilidad del audio dentro del archivo (F2.3) con los pesos medidos en F2.1 |
 | **Cómo se hace** | En modo acelerado, el chat de Desarrollo lanza los dos auditores en paralelo como subagentes de solo lectura |
 | **Salida** | Informes AR-02 y AT-02 en `docs/auditorias/` y en el proyecto; el chat de Desarrollo decide y actualiza |
+| **CP-2 (19/10)** | ✅ Superado (AR-03 y AT-03). Correcciones en la `0.2.3`: restablecer desde la acústica, saltos de línea en Windows, límites de peso y pruebas del reproductor con un contexto de audio simulado. Dos decisiones nuevas para ti |
 | **Resultado (15/10)** | ✅ Superado. Un hallazgo alto técnico (carrera al cambiar de timbre) y dos bajos, corregidos en la `0.1.4` con tres pruebas nuevas. De requisitos: subir el repositorio pasa a ser parada antes de F2.2, criterios medibles para F2, dos comprobaciones cortas entre sesiones y dos decisiones nuevas |
 
 ---
@@ -146,11 +147,11 @@ Cada pieza del proyecto lleva su propio número, y todas se citan entre sí.
 
 | Etapa | Qué se hace | Requisitos | Cómo se valida | Aprenderás | Estado |
 |---|---|---|---|---|:---:|
-| **F2.1** | Elegir la fuente de audio, descargarla y documentar su licencia | S-07, G-06, S-08 | `CREDITOS.md` con origen y licencia de cada archivo; cada muestra medida a ±5 cents de su nota | Qué es un CDN; licencias de contenido (dominio público, CC0, CC-BY); formato y frecuencia de muestreo; medir la afinación con el espectro | 🔨 falta confirmar la licencia del resto del pack de nylon |
+| **F2.1** | Elegir la fuente de audio, descargarla y documentar su licencia | S-07, G-06, S-08 | `CREDITOS.md` con origen y licencia de cada archivo; cada muestra medida a ±5 cents de su nota | Qué es un CDN; licencias de contenido (dominio público, CC0, CC-BY); formato y frecuencia de muestreo; medir la afinación con el espectro | ✅ La licencia del resto del pack de nylon es una tarea aparte: como tarde al cerrar F3 (AR-03) |
 | **F2.2** | Sustituir Tone.js por un reproductor de muestras propio, de unas cincuenta líneas | PL-04, S-01, S-08 | El banco recorre todas las notas del mástil en los dos timbres: muestra más transposición dan la frecuencia teórica, ±5 cents; ninguna dirección externa en el código; ninguna espera programada entre la pulsación y el sonido. Comprobación corta en el iPhone: 5 minutos de escucha comparada | Web Audio API: grafo de audio, decodificar, buffers, cambiar el tono variando la velocidad | ✅ 0.2.0, escuchada en tu iPhone el 19/10 |
-| **F2.3** | Meter el audio dentro del propio HTML | S-07, G-07 | En modo avión y con doble clic suena la guitarra real; el archivo autónomo pesa ≤ 1,5 MB y abre en ≤ 3 s en Windows. Lo genera una herramienta en `dist/`: `index.html` no lleva el audio dentro (AT-02) | Codificación base64; compromiso entre autonomía y peso | ✅ 0.2.1, aprobada el 19/10 · 1,42 MB, abre en 0,6 s (V-03) |
-| **F2.4** | Añadir muestras intermedias para el registro agudo | S-01, S-08 | En afinación estándar, la transposición máxima de nylon es ≤ 6 semitonos y la de la acústica la menor que permitan sus muestras, anotada; cada muestra nueva medida a ±5 cents | Por qué un sampler necesita varias muestras; qué degrada el sonido al transportar | 🔨 0.2.2 · nylon ≤ 6 semitonos, acústica 14 |
-| **F2.5** | Probar el archivo autónomo en cada plataforma | G-07, PL-01, PL-02, PL-03 | Tabla de resultados: Windows e iPhone, el móvil de referencia; Android si hay uno a mano | Cómo abre cada sistema un archivo local, y por qué iOS es distinto | 📅 Sesión 1 |
+| **F2.3** | Meter el audio dentro del propio HTML | S-07, G-07 | En modo avión y con doble clic suena la guitarra real; el archivo autónomo abre en ≤ 3 s en Windows (Sesión 1); audio ≤ 1,45 MB y archivo ≤ 2 MB (CP-2). Lo genera una herramienta en `dist/`: `index.html` no lleva el audio dentro (AT-02) | Codificación base64; compromiso entre autonomía y peso | ✅ 0.2.1, aprobada el 19/10 · 1,42 MB, abre en 0,6 s (V-03) |
+| **F2.4** | Añadir muestras intermedias para el registro agudo | S-01, S-08 | En afinación estándar, la transposición máxima de nylon es ≤ 6 semitonos y la de la acústica la menor que permitan sus muestras, anotada; cada muestra nueva medida a ±5 cents | Por qué un sampler necesita varias muestras; qué degrada el sonido al transportar | ✅ 0.2.2 · nylon ≤ 6 semitonos, acústica 14 |
+| **F2.5** | Probar el archivo autónomo en cada plataforma | G-07, PL-01, PL-02, PL-03 | Windows: el archivo abre con doble clic en modo avión en ≤ 3 s. iPhone: el archivo no se ejecuta (a confirmar) y la web en `https` abre, suena y se instala. Android, cuando haya uno | Cómo abre cada sistema un archivo local, y por qué iOS es distinto | 📅 Sesión 1 |
 
 ### 🔍 CP-2 — Checkpoint del sonido
 
@@ -391,9 +392,11 @@ flowchart TB
 
 **Las dos sesiones contigo.** *Sesión 1*, al cerrar F3, con el iPhone y el ordenador: la lista de F1.1, el archivo autónomo en cada plataforma (F2.5) y quince minutos de uso real (F3.3). En el iPhone la app se sirve desde el ordenador por WiFi con Live Server, salvo que el archivo autónomo funcione. *Sesión 2*, al cerrar F6, con la guitarra: el afinador por micrófono (F4.3) y la práctica de escalas (F5.4), en el ordenador.
 
-**Despliegue de pruebas** (decisión del 15/10): antes de la Sesión 1 se publica una versión de pruebas en GitHub Pages, sin anunciar, desde una rama propia (`main` no se toca), y se actualiza al cerrar cada bloque. En el iPhone permite probar con `https` lo que el WiFi no deja: instalarla, usarla sin conexión y, desde F4, el micrófono. La publicación oficial sigue siendo F7.1.
+**Despliegue de pruebas** (decisión del 15/10, **activo desde el 19/10**): `pdigue.github.io/guitarra`, servido desde la rama `pruebas` (`main` no se toca), que se actualiza con cada *pull request*. En el iPhone permite probar con `https` lo que el WiFi no deja: instalarla y, desde F4, el micrófono. Usarla sin conexión necesita el Service Worker (G-03), previsto en F6.2: si quieres probarlo en la Sesión 1, hay que adelantar uno mínimo (decisión abierta). La publicación oficial sigue siendo F7.1.
 
 **Android:** no hay uno de pruebas por ahora. Se valida con el simulador de dispositivos de Chrome y, en cuanto haya uno, en real. El diseño es para todos los sistemas desde el principio: ver `compatibilidad.md`.
+
+**Añadido a la Sesión 1 tras CP-2:** escucha guiada de los trastes 15 a 24 de la 1ª cuerda en la acústica; una nota larga en `index.html` frente al archivo autónomo; un afinador externo sobre Mi2, Mi4 y Mi6 en cada timbre; el primer reto tras una llamada o un bloqueo, y tocar deprisa muchas notas.
 
 **Dos comprobaciones cortas entre sesiones** (CP-1), para no esperar dos fases a oír un cambio de riesgo: 5 minutos en el iPhone tras F2.2, que sustituye todo el motor de audio, y 10 minutos con la guitarra en `localhost` tras F4.3.
 
@@ -446,7 +449,8 @@ flowchart TB
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **3.5** | 19/10/2026 | F2.3 aprobada. F2.4 hecha en la `0.2.2`. |
+| **3.6** | 19/10/2026 | CP-2: F2.1 y F2.4 cerradas, criterios de F2.3 y F2.5 revisados, despliegue de pruebas activo, comprobaciones nuevas para la Sesión 1 y dos decisiones abiertas. **Corrección:** la v3.2 prometía usar la app sin conexión en el iPhone durante la Sesión 1, y eso exige el Service Worker de F6.2. |
+| 3.5 | 19/10/2026 | F2.3 aprobada. F2.4 hecha en la `0.2.2`. |
 | 3.4 | 19/10/2026 | F2.2 aprobada tras tu escucha en el iPhone. F2.3 hecha en la `0.2.1`. |
 | 3.3 | 19/10/2026 | F1 cerrada con la etiqueta `v0.1.5` (corrige la `v0.1.4` que citaba la 3.2). F2.2 hecha en la `0.2.0`. |
 | 3.2 | 15/10/2026 | Tus decisiones del 15/10: despliegue de pruebas en GitHub Pages antes de la Sesión 1, desde una rama propia; sin Android de pruebas por ahora. PL-04 (adaptabilidad entre sistemas) en F2.2, F3.2 y F7.2. Nuevo documento `compatibilidad.md`. |

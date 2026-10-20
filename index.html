@@ -503,7 +503,7 @@ select { flex:1; background:var(--surface); border:1px solid var(--line2); color
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.2.2';
+const APP_VERSION = '0.2.3';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -1712,7 +1712,14 @@ document.getElementById('set-reset').addEventListener('click', async () => {
   // afinación restablecida, y dejaría al usuario fallando indefinidamente.
   if (screen === 'guess'){ streak = 0; updateScore(); newChallenge(); }
   // Y la interfaz mostraría "Clásica" mientras sigue sonando la acústica.
-  if (previousTimbre !== state.timbre) await loadSamples(state.timbre);
+  // setTimbre ya actualiza el aviso y, si la carga falla, vuelve al timbre que
+  // de verdad suena (AT-03 #3). Compara con el timbre actual: se le devuelve
+  // el anterior para que haga el cambio completo.
+  if (previousTimbre !== state.timbre){
+    const elegido = state.timbre;
+    state.timbre = previousTimbre;
+    await setTimbre(elegido);
+  }
 });
 
 // resize cubre también el giro del dispositivo, y orientationchange está

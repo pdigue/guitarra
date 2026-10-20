@@ -1,7 +1,9 @@
 {
- "version": "0.2.2",
- "bytes": 1460057,
- "limite": 1500000,
+ "version": "0.2.3",
+ "bytes": 1460337,
+ "limite": 2000000,
+ "bytes_audio": 1384270,
+ "limite_audio": 1450000,
  "muestras": [
   {
    "timbre": "nylon",
@@ -11,7 +13,8 @@
    "segundos": 4.5,
    "cents_original": -2.8,
    "cents_recortada": -2.8,
-   "sha256": "241c5a11c6550c3d8e64467d70fba65b265ec5774c73e1cacd6f7bbe694b6a1a"
+   "sha256": "241c5a11c6550c3d8e64467d70fba65b265ec5774c73e1cacd6f7bbe694b6a1a",
+   "sha256_original": "af94c24ff1726e3dfb6edb3459ece1332820f32db1554e0509a9c5c815e93a35"
   },
   {
    "timbre": "nylon",
@@ -21,7 +24,8 @@
    "segundos": 4.5,
    "cents_original": 0.8,
    "cents_recortada": 0.8,
-   "sha256": "21d9d2590f31e62481bbf569b714c2a3c1709894028b426cd800492b57191466"
+   "sha256": "21d9d2590f31e62481bbf569b714c2a3c1709894028b426cd800492b57191466",
+   "sha256_original": "0e20a4c2cb8451919121c19815f8fe9b2a3003ee823a26a55790dd16bd640ea8"
   },
   {
    "timbre": "nylon",
@@ -31,7 +35,8 @@
    "segundos": 4.5,
    "cents_original": -2.4,
    "cents_recortada": -2.4,
-   "sha256": "47a80ed9a26cd1e1b6181a512f7591a49796bcfb51a4ea82df75296abf08283a"
+   "sha256": "47a80ed9a26cd1e1b6181a512f7591a49796bcfb51a4ea82df75296abf08283a",
+   "sha256_original": "aaeb2afa295e5d1733fe5b475851d590b56d7dfe26d841cb56272cd6867716c6"
   },
   {
    "timbre": "nylon",
@@ -41,7 +46,8 @@
    "segundos": 3.19,
    "cents_original": 2.6,
    "cents_recortada": 2.6,
-   "sha256": "499036e0a395ee2d988cd5f586e984b67001f1bd9b0449ff1315fdcd111eeb41"
+   "sha256": "499036e0a395ee2d988cd5f586e984b67001f1bd9b0449ff1315fdcd111eeb41",
+   "sha256_original": "85cbc7aeb84956c5b30333d73fedb57f1c393d04302684566ca77523015a6449"
   },
   {
    "timbre": "nylon",
@@ -51,7 +57,8 @@
    "segundos": 3.19,
    "cents_original": -0.6,
    "cents_recortada": -0.6,
-   "sha256": "7dece97eeae3e39773e50674e65fa2ca024376fa2a73eb1c5e0cb931b557533e"
+   "sha256": "7dece97eeae3e39773e50674e65fa2ca024376fa2a73eb1c5e0cb931b557533e",
+   "sha256_original": "9e4b3df9cda03761dc093b910000bfc68083d9ce40605fdd2af370140521f2cd"
   },
   {
    "timbre": "nylon",
@@ -61,7 +68,8 @@
    "segundos": 3.19,
    "cents_original": -2.1,
    "cents_recortada": -2.1,
-   "sha256": "0462339fec0779f4d60aadf1cf2f65e12036c69e968f292486be70cb87e0fba7"
+   "sha256": "0462339fec0779f4d60aadf1cf2f65e12036c69e968f292486be70cb87e0fba7",
+   "sha256_original": "3f95d206021f8935d79da1f1b5bffe45c17f8dbfb598148e6a3ac4999cb0fa0b"
   },
   {
    "timbre": "nylon",
@@ -71,7 +79,8 @@
    "segundos": 3.19,
    "cents_original": -0.2,
    "cents_recortada": -0.2,
-   "sha256": "98d7a408b4fdc3b83e772e988eacba386bcb3b2833425678a6dd2de9cc123557"
+   "sha256": "98d7a408b4fdc3b83e772e988eacba386bcb3b2833425678a6dd2de9cc123557",
+   "sha256_original": "3436e55cf99281a40467dce558ea3009b929080d837193492fb110b7afd348e7"
   },
   {
    "timbre": "nylon",
@@ -81,7 +90,8 @@
    "segundos": 1.52,
    "cents_original": -2.4,
    "cents_recortada": -2.4,
-   "sha256": "5f3228ea965bf6c948c0162223d7dfc7066500f9c618f337192fb0b3c9782269"
+   "sha256": "5f3228ea965bf6c948c0162223d7dfc7066500f9c618f337192fb0b3c9782269",
+   "sha256_original": "9ab5b711d43f7bd0cf5a7ec2c5d5a382c701b0258341a0a4483ccb377c4fd63c"
   },
   {
    "timbre": "nylon",
@@ -91,7 +101,8 @@
    "segundos": 1.62,
    "cents_original": -10.0,
    "cents_recortada": -10.0,
-   "sha256": "1736523720225fb0ee1fc7a1b65c2edc8b90398283915fd5dc32d938d05f5c85"
+   "sha256": "1736523720225fb0ee1fc7a1b65c2edc8b90398283915fd5dc32d938d05f5c85",
+   "sha256_original": "8b58374042aa47d7aef055afca8492a0e25faeecee9ac44fb098afff53e6cb97"
   },
   {
    "timbre": "acoustic",
@@ -101,7 +112,8 @@
    "segundos": 4.5,
    "cents_original": -1.9,
    "cents_recortada": -1.9,
-   "sha256": "8beb43bac362dbc9270dcd7eb3c9524e02474ca7dd3bb35f98de1b3d118545d4"
+   "sha256": "8beb43bac362dbc9270dcd7eb3c9524e02474ca7dd3bb35f98de1b3d118545d4",
+   "sha256_original": "917820984d1bb0b7712b4f2c42a9694efbb2479ccede45aa78af73811fc6818d"
   },
   {
    "timbre": "acoustic",
@@ -111,7 +123,8 @@
    "segundos": 4.5,
    "cents_original": 1.0,
    "cents_recortada": 1.0,
-   "sha256": "c52e2e0ac40a9ecdc35c57711b0e024ca5d406497206d1a77aea0bcbe976f8e0"
+   "sha256": "c52e2e0ac40a9ecdc35c57711b0e024ca5d406497206d1a77aea0bcbe976f8e0",
+   "sha256_original": "43e339bcd75f5f26336be8e1e59b131a0bf06dbf66f588f1c59a8d9faf53613f"
   },
   {
    "timbre": "acoustic",
@@ -121,7 +134,8 @@
    "segundos": 4.5,
    "cents_original": -2.5,
    "cents_recortada": -2.5,
-   "sha256": "c9214a37a5ca460f4a844bb11a7e45728418e8ac33f35440df20298f94216a11"
+   "sha256": "c9214a37a5ca460f4a844bb11a7e45728418e8ac33f35440df20298f94216a11",
+   "sha256_original": "861b74a32a9159eea675ebd6ba0e5d3fa331b2c744dddd9ca1151073a3974fc0"
   },
   {
    "timbre": "acoustic",
@@ -131,7 +145,8 @@
    "segundos": 4.5,
    "cents_original": -4.2,
    "cents_recortada": -4.2,
-   "sha256": "ba3c7eaadc3b22241dd90c4fccabae6847b292d7fe5427481a2cde8ae1acf59b"
+   "sha256": "ba3c7eaadc3b22241dd90c4fccabae6847b292d7fe5427481a2cde8ae1acf59b",
+   "sha256_original": "8a8ddf06e2d4824f5086e6ad0cf32371da6afc594bf2efd9bb5ec9a2dfe9c040"
   },
   {
    "timbre": "acoustic",
@@ -141,7 +156,8 @@
    "segundos": 4.5,
    "cents_original": -0.5,
    "cents_recortada": -0.5,
-   "sha256": "3b8a01fc877b71003f912f536968ec8d8f3b0ea1f5f5ff130bf4ebee72277be1"
+   "sha256": "3b8a01fc877b71003f912f536968ec8d8f3b0ea1f5f5ff130bf4ebee72277be1",
+   "sha256_original": "2ab73ca750ca539a76c7ddaf7a3be2aac1436cd59ffc65525bf4adbb47c56488"
   },
   {
    "timbre": "acoustic",
@@ -151,7 +167,8 @@
    "segundos": 4.5,
    "cents_original": 4.5,
    "cents_recortada": 4.5,
-   "sha256": "968e5e000cf3caf73e1409b228c944a1adaa210ce585060e0ba2c56dece0b726"
+   "sha256": "968e5e000cf3caf73e1409b228c944a1adaa210ce585060e0ba2c56dece0b726",
+   "sha256_original": "3b02f5448695ac92f257ea9e36ba77be1b1b4a08f62a549b95c7ea9f5303ce14"
   },
   {
    "timbre": "acoustic",
@@ -161,7 +178,8 @@
    "segundos": 4.08,
    "cents_original": 2.8,
    "cents_recortada": 2.8,
-   "sha256": "e4e222c2ba8eac9a41882387cec2c7b612db234c8bc2dfd3e426ca39e5fd94b7"
+   "sha256": "e4e222c2ba8eac9a41882387cec2c7b612db234c8bc2dfd3e426ca39e5fd94b7",
+   "sha256_original": "1f8263f10e24509d8d0bb82c7dd873bfe7da5354ba0333f23ebfc0f02076361a"
   },
   {
    "timbre": "acoustic",
@@ -171,7 +189,8 @@
    "segundos": 3.27,
    "cents_original": 1.9,
    "cents_recortada": 1.9,
-   "sha256": "a3aa90fb427198a6d1215105bf478106d4642d4ddb9415b8189e682f01048951"
+   "sha256": "a3aa90fb427198a6d1215105bf478106d4642d4ddb9415b8189e682f01048951",
+   "sha256_original": "c9d74d19e672780b7b6e9eb4468b31b5fee6642f20df724198b232f7c78af4f1"
   }
  ]
 }

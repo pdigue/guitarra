@@ -167,6 +167,8 @@ test('cada grabación es la nota a la que se asigna y su desviación está medid
 test('la app no descarga nada de otros servidores (S-07, F2.2)', () => {
   const src = fs.readFileSync(APP, 'utf8');
   const urls = [...new Set(src.match(/https?:\/\/[^\s"'`)<>]+/g) || [])];
+  // Tampoco direcciones sin protocolo («//cdn…»), que el navegador completa con https.
+  assert.deepEqual(src.match(/["'(=]\s*\/\/[a-z0-9]/gi) || [], []);
   // El espacio de nombres de SVG parece una dirección, pero el navegador no la descarga.
   assert.deepEqual(urls.filter(u => u !== 'http://www.w3.org/2000/svg'), []);
   const A = boot(APP);
@@ -191,7 +193,7 @@ test('cambiar de timbre deprisa deja instalado el último elegido (S-02, AT-02 #
   assert.equal(A.ev('samplerTimbre'), 'nylon');
 });
 
-test('todas las notas posibles suenan en su frecuencia, en los dos timbres (S-01, S-08, F2.2)', async () => {
+test('toda nota tiene grabación, afinación corregida y transporte acotado, en los dos timbres (S-01, S-08, F2.2, F2.4)', async () => {
   const A = boot(APP);
   A.ev(cargaFalsa);
   for (const timbre of ['nylon', 'acoustic']){
@@ -208,9 +210,9 @@ test('todas las notas posibles suenan en su frecuencia, en los dos timbres (S-01
       if (midi >= 40 && midi <= 88) transporteEstandar = Math.max(transporteEstandar, Math.abs(midi - s.midi));
     }
     assert.ok(peor <= 0.5, `${timbre}: una nota se desvía ${peor.toFixed(2)} cents`);
-    // Hoy llega a +17 en nylon y +19 en acústica con una afinación personalizada
-    // muy aguda; F2.4 lo reducirá añadiendo muestras.
-    assert.ok(transporte <= 19, `${timbre}: transporte máximo ${transporte} semitonos`);
+    // Con una afinación personalizada muy aguda: +11 en nylon y +19 en acústica.
+    const tope = { nylon: 11, acoustic: 19 }[timbre];
+    assert.ok(transporte <= tope, `${timbre}: transporte máximo ${transporte} semitonos (tope ${tope})`);
     // F2.4: en afinación estándar (Mi2 a Mi6), nylon ≤ 6; la acústica no tiene grabaciones
     // por encima del D5 y se queda en 14.
     assert.ok(transporteEstandar <= (timbre === 'nylon' ? 6 : 14), `${timbre}: ${transporteEstandar} semitonos en afinación estándar`);
@@ -239,20 +241,97 @@ test('con el audio dentro de la página no descarga nada (G-07, F2.3)', async ()
   assert.equal(A.ev('__descargas'), 0);
 });
 
-test('el archivo autónomo existe, está al día con index.html y pesa 1,5 MB o menos (G-07, G-08, F2.3)', () => {
-  const dist = path.join(__dirname, '..', 'dist', 'trasteando.html');
-  const pagina = fs.readFileSync(dist, 'utf8');
-  assert.ok(fs.statSync(dist).size <= 1_500_000, `pesa ${fs.statSync(dist).size} bytes`);
-  const i = pagina.indexOf('<!-- AUDIO INCRUSTADO: inicio'), f = pagina.indexOf('<!-- AUDIO INCRUSTADO: fin -->');
-  assert.ok(i > 0 && f > i, 'faltan las marcas del audio incrustado');
-  const sinAudio = pagina.slice(0, i) + pagina.slice(f + '<!-- AUDIO INCRUSTADO: fin -->\n'.length);
-  assert.equal(sinAudio, fs.readFileSync(APP, 'utf8'), 'dist/trasteando.html no se ha regenerado tras cambiar index.html');
-  const ids = [...pagina.slice(i, f).matchAll(/id="audio-(\w+)-(\w+)"/g)].map(m => m[1] + '-' + m[2]).sort();
+test('el archivo autónomo está al día con index.html, con su audio y dentro de sus límites (G-07, G-08, F2.3)', () => {
+  const carpeta = path.join(__dirname, '..', 'dist');
+  const pagina = fs.readFileSync(path.join(carpeta, 'trasteando.html'), 'utf8');
+  const informe = JSON.parse(fs.readFileSync(path.join(carpeta, 'autonomo.json'), 'utf8'));
+  const tramo = pagina.match(/<!-- AUDIO INCRUSTADO: inicio[\s\S]*?<!-- AUDIO INCRUSTADO: fin -->\r?\n/);
+  assert.ok(tramo, 'faltan las marcas del audio incrustado');
+  // Límites revisados en CP-2: el archivo entero ≤ 2 MB y el audio ≤ 1,45 MB.
+  assert.ok(Buffer.byteLength(pagina) <= 2_000_000, `el archivo pesa ${Buffer.byteLength(pagina)} bytes`);
+  const bloques = [...tramo[0].matchAll(/<script type="application\/octet-stream" id="audio-(\w+)-(\w+)">([^<]*)<\/script>/g)];
+  const audio = bloques.reduce((n, m) => n + m[0].length, 0);
+  assert.ok(audio <= 1_450_000, `el audio ocupa ${audio} bytes`);
+  // Quitado el audio, es exactamente index.html (los \r de Windows no cuentan).
+  const sinAudio = pagina.replace(tramo[0], '').replace(/\r\n/g, '\n');
+  assert.equal(sinAudio, fs.readFileSync(APP, 'utf8').replace(/\r\n/g, '\n'), 'dist/trasteando.html no se ha regenerado tras cambiar index.html');
   const A = boot(APP);
+  assert.equal(informe.version, A.ev('APP_VERSION'));
   const mapas = JSON.parse(A.ev('JSON.stringify(SAMPLE_MAPS)'));
-  assert.deepEqual(ids, Object.entries(mapas).flatMap(([t, m]) => Object.keys(m).map(n => t + '-' + n)).sort());
+  assert.deepEqual(bloques.map(m => m[1] + '-' + m[2]).sort(),
+    Object.entries(mapas).flatMap(([t, m]) => Object.keys(m).map(n => t + '-' + n)).sort());
+  // Y el audio es el que se generó a partir de las grabaciones actuales (huellas sha256).
+  for (const [, timbre, nota, b64] of bloques){
+    const fila = informe.muestras.find(r => r.timbre === timbre && r.nota === nota);
+    assert.equal(crypto.createHash('sha256').update(Buffer.from(b64, 'base64')).digest('hex'), fila.sha256, `${timbre}-${nota}: el audio incrustado no es el generado`);
+    assert.equal(fila.sha256_original, medida[timbre][fila.archivo].sha256, `${timbre}-${nota}: la grabación original ha cambiado; hay que regenerar`);
+  }
   const urls = [...new Set(pagina.match(/https?:\/\/[^\s"'`)<>]+/g) || [])].filter(u => u !== 'http://www.w3.org/2000/svg');
   assert.deepEqual(urls, []);
+});
+
+/** Contexto de audio simulado: anota lo que la app le pide, sin sonar. */
+const audioFalso = `globalThis.__nodos = [];
+  class Param { constructor(v){ this.value = v; this.ev = []; }
+    setValueAtTime(v, t){ this.ev.push(['valor', v, t]); } linearRampToValueAtTime(v, t){ this.ev.push(['rampa', v, t]); }
+    setTargetAtTime(v, t, c){ this.ev.push(['hacia', v, t, c]); } cancelScheduledValues(t){ this.ev.push(['anular', t]); } }
+  class Nodo { constructor(tipo){ this.tipo = tipo; __nodos.push(this); } connect(n){ this.destino = n; return n; } disconnect(){} }
+  globalThis.__ctx = { state: 'running', currentTime: 10, sampleRate: 44100, destination: new Nodo('salida'), reanudar: 0,
+    resume(){ this.reanudar++; this.state = 'running'; return Promise.resolve(); },
+    createGain(){ const n = new Nodo('volumen'); n.gain = new Param(1); return n; },
+    createBufferSource(){ const n = new Nodo('fuente'); n.playbackRate = new Param(1); n.arranques = []; n.paradas = [];
+      n.start = (t, o) => n.arranques.push([t, o]); n.stop = t => n.paradas.push(t); return n; } };
+  audioCtx = __ctx; audioReady = true; audioOut = __ctx.createGain();`;
+
+test('cada nota arranca sin silencio, a su velocidad y con su envolvente (S-01, AT-03 #1)', async () => {
+  const A = boot(APP);
+  A.ev(cargaFalsa);
+  const p = A.ev("loadSamples('nylon')"); await sleep(0); terminarCargas(A); await p;
+  A.ev(audioFalso);
+  A.ev('playMidi(64)');                                     // Mi4: su grabación se desvía −2,1 cents
+  const r = JSON.parse(A.ev(`(() => { const f = __nodos.filter(n => n.tipo === 'fuente').pop();
+    return JSON.stringify({ arranque: f.arranques[0], vel: f.playbackRate.value, env: f.destino.gain.ev, destino: f.destino.destino === audioOut }); })()`));
+  assert.ok(Math.abs(r.arranque[0] - 10) < 1e-9);
+  assert.ok(Math.abs(r.arranque[1] - (1000 / 44100 - 0.002)) < 1e-6, 'empieza donde suena, no en el silencio');
+  assert.ok(Math.abs(r.vel - 2 ** (2.1 / 1200)) < 1e-9, 'corrige los −2,1 cents de la grabación');
+  assert.deepEqual(r.env.slice(0, 2), [['valor', 0, 10], ['rampa', 1, 10.003]]);
+  assert.equal(r.env[2][0], 'hacia');
+  assert.ok(r.destino, 'sale por el volumen común');
+});
+
+test('con más de 8 notas se apaga la más antigua, y las acabadas se liberan (S-01, AT-03 #1)', async () => {
+  const A = boot(APP);
+  A.ev(cargaFalsa);
+  const p = A.ev("loadSamples('nylon')"); await sleep(0); terminarCargas(A); await p;
+  A.ev(audioFalso);
+  for (let i = 0; i < 9; i++) A.ev(`playMidi(${50 + i})`);
+  assert.equal(A.ev('voices.length'), 8);
+  const primera = JSON.parse(A.ev(`JSON.stringify((() => { const f = __nodos.filter(n => n.tipo === 'fuente')[0]; return { paradas: f.paradas, env: f.destino.gain.ev.map(e => e[0]) }; })())`));
+  assert.ok(primera.env.includes('anular') && primera.paradas.some(t => Math.abs(t - 10.05) < 1e-9), 'la más antigua se apaga en 50 ms');
+  A.ev(`__nodos.filter(n => n.tipo === 'fuente').forEach(f => f.onended && f.onended())`);
+  assert.equal(A.ev('voices.length'), 0);
+});
+
+test('el audio se reanuda si iOS lo interrumpe, y no si está cerrado (PL-04, AT-03 #1)', () => {
+  const A = boot(APP);
+  A.ev(audioFalso);
+  A.ev("__ctx.state = 'interrupted'; wakeAudio()");
+  assert.equal(A.ev('__ctx.reanudar'), 1);
+  A.ev("__ctx.state = 'closed'; wakeAudio()");
+  assert.equal(A.ev('__ctx.reanudar'), 1);
+});
+
+test('restablecer desde la acústica deja la clásica sonando y anunciada (C-05, S-02, AT-03 #3)', async () => {
+  const A = boot(APP);
+  A.ev(cargaFalsa);
+  let p = A.ev("loadSamples('nylon')"); await sleep(0); terminarCargas(A); await p;
+  p = A.ev("setTimbre('acoustic')"); await sleep(0); terminarCargas(A); await p;
+  assert.equal(A.ev('samplerTimbre'), 'acoustic');
+  A.$('set-reset').click();
+  await sleep(0); terminarCargas(A); await sleep(10);
+  assert.equal(A.ev('state.timbre'), 'nylon');
+  assert.equal(A.ev('samplerTimbre'), 'nylon');
+  assert.match(A.$('timbre-note').textContent, /clásica/);
 });
 
 test('el reto suena una sola vez aunque se cambie de pestaña deprisa (J-01, AT-02 #5)', async () => {
