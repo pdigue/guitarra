@@ -10,6 +10,7 @@ const fs = require('fs');
 const vm = require('vm');
 
 function camelToData(k){ return 'data-' + k.replace(/[A-Z]/g, m => '-' + m.toLowerCase()); }
+const foco = { el: null };   // qué elemento tiene el foco (document.activeElement)
 
 class El {
   constructor(tag){
@@ -43,7 +44,7 @@ class El {
   set textContent(v){ this.children = []; this._html = ''; this._text = String(v); }
   get innerHTML(){ return this._html || this._text; }
   set innerHTML(v){ this.children = []; this._text = ''; this._html = String(v); }
-  focus(){}
+  focus(){ foco.el = this; }
   addEventListener(t, f){ (this.listeners[t] ||= []).push(f); }
   dispatchEvent(ev){
     ev.target ||= this; ev.preventDefault ||= () => {};
@@ -120,11 +121,13 @@ function appScript(src){
 function boot(htmlPath, preset, extra){
   const src = fs.readFileSync(htmlPath, 'utf8');
   const body = parseBody(src);
+  foco.el = null;
   const html = new El('html'); html.appendChild(body);
   const store = new Map(preset ? [['trasteando.v1', JSON.stringify(preset)]] : []);
   const errors = [];
   const doc = {
     body, documentElement: html, listeners: {},
+    get activeElement(){ return foco.el || body; },
     getElementById: id => [...html.descendants()].find(e => e.id === id) || null,
     createElement: t => new El(t), createElementNS: (_, t) => new El(t),
     querySelectorAll: s => html.querySelectorAll(s), querySelector: s => html.querySelector(s),

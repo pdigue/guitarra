@@ -1,7 +1,7 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 1.2 · **Fecha:** 20 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0). Las versiones 1.1 y 1.2 no cambian el diseño: corrigen cifras medidas al construirlo y anotan dos detalles de F3.2 (ver el control de cambios).
-**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.3.0` · `requisitos.md` v1.12 · `roadmap.md` v3.10
+**Versión:** 1.3 · **Fecha:** 20 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0). Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4 (ver el control de cambios).
+**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.3.1` · `requisitos.md` v1.13 · `roadmap.md` v3.11
 **Revisión:** auditoría de requisitos AR-04 (`auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
 
@@ -159,12 +159,16 @@ Las cuatro áreas pasan a la cabecera como pestañas, y desaparece la barra infe
 - **Movimiento:** con `prefers-reduced-motion`, sin destellos ni animaciones de desplazamiento.
 - **Contraste:** 4,5:1 en textos, comprobado con herramienta en F3.4.
 
-## 10. Color y paleta (decisión abierta, antes de F3.4)
+## 10. Color y paleta (decidida el 20/10, F3.4)
 
-Los bocetos usan un único acento para no decidir la paleta. Hay dos caminos, y la estructura de esta propuesta vale para los dos:
+Decisión del cliente: «elige tú los colores, para que las notas se distingan bien y los semitonos sean de colores derivados». La paleta parte de los tonos de su imagen inicial y la genera `herramientas/paleta.py` (detalle y medidas en `verificaciones/V-07`):
 
-- **Paleta actual:** un acento (ámbar) para lo activo, verde para acierto y rojo para error.
-- **Color por nota**, como en tu imagen inicial: cada nota (Do, Do♯, Re…) con su color, en los puntos del mástil y en las notas del pentagrama. Encaja sobre todo con «Ver todas las notas» y con Escalas. El nombre de la nota se seguiría escribiendo siempre, por el principio 5 y por las personas que no distinguen bien los colores.
+- **Las 7 naturales**, bien separadas también con daltonismo: Do melocotón, Re verde, Mi amarillo, Fa lila, Sol rosa, La rojo y Si celeste.
+- **Cada sostenido**, un tono más claro de su natural: Do♯ es un Do más claro.
+- **Contraste** de 5,1:1 o más, con el texto de los puntos y como texto sobre el fondo.
+- La nota pulsada va **rellena**. Las demás posiciones de la misma nota y «Ver todas las notas» van **con contorno**, sin relleno. Con «Ver todas las notas», las del mismo sonido llevan además un anillo claro por fuera (L-03, AR-06).
+- El nombre de la nota se escribe siempre, por el principio 5.
+- El ámbar sigue siendo el color de lo activo, el verde el del acierto y el rojo el del error.
 
 ## 11. Alternativas descartadas
 
@@ -216,7 +220,8 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.2** | 20/10/2026 | Tras AR-05 y AT-04: en vertical, la navegación nunca se sale y los 40 px por cuerda se garantizan desde 660 px de alto (§7); en horizontal, de 10 a 12 trastes según el ancho; en el panel de Adivinar, Do Re Mi y 𝄞 arriba, como en Libre; el zoom guardado se conserva. El gesto de bajar para cerrar Ajustes pasa a F3.4. |
+| **1.3** | 20/10/2026 | §10: paleta decidida en F3.4 (7 naturales bien distintas y sostenidos derivados) y puntos secundarios con contorno. |
+| 1.2 | 20/10/2026 | Tras AR-05 y AT-04: en vertical, la navegación nunca se sale y los 40 px por cuerda se garantizan desde 660 px de alto (§7); en horizontal, de 10 a 12 trastes según el ancho; en el panel de Adivinar, Do Re Mi y 𝄞 arriba, como en Libre; el zoom guardado se conserva. El gesto de bajar para cerrar Ajustes pasa a F3.4. |
 | 1.1 | 20/10/2026 | Medido en F3.2 (V-06): con la cejuela de 40 px, caben como mucho 7 trastes en el iPhone en vertical y 10 en horizontal (antes se estimaban 8 y 11). Solo cambian esas cifras. |
 | 1.0 | 20/10/2026 | Aprobada por el cliente. Cambios aplicados en `requisitos.md` v1.11. |
 | 0.2 | 20/10/2026 | Tras AR-04: horizontal rediseñado como raíl, mástil y panel (de 45 a 52 px por cuerda en el iPhone, y 42 px en un Android de 280 px de alto); acceso rápido también en horizontal; afinación visible en el modo Micrófono; zoom en Escalas; bocetos del Afinador en horizontal; controles de 40 × 40 px comprobados por la herramienta; redacción concreta de V-01, V-04, G-05 y C-07; notas de C-01 a C-04; privacidad en F6.4; intervalos con «ST». |

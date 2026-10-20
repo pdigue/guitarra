@@ -1,7 +1,7 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 3.10 · **Fecha:** 20 de octubre de 2026
-**Válido para:** app `0.3.0` · `requisitos.md` v1.12 · `matriz-cumplimiento` v1.10 · `interfaz.md` v1.2 · `compatibilidad.md` v1.2 · `automatizacion.md` v1.1 · `CHANGELOG.md`
+**Versión:** 3.11 · **Fecha:** 20 de octubre de 2026
+**Válido para:** app `0.3.1` · `requisitos.md` v1.13 · `matriz-cumplimiento` v1.11 · `interfaz.md` v1.3 · `compatibilidad.md` v1.3 · `automatizacion.md` v1.1 · `CHANGELOG.md`
 **Gestiona:** chat de Desarrollo
 
 > ⚡ **Modo acelerado activo desde el 14/10** (detalle en `automatizacion.md`). El agente ejecuta las etapas por bloques —F1 a F3, luego F4 a F6— y solo para en las decisiones. Las pruebas que necesitan tus manos se agrupan en dos sesiones: **Sesión 1** con el iPhone y el ordenador al cerrar F3, y **Sesión 2** con la guitarra al cerrar F6.
@@ -12,13 +12,13 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** F3.2 hecha con la `0.3.0` (falta comprobarla en tu iPhone en la Sesión 1). Siguiente: F3.4, accesibilidad y paleta, que necesita antes tu decisión sobre la paleta. F3.3 y F2.5 van a la Sesión 1.
+📍 **Estás aquí:** F3 hecha por mi parte: F3.1, F3.2 (`0.3.0`) y F3.4 (`0.3.1`). Siguiente: la **Sesión 1** contigo, con el iPhone y el ordenador (F1.1, F2.5, F3.3 y lo añadido), y después CP-3 y F4.
 
 | Fase | Objetivo | Versión | Dónde se usa | Etapas | Progreso |
 |------|----------|:---:|---|:---:|---|
 | **F1** | Base local verificada | 0.1.x | 💻 Live Server | 4 | `▰▰▰▰▰▰▱▱` 3/4 |
 | **F2** | Sonido propio y archivo autónomo | 0.2.x | 📁 Archivo en cualquier dispositivo | 5 | `▰▰▰▰▰▰▱▱` 4/5 |
-| **F3** | Interfaz y adaptación | 0.3.x | 📁 Archivo | 4 | `▰▰▰▰▱▱▱▱` 2/4 |
+| **F3** | Interfaz y adaptación | 0.3.x | 📁 Archivo | 4 | `▰▰▰▰▰▰▱▱` 3/4 |
 | **F4** | Afinador por micrófono | 0.4.x | 💻 Live Server | 4 | `▱▱▱▱▱▱▱▱` 0/4 |
 | **F5** | Escalas | 0.5.x | 📁 Archivo | 5 | `▱▱▱▱▱▱▱▱` 0/5 |
 | **F6** | Preparación para distribución | 0.6.x | 💻 Live Server | 4 | `▱▱▱▱▱▱▱▱` 0/4 |
@@ -171,7 +171,7 @@ Cada pieza del proyecto lleva su propio número, y todas se citan entre sí.
 | **F3.1** | Especificar la interfaz pantalla a pantalla. **Bloquea F3.2 y toda F5**. En modo acelerado, el agente propone `interfaz.md` y **para** hasta que lo apruebes | C-06 | `interfaz.md` revisado por el auditor de requisitos y aprobado por ti | Wireframes, jerarquía visual, arquitectura de información | ✅ aprobada el 20/10 |
 | **F3.2** | Diseño apaisado (raíl, mástil y panel), aviso discreto para girar el móvil, zoom con trastes táctiles de al menos 40 px y botón «atrás» | PL-04, V-01, V-04, C-07 | En horizontal, con un alto útil de 268 px o más, cada cuerda mide al menos 40 px (iPhone en Safari e instalada; simulador de Android) | Diseño adaptable: media queries, unidades relativas | ✅ `0.3.0` (V-06; en el iPhone, Sesión 1) |
 | **F3.3** | Quince minutos de uso real en el móvil, con la guitarra delante | Validación en móvil de los requisitos de F1.1 | Lista táctil y notas de lo incómodo | Eventos de puntero; latencia percibida | 📅 Sesión 1 |
-| **F3.4** | Accesibilidad completa y paleta de colores. Incluye lo que dejó F3.2: el mástil con teclado, que toda la fila de un interruptor responda al toque y el gesto de bajar para cerrar Ajustes | G-05 | Recorrer la app solo con teclado; contraste 4,5:1; simulador de daltonismo | ARIA, contraste, por qué el color no debe ser la única señal | ⬜ |
+| **F3.4** | Accesibilidad completa y paleta de colores. Incluye lo que dejó F3.2: el mástil con teclado, que toda la fila de un interruptor responda al toque y el gesto de bajar para cerrar Ajustes | G-05 | Recorrer la app solo con teclado; contraste 4,5:1; simulador de daltonismo | ARIA, contraste, por qué el color no debe ser la única señal | ✅ `0.3.1` (V-07) |
 
 ### 🔍 CP-3 — Checkpoint de interfaz
 Peso principal en el **auditor de requisitos** como experto en experiencia de usuario: contraste con `interfaz.md`. El **técnico** revisa el diseño adaptable y el rendimiento en móviles modestos.
@@ -408,13 +408,12 @@ flowchart TB
 
 | Decisión | Bloquea | Plazo |
 |---|---|---|
-| Paleta de colores por nota | F3.4 | Antes de F3.4 |
 | Récord único o por afinación | F4.4 | Antes de F4.4 |
 | Catálogo de escalas | F5.2 | Antes de F5.2 |
 | Licencia del código | F6.4 | Antes de F6.4 |
 | Tiendas y orden | F7.4 | Antes de F7.4 |
 
-**Cerradas el 20/10:** Service Worker → en F6.2, sin adelantarlo a la Sesión 1 · agudo de la acústica → aceptado como limitación conocida · especificación de interfaz → aprobada (`interfaz.md` v1.0).
+**Cerradas el 20/10:** Service Worker → en F6.2, sin adelantarlo a la Sesión 1 · agudo de la acústica → aceptado como limitación conocida · especificación de interfaz → aprobada (`interfaz.md` v1.0) · paleta por nota → la elige el agente con tu criterio (naturales bien distintas y sostenidos derivados), hecha en F3.4.
 
 **Cerradas el 15/10:** despliegue de pruebas en `https` → sí, antes de la Sesión 1 · Android de pruebas → ninguno por ahora, con diseño para todos los sistemas (PL-04).
 
@@ -452,7 +451,8 @@ flowchart TB
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **3.10** | 20/10/2026 | F3.2 hecha con la `0.3.0`, tras AR-05 y AT-04. F3.4 recoge lo que quedó de F3.2. Comprobaciones nuevas para la Sesión 1. |
+| **3.11** | 20/10/2026 | F3.4 hecha con la `0.3.1`, tras AR-06 y AT-05. Paleta decidida. F3 queda a falta de la Sesión 1 (F3.3). |
+| 3.10 | 20/10/2026 | F3.2 hecha con la `0.3.0`, tras AR-05 y AT-04. F3.4 recoge lo que quedó de F3.2. Comprobaciones nuevas para la Sesión 1. |
 | 3.9 | 20/10/2026 | F3.1 cerrada con `interfaz.md` v1.0. F3.2 amplía su alcance (V-04, C-07) y su criterio (alto útil ≥ 268 px). |
 | 3.8 | 20/10/2026 | Licencia del pack de nylon completa: S-07 cerrado. |
 | 3.7 | 20/10/2026 | Dos decisiones cerradas: Service Worker en F6.2 y agudo de la acústica aceptado. F3.1 en curso. |

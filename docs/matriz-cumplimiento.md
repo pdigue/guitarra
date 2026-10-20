@@ -1,11 +1,13 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 1.10 · **Fecha:** 20 de octubre de 2026 · **Base:** `requisitos.md` v1.12 · app `0.3.0` · `roadmap.md` v3.10  
+**Versión:** 1.11 · **Fecha:** 20 de octubre de 2026 · **Base:** `requisitos.md` v1.13 · app `0.3.1` · `roadmap.md` v3.11  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
+
+**Cambios en la 1.11:** F3.4. G-05 cumple; su criterio añade los umbrales de la paleta.
 
 **Cambios en la 1.10:** F3.2. V-01 y C-07 cumplen; criterios revisados de V-04 y G-05.
 
@@ -29,7 +31,7 @@
 
 | Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 93 | 65 | 9 | 17 | 2 | 3 | 23 |
+| 93 | 66 | 8 | 17 | 2 | 3 | 24 |
 
 | ID | Etapa | Método | Criterio de aceptación | Declaración | Evidencia | Verificación | Origen |
 |---|---|:---:|---|---|---|---|---|
@@ -37,7 +39,7 @@
 | **G-02** | F1.1 | D | La barra inferior muestra Libre, Adivinar, Afinador y Escalas; cada destino activo abre su vista y Escalas aparece deshabilitada. | Cumple | F1.1 #1 y #14 | Pendiente | Cliente · listado 14/09 |
 | **G-03** | F6.2 · F7.2 | T | F6.2: tras una primera carga en localhost y sin red, la app abre y suena. F7.2: lo mismo desde la web publicada. | No cumple | — | Pendiente | Cliente · listado 14/09 |
 | **G-04** | F6.3 · F7.2 | D | Desde la web publicada, el navegador ofrece instalarla y abre a pantalla completa desde el icono. | Cumple parcialmente | — | Pendiente | Cliente · listado 14/09 |
-| **G-05** | F3.4 | I+T | Todo control es alcanzable con teclado y muestra el foco; contrastes ≥ 4,5:1 medidos; el movimiento se reduce con prefers-reduced-motion; en pantallas táctiles, todo control y toda casilla del mástil mide al menos 40 × 40 px, salvo las cuerdas en vertical con menos de 660 px de alto, donde manda que la navegación no se salga. | Cumple parcialmente | V-06: comprobar-disposicion.js en 14 pantallas (40 × 40 px, también con Ajustes abierto) · Banco (node --test): Ajustes inerte | Pendiente | Cliente · 20/10 (interfaz.md v1.0) |
+| **G-05** | F3.4 | I+T | Todo control es alcanzable con teclado y muestra el foco; contrastes ≥ 4,5:1 medidos; el movimiento se reduce con prefers-reduced-motion; en pantallas táctiles, todo control y toda casilla del mástil mide al menos 40 × 40 px, salvo las cuerdas en vertical con menos de 660 px de alto. Paleta por nota: las 7 naturales a ≥ 7,5 (OKLab × 100) entre sí con visión normal y con protanopía, deuteranopía y tritanopía simuladas, y las 12 a ≥ 8 con visión normal; el nombre de la nota siempre escrito. | Cumple | V-07: comprobar-accesibilidad.js (teclado, contraste, movimiento) · paleta.py · V-06: 40 × 40 px · Banco (node --test): teclado, etiquetas, paleta, grises, fila y asa | Verificado parcialmente | Cliente · 20/10 (interfaz.md v1.0) |
 | **G-06** | F2.1 · F6.4 | I | CREDITOS.md lista cada recurso de terceros con su origen y su licencia, y la app muestra el texto de atribución en Ajustes. | Cumple parcialmente | CREDITOS.md (F2.1). Falta mostrarlo en la app (F6.4) | Verificado parcialmente | Desarrollo · v1.1 |
 | **G-07** | F2.3 · F2.5 | T | En Windows (y Android cuando lo haya), con el ordenador en modo avión, dist/trasteando.html abre con doble clic en ≤ 3 s, suenan las grabaciones y funcionan Libre, Adivinar y el afinador por referencia. Audio ≤ 1,45 MB y archivo ≤ 2 MB. | Cumple | V-03 y V-04: desde disco y sin conexión en Chromium, abre en 0,3 s y suena a menos de 1 cent · Banco (node --test): autónomo al día, con su audio, huellas y límites | Verificado parcialmente | Cliente · 15/09 |
 | **G-08** | F4.1 · F6.1 | T | El archivo autónomo generado y la web publicada superan el mismo banco de pruebas. | Cumple parcialmente | — | Verificado parcialmente | Cliente · 15/09 |

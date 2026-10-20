@@ -1,7 +1,7 @@
 # Trasteando — Especificación de Requisitos
 
-**Versión del documento:** 1.12 · **Fecha:** 20 de octubre de 2026  
-**Válido para:** app `0.3.0` · `roadmap.md` v3.10 · `matriz-cumplimiento` v1.10 · fase en curso **F3**, en modo acelerado  
+**Versión del documento:** 1.13 · **Fecha:** 20 de octubre de 2026  
+**Válido para:** app `0.3.1` · `roadmap.md` v3.11 · `matriz-cumplimiento` v1.11 · fase en curso **F3**, en modo acelerado  
 **Repositorio:** github.com/pdigue/guitarra, carpeta `docs/` · **Gestiona:** chat de Desarrollo  
 **Tipo de producto:** aplicación web progresiva (PWA), desarrollada en local y publicada al final del roadmap
 
@@ -11,7 +11,7 @@
 
 | Total | ✅ Implementados | 🟡 Parciales | ⬜ Pendientes | ✅ Validados |
 |:---:|:---:|:---:|:---:|:---:|
-| 93 | 65 | 9 | 19 | 3 |
+| 93 | 66 | 8 | 19 | 3 |
 
 > Un requisito implementado no cuenta como cumplido hasta superar su prueba. El primero validado es **S-08**, en la 0.2.0: la app usa sus grabaciones medidas y el banco y la grabación en el navegador lo demuestran. La validación en dispositivo llega con la sesión de pruebas en el iPhone y el ordenador (F1.1, F2.5 y F3.3 juntas, al cerrar F3).
 
@@ -19,7 +19,7 @@
 |------|----------|:---:|-----------|
 | **F1** | Base local verificada | 59 | `▰▰▰▰▰▰▰▰▰▰` 59/59 |
 | **F2** | Sonido propio y archivo autónomo | 9 | `▰▰▰▰▱▱▱▱▱▱` 4/9 |
-| **F3** | Interfaz y adaptación | 6 | `▰▰▰▰▰▰▰▱▱▱` 4/6 |
+| **F3** | Interfaz y adaptación | 6 | `▰▰▰▰▰▰▰▰▱▱` 5/6 |
 | **F4** | Afinador por micrófono | 7 | `▱▱▱▱▱▱▱▱▱▱` 0/7 |
 | **F5** | Escalas | 7 | `▱▱▱▱▱▱▱▱▱▱` 0/7 |
 | **F6** | Preparación para distribución | 5 | `▱▱▱▱▱▱▱▱▱▱` 0/5 |
@@ -34,7 +34,8 @@
 
 | Versión | Fecha | App | Roadmap | Resumen | Origen |
 |---|---|:---:|:---:|---|---|
-| **1.12** | 20/10/2026 | 0.3.0 | 3.10 | Etapa F3.2: V-01 y C-07 implementados. 0 nuevos y 8 modificados: 93 en total. | Etapa F3.2, AR-05 y AT-04 |
+| **1.13** | 20/10/2026 | 0.3.1 | 3.11 | Etapa F3.4: G-05 implementado y paleta decidida. 0 nuevos y 2 modificados: 93 en total. | Tu decisión del 20/10, AR-06 y AT-05 |
+| 1.12 | 20/10/2026 | 0.3.0 | 3.10 | Etapa F3.2: V-01 y C-07 implementados. 0 nuevos y 8 modificados: 93 en total. | Etapa F3.2, AR-05 y AT-04 |
 | 1.11 | 20/10/2026 | 0.2.3 | 3.9 | Interfaz aprobada (F3.1): C-06 validado. 1 nuevo (C-07) y 8 modificados: 93 en total. | Tu aprobación de `interfaz.md` |
 | 1.10 | 20/10/2026 | 0.2.3 | 3.8 | Licencia del pack de nylon completa: S-07 implementado y validado. 0 nuevos y 1 modificado: 92 en total. | Tu comprobación en Freesound |
 | 1.9 | 20/10/2026 | 0.2.3 | 3.7 | Dos decisiones cerradas y licencia de nylon comprobada en tres sonidos. 0 nuevos y 3 modificados: 92 en total. | Tus decisiones del 20/10 |
@@ -48,9 +49,17 @@
 | 1.1 | 15/09/2026 | 0.1.1 | 2.0 | Reconciliación de estados. 11 nuevos (S-07, V-09, J-11, G-05, G-06, A-02-CA, E-02b, E-05b, X-01 a X-03): 81 en total. Seis decisiones cerradas. | Auditoría de requisitos AR-01 |
 | 1.0 | 14/09/2026 | 0.1.0 | — | Primera versión: 70 requisitos en 11 categorías. | Tu listado inicial |
 
+### Detalle de la versión 1.13
+
+**Requisitos modificados ✏️** — G-05, L-03
+- **G-05:** implementado en la 0.3.1: teclado, contraste, movimiento reducido, tamaños táctiles y paleta. Su criterio en la matriz añade los umbrales de la paleta.
+- **L-03:** las posiciones del mismo sonido llevan contorno y, con «Ver todas las notas», un anillo exterior.
+
+**Decisión cerrada:** paleta por nota (F3.4). Ver sección 20.
+
 ### Detalle de la versión 1.12
 
-**Requisitos modificados ✏️** — G-05, PL-04, V-01, V-04, C-01, C-03, C-04, C-07
+**Requisitos modificados** — G-05, PL-04, V-01, V-04, C-01, C-03, C-04, C-07
 - **V-01:** implementado en la 0.3.0: 52,8 px por cuerda en horizontal en el iPhone con Safari y aviso para girar. Falta validarlo en tu iPhone.
 - **V-04:** implementado entero: con el dedo, trastes de al menos 40 px. Lo que se ajusta es lo que se muestra; el zoom guardado se conserva (V-08).
 - **C-07:** implementado en la 0.3.0. Falta la prueba a mano en Windows y Android.
@@ -204,7 +213,7 @@
 | **G-02** | La app se organiza en áreas accesibles desde una navegación principal: Libre, Adivinar, Afinador y Escalas. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Escalas visible pero deshabilitada hasta F5. |
 | **G-03** | La app funciona sin conexión una vez cargada **desde la web**. | Media | F6.2 · F7.2 | ⬜ | ⬜ | — | Service Worker en F6.2, decidido el 20/10: en la Sesión 1 el iPhone no prueba la app sin conexión. Depende de S-07. Se valida en dos pasos: en `localhost` en F6.2 y desde la web publicada en F7.2 (CP-1). En modo archivo (G-07) la autonomía se consigue de otra forma: el audio va dentro del archivo. |
 | **G-04** | La app es instalable como PWA (icono en la pantalla de inicio, pantalla completa). | Alta | F6.3 · F7.2 | 🟡 | ⬜ | 0.1.0 | Manifiesto incrustado como `data:` URL. Falta un archivo de manifiesto propio con iconos PNG (F6.3) y verificarla instalada desde la web publicada (F7.2): instalar solo es posible desde `https`. |
-| **G-05** ✏️ | La interfaz cumple unos mínimos de accesibilidad: foco de teclado visible, respeto a `prefers-reduced-motion`, contraste suficiente y etiquetas accesibles en los controles solo-icono. | Media | F3.4 | 🟡 | ⬜ | 0.1.1 | Hecho: foco visible, movimiento reducido, interruptores con `role="switch"` (0.1.1), `aria-pressed` en los selectores y aviso del reto para lectores de pantalla (0.1.2). **Desde la 0.3.0**, con el dedo todo botón, desplegable e interruptor mide al menos 40 × 40 px, también en Ajustes, y las casillas del mástil también; Ajustes es un diálogo que deja inerte el resto, y el orden del tabulador sigue al visual (V-06). **Excepción** (AR-05): en vertical, en pantallas de menos de 660 px de alto (iPhone SE), manda que la navegación no se salga y las cuerdas pueden bajar de 40 px; el aviso para girar lo resuelve. Falta para F3.4: recorrer el mástil con teclado, auditar el contraste, que toda la fila de un interruptor responda al toque y el gesto de bajar para cerrar Ajustes. |
+| **G-05** ✏️ | La interfaz cumple unos mínimos de accesibilidad: foco de teclado visible, respeto a `prefers-reduced-motion`, contraste suficiente y etiquetas accesibles en los controles solo-icono. | Media | F3.4 | ✅ | ⬜ | 0.1.1 | **Hecho en la 0.3.1** (F3.4, V-07). Con el teclado se llega a todo y el foco se ve; el mástil es una cuadrícula (`role="grid"`) que se recorre con las flechas y se toca con Intro; en Adivinar ninguna casilla anuncia su nota (J-12). Todos los textos a 4,5:1 o más, medidos en Chromium sobre su fondo real (con la 0.3.0 había 205 por debajo). Con «reducir movimiento» nada se anima. Con el dedo, controles y casillas de 40 × 40 px, también en Ajustes; la fila entera cambia su interruptor, y el asa cierra Ajustes deslizando. **Paleta por nota** con tu criterio del 20/10: 7 naturales bien separadas, también con daltonismo, y sostenidos derivados (`herramientas/paleta.py`). **Excepción** (AR-05): en vertical, por debajo de 660 px de alto, la navegación manda sobre los 40 px por cuerda. Falta probar con el dedo la fila y el asa en tu iPhone (Sesión 1). |
 | **G-06** | El proyecto documenta sus dependencias externas y la licencia de cada recurso de terceros que distribuye, y la app muestra los créditos. | Media | F2.1 · F6.4 | 🟡 | ⬜ | — | `CREDITOS.md` (F2.1): origen, licencia, huella `sha256` y texto de atribución de cada muestra de audio, y Tone.js (MIT). Falta mostrar los créditos dentro de la app y elegir la licencia del propio código (F6.4). |
 | **G-07** | **Modo archivo autónomo** en Windows y Android: la app funciona completa —salvo el afinador por micrófono— abriendo el archivo directamente (`file://`), sin servidor y sin conexión. En iPhone, donde no se pueden abrir páginas desde Archivos, la autonomía llega por G-03. | Alta | F2.3 · F2.5 | ✅ | ⬜ | 0.2.1 | `dist/trasteando.html`: la app con sus 17 grabaciones dentro (1,46 MB). Límites revisados en CP-2: el audio no pasa de 1,45 MB, y bajar su calidad exige tu escucha; el archivo entero no pasa de 2 MB, para dejar sitio al código de F3 a F6. Lo que cuenta para ti es que abra en ≤ 3 s en Windows: en Chromium tarda 0,3 s, y en tu PC se mide en la Sesión 1 (F2.5). Redacción limitada a Windows y Android tras AR-03. |
 | **G-08** | El proyecto conserva **dos formas de distribución** equivalentes: el archivo autónomo (para llevárselo) y la web publicada (para instalarla como PWA). | Media | F4.1 · F6.1 | 🟡 | ⬜ | 0.1.0 | Desde la 0.2.1 hay dos formas reales: `index.html` para servir (Live Server y web) y `dist/trasteando.html`, generado a partir de él con `herramientas/generar-autonomo.py`. El banco comprueba que el autónomo está al día con `index.html`. Se vuelve más exigente al pasar a módulos (F4.1); F6.1 generará el archivo autónomo a partir de ellos. |
@@ -236,7 +245,7 @@
 | **PL-01** | **Windows:** la app funciona en Chrome, Edge y Firefox actuales —en modo archivo, local y web— e instalada como PWA desde Edge o Chrome. | Alta | F2.5 · F7.2 | 🟡 | ⬜ | 0.1.0 | Es la plataforma de desarrollo y la mejor cubierta. Tienda: Microsoft Store (F7.4). |
 | **PL-02** | **Android:** la app funciona en Chrome —en web e instalada como PWA— y, si es viable, en modo archivo. | Alta | F2.5 · F7.2 | 🟡 | ⬜ | 0.1.0 | Modo archivo: abrir el HTML descargado con Chrome; a verificar en F2.5. Tienda: Google Play empaquetando la PWA (F7.4). **Sin Android de pruebas por ahora** (decisión del 15/10): mantiene la prioridad Alta, se valida con el simulador de dispositivos de Chrome como evidencia parcial y en un Android real en cuanto haya uno, como tarde en F7.2. |
 | **PL-03** | **iPhone y iPad:** la app funciona en Safari, en web e instalada con «Añadir a pantalla de inicio». | Alta | F2.5 · F7.2 | 🟡 | ⬜ | 0.1.0 | Modo archivo probablemente inviable: la vista previa de la app Archivos no ejecuta JavaScript (a confirmar en F2.5). Alternativas: el navegador integrado de una app de terceros o un despliegue de pruebas. Tienda: App Store exige un Mac con Xcode y la cuenta de desarrollador de Apple (F7.4). **Móvil de referencia del proyecto desde el 14/10.** Hasta publicar, se prueba con la app servida desde el ordenador por WiFi (Live Server): funciona todo salvo el micrófono y la instalación. |
-| **PL-04** ✏️ | **Adaptabilidad entre sistemas:** la app solo usa estándares web; detecta cada capacidad en lugar del sistema, y toda capacidad que no esté en Windows, Android e iPhone tiene alternativa, de modo que la app sigue funcionando donde falta. | Alta | F2.2 · F3.2 · F7.2 | 🟡 | ⬜ | 0.1.4 | Decisión del 15/10. Inventario de capacidades, comportamiento por sistema y alternativas en `docs/compatibilidad.md`, que se revisa en cada etapa que añade una capacidad. Hoy ya se cumple para la vibración (se omite donde no existe) y para el audio interrumpido de iOS (0.1.4). En F3.2 (0.3.0) se añaden el tipo de puntero, el historial, `grid` y `display: contents`, y `position: sticky`, cada uno con su alternativa (`compatibilidad.md` v1.2), y el banco arranca la app sin ellos. |
+| **PL-04** | **Adaptabilidad entre sistemas:** la app solo usa estándares web; detecta cada capacidad en lugar del sistema, y toda capacidad que no esté en Windows, Android e iPhone tiene alternativa, de modo que la app sigue funcionando donde falta. | Alta | F2.2 · F3.2 · F7.2 | 🟡 | ⬜ | 0.1.4 | Decisión del 15/10. Inventario de capacidades, comportamiento por sistema y alternativas en `docs/compatibilidad.md`, que se revisa en cada etapa que añade una capacidad. Hoy ya se cumple para la vibración (se omite donde no existe) y para el audio interrumpido de iOS (0.1.4). En F3.2 (0.3.0) se añaden el tipo de puntero, el historial, `grid` y `display: contents`, y `position: sticky`, cada uno con su alternativa (`compatibilidad.md` v1.2), y el banco arranca la app sin ellos. |
 
 ---
 
@@ -298,7 +307,7 @@
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
 | **L-01** | El modo por defecto al abrir la app es el diapasón libre. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
 | **L-02** | El usuario decide si ve el nombre de todas las notas del mástil o solo el de la que pulsa. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Por defecto solo la pulsada, para no convertir el mástil en una chuleta permanente. En Adivinar no se aplica (J-12). |
-| **L-03** | Al pulsar una nota se señalan discretamente las demás posiciones que producen **exactamente la misma nota** (mismo sonido, no misma clase de nota). | Media | F1.1 | ✅ | ⬜ | 0.1.0 | Señal deliberadamente más tenue que la nota pulsada. |
+| **L-03** ✏️ | Al pulsar una nota se señalan discretamente las demás posiciones que producen **exactamente la misma nota** (mismo sonido, no misma clase de nota). | Media | F1.1 | ✅ | ⬜ | 0.1.0 | Desde la 0.3.1 se señalan con contorno, sin relleno, y con «Ver todas las notas» llevan además un anillo claro por fuera (AR-06). Señal deliberadamente más tenue que la nota pulsada. |
 
 ---
 
@@ -359,10 +368,10 @@
 
 | ID | Requisito | Prior. | Etapa | Impl. | Valid. | Desde | Notas |
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
-| **V-01** ✏️ | En móvil se **sugiere** la orientación horizontal con un aviso discreto; no se fuerza. | Alta | F3.2 | ✅ | ⬜ | 0.3.0 | **Hecho en la 0.3.0** según `interfaz.md` §7. En horizontal, raíl, mástil a todo el alto y panel: medido en Chromium, 52,8 px por cuerda en el iPhone con Safari (antes 28,8), 60,8 con la app instalada y 42,5 en un Android de 280 px de alto (V-06). El aviso para girar sale solo con el dedo, en vertical y en pantallas de menos de 600 px de ancho, en Libre y Adivinar (y Escalas desde F5), nunca en el Afinador; cerrado no vuelve y «Restablecer» lo recupera. Falta validarlo en tu iPhone (Sesión 1). El bloqueo de orientación tiene mal soporte en iOS, así que no se fuerza. |
+| **V-01** | En móvil se **sugiere** la orientación horizontal con un aviso discreto; no se fuerza. | Alta | F3.2 | ✅ | ⬜ | 0.3.0 | **Hecho en la 0.3.0** según `interfaz.md` §7. En horizontal, raíl, mástil a todo el alto y panel: medido en Chromium, 52,8 px por cuerda en el iPhone con Safari (antes 28,8), 60,8 con la app instalada y 42,5 en un Android de 280 px de alto (V-06). El aviso para girar sale solo con el dedo, en vertical y en pantallas de menos de 600 px de ancho, en Libre y Adivinar (y Escalas desde F5), nunca en el Afinador; cerrado no vuelve y «Restablecer» lo recupera. Falta validarlo en tu iPhone (Sesión 1). El bloqueo de orientación tiene mal soporte en iOS, así que no se fuerza. |
 | **V-02** | El afinador funciona en vertical y en horizontal. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
 | **V-03** | En escritorio el mástil aprovecha el ancho disponible. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Arranca mostrando el mástil completo en pantallas anchas. |
-| **V-04** ✏️ | Control de zoom que determina qué porción del mástil se ve. | Alta | F1.1 · F3.2 | ✅ | ⬜ | 0.1.0 | De 3 a 24 trastes a la vista. Desde 0.1.1 la etiqueta indica los trastes que caben de verdad, y el zoom conserva el tramo que estabas mirando. **Desde la 0.3.0**, con el dedo un traste nunca mide menos de 40 px (34 con ratón), y la cejuela, 40: en el iPhone en vertical caben como mucho 7 trastes y en horizontal de 10 a 12 según el ancho (V-06). Si el zoom guardado pide más, se muestran los que caben y la etiqueta lo dice, pero lo guardado se conserva para que al girar vuelva (V-08). |
+| **V-04** | Control de zoom que determina qué porción del mástil se ve. | Alta | F1.1 · F3.2 | ✅ | ⬜ | 0.1.0 | De 3 a 24 trastes a la vista. Desde 0.1.1 la etiqueta indica los trastes que caben de verdad, y el zoom conserva el tramo que estabas mirando. **Desde la 0.3.0**, con el dedo un traste nunca mide menos de 40 px (34 con ratón), y la cejuela, 40: en el iPhone en vertical caben como mucho 7 trastes y en horizontal de 10 a 12 según el ancho (V-06). Si el zoom guardado pide más, se muestran los que caben y la etiqueta lo dice, pero lo guardado se conserva para que al girar vuelva (V-08). |
 | **V-05** | Cuando el mástil no cabe, el usuario se desplaza lateralmente. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
 | **V-06** | El ancho de traste no cambia al desplazarse: el zoom fija el tamaño y el desplazamiento mueve la ventana. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
 | **V-07** | El mástil se readapta al redimensionar la ventana. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
@@ -375,13 +384,13 @@
 
 | ID | Requisito | Prior. | Etapa | Impl. | Valid. | Desde | Notas |
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
-| **C-01** ✏️ | Menú de configuración accesible desde cualquier pantalla. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Hoja que sube desde abajo en vertical; panel lateral en horizontal y en pantallas amplias, con un segundo botón en el raíl (0.3.0). Es un diálogo: mientras está abierto, el resto de la página no responde (AT-04). |
+| **C-01** | Menú de configuración accesible desde cualquier pantalla. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Hoja que sube desde abajo en vertical; panel lateral en horizontal y en pantallas amplias, con un segundo botón en el raíl (0.3.0). Es un diálogo: mientras está abierto, el resto de la página no responde (AT-04). |
 | **C-02** | El menú contiene nomenclatura, pentagrama, timbre, numeración de trastes (tres modos), ver todas las notas, señalar iguales y afinación activa, y muestra la versión de la app. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Ampliado en 0.1.2 con la numeración en tres modos y la versión (G-10). En F6.4 se añade el grupo «Acerca de», con los créditos (G-06) y la privacidad (G-11) (`interfaz.md` v1.0, aprobada el 20/10). |
-| **C-03** ✏️ | Los ajustes frecuentes tienen acceso rápido sin abrir el menú. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Nomenclatura y pentagrama en chips bajo la cabecera, o en el panel en horizontal, donde el pentagrama se rotula con la clave de sol; las dos pistas del juego, en la tarjeta del reto (0.3.0). |
-| **C-04** ✏️ | Navegación principal clara entre las áreas de la app. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Barra inferior con cuatro destinos en vertical, raíl a la izquierda en horizontal y pestañas en la cabecera en pantallas amplias (0.3.0). En pantallas bajas la barra nunca se sale (AR-05). |
+| **C-03** | Los ajustes frecuentes tienen acceso rápido sin abrir el menú. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Nomenclatura y pentagrama en chips bajo la cabecera, o en el panel en horizontal, donde el pentagrama se rotula con la clave de sol; las dos pistas del juego, en la tarjeta del reto (0.3.0). |
+| **C-04** | Navegación principal clara entre las áreas de la app. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Barra inferior con cuatro destinos en vertical, raíl a la izquierda en horizontal y pestañas en la cabecera en pantallas amplias (0.3.0). En pantallas bajas la barra nunca se sale (AR-05). |
 | **C-05** | Todos los ajustes persisten entre sesiones. | Media | F1.1 | ✅ | ⬜ | 0.1.0 | Un único objeto de estado, validado campo a campo al leerlo (0.1.1). |
 | **C-06** | Especificación detallada de la interfaz: estructura de menús, jerarquía de controles y flujos de navegación. | Alta | F3.1 | ✅ | ✅ | 0.2.3 | `docs/interfaz.md` v1.0, aprobada por ti el 20/10 tras la auditoría AR-04 (10 hallazgos resueltos). Bocetos al tamaño real de cada pantalla en `docs/interfaz/`, comprobados por `herramientas/capturar-wireframes.js`. Los cambios posteriores suben su versión. |
-| **C-07** ✏️ | **Botón «atrás» del sistema:** mientras haya un paso anterior en la sesión, el botón o gesto «atrás» cierra Ajustes o vuelve al área anterior; desde la primera área actúa el sistema. Al abrir la app se entra en Libre. | Media | F3.2 | ✅ | ⬜ | 0.3.0 | **Hecho en la 0.3.0** con el historial del navegador (`history`): cada área tiene su dirección (`#libre`, `#adivinar`…). Un paso que deja la misma área, como tras recargar, se salta. El banco lo prueba con un historial simulado que avisa como el de verdad. Falta la prueba a mano en Windows y en el simulador de Android (Sesión 1). En el iPhone instalado no hay botón atrás. |
+| **C-07** | **Botón «atrás» del sistema:** mientras haya un paso anterior en la sesión, el botón o gesto «atrás» cierra Ajustes o vuelve al área anterior; desde la primera área actúa el sistema. Al abrir la app se entra en Libre. | Media | F3.2 | ✅ | ⬜ | 0.3.0 | **Hecho en la 0.3.0** con el historial del navegador (`history`): cada área tiene su dirección (`#libre`, `#adivinar`…). Un paso que deja la misma área, como tras recargar, se salta. El banco lo prueba con un historial simulado que avisa como el de verdad. Falta la prueba a mano en Windows y en el simulador de Android (Sesión 1). En el iPhone instalado no hay botón atrás. |
 
 ---
 
@@ -463,13 +472,12 @@ Qué requisitos cierra o valida cada etapa del roadmap. Es la misma información
 
 | # | Decisión | Afecta a | Plazo |
 |---|---|---|---|
-| 1 | Paleta de colores por nota (la de la imagen inicial o la actual) | G-05 | Antes de F3.4 |
-| 2 | J-11: récord único o por afinación | J-11 | Antes de F4.4 |
-| 3 | E-01: catálogo inicial de escalas | E-01, E-02 | Antes de F5.2 |
-| 4 | Licencia del código (MIT u otra) | G-06 | Antes de F6.4 |
-| 5 | Tiendas: cuáles y en qué orden | G-09 | Antes de F7.4 |
+| 1 | J-11: récord único o por afinación | J-11 | Antes de F4.4 |
+| 2 | E-01: catálogo inicial de escalas | E-01, E-02 | Antes de F5.2 |
+| 3 | Licencia del código (MIT u otra) | G-06 | Antes de F6.4 |
+| 4 | Tiendas: cuáles y en qué orden | G-09 | Antes de F7.4 |
 
-**Cerradas el 20/10:** Service Worker → en F6.2, sin adelantarlo a la Sesión 1 · agudo de la acústica → aceptado como limitación conocida · C-06, especificación de interfaz → aprobada (`interfaz.md` v1.0).
+**Cerradas el 20/10:** Service Worker → en F6.2, sin adelantarlo a la Sesión 1 · agudo de la acústica → aceptado como limitación conocida · C-06, especificación de interfaz → aprobada (`interfaz.md` v1.0) · paleta por nota → la elige el agente con tu criterio: naturales bien distintas y sostenidos derivados (F3.4).
 
 **Cerradas el 15/10:** despliegue de pruebas en `https`, sin anunciar → sí, antes de la Sesión 1 · Android de pruebas → ninguno por ahora; diseño pensado para todos los sistemas (PL-04).
 
