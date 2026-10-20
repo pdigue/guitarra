@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Trasteando — wireframes de F3.1</title>
+<!--
+  Wireframes de la propuesta de interfaz (F3.1, C-06). Fuente de las imágenes
+  de docs/interfaz/*.png, que genera herramientas/capturar-wireframes.js.
+
+  Son bocetos de baja fidelidad: grises y un único color de acento. Muestran
+  dónde va cada cosa y cuánto mide, no el aspecto final: la paleta se decide
+  en F3.4. Cada marco tiene el tamaño real de la pantalla en píxeles CSS, así
+  que las medidas que se leen aquí (alto de cuerda, ancho de traste) son las
+  que tendrá la app.
+-->
+<style>
+  :root { --bg:#141311; --panel:#1f1d1a; --line:#4a453f; --txt:#ebe6de; --dim:#9a9389;
+          --acc:#e8a45c; --ok:#5fb37a; --bad:#d9634f; --wire:#6f685f; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#0c0b0a; color:var(--txt); font:13px/1.35 "DejaVu Sans", system-ui, sans-serif; }
+  .group { display:flex; flex-wrap:wrap; gap:28px; padding:24px; align-items:flex-start; width:max-content; background:#0c0b0a; }
+  .group > h1 { flex-basis:100%; margin:0 0 -8px; font-size:18px; font-weight:600; color:var(--acc); }
+  .cap { font-size:13px; color:var(--dim); margin:0 0 6px; }
+  .cap b { color:var(--txt); }
+  .frame { position:relative; overflow:hidden; background:var(--bg); border:1px solid #3a3631; border-radius:14px;
+           display:flex; flex-direction:column; }
+  .row { display:flex; align-items:center; gap:8px; padding:0 12px; flex:none; }
+  .hdr { height:48px; justify-content:space-between; border-bottom:1px solid var(--line); }
+  .brand { font-style:italic; font-size:17px; }
+  .gear, .ib { width:36px; height:36px; border:1px solid var(--line); border-radius:10px; display:grid; place-items:center; color:var(--dim); flex:none; }
+  .chips { height:44px; }
+  .chip { height:30px; padding:0 12px; border:1px solid var(--line); border-radius:15px; display:inline-flex; align-items:center; white-space:nowrap; color:var(--dim); flex:none; }
+  .chip.on { background:var(--acc); border-color:var(--acc); color:#1a1208; font-weight:600; }
+  .lbl { color:var(--dim); font-size:12px; flex:none; }
+  .sep { width:1px; height:22px; background:var(--line); flex:none; }
+  .seg { display:inline-flex; border:1px solid var(--line); border-radius:10px; overflow:hidden; flex:none; }
+  .seg span { padding:6px 12px; color:var(--dim); white-space:nowrap; }
+  .seg span.on { background:var(--acc); color:#1a1208; font-weight:600; }
+  .sel { height:32px; padding:0 10px; border:1px solid var(--line); border-radius:8px; display:inline-flex; align-items:center; gap:6px; white-space:nowrap; flex:none; }
+  .sel::after { content:"▾"; color:var(--dim); }
+  .card { height:56px; background:var(--panel); border-bottom:1px solid var(--line); }
+  .play { width:40px; height:40px; border:1px solid var(--line); border-radius:10px; display:grid; place-items:center; color:var(--acc); flex:none; }
+  .grow { flex:1; min-width:0; }
+  .stats { text-align:right; flex:none; }
+  .stats b { color:var(--acc); display:block; }
+  .stats small { color:var(--dim); }
+  .display { height:112px; border-bottom:1px solid var(--line); gap:12px; }
+  .readout { width:92px; text-align:center; flex:none; }
+  .readout b { font-size:30px; font-weight:600; display:block; }
+  .readout small { color:var(--dim); }
+  .banner { height:34px; margin:6px 12px 0; padding:0 10px; border:1px dashed var(--wire); border-radius:8px; color:var(--dim); justify-content:space-between; }
+  .board { margin:6px 8px 0; flex:none; }
+  .zoom { height:44px; justify-content:center; color:var(--dim); }
+  .zoom .ib { width:40px; }
+  .tabbar { height:56px; margin-top:auto; border-top:1px solid var(--line); display:flex; flex:none; }
+  .tab { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; color:var(--dim); font-size:11px; }
+  .tab i { width:20px; height:20px; border:1.5px solid currentColor; border-radius:5px; }
+  .tab.on { color:var(--acc); }
+  .note { color:var(--dim); font-size:12px; padding:6px 12px 0; }
+  .msg { font-weight:600; }
+  .msg.ok { color:var(--ok); } .msg.bad { color:var(--bad); }
+  /* Mástil */
+  .fb { display:grid; }
+  .fb .num { height:18px; font-size:11px; color:var(--dim); text-align:center; line-height:18px; }
+  .fb .num.m { color:var(--txt); font-weight:600; }
+  .fb .sn { color:var(--txt); font-size:12px; font-weight:600; display:grid; place-items:center; }
+  .fb .c { position:relative; border-right:2px solid var(--wire);
+           background:linear-gradient(to bottom, transparent calc(50% - .75px), #a39a8e calc(50% - .75px), #a39a8e calc(50% + .75px), transparent calc(50% + .75px)); }
+  .fb .c.nut { border-right:5px solid #d8cfc2; background-color:#1a1916; }
+  .fb .d { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); min-width:26px; height:26px; padding:0 4px; border-radius:13px;
+           display:grid; place-items:center; font-size:11px; font-weight:700; white-space:nowrap; z-index:1; }
+  .d.on { background:var(--acc); color:#1a1208; }
+  .d.ok { background:var(--ok); color:#0d1a10; }
+  .d.bad { background:var(--bad); color:#1d0905; }
+  .d.ghost { border:2px solid var(--acc); color:var(--acc); background:var(--bg); }
+  .d.root { background:var(--acc); color:#1a1208; box-shadow:0 0 0 3px var(--bg), 0 0 0 5px var(--acc); }
+  .d.focus { outline:3px dashed #fff; outline-offset:3px; }
+  .d.lit { background:#3b342b; color:var(--txt); border:1px solid #6d6153; }
+  .measure { position:absolute; right:-2px; transform:translateX(100%); padding-left:6px; font-size:11px; color:var(--acc); white-space:nowrap; }
+  /* Horizontal */
+  .land { flex-direction:row; }
+  .rail { width:64px; border-right:1px solid var(--line); display:flex; flex-direction:column; align-items:center; padding:6px 0; gap:2px; flex:none; }
+  .rail .tab { flex:none; height:50px; width:60px; }
+  .rail .gear { margin-top:auto; }
+  .main { flex:1; min-width:0; display:flex; flex-direction:column; }
+  .strip { height:44px; border-bottom:1px solid var(--line); }
+  .main .board { flex:1; display:flex; flex-direction:column; margin:4px 6px 6px; }
+  .main .board .fb { flex:1; }
+  .side { width:132px; border-left:1px solid var(--line); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; flex:none; }
+  /* Afinador */
+  .strs { display:flex; gap:6px; padding:8px 12px; flex:none; }
+  .sb { flex:1; height:58px; border:1px solid var(--line); border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .sb small { color:var(--dim); font-size:10px; }
+  .sb.on { border-color:var(--acc); color:var(--acc); }
+  .trs { padding:2px 12px; flex:none; }
+  .tr { height:46px; padding:0 8px; margin-bottom:4px; border:1px solid var(--line); border-radius:10px; }
+  .tr.on { border-color:var(--acc); }
+  .tr .ib { width:34px; height:34px; }
+  .gauge { display:flex; flex-direction:column; align-items:center; padding:4px 0; flex:none; }
+  .big { font-size:40px; font-weight:600; line-height:1; }
+  .btn { height:40px; border:1px solid var(--line); border-radius:10px; display:grid; place-items:center; margin:8px 12px; color:var(--dim); flex:none; }
+  /* Ajustes */
+  .dim { position:absolute; inset:0; background:rgba(0,0,0,.6); }
+  .sheet { position:absolute; left:0; right:0; bottom:0; top:70px; background:#211f1c; border-radius:16px 16px 0 0; border-top:1px solid var(--line); padding:8px 14px; overflow:hidden; }
+  .grab { width:40px; height:5px; background:var(--line); border-radius:3px; margin:0 auto 8px; }
+  .sheet h3 { margin:0 0 6px; font-size:16px; }
+  .sg { color:var(--acc); font-size:11px; text-transform:uppercase; letter-spacing:.06em; margin:10px 0 2px; }
+  .sr { display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:40px; border-bottom:1px solid #2f2c28; }
+  .sr small { display:block; color:var(--dim); font-size:11px; }
+  .sw { width:40px; height:24px; border-radius:12px; background:#3a3631; position:relative; flex:none; }
+  .sw.on { background:var(--acc); }
+  .sw::after { content:""; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%; background:#ebe6de; }
+  .sw.on::after { left:19px; }
+  .chev { color:var(--dim); }
+  .new { color:var(--acc); font-size:10px; border:1px solid var(--acc); border-radius:6px; padding:0 4px; margin-left:4px; }
+</style>
+</head>
+<body>
+
+<!-- ===================== VERTICAL 1 ===================== -->
+<section class="group" id="g-vertical-1">
+  <h1>Móvil en vertical · Libre, Adivinar y Ajustes</h1>
+
+  <div><p class="cap"><b>A1 · Libre</b> · 390 × 664 (iPhone, Safari)</p>
+  <div class="frame" style="width:390px;height:664px">
+    <div class="row hdr"><span class="brand">Trasteando</span><span class="gear" aria-label="Ajustes">⚙</span></div>
+    <div class="row chips"><span class="chip on">Do Re Mi</span><span class="chip on">Pentagrama</span></div>
+    <div class="row display"><span class="grow" data-staff="libre"></span><div class="readout"><b>Sol</b><small>Sol3 · 196 Hz</small></div></div>
+    <div class="row banner"><span>⟳ Gira el móvil para ver más trastes</span><span>✕</span></div>
+    <div class="board" data-fb='{"from":0,"to":5,"h":40,"marks":{"3,5":"on:Sol","2,0":"ghost:Sol"}}'></div>
+    <div class="row zoom"><span class="ib">−</span><span>6 trastes a la vista</span><span class="ib">+</span></div>
+    <div class="tabbar"><div class="tab on"><i></i>Libre</div><div class="tab"><i></i>Adivinar</div><div class="tab"><i></i>Afinador</div><div class="tab"><i></i>Escalas</div></div>
+  </div></div>
+
+  <div><p class="cap"><b>A2 · Adivinar</b>, tras un fallo · 390 × 664</p>
+  <div class="frame" style="width:390px;height:664px">
+    <div class="row hdr"><span class="brand">Trasteando</span><span class="gear">⚙</span></div>
+    <div class="row chips"><span class="chip on">Do Re Mi</span><span class="chip">Pentagrama</span></div>
+    <div class="row card" style="border-bottom:none"><span class="play">▶</span><span class="grow msg bad">✗ Era Sol3 · racha a 0</span><span class="stats"><b>Racha 0</b><small>Récord 7</small></span></div>
+    <div class="row card" style="height:40px"><span class="lbl">Pistas</span><span class="chip">Nombre</span><span class="chip on">Cuerda</span><span class="lbl grow">3ª, 4ª, 5ª o 6ª</span></div>
+    <div class="board" data-fb='{"from":0,"to":5,"h":40,"marks":{"3,3":"bad:✗","3,5":"ok:Sol","2,0":"ok:Sol"}}'></div>
+    <div class="row zoom"><span class="ib">−</span><span>6 trastes a la vista</span><span class="ib">+</span></div>
+    <div class="tabbar"><div class="tab"><i></i>Libre</div><div class="tab on"><i></i>Adivinar</div><div class="tab"><i></i>Afinador</div><div class="tab"><i></i>Escalas</div></div>
+  </div></div>
+
+  <div><p class="cap"><b>A7 · Ajustes</b>, desde cualquier pantalla · 390 × 664</p>
+  <div class="frame" style="width:390px;height:664px">
+    <div class="row hdr"><span class="brand">Trasteando</span><span class="gear">⚙</span></div>
+    <div class="dim"></div>
+    <div class="sheet">
+      <div class="grab"></div><h3>Ajustes</h3>
+      <div class="sg">Notación</div>
+      <div class="sr"><span>Nomenclatura</span><span class="seg"><span class="on">Do Re Mi</span><span>C D E</span></span></div>
+      <div class="sr"><span>Pentagrama</span><span class="sw on"></span></div>
+      <div class="sg">Mástil</div>
+      <div class="sr"><span>Números de traste</span><span class="seg"><span>Todos</span><span class="on">Guía</span><span>No</span></span></div>
+      <div class="sr"><span>Ver todas las notas</span><span class="sw"></span></div>
+      <div class="sr"><span>Señalar posiciones iguales</span><span class="sw on"></span></div>
+      <div class="sg">Sonido y afinación</div>
+      <div class="sr"><span>Guitarra</span><span class="seg"><span class="on">Clásica</span><span>Acústica</span></span></div>
+      <div class="sr"><span>Afinación activa</span><span class="sel">Estándar</span></div>
+      <div class="sg">Acerca de <span class="new">nuevo</span></div>
+      <div class="sr"><span>Créditos y licencias</span><span class="chev">›</span></div>
+      <div class="sr"><span>Privacidad <small>desde F7</small></span><span class="chev">›</span></div>
+      <div class="sr"><span>Restablecer todos los ajustes</span><span class="lbl">Versión 0.3.0</span></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ===================== VERTICAL 2 ===================== -->
+<section class="group" id="g-vertical-2">
+  <h1>Móvil en vertical · Afinador (F4) y Escalas (F5)</h1>
+
+  <div><p class="cap"><b>A3 · Afinador · De oído</b> (hoy) · 390 × 664</p>
+  <div class="frame" style="width:390px;height:664px">
+    <div class="row hdr"><span class="brand">Trasteando</span><span class="gear">⚙</span></div>
+    <div class="row chips"><span class="seg"><span class="on">De oído</span><span>Micrófono</span></span></div>
+    <div class="row chips"><span class="lbl">Afinación</span><span class="sel grow">Estándar · Mi La Re Sol Si Mi</span></div>
+    <div class="note">Pulsa una cuerda para oír cómo debe sonar. − y + la cambian un semitono y la afinación pasa a «Personalizada».</div>
+    <div class="trs"><div class="row tr"><span class="lbl" style="width:22px">1ª</span><span class="grow"><b>Mi4</b> <small class="lbl">· pulsa para oírla</small></span><span class="ib">−</span><span class="ib">+</span></div><div class="row tr"><span class="lbl" style="width:22px">2ª</span><span class="grow"><b>Si3</b> <small class="lbl">· pulsa para oírla</small></span><span class="ib">−</span><span class="ib">+</span></div><div class="row tr"><span class="lbl" style="width:22px">3ª</span><span class="grow"><b>Sol3</b> <small class="lbl">· pulsa para oírla</small></span><span class="ib">−</span><span class="ib">+</span></div><div class="row tr"><span class="lbl" style="width:22px">4ª</span><span class="grow"><b>Re3</b> <small class="lbl">· pulsa para oírla</small></span><span class="ib">−</span><span class="ib">+</span></div><div class="row tr on"><span class="lbl" style="width:22px">5ª</span><span class="grow"><b>La2</b> <small class="lbl">· pulsa para oírla</small></span><span class="ib">−</span><span class="ib">+</span></div><div class="row tr"><span class="lbl" style="width:22px">6ª</span><span class="grow"><b>Mi2</b> <small class="lbl">· pulsa para oírla</small></span><span class="ib">−</span><span class="ib">+</span></div></div>
+    <div class="row" style="height:112px"><span class="grow" data-staff="afinacion"></span></div>
+    <div class="tabbar"><div class="tab"><i></i>Libre</div><div class="tab"><i></i>Adivinar</div><div class="tab on"><i></i>Afinador</div><div class="tab"><i></i>Escalas</div></div>
+  </div></div>
+
+  <div><p class="cap"><b>A4 · Afinador · Micrófono</b> (F4) · 390 × 664</p>
+  <div class="frame" style="width:390px;height:664px">
+    <div class="row hdr"><span class="brand">Trasteando</span><span class="gear">⚙</span></div>
+    <div class="row chips"><span class="seg"><span>De oído</span><span class="on">Micrófono</span></span></div>
+    <div class="row chips"><span class="lbl">Cuerda</span><span class="seg"><span class="on">Auto</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span></span></div>
+    <div class="gauge"><span data-gauge="-12"></span><span class="big">La2</span><span class="lbl">−12 cents · 5ª cuerda</span></div>
+    <div class="row" style="justify-content:center;height:44px"><span class="msg bad" style="font-size:16px">▲ Sube un poco</span></div>
+    <div class="note" style="text-align:center">Afinada cuando la aguja queda en la franja verde (±5 cents).<br>El sonido se analiza solo en tu dispositivo.</div>
+    <div class="btn">Detener el micrófono</div>
+    <div class="tabbar"><div class="tab"><i></i>Libre</div><div class="tab"><i></i>Adivinar</div><div class="tab on"><i></i>Afinador</div><div class="tab"><i></i>Escalas</div></div>
+  </div></div>
+
+  <div><p class="cap"><b>A5 · Escalas · Mostrar</b> (F5) · 390 × 664</p>
+  <div class="frame" style="width:390px;height:664px">
+    <div class="row hdr"><span class="brand">Trasteando</span><span class="gear">⚙</span></div>
+    <div class="row chips"><span class="seg"><span class="on">Mostrar</span><span>Práctica</span></span><span class="sel">Do</span><span class="sel">Mayor</span></div>
+    <div class="row display" style="height:96px"><span class="grow" data-staff="escala"></span></div>
+    <div class="row" style="height:30px;font-size:12px;gap:5px;color:var(--dim)">Do <b style="color:var(--acc)">T</b> Re <b style="color:var(--acc)">T</b> Mi <b style="color:var(--acc)">S</b> Fa <b style="color:var(--acc)">T</b> Sol <b style="color:var(--acc)">T</b> La <b style="color:var(--acc)">T</b> Si <b style="color:var(--acc)">S</b> Do</div>
+    <div class="board" data-fb='{"from":0,"to":5,"h":40,"marks":{"0,0":"lit:Mi","0,1":"lit:Fa","0,3":"lit:Sol","0,5":"lit:La","1,0":"lit:Si","1,1":"root:Do","1,3":"lit:Re","1,5":"lit:Mi","2,0":"lit:Sol","2,2":"lit:La","2,4":"lit:Si","2,5":"root:Do","3,0":"lit:Re","3,2":"on:Mi","3,3":"lit:Fa","3,5":"lit:Sol","4,0":"lit:La","4,2":"lit:Si","4,3":"root:Do","4,5":"lit:Re","5,0":"lit:Mi","5,1":"lit:Fa","5,3":"lit:Sol","5,5":"lit:La"}}'></div>
+    <div class="row zoom" style="justify-content:space-between"><span class="ib">◀</span><span>Paso 3 de 8 · <b>Mi</b>, un tono sobre Re</span><span class="ib">▶</span></div>
+    <div class="tabbar"><div class="tab"><i></i>Libre</div><div class="tab"><i></i>Adivinar</div><div class="tab"><i></i>Afinador</div><div class="tab on"><i></i>Escalas</div></div>
+  </div></div>
+
+  <div><p class="cap"><b>A6 · Escalas · Práctica</b> (F5), tras una nota ajena · 390 × 664</p>
+  <div class="frame" style="width:390px;height:664px">
+    <div class="row hdr"><span class="brand">Trasteando</span><span class="gear">⚙</span></div>
+    <div class="row chips"><span class="seg"><span>Mostrar</span><span class="on">Práctica</span></span><span class="sel">Do</span><span class="sel">Mayor</span></div>
+    <div class="row card"><span class="grow msg bad">✗ Fa♯ no está en Do mayor</span><span class="stats"><b>5 de 7</b><small>notas distintas</small></span></div>
+    <div class="row display" style="height:96px"><span class="grow" data-staff="practica"></span></div>
+    <div class="board" data-fb='{"from":0,"to":5,"h":40,"marks":{"3,4":"bad:✗","4,3":"ok:Do","4,5":"ok:Re","3,2":"ok:Mi","2,2":"ok:La","1,0":"ok:Si","0,0":"lit:Mi","0,1":"lit:Fa","0,3":"lit:Sol","0,5":"lit:La","1,1":"lit:Do","1,3":"lit:Re","1,5":"lit:Mi","2,0":"lit:Sol","2,4":"lit:Si","2,5":"lit:Do","3,0":"lit:Re","3,3":"lit:Fa","3,5":"lit:Sol","4,0":"lit:La","4,2":"lit:Si","5,0":"lit:Mi","5,1":"lit:Fa","5,3":"lit:Sol","5,5":"lit:La"}}'></div>
+    <div class="row zoom"><span class="ib">−</span><span>6 trastes a la vista</span><span class="ib">+</span></div>
+    <div class="tabbar"><div class="tab"><i></i>Libre</div><div class="tab"><i></i>Adivinar</div><div class="tab"><i></i>Afinador</div><div class="tab on"><i></i>Escalas</div></div>
+  </div></div>
+</section>
+
+<!-- ===================== HORIZONTAL ===================== -->
+<section class="group" id="g-horizontal" style="flex-direction:column">
+  <h1>Móvil en horizontal (F3.2) · el caso más estrecho: iPhone en Safari, 750 × 342</h1>
+
+  <div><p class="cap"><b>B1 · Libre</b> con el pentagrama a la derecha</p>
+  <div class="frame land" style="width:750px;height:342px">
+    <div class="rail"><div class="tab on"><i></i>Libre</div><div class="tab"><i></i>Adivinar</div><div class="tab"><i></i>Afinador</div><div class="tab"><i></i>Escalas</div><span class="gear">⚙</span></div>
+    <div class="main">
+      <div class="row strip"><span class="chip on">Do Re Mi</span><span class="chip on">Pentagrama</span><span class="grow"></span><span class="ib">−</span><span class="lbl">9 trastes</span><span class="ib">+</span></div>
+      <div class="board" data-fb='{"from":0,"to":8,"marks":{"3,5":"on:Sol","2,0":"ghost:Sol"},"measure":true}'></div>
+    </div>
+    <div class="side"><span data-staff="mini"></span><div class="readout"><b>Sol</b><small>Sol3</small></div></div>
+  </div></div>
+
+  <div><p class="cap"><b>B2 · Adivinar</b>, tras un acierto (sin pentagrama: el mástil gana ancho)</p>
+  <div class="frame land" style="width:750px;height:342px">
+    <div class="rail"><div class="tab"><i></i>Libre</div><div class="tab on"><i></i>Adivinar</div><div class="tab"><i></i>Afinador</div><div class="tab"><i></i>Escalas</div><span class="gear">⚙</span></div>
+    <div class="main">
+      <div class="row strip"><span class="play">▶</span><span class="grow msg ok">✓ Sol3</span><span class="lbl">Pistas</span><span class="chip">Nombre</span><span class="chip">Cuerda</span><span class="stats"><b>Racha 4</b><small>Récord 7</small></span><span class="ib">−</span><span class="ib">+</span></div>
+      <div class="board" data-fb='{"from":0,"to":11,"marks":{"3,5":"ok:Sol","2,0":"ok:Sol","4,10":"ok:Sol"},"measure":true}'></div>
+    </div>
+  </div></div>
+
+  <div><p class="cap"><b>B3 · Escalas · Mostrar</b> (F5)</p>
+  <div class="frame land" style="width:750px;height:342px">
+    <div class="rail"><div class="tab"><i></i>Libre</div><div class="tab"><i></i>Adivinar</div><div class="tab"><i></i>Afinador</div><div class="tab on"><i></i>Escalas</div><span class="gear">⚙</span></div>
+    <div class="main">
+      <div class="row strip"><span class="seg"><span class="on">Mostrar</span><span>Práctica</span></span><span class="sel">Do</span><span class="sel">Mayor</span><span class="grow"></span><span class="ib">◀</span><span class="lbl">3 / 8</span><span class="ib">▶</span></div>
+      <div class="board" data-fb='{"from":0,"to":8,"marks":{"4,3":"root:Do","4,5":"lit:Re","3,2":"on:Mi","3,3":"lit:Fa","3,5":"lit:Sol","3,7":"lit:La","2,2":"lit:La","2,4":"lit:Si","2,5":"root:Do","2,7":"lit:Re","3,0":"lit:Re","4,0":"lit:La","4,2":"lit:Si","1,0":"lit:Si","1,1":"root:Do","1,3":"lit:Re","1,5":"lit:Mi","1,6":"lit:Fa","1,8":"lit:Sol","5,0":"lit:Mi","5,1":"lit:Fa","5,3":"lit:Sol","5,5":"lit:La","5,7":"lit:Si","5,8":"root:Do","0,0":"lit:Mi","0,1":"lit:Fa","0,3":"lit:Sol","0,5":"lit:La","0,7":"lit:Si","0,8":"root:Do","2,0":"lit:Sol","4,7":"lit:Mi","4,8":"lit:Fa"},"measure":true}'></div>
+    </div>
+    <div class="side"><span data-staff="mini-escala"></span><div class="lbl" style="text-align:center">Mi · 3ª nota<br>T sobre Re</div></div>
+  </div></div>
+</section>
+
+<!-- ===================== ESCRITORIO ===================== -->
+<section class="group" id="g-escritorio">
+  <h1>Ordenador (Windows) · ventana de 1280 × 720</h1>
+  <div><p class="cap"><b>C1 · Libre</b>, con el foco de teclado en el mástil (F3.4)</p>
+  <div class="frame" style="width:1280px;height:720px">
+    <div class="row hdr" style="height:56px"><span class="brand">Trasteando</span>
+      <span style="display:flex;gap:4px"><span class="chip on">Libre</span><span class="chip">Adivinar</span><span class="chip">Afinador</span><span class="chip">Escalas</span></span>
+      <span class="gear">⚙</span></div>
+    <div class="row chips"><span class="chip on">Do Re Mi</span><span class="chip on">Pentagrama</span></div>
+    <div class="row display" style="height:150px;justify-content:center"><span style="width:520px" data-staff="escritorio"></span><div class="readout"><b>Re</b><small>Re4 · 294 Hz</small></div></div>
+    <div class="board" style="margin:14px 16px 0" data-fb='{"from":0,"to":15,"h":46,"marks":{"1,3":"on:Re","2,7":"ghost:Re","3,12":"ghost:Re"},"focus":"1,3"}'></div>
+    <div class="row zoom"><span class="ib">−</span><span>16 trastes a la vista</span><span class="ib">+</span></div>
+    <div class="note" style="text-align:center;padding-top:14px">Teclado: ← → cambia de traste, ↑ ↓ de cuerda, Intro o Espacio toca la nota. Tab salta del mástil al siguiente control.</div>
+  </div></div>
+</section>
+
+<script>
+// Construye los mástiles a partir de data-fb: cuerdas de la 1ª (arriba) a la 6ª.
+const NOMBRES = ['Mi','Si','Sol','Re','La','Mi'];
+const GUIA = new Set([3,5,7,9,12,15,17,19,21,24]);
+document.querySelectorAll('[data-fb]').forEach(el => {
+  const o = JSON.parse(el.dataset.fb);
+  const n = o.to - o.from + 1;
+  const fb = document.createElement('div');
+  fb.className = 'fb';
+  fb.style.gridTemplateColumns = `30px repeat(${n}, minmax(0,1fr))`;
+  fb.style.gridTemplateRows = o.h ? `18px repeat(6, ${o.h}px)` : `18px repeat(6, minmax(0,1fr))`;
+  fb.appendChild(document.createElement('div'));
+  for (let f = o.from; f <= o.to; f++) {
+    const d = document.createElement('div');
+    d.className = 'num' + (GUIA.has(f) ? ' m' : ''); d.textContent = f; fb.appendChild(d);
+  }
+  for (let s = 0; s < 6; s++) {
+    const sn = document.createElement('div'); sn.className = 'sn'; sn.textContent = NOMBRES[s]; fb.appendChild(sn);
+    for (let f = o.from; f <= o.to; f++) {
+      const c = document.createElement('div');
+      c.className = 'c' + (f === 0 ? ' nut' : '');
+      const m = o.marks && o.marks[s + ',' + f];
+      if (m) {
+        const [k, t] = m.split(':');
+        const d = document.createElement('span');
+        d.className = 'd ' + k + (o.focus === s + ',' + f ? ' focus' : ''); d.textContent = t; c.appendChild(d);
+      }
+      fb.appendChild(c);
+    }
+  }
+  el.appendChild(fb);
+  if (o.measure) {
+    // Mide el alto real de una cuerda y lo escribe en el boceto: es la prueba de F3.2.
+    requestAnimationFrame(() => {
+      const c = fb.querySelector('.c');
+      const h = c.getBoundingClientRect().height, w = c.getBoundingClientRect().width;
+      el.dataset.cuerda = h.toFixed(1); el.dataset.traste = w.toFixed(1);
+      const tag = document.createElement('span');
+      tag.style.color = 'var(--acc)';
+      tag.textContent = ` · medido: cuerda ${Math.round(h)} px, traste ${Math.round(w)} px`;
+      el.closest('.frame').previousElementSibling.appendChild(tag);
+    });
+  }
+});
+
+// Pentagramas esquemáticos: cinco líneas, clave y unas notas.
+const PASOS = { libre:[[2,'']], afinacion:[[-7,''],[-4,''],[-1,''],[2,''],[4,''],[7,'']], escritorio:[[6,'']],
+  escala:[[-2,''],[-1,''],[0,''],[1,''],[2,''],[3,''],[4,''],[5,'']], practica:[[0,''],[1,''],[3,''],[5,''],[-2,'']],
+  mini:[[2,'']], 'mini-escala':[[0,'']] };
+document.querySelectorAll('[data-staff]').forEach(el => {
+  const k = el.dataset.staff, mini = k.startsWith('mini');
+  const W = mini ? 116 : 300, H = mini ? 120 : 96, g = 8, top = mini ? 40 : 28;
+  const y = p => top + 4 * g - p * g / 2;   // p = 0 en la 1ª línea (Mi del pentagrama)
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" style="max-width:${W}px;display:block">`;
+  for (let i = 0; i < 5; i++) s += `<line x1="4" x2="${W - 4}" y1="${top + i * g}" y2="${top + i * g}" stroke="#a39a8e" stroke-width="1"/>`;
+  s += `<text x="6" y="${top + 4 * g + 2}" font-size="${mini ? 38 : 40}" fill="#ebe6de" font-family="DejaVu Sans">𝄞</text>`;
+  const notas = PASOS[k] || [];
+  notas.forEach(([p], i) => {
+    const x = (mini ? 70 : 64) + i * (notas.length > 1 ? (W - 84) / notas.length : 0);
+    for (let q = -2; q >= p; q -= 2) s += `<line x1="${x - 9}" x2="${x + 9}" y1="${y(q)}" y2="${y(q)}" stroke="#a39a8e"/>`;
+    for (let q = 10; q <= p; q += 2) s += `<line x1="${x - 9}" x2="${x + 9}" y1="${y(q)}" y2="${y(q)}" stroke="#a39a8e"/>`;
+    const col = (k === 'escala' && i === 2) || k.startsWith('mini') ? '#e8a45c' : '#ebe6de';
+    s += `<ellipse cx="${x}" cy="${y(p)}" rx="5.5" ry="4" fill="${col}" transform="rotate(-20 ${x} ${y(p)})"/>`;
+  });
+  el.innerHTML = s + '</svg>';
+});
+
+// Aguja del afinador: semicírculo de ±50 cents con la franja verde de ±5.
+document.querySelectorAll('[data-gauge]').forEach(el => {
+  const c = +el.dataset.gauge, R = 120, cx = 150, cy = 140;
+  const pt = (cents, r) => { const a = Math.PI * (0.5 - cents / 100); return [cx + r * Math.cos(a), cy - r * Math.sin(a)]; };
+  const arc = (a, b, r) => { const [x1, y1] = pt(a, r), [x2, y2] = pt(b, r); return `M${x1} ${y1} A${r} ${r} 0 0 1 ${x2} ${y2}`; };
+  let s = `<svg viewBox="0 0 300 150" width="300" height="150">`;
+  s += `<path d="${arc(-50, 50, R)}" fill="none" stroke="#4a453f" stroke-width="14"/>`;
+  s += `<path d="${arc(-5, 5, R)}" fill="none" stroke="#5fb37a" stroke-width="14"/>`;
+  [-50, -25, 0, 25, 50].forEach(t => { const [x, y] = pt(t, R + 18); s += `<text x="${x}" y="${y + 4}" font-size="11" fill="#9a9389" text-anchor="middle">${t > 0 ? '+' + t : t}</text>`; });
+  const [nx, ny] = pt(c, R - 4);
+  s += `<line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="#d9634f" stroke-width="3"/><circle cx="${cx}" cy="${cy}" r="6" fill="#d9634f"/></svg>`;
+  el.innerHTML = s;
+});
+</script>
+</body>
+</html>
