@@ -7,6 +7,7 @@ Idioma: español en todo (código comentado, commits, informes y respuestas).
 ## Documentos que mandan
 - docs/compatibilidad.md — qué capacidades usa la app y qué hace donde faltan.
 - docs/requisitos.md — qué debe hacer el producto. Fuente de verdad del alcance.
+- docs/interfaz.md — qué hay en cada pantalla y cómo se navega (C-06, aprobada).
 - docs/roadmap.md — en qué orden se construye y cómo se valida cada etapa.
 - docs/matriz-cumplimiento.md — criterio de aceptación de cada requisito. Es el contrato.
 - docs/automatizacion.md — ciclo de iteración y paradas.
@@ -23,6 +24,10 @@ Idioma: español en todo (código comentado, commits, informes y respuestas).
 - Despliegue de pruebas en GitHub Pages, sin anunciar, desde una rama propia,
   antes de la Sesión 1. La publicación oficial sigue en F7.1.
 - Sin Android de pruebas por ahora: simulador de Chrome hasta tener uno.
+- Service Worker en F6.2, no antes (20/10): en la Sesión 1 el iPhone usa la web
+  con conexión.
+- Agudo de la acústica (hasta 14 semitonos de transporte): limitación conocida
+  aceptada (20/10).
 
 ## Reglas
 1. Nunca trabajes en main. Una rama por etapa: auto/F<fase>.<etapa>-<tema>.

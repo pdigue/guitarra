@@ -1,11 +1,17 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 1.6 · **Fecha:** 19 de octubre de 2026 · **Base:** `requisitos.md` v1.8 · app `0.2.3` · `roadmap.md` v3.6  
+**Versión:** 1.9 · **Fecha:** 20 de octubre de 2026 · **Base:** `requisitos.md` v1.11 · app `0.2.3` · `roadmap.md` v3.9  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
+
+**Cambios en la 1.9:** interfaz aprobada. C-06 verificado; C-07 nuevo; criterios revisados de V-01, V-04, G-05 y C-04.
+
+**Cambios en la 1.8:** S-07 cumple y queda verificado (licencia del pack de nylon completa).
+
+**Cambios en la 1.7:** evidencia nueva en S-07 (licencia de nylon en tres sonidos). Criterios sin cambios.
 
 **Cambios en la 1.6:** CP-2: G-07 con límites revisados; X-01 cumple; escucha del cliente en S-01.
 
@@ -21,7 +27,7 @@
 
 | Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 92 | 61 | 11 | 18 | 2 | 1 | 21 |
+| 93 | 62 | 11 | 18 | 2 | 3 | 21 |
 
 | ID | Etapa | Método | Criterio de aceptación | Declaración | Evidencia | Verificación | Origen |
 |---|---|:---:|---|---|---|---|---|
@@ -29,7 +35,7 @@
 | **G-02** | F1.1 | D | La barra inferior muestra Libre, Adivinar, Afinador y Escalas; cada destino activo abre su vista y Escalas aparece deshabilitada. | Cumple | F1.1 #1 y #14 | Pendiente | Cliente · listado 14/09 |
 | **G-03** | F6.2 · F7.2 | T | F6.2: tras una primera carga en localhost y sin red, la app abre y suena. F7.2: lo mismo desde la web publicada. | No cumple | — | Pendiente | Cliente · listado 14/09 |
 | **G-04** | F6.3 · F7.2 | D | Desde la web publicada, el navegador ofrece instalarla y abre a pantalla completa desde el icono. | Cumple parcialmente | — | Pendiente | Cliente · listado 14/09 |
-| **G-05** | F3.4 | I+T | Todo control es alcanzable con teclado y muestra el foco; contrastes ≥ 4,5:1 medidos; el movimiento se reduce con prefers-reduced-motion. | Cumple parcialmente | — | Pendiente | Desarrollo · v1.1 |
+| **G-05** | F3.4 | I+T | Todo control es alcanzable con teclado y muestra el foco; contrastes ≥ 4,5:1 medidos; el movimiento se reduce con prefers-reduced-motion; en pantallas táctiles, todo control y toda casilla del mástil mide al menos 40 × 40 px. | Cumple parcialmente | — | Pendiente | Cliente · 20/10 (interfaz.md v1.0) |
 | **G-06** | F2.1 · F6.4 | I | CREDITOS.md lista cada recurso de terceros con su origen y su licencia, y la app muestra el texto de atribución en Ajustes. | Cumple parcialmente | CREDITOS.md (F2.1). Falta mostrarlo en la app (F6.4) | Verificado parcialmente | Desarrollo · v1.1 |
 | **G-07** | F2.3 · F2.5 | T | En Windows (y Android cuando lo haya), con el ordenador en modo avión, dist/trasteando.html abre con doble clic en ≤ 3 s, suenan las grabaciones y funcionan Libre, Adivinar y el afinador por referencia. Audio ≤ 1,45 MB y archivo ≤ 2 MB. | Cumple | V-03 y V-04: desde disco y sin conexión en Chromium, abre en 0,3 s y suena a menos de 1 cent · Banco (node --test): autónomo al día, con su audio, huellas y límites | Verificado parcialmente | Cliente · 15/09 |
 | **G-08** | F4.1 · F6.1 | T | El archivo autónomo generado y la web publicada superan el mismo banco de pruebas. | Cumple parcialmente | — | Verificado parcialmente | Cliente · 15/09 |
@@ -58,7 +64,7 @@
 | **S-04** | F1.1 | T | Sin conexión, la app suena con el sintetizador y lo avisa en la pantalla de entrada. | Cumple | — | Pendiente | Cliente · listado 14/09 |
 | **S-05** | F1.1 | D | No suena nada antes de pulsar «Empezar». | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **S-06** | F1.1 | D | Tras recargar se mantiene el timbre elegido. | Cumple | F1.1 #13 | Pendiente | Cliente · listado 14/09 |
-| **S-07** | F2.1 · F2.3 | I | Ninguna petición de audio sale del dominio propio, y CREDITOS.md documenta origen y licencia. | Cumple parcialmente | CREDITOS.md y samples/ (F2.1) · Banco (node --test): ninguna dirección externa (0.2.0) | Verificado parcialmente | AR-01 |
+| **S-07** | F2.1 · F2.3 | I | Ninguna petición de audio sale del dominio propio, y CREDITOS.md documenta origen y licencia. | Cumple | CREDITOS.md y samples/ (F2.1) · Banco (node --test): ninguna dirección externa (0.2.0) · licencia de los 161 sonidos del pack de nylon: CC BY, con filtros de control a 0 (20/10) | Verificado | AR-01 |
 | **S-08** | F2.1 · F2.2 · F2.4 | T | Cada nota posible, en los dos timbres, suena a ±5 cents de su frecuencia una vez aplicada la corrección de su grabación; cada grabación es la nota asignada (a menos de 50 cents) y su desviación coincide con samples/afinacion.json. | Cumple | samples/afinacion.json · Banco (node --test): grabaciones y todas las notas (±0,5 cents) · V-02, V-03 y V-04: notas grabadas en el navegador, a menos de 1 cent | Verificado | Desarrollo · medición F2.1 |
 | **P-01** | F1.1 | A | Toda posición del mástil, en cualquier afinación permitida, se dibuja dentro del pentagrama. | Cumple | Análisis 15/09: ninguna nota fuera en todo el rango · F1.1 #3 y #4 | Verificado parcialmente | Cliente · listado 14/09 |
 | **P-02** | F1.1 | D | El pentagrama se oculta y se muestra desde el chip y desde Ajustes. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
@@ -99,10 +105,10 @@
 | **A-09** | F1.1 | D | El pentagrama del afinador refleja la afinación seleccionada. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **A-10** | F1.1 | T | Al cambiar de afinación, el mástil y los retos se rehacen con las nuevas notas. | Cumple | Banco (node --test): Drop D | Verificado parcialmente | Cliente · listado 14/09 |
 | **A-11** | F1.1 | D | Tras recargar se mantiene la afinación, incluida la personalizada. | Cumple | F1.1 #13 | Pendiente | Cliente · listado 14/09 |
-| **V-01** | F3.2 | D | En un móvil apaisado cada cuerda mide al menos 40 px, y en vertical aparece el aviso para girar. | Cumple parcialmente | — | Pendiente | Cliente · listado 14/09 |
+| **V-01** | F3.2 | D | En horizontal, con un alto útil de 268 px o más, cada cuerda mide al menos 40 px (iPhone en Safari e instalada; simulador de Android). En vertical, en pantallas táctiles de menos de 600 px y en Libre, Adivinar y Escalas, aparece el aviso para girar; nunca en el Afinador; cerrado, no vuelve y «Restablecer» lo recupera. | Cumple parcialmente | interfaz.md §7: bocetos medidos (52 px en el iPhone, 42 px en Android) | Pendiente | Cliente · 20/10 (interfaz.md v1.0) |
 | **V-02** | F1.1 | D | El afinador se usa con comodidad en vertical y en horizontal. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **V-03** | F1.1 | D | En una pantalla de 1280 px se ven los 24 trastes sin desplazarse. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
-| **V-04** | F1.1 | D | El zoom cambia los trastes visibles entre 3 y el máximo que cabe, y la etiqueta dice la cifra real. | Cumple | F1.1 #7 y #8 | Pendiente | Cliente · listado 14/09 |
+| **V-04** | F1.1 · F3.2 | D | El zoom cambia los trastes visibles entre 3 y el máximo que cabe, y la etiqueta dice la cifra real. Con pointer: coarse, un traste mide al menos 40 px y el zoom guardado se ajusta a ese límite. | Cumple parcialmente | F1.1 #7 y #8 | Verificado parcialmente | Cliente · 20/10 (interfaz.md v1.0) |
 | **V-05** | F1.1 | D | Con el mástil más ancho que la pantalla se puede desplazar hasta el traste 24. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **V-06** | F1.1 | D | Desplazarse no cambia el ancho de los trastes. | Cumple | F1.1 #7 | Pendiente | Cliente · listado 14/09 |
 | **V-07** | F1.1 | D | Al redimensionar la ventana el mástil se reajusta sin perder el tramo visible. | Cumple | F1.1 #7 | Pendiente | Cliente · listado 14/09 |
@@ -111,9 +117,10 @@
 | **C-01** | F1.1 | D | El botón de Ajustes abre el panel desde cualquier pantalla y Escape lo cierra. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **C-02** | F1.1 | I | El panel contiene todos los ajustes listados y la versión de la app. | Cumple | F1.1 #12 | Pendiente | Cliente · listado 14/09 |
 | **C-03** | F1.1 | D | Nomenclatura, pentagrama y pistas tienen chips de acceso rápido. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
-| **C-04** | F1.1 | D | La barra inferior lleva a cada área con un toque. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
+| **C-04** | F1.1 | D | La navegación (barra inferior, raíl o pestañas en la cabecera, según la disposición) lleva a cada área con un toque. | Cumple | F1.1 #14 | Pendiente | Cliente · 20/10 (interfaz.md v1.0) |
 | **C-05** | F1.1 | T | Todos los ajustes persisten tras recargar, y unos ajustes corruptos o antiguos no rompen la app. | Cumple | Banco (node --test): migración · F1.1 #13 | Verificado parcialmente | Cliente · listado 14/09 |
-| **C-06** | F3.1 | I | interfaz.md aprobado por el cliente y revisado por el auditor de requisitos. | No cumple | — | Pendiente | Cliente · listado 14/09 |
+| **C-06** | F3.1 | I | interfaz.md aprobado por el cliente y revisado por el auditor de requisitos. | Cumple | interfaz.md v1.0 · AR-04 · aprobación del cliente el 20/10 | Verificado | Cliente · listado 14/09 |
+| **C-07** | F3.2 | D | Con un paso anterior en la sesión, «atrás» cierra Ajustes o vuelve al área anterior; desde la primera área actúa el sistema; al abrir o recargar se entra en Libre. Prueba manual en Windows y en el simulador de Android de Chrome. | No cumple | — | Pendiente | Cliente · 20/10 (interfaz.md v1.0) |
 | **X-01** | F1.2 · F1.4 | I | GitHub muestra la última versión en main, entrada por pull request aprobado, y la etiqueta de cierre de fase. | Cumple | PR #1 a #5 fusionados · etiqueta v0.1.5 | Verificado parcialmente | Desarrollo · v1.1 |
 | **X-02** | F7.1 | D | La URL pública carga la app desde un dispositivo ajeno al proyecto. | No cumple | — | Pendiente | Desarrollo · v1.1 |
 | **X-03** | F7.2 | D | La app instalada desde la web funciona en un Android, un iPhone y un Windows reales. | No cumple | — | Pendiente | Desarrollo · v1.1 |
