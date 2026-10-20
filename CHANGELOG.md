@@ -6,8 +6,9 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.3.1** | 20/10/2026 | F3.4 | Rama `auto/F3.4-accesibilidad` |
-| 0.3.0 | 20/10/2026 | F3.2 | Rama `auto/F3.2-horizontal` (PR #8) |
+| **0.3.2** | 20/10/2026 | F3 · tu comentario sobre el zoom | Rama `auto/F3.2-zoom` |
+| 0.3.1 | 20/10/2026 | F3.4 | `main`, fusionada el 20/10 (PR #9) |
+| 0.3.0 | 20/10/2026 | F3.2 | `main`, fusionada el 20/10 (PR #8) |
 | 0.2.3 | 19/10/2026 | F2 · auditoría CP-2 | `main`, fusionada el 20/10 |
 | 0.2.2 | 19/10/2026 | F2.4 | `main`, aprobada el 19/10 |
 | 0.2.1 | 19/10/2026 | F2.3 | `main`, aprobada el 19/10 |
@@ -26,6 +27,17 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.3.2] — 20/10/2026 · Zoom: «+» enseña más trastes
+
+### Cambiado
+- **V-04** · «+» enseña más trastes y «−» menos, al revés que antes, y en ese orden de izquierda a derecha (tu comentario del 20/10).
+- **V-04 · G-05** · Con el dedo puedes pedir más trastes, que se estrechan hasta 28 px. En el iPhone con Safari caben hasta 11 en vertical (antes 7) y 15 en horizontal (antes 10). La vista por defecto sigue con trastes de 40 px o más; en horizontal empieza en 10. Con ratón no cambia nada.
+
+### Verificado
+- Banco: 35 de 35, con la prueba del zoom ampliada (anchos, orden de los botones y que «+» sume trastes). `comprobar-disposicion.js` y las 15 comprobaciones de F1.1 siguen bien. Se audita en CP-3.
 
 ---
 

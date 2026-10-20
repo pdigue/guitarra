@@ -393,11 +393,23 @@ test('aviso para girar: solo con el dedo, en vertical, fuera del Afinador, y cer
   assert.equal(boot(APP).$('rotate-hint').hidden, true, 'sin matchMedia, como el caso más pobre, no sale');
 });
 
-test('con el dedo un traste mide al menos 40 px; con ratón, 34 (V-04, G-05)', () => {
-  assert.equal(boot(APP, null, DEDO).ev('minFretW()'), 40);
+test('con el dedo los trastes miden 40 px por defecto y con «+» se ven más, hasta 28 px (V-04, G-05)', () => {
+  assert.equal(boot(APP, null, DEDO).ev('minFretW()'), 40, 'ancho cómodo, el de la vista por defecto');
+  assert.equal(boot(APP, null, DEDO).ev('zoomFloorW()'), 28, 'lo más estrecho que se puede pedir');
   assert.equal(boot(APP, null, RATON).ev('minFretW()'), 34);
-  assert.equal(boot(APP).ev('minFretW()'), 34, 'sin matchMedia se trata como ratón');
+  assert.equal(boot(APP, null, RATON).ev('zoomFloorW()'), 34);
+  assert.equal(boot(APP).ev('zoomFloorW()'), 34, 'sin matchMedia se trata como ratón');
   assert.equal(boot(APP).ev('NUT_W'), 40, 'la cejuela también se toca con el dedo');
+  // «+» enseña más trastes y «−» menos, en ese orden de izquierda a derecha.
+  const A = boot(APP);
+  const botones = A.$('zoombar').querySelectorAll('.zoom-btn');
+  // (El DOM de prueba no traduce &minus;: se compara ya traducido.)
+  assert.deepEqual(botones.map(x => [x.textContent.replace('&minus;', '−'), x.getAttribute('aria-label')]),
+    [['−', 'Ver menos trastes'], ['+', 'Ver más trastes']]);
+  A.$('board-scroll').clientWidth = 390;   // un móvil en vertical: caben 9 trastes de 34 px
+  A.ev('state.visibleFrets = 5');
+  A.$('zoom-out').click();
+  assert.equal(A.ev('state.visibleFrets'), 7, '«+» suma trastes');
 });
 
 /** Historial de navegador simulado: una pila de pasos. back() retrocede uno y,

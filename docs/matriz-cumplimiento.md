@@ -1,11 +1,13 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 1.11 · **Fecha:** 20 de octubre de 2026 · **Base:** `requisitos.md` v1.13 · app `0.3.1` · `roadmap.md` v3.11  
+**Versión:** 1.12 · **Fecha:** 20 de octubre de 2026 · **Base:** `requisitos.md` v1.14 · app `0.3.2` · `roadmap.md` v3.12  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
+
+**Cambios en la 1.12:** criterios de V-04 y G-05 con el zoom nuevo.
 
 **Cambios en la 1.11:** F3.4. G-05 cumple; su criterio añade los umbrales de la paleta.
 
@@ -39,7 +41,7 @@
 | **G-02** | F1.1 | D | La barra inferior muestra Libre, Adivinar, Afinador y Escalas; cada destino activo abre su vista y Escalas aparece deshabilitada. | Cumple | F1.1 #1 y #14 | Pendiente | Cliente · listado 14/09 |
 | **G-03** | F6.2 · F7.2 | T | F6.2: tras una primera carga en localhost y sin red, la app abre y suena. F7.2: lo mismo desde la web publicada. | No cumple | — | Pendiente | Cliente · listado 14/09 |
 | **G-04** | F6.3 · F7.2 | D | Desde la web publicada, el navegador ofrece instalarla y abre a pantalla completa desde el icono. | Cumple parcialmente | — | Pendiente | Cliente · listado 14/09 |
-| **G-05** | F3.4 | I+T | Todo control es alcanzable con teclado y muestra el foco; contrastes ≥ 4,5:1 medidos; el movimiento se reduce con prefers-reduced-motion; en pantallas táctiles, todo control y toda casilla del mástil mide al menos 40 × 40 px, salvo las cuerdas en vertical con menos de 660 px de alto. Paleta por nota: las 7 naturales a ≥ 7,5 (OKLab × 100) entre sí con visión normal y con protanopía, deuteranopía y tritanopía simuladas, y las 12 a ≥ 8 con visión normal; el nombre de la nota siempre escrito. | Cumple | V-07: comprobar-accesibilidad.js (teclado, contraste, movimiento) · paleta.py · V-06: 40 × 40 px · Banco (node --test): teclado, etiquetas, paleta, grises, fila y asa | Verificado parcialmente | Cliente · 20/10 (interfaz.md v1.0) |
+| **G-05** | F3.4 | I+T | Todo control es alcanzable con teclado y muestra el foco; contrastes ≥ 4,5:1 medidos; el movimiento se reduce con prefers-reduced-motion; en pantallas táctiles, todo control y toda casilla del mástil mide al menos 40 × 40 px en la vista por defecto, salvo las cuerdas en vertical con menos de 660 px de alto y los trastes que el usuario estreche con «+» (hasta 28 px). Paleta por nota: las 7 naturales a ≥ 7,5 (OKLab × 100) entre sí con visión normal y con protanopía, deuteranopía y tritanopía simuladas, y las 12 a ≥ 8 con visión normal; el nombre de la nota siempre escrito. | Cumple | V-07: comprobar-accesibilidad.js (teclado, contraste, movimiento) · paleta.py · V-06: 40 × 40 px · Banco (node --test): teclado, etiquetas, paleta, grises, fila y asa | Verificado parcialmente | Cliente · 20/10 (interfaz.md v1.0) |
 | **G-06** | F2.1 · F6.4 | I | CREDITOS.md lista cada recurso de terceros con su origen y su licencia, y la app muestra el texto de atribución en Ajustes. | Cumple parcialmente | CREDITOS.md (F2.1). Falta mostrarlo en la app (F6.4) | Verificado parcialmente | Desarrollo · v1.1 |
 | **G-07** | F2.3 · F2.5 | T | En Windows (y Android cuando lo haya), con el ordenador en modo avión, dist/trasteando.html abre con doble clic en ≤ 3 s, suenan las grabaciones y funcionan Libre, Adivinar y el afinador por referencia. Audio ≤ 1,45 MB y archivo ≤ 2 MB. | Cumple | V-03 y V-04: desde disco y sin conexión en Chromium, abre en 0,3 s y suena a menos de 1 cent · Banco (node --test): autónomo al día, con su audio, huellas y límites | Verificado parcialmente | Cliente · 15/09 |
 | **G-08** | F4.1 · F6.1 | T | El archivo autónomo generado y la web publicada superan el mismo banco de pruebas. | Cumple parcialmente | — | Verificado parcialmente | Cliente · 15/09 |
@@ -112,7 +114,7 @@
 | **V-01** | F3.2 | D | En horizontal, con un alto útil de 268 px o más, cada cuerda mide al menos 40 px (iPhone en Safari e instalada; simulador de Android). En vertical, en pantallas táctiles de menos de 600 px de ancho y en Libre, Adivinar y Escalas, aparece el aviso para girar; nunca en el Afinador; cerrado, no vuelve y «Restablecer» lo recupera. | Cumple | V-06: comprobar-disposicion.js en 14 pantallas: 52,8 / 60,8 / 42,5 px · Banco (node --test): aviso para girar | Verificado parcialmente | Cliente · 20/10 (interfaz.md v1.0) |
 | **V-02** | F1.1 | D | El afinador se usa con comodidad en vertical y en horizontal. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **V-03** | F1.1 | D | En una pantalla de 1280 px se ven los 24 trastes sin desplazarse. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
-| **V-04** | F1.1 · F3.2 | D | El zoom cambia los trastes visibles entre 3 y el máximo que cabe, y la etiqueta dice la cifra real. Con pointer: coarse, un traste mide al menos 40 px; si el zoom guardado pide más trastes, se muestran los que caben y lo guardado se conserva (V-08). | Cumple | F1.1 #7 y #8 · V-06: comprobar-disposicion.js en 14 pantallas · Banco (node --test): 40 px con el dedo | Verificado parcialmente | Cliente · 20/10 (interfaz.md v1.0) |
+| **V-04** | F1.1 · F3.2 | D | El zoom cambia los trastes visibles entre 3 y el máximo que cabe, y la etiqueta dice la cifra real; «+» enseña más trastes y «−» menos. Con pointer: coarse, la vista por defecto usa trastes de al menos 40 px y el usuario puede pedir más trastes, de hasta 28 px; si el zoom guardado pide más de los que caben, se muestran los que caben y lo guardado se conserva (V-08). | Cumple | F1.1 #7 y #8 · V-06 · Banco (node --test): 40 px por defecto, 28 con «+», orden de los botones | Verificado parcialmente | Cliente · 20/10 (interfaz.md v1.0) |
 | **V-05** | F1.1 | D | Con el mástil más ancho que la pantalla se puede desplazar hasta el traste 24. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **V-06** | F1.1 | D | Desplazarse no cambia el ancho de los trastes. | Cumple | F1.1 #7 | Pendiente | Cliente · listado 14/09 |
 | **V-07** | F1.1 | D | Al redimensionar la ventana el mástil se reajusta sin perder el tramo visible. | Cumple | F1.1 #7 | Pendiente | Cliente · listado 14/09 |

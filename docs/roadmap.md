@@ -1,7 +1,7 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 3.11 · **Fecha:** 20 de octubre de 2026
-**Válido para:** app `0.3.1` · `requisitos.md` v1.13 · `matriz-cumplimiento` v1.11 · `interfaz.md` v1.3 · `compatibilidad.md` v1.3 · `automatizacion.md` v1.1 · `CHANGELOG.md`
+**Versión:** 3.12 · **Fecha:** 20 de octubre de 2026
+**Válido para:** app `0.3.2` · `requisitos.md` v1.14 · `matriz-cumplimiento` v1.12 · `interfaz.md` v1.4 · `compatibilidad.md` v1.3 · `automatizacion.md` v1.1 · `CHANGELOG.md`
 **Gestiona:** chat de Desarrollo
 
 > ⚡ **Modo acelerado activo desde el 14/10** (detalle en `automatizacion.md`). El agente ejecuta las etapas por bloques —F1 a F3, luego F4 a F6— y solo para en las decisiones. Las pruebas que necesitan tus manos se agrupan en dos sesiones: **Sesión 1** con el iPhone y el ordenador al cerrar F3, y **Sesión 2** con la guitarra al cerrar F6.
@@ -12,7 +12,7 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** F3 hecha por mi parte: F3.1, F3.2 (`0.3.0`) y F3.4 (`0.3.1`). Siguiente: la **Sesión 1** contigo, con el iPhone y el ordenador (F1.1, F2.5, F3.3 y lo añadido), y después CP-3 y F4.
+📍 **Estás aquí:** F3 hecha por mi parte: F3.1, F3.2 (`0.3.0`), F3.4 (`0.3.1`) y el zoom que pediste (`0.3.2`). Siguiente: la **Sesión 1** contigo, con el iPhone y el ordenador (F1.1, F2.5, F3.3 y lo añadido), y después CP-3 y F4.
 
 | Fase | Objetivo | Versión | Dónde se usa | Etapas | Progreso |
 |------|----------|:---:|---|:---:|---|
@@ -451,7 +451,8 @@ flowchart TB
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **3.11** | 20/10/2026 | F3.4 hecha con la `0.3.1`, tras AR-06 y AT-05. Paleta decidida. F3 queda a falta de la Sesión 1 (F3.3). |
+| **3.12** | 20/10/2026 | `0.3.2`: «+» enseña más trastes y con el dedo se pueden pedir trastes de hasta 28 px. Se audita en CP-3, junto con lo que salga de la Sesión 1. |
+| 3.11 | 20/10/2026 | F3.4 hecha con la `0.3.1`, tras AR-06 y AT-05. Paleta decidida. F3 queda a falta de la Sesión 1 (F3.3). |
 | 3.10 | 20/10/2026 | F3.2 hecha con la `0.3.0`, tras AR-05 y AT-04. F3.4 recoge lo que quedó de F3.2. Comprobaciones nuevas para la Sesión 1. |
 | 3.9 | 20/10/2026 | F3.1 cerrada con `interfaz.md` v1.0. F3.2 amplía su alcance (V-04, C-07) y su criterio (alto útil ≥ 268 px). |
 | 3.8 | 20/10/2026 | Licencia del pack de nylon completa: S-07 cerrado. |

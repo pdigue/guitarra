@@ -516,9 +516,10 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 
 <!-- Zoom -->
 <div class="zoombar" id="zoombar">
-  <button class="zoom-btn" id="zoom-out" aria-label="Ver más trastes">&minus;</button>
+  <!-- «+» enseña más trastes y «−» menos, como pidió el cliente el 20/10. -->
+  <button class="zoom-btn" id="zoom-in" aria-label="Ver menos trastes">&minus;</button>
   <span class="zoom-label" id="zoom-label"></span>
-  <button class="zoom-btn" id="zoom-in" aria-label="Ver menos trastes">+</button>
+  <button class="zoom-btn" id="zoom-out" aria-label="Ver más trastes">+</button>
 </div>
 
 </div>
@@ -633,7 +634,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.3.1';
+const APP_VERSION = '0.3.2';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -653,14 +654,19 @@ const COLORS = ['#feb893','#ffddcb','#6ec933','#96de71','#fee73f','#9095fd',
 const NUM_FRETS = 24;
 const MIN_FRET_W = 34;   // ancho mínimo de un traste con ratón
 const MIN_TOUCH = 40;    // lado mínimo de lo que se toca con el dedo (G-05, V-04)
+const MIN_TOUCH_ZOOM = 28;  // con «+» se pueden ver más trastes, más estrechos (20/10)
 
 /** ¿El puntero principal es un dedo? Se pregunta por la capacidad, no por el
  *  sistema (PL-04): un portátil táctil con ratón dice que no, un móvil que sí. */
 function coarsePointer(){
   return typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 }
-/** Ancho mínimo de un traste: 40 px con el dedo, 34 con ratón (V-04). */
+/** Ancho cómodo de un traste: 40 px con el dedo, 34 con ratón. Es el que usa
+ *  la vista por defecto (G-05). */
 function minFretW(){ return coarsePointer() ? MIN_TOUCH : MIN_FRET_W; }
+/** Ancho mínimo si tú pides más trastes con «+»: 28 px con el dedo, que se
+ *  aciertan con algo más de cuidado; con ratón no cambia (V-04, 20/10). */
+function zoomFloorW(){ return coarsePointer() ? MIN_TOUCH_ZOOM : MIN_FRET_W; }
 const MAX_FRET_W = 110;
 
 // Afinaciones. Cada una es un array de 6 notas MIDI, de la cuerda más grave
@@ -1434,7 +1440,7 @@ function defaultVisibleFrets(){
   const w = window.innerWidth;
   const landscape = w > window.innerHeight;
   if (w >= 900) return NUM_FRETS;   // escritorio: mástil entero
-  if (landscape) return 12;
+  if (landscape) return 10;          // con 40 px por traste caben 10 en un iPhone con Safari
   return 5;                          // móvil vertical: pocos y anchos
 }
 
@@ -1444,7 +1450,7 @@ const LABEL_W = 30, NUT_W = 40;   // deben coincidir con --label-w y --nut-w
 function maxVisibleFrets(){
   const scroll = document.getElementById('board-scroll');
   const avail = scroll.clientWidth - LABEL_W - NUT_W;
-  return Math.max(3, Math.min(NUM_FRETS, Math.floor(avail / minFretW())));
+  return Math.max(3, Math.min(NUM_FRETS, Math.floor(avail / zoomFloorW())));
 }
 
 function applyZoom(){
@@ -1460,11 +1466,11 @@ function applyZoom(){
     ? (scroll.scrollLeft + scroll.clientWidth/2 - NUT_W) / prevFw
     : null;
 
-  // Con el dedo, un traste nunca mide menos de 40 px (V-04). Si el zoom
-  // guardado pide más trastes de los que caben así, se muestran los que caben
-  // y la etiqueta lo dice, pero no se pisa lo guardado: al girar el móvil
-  // vuelve el zoom elegido (V-08).
-  let fw = Math.max(minFretW(), Math.min(MAX_FRET_W, avail / state.visibleFrets));
+  // Con el dedo, un traste no baja de 28 px aunque pidas más con «+» (por
+  // defecto se ven los que caben a 40 px). Si el zoom guardado pide más de los
+  // que caben, se muestran los que caben y la etiqueta lo dice, pero no se
+  // pisa lo guardado: al girar el móvil vuelve el zoom elegido (V-08).
+  let fw = Math.max(zoomFloorW(), Math.min(MAX_FRET_W, avail / state.visibleFrets));
   // La variable vive en #board, no en :root: cambiarla en la raíz obliga al
   // navegador a revalidar el estilo de todo el documento en cada resize.
   document.getElementById('board').style.setProperty('--fret-w', fw + 'px');
