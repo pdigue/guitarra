@@ -47,8 +47,8 @@ versión exacta y permite comprobar que nadie la ha cambiado.
 | Licencia de la edición de Brosowsky | `LICENSE.md` del repositorio: «SAMPLES RELEASED UNDER CC-BY 3.0» | ✅ | 14/10/2026 |
 | Origen de cada instrumento | `sample-source-info.txt`: «guitar ac - Iowa», «guitar ny - Freesound - 11573__quartertone__classicalguitar-multisampled» | ✅ | 14/10/2026 |
 | Licencia del original acústico | theremin.music.uiowa.edu/MIS.html: «may be downloaded and used for any projects, without restrictions» | ✅ | 14/10/2026 |
-| Licencia del original de nylon | Freesound, sonido 183089 del pack 11573: «Attribution 4.0» | 🟡 comprobado en un sonido del pack | 14/10/2026 |
-| Que todos los sonidos del pack 11573 tienen la misma licencia | Freesound asigna la licencia sonido a sonido | ⬜ pendiente: revisar la lista del pack en el navegador, unos minutos | — |
+| Licencia del original de nylon | Freesound, sonidos 183089 (14/10), 183078 y 183083 (20/10) del pack 11573, de cuerdas distintas: los tres «Attribution 4.0» | 🟡 comprobado en tres sonidos del pack | 20/10/2026 |
+| Que todos los sonidos del pack 11573 tienen la misma licencia | Freesound asigna la licencia sonido a sonido | ⬜ pendiente: la lista completa solo se ve en la búsqueda de Freesound, cerrada a los agentes; la revisa el cliente en su navegador (filtro «License» del pack) | — |
 
 ## Archivos
 

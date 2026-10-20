@@ -1,7 +1,7 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 3.6 · **Fecha:** 19 de octubre de 2026
-**Válido para:** app `0.2.3` · `requisitos.md` v1.8 · `matriz-cumplimiento` v1.6 · `compatibilidad.md` v1.0 · `automatizacion.md` v1.1 · `CHANGELOG.md`
+**Versión:** 3.7 · **Fecha:** 20 de octubre de 2026
+**Válido para:** app `0.2.3` · `requisitos.md` v1.9 · `matriz-cumplimiento` v1.7 · `compatibilidad.md` v1.1 · `automatizacion.md` v1.1 · `CHANGELOG.md`
 **Gestiona:** chat de Desarrollo
 
 > ⚡ **Modo acelerado activo desde el 14/10** (detalle en `automatizacion.md`). El agente ejecuta las etapas por bloques —F1 a F3, luego F4 a F6— y solo para en las decisiones. Las pruebas que necesitan tus manos se agrupan en dos sesiones: **Sesión 1** con el iPhone y el ordenador al cerrar F3, y **Sesión 2** con la guitarra al cerrar F6.
@@ -12,7 +12,7 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** F2 hecha salvo F2.5, que va a la Sesión 1; CP-2 superado con la `0.2.3`. Siguiente: F3.1, la propuesta de interfaz, que se para hasta tu aprobación.
+📍 **Estás aquí:** F3.1, la propuesta de interfaz (`docs/interfaz.md`), parada hasta tu aprobación. F2 hecha salvo F2.5, que va a la Sesión 1.
 
 | Fase | Objetivo | Versión | Dónde se usa | Etapas | Progreso |
 |------|----------|:---:|---|:---:|---|
@@ -392,7 +392,7 @@ flowchart TB
 
 **Las dos sesiones contigo.** *Sesión 1*, al cerrar F3, con el iPhone y el ordenador: la lista de F1.1, el archivo autónomo en cada plataforma (F2.5) y quince minutos de uso real (F3.3). En el iPhone la app se sirve desde el ordenador por WiFi con Live Server, salvo que el archivo autónomo funcione. *Sesión 2*, al cerrar F6, con la guitarra: el afinador por micrófono (F4.3) y la práctica de escalas (F5.4), en el ordenador.
 
-**Despliegue de pruebas** (decisión del 15/10, **activo desde el 19/10**): `pdigue.github.io/guitarra`, servido desde la rama `pruebas` (`main` no se toca), que se actualiza con cada *pull request*. En el iPhone permite probar con `https` lo que el WiFi no deja: instalarla y, desde F4, el micrófono. Usarla sin conexión necesita el Service Worker (G-03), previsto en F6.2: si quieres probarlo en la Sesión 1, hay que adelantar uno mínimo (decisión abierta). La publicación oficial sigue siendo F7.1.
+**Despliegue de pruebas** (decisión del 15/10, **activo desde el 19/10**): `pdigue.github.io/guitarra`, servido desde la rama `pruebas` (`main` no se toca), que se actualiza con cada *pull request*. En el iPhone permite probar con `https` lo que el WiFi no deja: instalarla y, desde F4, el micrófono. Usarla sin conexión necesita el Service Worker (G-03), que se queda en F6.2 (decisión del 20/10): en la Sesión 1 el iPhone usa la web con conexión. La publicación oficial sigue siendo F7.1.
 
 **Android:** no hay uno de pruebas por ahora. Se valida con el simulador de dispositivos de Chrome y, en cuanto haya uno, en real. El diseño es para todos los sistemas desde el principio: ver `compatibilidad.md`.
 
@@ -412,6 +412,8 @@ flowchart TB
 | Catálogo de escalas | F5.2 | Antes de F5.2 |
 | Licencia del código | F6.4 | Antes de F6.4 |
 | Tiendas y orden | F7.4 | Antes de F7.4 |
+
+**Cerradas el 20/10:** Service Worker → en F6.2, sin adelantarlo a la Sesión 1 · agudo de la acústica → aceptado como limitación conocida.
 
 **Cerradas el 15/10:** despliegue de pruebas en `https` → sí, antes de la Sesión 1 · Android de pruebas → ninguno por ahora, con diseño para todos los sistemas (PL-04).
 
@@ -449,7 +451,8 @@ flowchart TB
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **3.6** | 19/10/2026 | CP-2: F2.1 y F2.4 cerradas, criterios de F2.3 y F2.5 revisados, despliegue de pruebas activo, comprobaciones nuevas para la Sesión 1 y dos decisiones abiertas. **Corrección:** la v3.2 prometía usar la app sin conexión en el iPhone durante la Sesión 1, y eso exige el Service Worker de F6.2. |
+| **3.7** | 20/10/2026 | Dos decisiones cerradas: Service Worker en F6.2 y agudo de la acústica aceptado. F3.1 en curso. |
+| 3.6 | 19/10/2026 | CP-2: F2.1 y F2.4 cerradas, criterios de F2.3 y F2.5 revisados, despliegue de pruebas activo, comprobaciones nuevas para la Sesión 1 y dos decisiones abiertas. **Corrección:** la v3.2 prometía usar la app sin conexión en el iPhone durante la Sesión 1, y eso exige el Service Worker de F6.2. |
 | 3.5 | 19/10/2026 | F2.3 aprobada. F2.4 hecha en la `0.2.2`. |
 | 3.4 | 19/10/2026 | F2.2 aprobada tras tu escucha en el iPhone. F2.3 hecha en la `0.2.1`. |
 | 3.3 | 19/10/2026 | F1 cerrada con la etiqueta `v0.1.5` (corrige la `v0.1.4` que citaba la 3.2). F2.2 hecha en la `0.2.0`. |
