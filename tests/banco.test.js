@@ -13,6 +13,8 @@ const { boot, sleep } = require('./dom-minimo');
 // prueba nueva falla con la versión anterior a la corrección.
 const APP = process.env.APP_HTML || path.join(__dirname, '..', 'index.html');
 const sinErrores = A => A.errors.filter(e => !/AudioContext|muestras/.test(e));
+/** Entra en Adivinar y pulsa ▶: desde la 0.3.3 nada suena ni puntúa hasta entonces. */
+const jugar = A => { A.doc.querySelector('.tab[data-screen="guess"]').click(); A.$('btn-repeat').click(); };
 
 test('arranque: mástil, numeración, versión y panel (D-01, G-10)', () => {
   const A = boot(APP);
@@ -65,7 +67,7 @@ test('«ver todas las notas» no se aplica en Adivinar (L-02, J-12)', () => {
 
 test('Adivinar: fallo, revelación y reto nuevo (J-07, J-10)', async () => {
   const A = boot(APP);
-  A.doc.querySelector('.tab[data-screen="guess"]').click();
+  jugar(A);
   await sleep(400);
   const target = A.ev('challenge');
   const wrong = A.doc.querySelectorAll('.fret-cell').find(c => +c.dataset.midi !== target.midi);
@@ -73,12 +75,14 @@ test('Adivinar: fallo, revelación y reto nuevo (J-07, J-10)', async () => {
   assert.equal(A.ev('streak'), 0);
   assert.ok(wrong.classList.contains('wrong'));
   assert.match(A.$('challenge-text').innerHTML, /Era/);
-  await sleep(800);
+  await sleep(600);
+  assert.equal(A.doc.querySelectorAll('.fret-cell.reveal').length, 0, 'la corrección espera: da tiempo a oír tu nota (Sesión 1, A09)');
+  await sleep(700);
   const reveals = A.doc.querySelectorAll('.fret-cell.reveal');
   assert.equal(reveals.length, A.ev('positionsFor(challenge.midi).length'));
   assert.ok(reveals.length > 0 && reveals.every(c => +c.dataset.midi === target.midi));
   assert.equal(A.ev('locked'), true, 'durante la revelación no se puede volver a fallar');
-  await sleep(2500);
+  await sleep(3100);
   assert.notEqual(A.ev('challenge'), target);
   assert.equal(A.doc.querySelectorAll('.fret-cell.reveal, .fret-cell.wrong').length, 0);
   assert.doesNotMatch(A.$('challenge-text').innerHTML, /Era/, 'el reto nuevo arranca limpio');
@@ -86,7 +90,7 @@ test('Adivinar: fallo, revelación y reto nuevo (J-07, J-10)', async () => {
 
 test('Adivinar: acierto en cualquier posición y récord guardado (J-02, J-07, J-08)', async () => {
   const A = boot(APP);
-  A.doc.querySelector('.tab[data-screen="guess"]').click();
+  jugar(A);
   await sleep(400);
   const midi = A.ev('challenge.midi');
   const cells = A.doc.querySelectorAll('.fret-cell').filter(c => +c.dataset.midi === midi);
@@ -97,7 +101,7 @@ test('Adivinar: acierto en cualquier posición y récord guardado (J-02, J-07, J
 
 test('arrastrar el mástil no cuenta como pulsación en Adivinar (AUD-02)', async () => {
   const A = boot(APP);
-  A.doc.querySelector('.tab[data-screen="guess"]').click();
+  jugar(A);
   await sleep(400);
   const midi = A.ev('challenge.midi');
   const other = A.doc.querySelectorAll('.fret-cell').find(c => +c.dataset.midi !== midi);
@@ -108,24 +112,29 @@ test('arrastrar el mástil no cuenta como pulsación en Adivinar (AUD-02)', asyn
 
 test('cambiar de afinación durante una revelación no revela el reto nuevo (A-10, D-02)', async () => {
   const A = boot(APP);
-  A.doc.querySelector('.tab[data-screen="guess"]').click();
+  jugar(A);
   await sleep(400);
   const t = A.ev('challenge');
   A.press(A.doc.querySelectorAll('.fret-cell').find(c => +c.dataset.midi !== t.midi));
   await sleep(200);
   const sel = A.$('set-tuning'); sel.value = 'dropd'; sel.dispatchEvent({ type: 'change', target: sel });
-  await sleep(1000);
+  await sleep(1400);
   assert.equal(A.doc.querySelectorAll('.fret-cell.reveal').length, 0);
   assert.equal(A.doc.querySelectorAll('.string-label').map(l => l.textContent).join(' '), 'Mi Si Sol Re La Re');
 });
 
-test('restablecer vuelve a los valores por defecto (C-05)', async () => {
+test('restablecer vuelve a los valores por defecto y conserva el récord; el récord se borra aparte (C-05, Sesión 1 A14)', async () => {
   const A = boot(APP);
+  A.ev('state.record = 7; save()');
   A.doc.querySelector('#set-fretnums [data-v="none"]').click();
   A.$('set-reset').click();
   await sleep(50);
   assert.equal(A.ev('state.tuningId'), 'standard');
   assert.equal(A.ev('state.fretNums'), 'all');
+  assert.equal(JSON.parse(A.store.get('trasteando.v1')).record, 7, 'el récord no es un ajuste');
+  A.$('set-clear-record').click();
+  assert.equal(JSON.parse(A.store.get('trasteando.v1')).record, 0);
+  assert.equal(A.$('st-record').textContent, 'Récord 0');
 });
 
 test('pentagrama: ninguna nota del rango posible se sale del dibujo (P-01)', () => {
@@ -321,6 +330,54 @@ test('el audio se reanuda si iOS lo interrumpe, y no si está cerrado (PL-04, AT
   assert.equal(A.ev('__ctx.reanudar'), 1);
 });
 
+test('al ocultar la app se corta el sonido y no se programa nada; al volver, Adivinar espera a ▶ (C07 de la Sesión 1)', async () => {
+  const A = boot(APP);
+  A.ev(audioFalso);
+  A.ev("__ctx.suspend = function(){ this.state = 'suspended'; this.pausas = (this.pausas || 0) + 1; return Promise.resolve(); }");
+  A.ev('globalThis.__plays = 0; playMidi = () => { __plays++; };');
+  jugar(A);
+  const midi = A.ev('challenge.midi');
+  A.press(A.doc.querySelectorAll('.fret-cell').find(c => +c.dataset.midi !== midi));   // fallo
+  A.ev("voices.push({ src: __ctx.createBufferSource(), g: __ctx.createGain() })");
+  const ocultar = h => { A.doc.hidden = h; (A.doc.listeners.visibilitychange || []).forEach(f => f({ type: 'visibilitychange' })); };
+  const antes = A.ev('__plays');
+  ocultar(true);
+  assert.equal(A.ev('voices.length'), 0, 'se cortan las notas que sonaban');
+  assert.equal(A.ev('__ctx.pausas'), 1, 'y se pausa el audio');
+  await sleep(1500);
+  assert.equal(A.ev('__plays'), antes, 'la corrección no suena con el móvil bloqueado');
+  assert.equal(A.doc.querySelectorAll('.fret-cell.reveal').length, 0);
+  ocultar(false);
+  assert.equal(A.ev('__ctx.state'), 'running', 'al volver se reanuda');
+  assert.ok(A.$('btn-repeat').classList.contains('ready'), 'y el reto nuevo espera a ▶');
+  assert.equal(A.ev('locked'), false);
+  await sleep(500);
+  assert.equal(A.ev('needsRebuild'), false);
+});
+
+test('si iOS no deja reanudar el audio, el siguiente toque crea uno nuevo; «Reactivar sonido» lo hace siempre (C08, D03 de la Sesión 1)', async () => {
+  const A = boot(APP);
+  A.ev(audioFalso);
+  A.ev(`globalThis.__creados = 0;
+    globalThis.AudioContext = function(){ __creados++; const c = Object.assign({}, __ctx, { state: 'running', cerrado: false });
+      c.createBuffer = () => ({}); c.close = function(){ this.state = 'closed'; return Promise.resolve(); }; return c; };
+    loadSamples = async () => true; playSynth = () => {};
+    __ctx.close = function(){ this.state = 'closed'; this.cerrado = true; return Promise.resolve(); };
+    __ctx.createBuffer = () => ({});`);
+  A.ev("__ctx.state = 'interrupted'; __ctx.resume = () => new Promise(() => {})");   // iOS no lo suelta
+  A.doc.hidden = false; (A.doc.listeners.visibilitychange || []).forEach(f => f({ type: 'visibilitychange' }));
+  await sleep(450);
+  assert.equal(A.ev('needsRebuild'), true);
+  A.ev('playMidi(60)');
+  await sleep(350);
+  assert.equal(A.ev('__ctx.cerrado'), true, 'el contexto atascado se cierra');
+  assert.equal(A.ev('__creados'), 1, 'y se crea uno nuevo');
+  assert.equal(A.ev('audioCtx.state'), 'running');
+  A.$('audio-wake').click();
+  assert.equal(A.ev('__creados'), 2, 'el botón crea otro aunque diga «activo»');
+  assert.match(A.$('audio-state').textContent, /activo/);
+});
+
 test('restablecer desde la acústica deja la clásica sonando y anunciada (C-05, S-02, AT-03 #3)', async () => {
   const A = boot(APP);
   A.ev(cargaFalsa);
@@ -334,13 +391,55 @@ test('restablecer desde la acústica deja la clásica sonando y anunciada (C-05,
   assert.match(A.$('timbre-note').textContent, /clásica/);
 });
 
-test('el reto suena una sola vez aunque se cambie de pestaña deprisa (J-01, AT-02 #5)', async () => {
+test('en Adivinar nada suena ni puntúa hasta pulsar ▶, y luego cada reto suena una vez (J-01, AT-02 #5, Sesión 1 E06)', async () => {
   const A = boot(APP);
   A.ev('globalThis.__plays = 0; playMidi = () => { __plays++; };');
   const tab = s => A.doc.querySelector('.tab[data-screen="' + s + '"]');
   tab('guess').click(); tab('free').click(); tab('guess').click();
   await sleep(600);
+  assert.equal(A.ev('__plays'), 0, 'entrar no hace sonar nada');
+  assert.ok(A.$('btn-repeat').classList.contains('ready'), '▶ resaltado');
+  assert.match(A.$('challenge-text').innerHTML, /Pulsa ▶/);
+  const midi = A.ev('challenge.midi');
+  const otra = A.doc.querySelectorAll('.fret-cell').find(c => +c.dataset.midi !== midi);
+  A.press(otra);                                       // explorar antes de ▶: suena, no puntúa
   assert.equal(A.ev('__plays'), 1);
+  assert.ok(!otra.classList.contains('wrong'));
+  assert.equal(A.ev('locked'), false);
+  A.$('btn-repeat').click();
+  assert.equal(A.ev('__plays'), 2, '▶ hace sonar el reto');
+  assert.ok(!A.$('btn-repeat').classList.contains('ready'));
+  A.press(A.doc.querySelectorAll('.fret-cell').find(c => +c.dataset.midi === midi));
+  await sleep(1500 + 400);
+  assert.equal(A.ev('__plays'), 4, 'el reto siguiente suena solo, una vez');
+  tab('free').click(); tab('guess').click();
+  await sleep(400);
+  assert.equal(A.ev('__plays'), 4, 'cada visita vuelve a esperar a ▶');
+});
+
+test('en Adivinar la lectura grande es la nota buscada: «?» hasta acertar o fallar (Sesión 1, E06)', async () => {
+  const A = boot(APP);
+  jugar(A);
+  const midi = A.ev('challenge.midi'), nombre = A.ev('noteName(challenge.midi)');
+  const otra = A.doc.querySelectorAll('.fret-cell').find(c => +c.dataset.midi !== midi);
+  assert.match(A.$('note-name').innerHTML, /\?/);
+  A.ev('state.hintNote = true'); A.ev('renderChallenge()');
+  assert.equal(A.$('note-name').textContent, nombre, 'con la pista de nota se ve la buscada');
+  A.ev('state.hintNote = false'); A.ev('renderChallenge()');
+  A.press(otra);
+  assert.equal(A.$('note-name').textContent, nombre, 'tras fallar, la buscada; no la pulsada');
+  assert.match(A.$('note-oct').textContent, /buscada/);
+  A.doc.querySelector('.tab[data-screen="free"]').click();
+  assert.match(A.$('note-name').innerHTML, /toca/, 'en Libre vuelve a ser la nota que tocas');
+});
+
+test('cambiar de guitarra no hace sonar ninguna nota (Sesión 1, A14)', async () => {
+  const A = boot(APP);
+  A.ev(cargaFalsa);
+  A.ev('globalThis.__plays = 0; playMidi = () => { __plays++; };');
+  const p = A.ev("setTimbre('acoustic')"); await sleep(0); terminarCargas(A); await p;
+  assert.equal(A.ev('state.timbre'), 'acoustic');
+  assert.equal(A.ev('__plays'), 0);
 });
 
 test('tocar la pestaña activa no reinicia la racha (J-07, AT-02 #6)', async () => {
