@@ -6,7 +6,8 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.3.0** | 20/10/2026 | F3.2 | Rama `auto/F3.2-horizontal` |
+| **0.3.1** | 20/10/2026 | F3.4 | Rama `auto/F3.4-accesibilidad` |
+| 0.3.0 | 20/10/2026 | F3.2 | Rama `auto/F3.2-horizontal` (PR #8) |
 | 0.2.3 | 19/10/2026 | F2 · auditoría CP-2 | `main`, fusionada el 20/10 |
 | 0.2.2 | 19/10/2026 | F2.4 | `main`, aprobada el 19/10 |
 | 0.2.1 | 19/10/2026 | F2.3 | `main`, aprobada el 19/10 |
@@ -25,6 +26,26 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.3.1] — 20/10/2026 · Etapa F3.4: accesibilidad y paleta
+
+### Cambiado
+- **G-05** · **Paleta nueva por nota**, elegida con tu criterio del 20/10: las 7 notas naturales bien distintas y cada sostenido, un tono más claro de su natural. Parte de tu imagen (Do melocotón, Re verde, Mi amarillo, Fa lila, Sol rosa, La rojo, Si celeste), pero separa los tres tonos cálidos que allí se parecían. Contraste mínimo de 5,1:1 (antes 2,7:1). Con tritanopía, las naturales pasan de 2,8 a 7,8 de separación.
+- **G-05** · Los grises de texto suben a 4,5:1 sobre todos los fondos. El más tenue estaba en 2,5:1.
+- **G-05** · Con «Ver todas las notas» y «Señalar posiciones iguales», los puntos secundarios llevan contorno en el color de la nota en vez de ser semitransparentes: su nombre se lee. La nota pulsada sigue rellena.
+
+### Añadido
+- **G-05** · El mástil se maneja con teclado. Es un único punto del tabulador; dentro, las flechas mueven, Inicio y Fin van al primer y al último traste a la vista, e Intro o Espacio tocan la nota. Cada casilla se anuncia («Re4, 2ª cuerda, traste 3»). En Adivinar no se anuncia la nota, porque sería la respuesta (J-12).
+- **G-05** · En Ajustes, tocar cualquier parte de una fila con interruptor lo cambia. La hoja se cierra deslizando el asa hacia abajo.
+- `herramientas/paleta.py`: genera la paleta y comprueba contraste, separación con tres tipos de daltonismo y que cada sostenido sea de la familia de su natural.
+- `herramientas/comprobar-accesibilidad.js`: recorre la app solo con teclado, mide el contraste de cada texto visible y comprueba el modo de movimiento reducido.
+
+### Verificado
+- Banco: 34 de 34. Cuatro pruebas nuevas, que fallan con la 0.3.0: la paleta, los grises, el mástil con teclado, y la fila y el asa de Ajustes.
+- `comprobar-accesibilidad.js`: «Todo correcto». Con la 0.3.0 encontraba 205 textos por debajo del contraste y un mástil al que no se llegaba con el teclado (V-07).
+- `comprobar-disposicion.js` y las 15 comprobaciones de F1.1 siguen bien. `dist/trasteando.html` regenerado: 1,48 MB.
 
 ---
 

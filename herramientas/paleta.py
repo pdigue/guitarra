@@ -166,7 +166,10 @@ def informe(pal, titulo):
 if __name__ == '__main__':
     if '--app' in sys.argv:
         sys.exit(1 if informe(paleta_app(), 'Paleta de index.html') else 0)
-    informe(paleta_app(), 'Paleta de index.html (antes)')
     fallos = informe(paleta_propuesta(), 'Paleta propuesta')
-    print('\nCOLORS = [' + ','.join(f"'{c}'" for c in paleta_propuesta()) + ']')
+    if [c.lower() for c in paleta_app()] == paleta_propuesta():
+        print('\nindex.html ya usa esta paleta.')
+    else:
+        informe(paleta_app(), 'Paleta de index.html, distinta de la propuesta')
+        print('\nPara usarla, en index.html:\nCOLORS = [' + ','.join(f"'{c}'" for c in paleta_propuesta()) + ']')
     sys.exit(1 if fallos else 0)
