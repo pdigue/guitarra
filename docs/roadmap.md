@@ -1,7 +1,7 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 3.7 · **Fecha:** 20 de octubre de 2026
-**Válido para:** app `0.2.3` · `requisitos.md` v1.9 · `matriz-cumplimiento` v1.7 · `compatibilidad.md` v1.1 · `automatizacion.md` v1.1 · `CHANGELOG.md`
+**Versión:** 3.8 · **Fecha:** 20 de octubre de 2026
+**Válido para:** app `0.2.3` · `requisitos.md` v1.10 · `matriz-cumplimiento` v1.8 · `compatibilidad.md` v1.1 · `automatizacion.md` v1.1 · `CHANGELOG.md`
 **Gestiona:** chat de Desarrollo
 
 > ⚡ **Modo acelerado activo desde el 14/10** (detalle en `automatizacion.md`). El agente ejecuta las etapas por bloques —F1 a F3, luego F4 a F6— y solo para en las decisiones. Las pruebas que necesitan tus manos se agrupan en dos sesiones: **Sesión 1** con el iPhone y el ordenador al cerrar F3, y **Sesión 2** con la guitarra al cerrar F6.
@@ -313,7 +313,7 @@ Lo que hará falta tener en F7, más allá del HTML en VS Code y el código en G
 | Dominio propio | Opcional, del orden de 10–15 € al año | Alternativa gratuita para Android: repositorio de usuario `pdigue.github.io` |
 
 ### Legal y contenido
-- Licencia verificada de cada sample (S-07) ✅ en F2.1, salvo confirmar el resto del pack de nylon; créditos dentro de la app (G-06) en F6.4.
+- Licencia verificada de cada sample (S-07) ✅ en F2.1, y el pack de nylon completo (161 sonidos, CC BY) el 20/10; créditos dentro de la app (G-06) en F6.4.
 - Licencia del código elegida.
 - Política de privacidad: qué no se recoge y que el micrófono se procesa en el dispositivo (G-11).
 - Comprobar que el nombre *Trasteando* no choca con una marca o app existente.
@@ -451,7 +451,8 @@ flowchart TB
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **3.7** | 20/10/2026 | Dos decisiones cerradas: Service Worker en F6.2 y agudo de la acústica aceptado. F3.1 en curso. |
+| **3.8** | 20/10/2026 | Licencia del pack de nylon completa: S-07 cerrado. |
+| 3.7 | 20/10/2026 | Dos decisiones cerradas: Service Worker en F6.2 y agudo de la acústica aceptado. F3.1 en curso. |
 | 3.6 | 19/10/2026 | CP-2: F2.1 y F2.4 cerradas, criterios de F2.3 y F2.5 revisados, despliegue de pruebas activo, comprobaciones nuevas para la Sesión 1 y dos decisiones abiertas. **Corrección:** la v3.2 prometía usar la app sin conexión en el iPhone durante la Sesión 1, y eso exige el Service Worker de F6.2. |
 | 3.5 | 19/10/2026 | F2.3 aprobada. F2.4 hecha en la `0.2.2`. |
 | 3.4 | 19/10/2026 | F2.2 aprobada tras tu escucha en el iPhone. F2.3 hecha en la `0.2.1`. |

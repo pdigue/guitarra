@@ -1,7 +1,7 @@
 # Trasteando — Especificación de interfaz
 
 **Versión:** 0.2, propuesta · **Fecha:** 20 de octubre de 2026 · **Estado:** ⏸️ pendiente de tu aprobación
-**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.2.3` · `requisitos.md` v1.9 · `roadmap.md` v3.7
+**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.2.3` · `requisitos.md` v1.10 · `roadmap.md` v3.8
 **Revisión:** auditoría de requisitos AR-04 (`auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
 

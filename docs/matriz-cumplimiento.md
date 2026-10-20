@@ -1,11 +1,13 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 1.7 · **Fecha:** 20 de octubre de 2026 · **Base:** `requisitos.md` v1.9 · app `0.2.3` · `roadmap.md` v3.7  
+**Versión:** 1.8 · **Fecha:** 20 de octubre de 2026 · **Base:** `requisitos.md` v1.10 · app `0.2.3` · `roadmap.md` v3.8  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
+
+**Cambios en la 1.8:** S-07 cumple y queda verificado (licencia del pack de nylon completa).
 
 **Cambios en la 1.7:** evidencia nueva en S-07 (licencia de nylon en tres sonidos). Criterios sin cambios.
 
@@ -23,7 +25,7 @@
 
 | Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 92 | 61 | 11 | 18 | 2 | 1 | 21 |
+| 92 | 62 | 10 | 18 | 2 | 2 | 20 |
 
 | ID | Etapa | Método | Criterio de aceptación | Declaración | Evidencia | Verificación | Origen |
 |---|---|:---:|---|---|---|---|---|
@@ -60,7 +62,7 @@
 | **S-04** | F1.1 | T | Sin conexión, la app suena con el sintetizador y lo avisa en la pantalla de entrada. | Cumple | — | Pendiente | Cliente · listado 14/09 |
 | **S-05** | F1.1 | D | No suena nada antes de pulsar «Empezar». | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **S-06** | F1.1 | D | Tras recargar se mantiene el timbre elegido. | Cumple | F1.1 #13 | Pendiente | Cliente · listado 14/09 |
-| **S-07** | F2.1 · F2.3 | I | Ninguna petición de audio sale del dominio propio, y CREDITOS.md documenta origen y licencia. | Cumple parcialmente | CREDITOS.md y samples/ (F2.1) · Banco (node --test): ninguna dirección externa (0.2.0) · licencia de nylon comprobada en 3 sonidos del pack (20/10) | Verificado parcialmente | AR-01 |
+| **S-07** | F2.1 · F2.3 | I | Ninguna petición de audio sale del dominio propio, y CREDITOS.md documenta origen y licencia. | Cumple | CREDITOS.md y samples/ (F2.1) · Banco (node --test): ninguna dirección externa (0.2.0) · licencia de los 161 sonidos del pack de nylon: CC BY, con filtros de control a 0 (20/10) | Verificado | AR-01 |
 | **S-08** | F2.1 · F2.2 · F2.4 | T | Cada nota posible, en los dos timbres, suena a ±5 cents de su frecuencia una vez aplicada la corrección de su grabación; cada grabación es la nota asignada (a menos de 50 cents) y su desviación coincide con samples/afinacion.json. | Cumple | samples/afinacion.json · Banco (node --test): grabaciones y todas las notas (±0,5 cents) · V-02, V-03 y V-04: notas grabadas en el navegador, a menos de 1 cent | Verificado | Desarrollo · medición F2.1 |
 | **P-01** | F1.1 | A | Toda posición del mástil, en cualquier afinación permitida, se dibuja dentro del pentagrama. | Cumple | Análisis 15/09: ninguna nota fuera en todo el rango · F1.1 #3 y #4 | Verificado parcialmente | Cliente · listado 14/09 |
 | **P-02** | F1.1 | D | El pentagrama se oculta y se muestra desde el chip y desde Ajustes. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |

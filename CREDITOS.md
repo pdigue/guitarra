@@ -3,7 +3,7 @@
 Todo lo que Trasteando usa y no hemos creado nosotros, de dónde sale y con qué
 licencia. Lo exige el requisito **G-06** y, para el audio, **S-07**.
 
-**Última revisión:** 19/10/2026
+**Última revisión:** 20/10/2026 (licencia del pack de nylon completa)
 
 ---
 
@@ -47,8 +47,8 @@ versión exacta y permite comprobar que nadie la ha cambiado.
 | Licencia de la edición de Brosowsky | `LICENSE.md` del repositorio: «SAMPLES RELEASED UNDER CC-BY 3.0» | ✅ | 14/10/2026 |
 | Origen de cada instrumento | `sample-source-info.txt`: «guitar ac - Iowa», «guitar ny - Freesound - 11573__quartertone__classicalguitar-multisampled» | ✅ | 14/10/2026 |
 | Licencia del original acústico | theremin.music.uiowa.edu/MIS.html: «may be downloaded and used for any projects, without restrictions» | ✅ | 14/10/2026 |
-| Licencia del original de nylon | Freesound, sonidos 183089 (14/10), 183078 y 183083 (20/10) del pack 11573, de cuerdas distintas: los tres «Attribution 4.0» | 🟡 comprobado en tres sonidos del pack | 20/10/2026 |
-| Que todos los sonidos del pack 11573 tienen la misma licencia | Freesound asigna la licencia sonido a sonido | ⬜ pendiente: la lista completa solo se ve en la búsqueda de Freesound, cerrada a los agentes; la revisa el cliente en su navegador (filtro «License» del pack) | — |
+| Licencia del original de nylon | Freesound, sonidos 183089 (14/10), 183078 y 183083 (20/10) del pack 11573, de cuerdas distintas: los tres «Attribution 4.0» | ✅ | 20/10/2026 |
+| Que todos los sonidos del pack 11573 tienen la misma licencia | Búsqueda de Freesound filtrada por el pack: 161 sonidos; con el filtro de licencia «Attribution», 161; con «Attribution 4.0» y con «Creative Commons 0», de control, 0 (el filtro se aplica). La hizo el cliente en su iPhone, porque la búsqueda está cerrada a los agentes | ✅ | 20/10/2026 |
 
 ## Archivos
 

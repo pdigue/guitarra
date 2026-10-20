@@ -1,7 +1,7 @@
 # Trasteando — Especificación de Requisitos
 
-**Versión del documento:** 1.9 · **Fecha:** 20 de octubre de 2026  
-**Válido para:** app `0.2.3` · `roadmap.md` v3.7 · `matriz-cumplimiento` v1.7 · fase en curso **F3**, en modo acelerado  
+**Versión del documento:** 1.10 · **Fecha:** 20 de octubre de 2026  
+**Válido para:** app `0.2.3` · `roadmap.md` v3.8 · `matriz-cumplimiento` v1.8 · fase en curso **F3**, en modo acelerado  
 **Repositorio:** github.com/pdigue/guitarra, carpeta `docs/` · **Gestiona:** chat de Desarrollo  
 **Tipo de producto:** aplicación web progresiva (PWA), desarrollada en local y publicada al final del roadmap
 
@@ -11,14 +11,14 @@
 
 | Total | ✅ Implementados | 🟡 Parciales | ⬜ Pendientes | ✅ Validados |
 |:---:|:---:|:---:|:---:|:---:|
-| 92 | 61 | 11 | 20 | 1 |
+| 92 | 62 | 10 | 20 | 2 |
 
 > Un requisito implementado no cuenta como cumplido hasta superar su prueba. El primero validado es **S-08**, en la 0.2.0: la app usa sus grabaciones medidas y el banco y la grabación en el navegador lo demuestran. La validación en dispositivo llega con la sesión de pruebas en el iPhone y el ordenador (F1.1, F2.5 y F3.3 juntas, al cerrar F3).
 
 | Fase | Objetivo | Requisitos | Implementados |
 |------|----------|:---:|-----------|
 | **F1** | Base local verificada | 59 | `▰▰▰▰▰▰▰▰▰▰` 59/59 |
-| **F2** | Sonido propio y archivo autónomo | 9 | `▰▰▰▱▱▱▱▱▱▱` 3/9 |
+| **F2** | Sonido propio y archivo autónomo | 9 | `▰▰▰▰▱▱▱▱▱▱` 4/9 |
 | **F3** | Interfaz y adaptación | 4 | `▱▱▱▱▱▱▱▱▱▱` 0/4 |
 | **F4** | Afinador por micrófono | 7 | `▱▱▱▱▱▱▱▱▱▱` 0/7 |
 | **F5** | Escalas | 7 | `▱▱▱▱▱▱▱▱▱▱` 0/7 |
@@ -34,7 +34,8 @@
 
 | Versión | Fecha | App | Roadmap | Resumen | Origen |
 |---|---|:---:|:---:|---|---|
-| **1.9** | 20/10/2026 | 0.2.3 | 3.7 | Dos decisiones cerradas y licencia de nylon comprobada en tres sonidos. 0 nuevos y 3 modificados: 92 en total. | Tus decisiones del 20/10 |
+| **1.10** | 20/10/2026 | 0.2.3 | 3.8 | Licencia del pack de nylon completa: S-07 implementado y validado. 0 nuevos y 1 modificados: 92 en total. | Tu comprobación en Freesound |
+| 1.9 | 20/10/2026 | 0.2.3 | 3.7 | Dos decisiones cerradas y licencia de nylon comprobada en tres sonidos. 0 nuevos y 3 modificados: 92 en total. | Tus decisiones del 20/10 |
 | 1.8 | 19/10/2026 | 0.2.3 | 3.6 | Auditoría CP-2. 0 nuevos y 4 modificados: 92 en total. Dos decisiones nuevas. | AR-03 y AT-03 |
 | 1.7 | 19/10/2026 | 0.2.2 | 3.5 | S-08 reformulado con tu aprobación; registro agudo de nylon (F2.4). 0 nuevos y 2 modificados: 92 en total. | Etapa F2.4 |
 | 1.6 | 19/10/2026 | 0.2.1 | 3.4 | Archivo autónomo (F2.3): G-07 implementado. 0 nuevos y 3 modificados: 92 en total. | Etapa F2.3 |
@@ -45,9 +46,16 @@
 | 1.1 | 15/09/2026 | 0.1.1 | 2.0 | Reconciliación de estados. 11 nuevos (S-07, V-09, J-11, G-05, G-06, A-02-CA, E-02b, E-05b, X-01 a X-03): 81 en total. Seis decisiones cerradas. | Auditoría de requisitos AR-01 |
 | 1.0 | 14/09/2026 | 0.1.0 | — | Primera versión: 70 requisitos en 11 categorías. | Tu listado inicial |
 
+### Detalle de la versión 1.10
+
+**Requisitos modificados ✏️** — S-07
+- **S-07:** pasa a implementado y validado. Los 161 sonidos del pack de nylon tienen licencia CC BY («Attribution»), con dos filtros de control a 0. Era lo único que faltaba.
+
+**Riesgos:** la licencia del audio pasa a resuelta.
+
 ### Detalle de la versión 1.9
 
-**Requisitos modificados ✏️** — G-03, S-01, S-07
+**Requisitos modificados** — G-03, S-01, S-07
 - **G-03:** el Service Worker se queda en F6.2. En la Sesión 1 el iPhone usa la web con conexión.
 - **S-01:** el agudo de la acústica (hasta 14 semitonos de transporte) queda aceptado como limitación conocida.
 - **S-07:** licencia «Attribution 4.0» comprobada en tres sonidos del pack de nylon; falta la vista del pack entero.
@@ -170,7 +178,7 @@
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
 | **G-01** | La aplicación se llama *Trasteando*. El nombre aparece en la pantalla de entrada, el título de la pestaña y el manifiesto PWA. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Naming cerrado: se descarta *Trasting*. |
 | **G-02** | La app se organiza en áreas accesibles desde una navegación principal: Libre, Adivinar, Afinador y Escalas. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Escalas visible pero deshabilitada hasta F5. |
-| **G-03** ✏️ | La app funciona sin conexión una vez cargada **desde la web**. | Media | F6.2 · F7.2 | ⬜ | ⬜ | — | Service Worker en F6.2, decidido el 20/10: en la Sesión 1 el iPhone no prueba la app sin conexión. Depende de S-07. Se valida en dos pasos: en `localhost` en F6.2 y desde la web publicada en F7.2 (CP-1). En modo archivo (G-07) la autonomía se consigue de otra forma: el audio va dentro del archivo. |
+| **G-03** | La app funciona sin conexión una vez cargada **desde la web**. | Media | F6.2 · F7.2 | ⬜ | ⬜ | — | Service Worker en F6.2, decidido el 20/10: en la Sesión 1 el iPhone no prueba la app sin conexión. Depende de S-07. Se valida en dos pasos: en `localhost` en F6.2 y desde la web publicada en F7.2 (CP-1). En modo archivo (G-07) la autonomía se consigue de otra forma: el audio va dentro del archivo. |
 | **G-04** | La app es instalable como PWA (icono en la pantalla de inicio, pantalla completa). | Alta | F6.3 · F7.2 | 🟡 | ⬜ | 0.1.0 | Manifiesto incrustado como `data:` URL. Falta un archivo de manifiesto propio con iconos PNG (F6.3) y verificarla instalada desde la web publicada (F7.2): instalar solo es posible desde `https`. |
 | **G-05** | La interfaz cumple unos mínimos de accesibilidad: foco de teclado visible, respeto a `prefers-reduced-motion`, contraste suficiente y etiquetas accesibles en los controles solo-icono. | Media | F3.4 | 🟡 | ⬜ | 0.1.1 | Hecho: foco visible, movimiento reducido, interruptores con `role="switch"` (0.1.1), `aria-pressed` en los selectores y aviso del reto para lectores de pantalla (0.1.2). Falta: recorrer el mástil con teclado y auditar el contraste. |
 | **G-06** | El proyecto documenta sus dependencias externas y la licencia de cada recurso de terceros que distribuye, y la app muestra los créditos. | Media | F2.1 · F6.4 | 🟡 | ⬜ | — | `CREDITOS.md` (F2.1): origen, licencia, huella `sha256` y texto de atribución de cada muestra de audio, y Tone.js (MIT). Falta mostrar los créditos dentro de la app y elegir la licencia del propio código (F6.4). |
@@ -238,13 +246,13 @@
 
 | ID | Requisito | Prior. | Etapa | Impl. | Valid. | Desde | Notas |
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
-| **S-01** ✏️ | El sonido corresponde a una guitarra real, no a un sintetizador genérico. | Alta | F1.1 · F2.2 · F2.4 | ✅ | ⬜ | 0.1.0 | Reproductor propio con las grabaciones de `samples/` desde la 0.2.0. Desde la 0.2.2 la guitarra clásica tiene también la grabación de La♯5: en afinación estándar ninguna nota se transporta más de 6 semitonos, y el traste 24 suena menos artificial. La acústica no tiene grabaciones por encima del Re5 y llega a 14: **limitación conocida, aceptada por ti el 20/10**; se comprueba de oído en la Sesión 1 (trastes 15 a 24 de la 1ª cuerda). Escuchada por ti en el iPhone con la 0.2.0 el 19/10 (V-05). La 0.1.3 corrigió el registro agudo de nylon, que sonaba medio tono alto. |
+| **S-01** | El sonido corresponde a una guitarra real, no a un sintetizador genérico. | Alta | F1.1 · F2.2 · F2.4 | ✅ | ⬜ | 0.1.0 | Reproductor propio con las grabaciones de `samples/` desde la 0.2.0. Desde la 0.2.2 la guitarra clásica tiene también la grabación de La♯5: en afinación estándar ninguna nota se transporta más de 6 semitonos, y el traste 24 suena menos artificial. La acústica no tiene grabaciones por encima del Re5 y llega a 14: **limitación conocida, aceptada por ti el 20/10**; se comprueba de oído en la Sesión 1 (trastes 15 a 24 de la 1ª cuerda). Escuchada por ti en el iPhone con la 0.2.0 el 19/10 (V-05). La 0.1.3 corrigió el registro agudo de nylon, que sonaba medio tono alto. |
 | **S-02** | El usuario elige entre guitarra clásica (nylon) y acústica (acero). | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Cambiar de timbre descarga otro set de muestras, con aviso. Desde 0.1.2, dos cambios seguidos ya no muestran el mensaje de la carga descartada. |
 | **S-03** | La selección de timbre está en el menú de configuración. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
 | **S-04** | Si los samples no cargan, la app sigue sonando por síntesis. | Media | F1.1 | ✅ | ⬜ | 0.1.0 | Karplus-Strong con filtros que imitan la caja de resonancia. Desde 0.1.1 cada nota se calcula una sola vez y se reutiliza. |
 | **S-05** | El primer sonido requiere una interacción explícita del usuario. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Lo impone la política de reproducción automática de los navegadores. |
 | **S-06** | El timbre persiste entre sesiones. | Media | F1.1 | ✅ | ⬜ | 0.1.0 | — |
-| **S-07** ✏️ | Los samples de audio se alojan en el propio proyecto, con licencia verificada y documentada. | Alta | F2.1 · F2.3 | 🟡 | ⬜ | — | **Opción A, decidida el 14/10.** Hecho: licencias verificadas y los 16 archivos en `samples/`, con `CREDITOS.md` (F2.1); desde la 0.2.0 la app los usa y no descarga nada de otros servidores (F2.2). Desde la 0.2.1 van también dentro del archivo autónomo (F2.3). El 20/10 se comprobaron tres sonidos del pack de nylon, de cuerdas distintas (183078, 183083 y 183089): los tres «Attribution 4.0». Falta confirmar el pack entero, que solo se ve en la búsqueda de Freesound, cerrada a los agentes: lo miras tú en un minuto. El repositorio y la web de pruebas ya son públicos, así que se hace **lo antes posible y como tarde al cerrar F3** (AR-03); si algún sonido no fuera CC BY, se sustituye su grabación. |
+| **S-07** ✏️ | Los samples de audio se alojan en el propio proyecto, con licencia verificada y documentada. | Alta | F2.1 · F2.3 | ✅ | ✅ | 0.2.3 | **Opción A, decidida el 14/10.** Hecho: licencias verificadas y los 16 archivos en `samples/`, con `CREDITOS.md` (F2.1); desde la 0.2.0 la app los usa y no descarga nada de otros servidores (F2.2). Desde la 0.2.1 van también dentro del archivo autónomo (F2.3). **El 20/10 se completó la licencia del pack de nylon:** en la búsqueda de Freesound, el pack tiene 161 sonidos y el filtro de licencia «Attribution» (CC BY) devuelve los 161; dos filtros de control («Attribution 4.0» y «Creative Commons 0») devuelven 0, lo que prueba que el filtro se aplica. Tres sonidos revisados uno a uno (183078, 183083 y 183089) son «Attribution 4.0». La búsqueda la hiciste tú en tu iPhone, porque está cerrada a los agentes. **Validado por inspección:** ninguna petición de audio sale del dominio propio (banco) y `CREDITOS.md` documenta origen y licencia de los 17 archivos. |
 | **S-08** | Cada nota suena a menos de **5 cents** de su frecuencia, una vez corregida la desviación medida de su grabación. Cada grabación que usa la app es la nota a la que está asignada y tiene su desviación medida. | Alta | F2.1 · F2.2 · F2.4 | ✅ | ✅ | 0.1.3 | **Reformulado el 19/10, con tu aprobación:** antes exigía ±5 cents a la grabación sin corregir; desde la 0.2.0 la app corrige cada grabación con su medida, así que lo que importa y se comprueba es la nota que suena. Origen: el `D5.mp3` de nylon sonaba en Re♯5. Validado: el banco comprueba todas las notas posibles (±0,5 cents) y la grabación en el navegador lo confirma (V-02, V-03, V-04). |
 
 ---
@@ -403,7 +411,7 @@ Qué requisitos cierra o valida cada etapa del roadmap. Es la misma información
 | Riesgo | Impacto | Estado | Mitigación |
 |--------|---------|--------|------------|
 | **Dependencia de samples de terceros.** El audio se carga del repositorio personal de otra persona, sin versión fijada; si cambia, la app deja de sonar sin que toquemos nada. | Alto | ✏️ Mitigado → F2.2 | Las muestras ya están en `samples/` (F2.1). La app deja de descargarlas en F2.2. |
-| **Licencia del audio sin verificar.** Hay referencias contradictorias sobre si esos samples son de dominio público o CC-BY. | Medio | ✏️ Resuelto en lo esencial | Verificado en F2.1: CC BY con atribución, apta para tiendas si el resto del pack de nylon comparte licencia. Queda confirmar que todos los sonidos del pack de nylon comparten licencia. Detalle en `CREDITOS.md`. |
+| **Licencia del audio sin verificar.** Hay referencias contradictorias sobre si esos samples son de dominio público o CC-BY. | Medio | ✅ Resuelto | Verificado en F2.1 y completado el 20/10: los 161 sonidos del pack de nylon son CC BY, y la edición de Brosowsky, CC BY 3.0. Apta para tiendas con atribución. Detalle en `CREDITOS.md`. |
 | 🆕 **Muestras mal etiquetadas.** Un archivo que dice ser una nota y suena en otra enseña una nota equivocada sin que nadie lo note. | Alto | Resuelto | Pasó con el `D5.mp3` de nylon (0.1.2). S-08: cada muestra se mide antes de usarse y el banco lo vigila. |
 | 🆕 **iPhone no ejecuta archivos HTML locales.** La vista previa de la app Archivos no ejecuta JavaScript, así que el modo archivo autónomo probablemente no sirve en iOS. | Medio | Abierto → F2.5 | Confirmarlo en el dispositivo. Alternativas: navegador integrado de una app de terceros, o un despliegue de pruebas sin anunciar. |
 | 🆕 **El micrófono no funciona por WiFi.** Desde el móvil contra el Live Server del ordenador (`http://192.168…`) no hay contexto seguro. | Medio | Conocido | A-02 en el móvil llega con la publicación (F7.2). Hasta entonces, el afinador por micrófono se usa en el ordenador. |
