@@ -7,6 +7,7 @@ Idioma: español en todo (código comentado, commits, informes y respuestas).
 ## Documentos que mandan
 - docs/compatibilidad.md — qué capacidades usa la app y qué hace donde faltan.
 - docs/requisitos.md — qué debe hacer el producto. Fuente de verdad del alcance.
+- docs/interfaz.md — qué hay en cada pantalla y cómo se navega (C-06, aprobada).
 - docs/roadmap.md — en qué orden se construye y cómo se valida cada etapa.
 - docs/matriz-cumplimiento.md — criterio de aceptación de cada requisito. Es el contrato.
 - docs/automatizacion.md — ciclo de iteración y paradas.

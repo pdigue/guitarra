@@ -1,11 +1,11 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 0.2, propuesta · **Fecha:** 20 de octubre de 2026 · **Estado:** ⏸️ pendiente de tu aprobación
-**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.2.3` · `requisitos.md` v1.10 · `roadmap.md` v3.8
+**Versión:** 1.0 · **Fecha:** 20 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026
+**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.2.3` · `requisitos.md` v1.11 · `roadmap.md` v3.9
 **Revisión:** auditoría de requisitos AR-04 (`auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
 
-Este documento dice **qué hay en cada pantalla, dónde está y cómo se pasa de una a otra**. Cuando lo apruebes pasa a la versión 1.0 y manda sobre el diseño de F3 a F5: lo que se construya después se compara con él.
+Este documento dice **qué hay en cada pantalla, dónde está y cómo se pasa de una a otra**. Desde su aprobación manda sobre el diseño de F3 a F5: lo que se construya después se compara con él. Cambiarlo es posible, sobre todo tras usarlo en la Sesión 1 (F3.3): cada cambio sube la versión y queda en el control de cambios.
 
 ## 1. Cómo leer los bocetos
 
@@ -187,7 +187,7 @@ Los bocetos usan un único acento para no decidir la paleta. Hay dos caminos, y 
 7. Mástil manejable con teclado; controles y casillas de al menos 40 × 40 px en pantallas táctiles.
 8. Huecos fijados para el micrófono (F4) y para Escalas (F5).
 
-**En `requisitos.md`, solo si la apruebas.** Te avisaré de cada uno al aplicarlos.
+**En `requisitos.md`:** aplicados en la v1.11, tras tu aprobación del 20/10.
 
 | Requisito | Cambio |
 |---|---|
@@ -199,18 +199,21 @@ Los bocetos usan un único acento para no decidir la paleta. Hay dos caminos, y 
 | **Criterio de F3.2** (roadmap y matriz de V-01) | «En horizontal, cada cuerda mide al menos 40 px **con un alto útil de 268 px o más**», medido en el iPhone (Safari e instalada) y en el simulador de Android. |
 | **Notas** de C-01, C-02, C-03 y C-04 | Solo redacción, para que describan la interfaz nueva: Ajustes como hoja o panel lateral según la disposición (C-01); «Acerca de», con créditos y privacidad, en la lista de contenidos (C-02); las pistas en la tarjeta del reto y el acceso rápido en el panel en horizontal (C-03); barra inferior, raíl o pestañas en la cabecera según la disposición (C-04). |
 
-## 13. Qué necesito de ti
+## 13. Aprobación
 
-Que la apruebes tal cual o me digas qué cambiar. Lo que más pesa, por si quieres mirarlo primero:
+Aprobada por ti el 20/10/2026, después de la auditoría AR-04. Lo que más pesaba de la decisión:
 
-1. **Horizontal** (bocetos B1 a B6): raíl a la izquierda, mástil a todo el alto y los controles en un panel a la derecha. A cambio del alto, se ven unos 10 trastes en vez de 12.
-2. **Trastes de al menos 40 px en pantallas táctiles:** en el iPhone en vertical verás como mucho 8 trastes a la vez (hoy puedes alejar hasta 24, pero entonces cada casilla mide unos 14 px y no se acierta con el dedo). Con ratón no cambia nada.
-3. **Pistas dentro de la tarjeta del reto** (A2).
-4. **Afinador y Escalas con dos modos dentro de su pestaña** (A3 a A6), en vez de pestañas nuevas.
+1. **Horizontal:** raíl a la izquierda, mástil a todo el alto y los controles en un panel a la derecha. Se ven unos 10 trastes en vez de 12, a cambio de cuerdas de 52 px.
+2. **Trastes de al menos 40 px en pantallas táctiles:** en el iPhone en vertical, como mucho 8 trastes a la vez. Con ratón no cambia nada.
+3. **Pistas dentro de la tarjeta del reto.**
+4. **Afinador y Escalas con dos modos dentro de su pestaña.**
+
+Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 ## Control de cambios
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **0.2** | 20/10/2026 | Tras AR-04: horizontal rediseñado como raíl, mástil y panel (de 45 a 52 px por cuerda en el iPhone, y 42 px en un Android de 280 px de alto); acceso rápido también en horizontal; afinación visible en el modo Micrófono; zoom en Escalas; bocetos del Afinador en horizontal; controles de 40 × 40 px comprobados por la herramienta; redacción concreta de V-01, V-04, G-05 y C-07; notas de C-01 a C-04; privacidad en F6.4; intervalos con «ST». |
+| **1.0** | 20/10/2026 | Aprobada por el cliente. Cambios aplicados en `requisitos.md` v1.11. |
+| 0.2 | 20/10/2026 | Tras AR-04: horizontal rediseñado como raíl, mástil y panel (de 45 a 52 px por cuerda en el iPhone, y 42 px en un Android de 280 px de alto); acceso rápido también en horizontal; afinación visible en el modo Micrófono; zoom en Escalas; bocetos del Afinador en horizontal; controles de 40 × 40 px comprobados por la herramienta; redacción concreta de V-01, V-04, G-05 y C-07; notas de C-01 a C-04; privacidad en F6.4; intervalos con «ST». |
 | 0.1 | 20/10/2026 | Propuesta inicial (F3.1), con bocetos medidos. |

@@ -1,7 +1,7 @@
 # Trasteando — Especificación de Requisitos
 
-**Versión del documento:** 1.10 · **Fecha:** 20 de octubre de 2026  
-**Válido para:** app `0.2.3` · `roadmap.md` v3.8 · `matriz-cumplimiento` v1.8 · fase en curso **F3**, en modo acelerado  
+**Versión del documento:** 1.11 · **Fecha:** 20 de octubre de 2026  
+**Válido para:** app `0.2.3` · `roadmap.md` v3.9 · `matriz-cumplimiento` v1.9 · fase en curso **F3**, en modo acelerado  
 **Repositorio:** github.com/pdigue/guitarra, carpeta `docs/` · **Gestiona:** chat de Desarrollo  
 **Tipo de producto:** aplicación web progresiva (PWA), desarrollada en local y publicada al final del roadmap
 
@@ -11,15 +11,15 @@
 
 | Total | ✅ Implementados | 🟡 Parciales | ⬜ Pendientes | ✅ Validados |
 |:---:|:---:|:---:|:---:|:---:|
-| 92 | 62 | 10 | 20 | 2 |
+| 93 | 62 | 11 | 20 | 3 |
 
 > Un requisito implementado no cuenta como cumplido hasta superar su prueba. El primero validado es **S-08**, en la 0.2.0: la app usa sus grabaciones medidas y el banco y la grabación en el navegador lo demuestran. La validación en dispositivo llega con la sesión de pruebas en el iPhone y el ordenador (F1.1, F2.5 y F3.3 juntas, al cerrar F3).
 
 | Fase | Objetivo | Requisitos | Implementados |
 |------|----------|:---:|-----------|
-| **F1** | Base local verificada | 59 | `▰▰▰▰▰▰▰▰▰▰` 59/59 |
+| **F1** | Base local verificada | 59 | `▰▰▰▰▰▰▰▰▰▰` 58/59 |
 | **F2** | Sonido propio y archivo autónomo | 9 | `▰▰▰▰▱▱▱▱▱▱` 4/9 |
-| **F3** | Interfaz y adaptación | 4 | `▱▱▱▱▱▱▱▱▱▱` 0/4 |
+| **F3** | Interfaz y adaptación | 6 | `▰▰▱▱▱▱▱▱▱▱` 1/6 |
 | **F4** | Afinador por micrófono | 7 | `▱▱▱▱▱▱▱▱▱▱` 0/7 |
 | **F5** | Escalas | 7 | `▱▱▱▱▱▱▱▱▱▱` 0/7 |
 | **F6** | Preparación para distribución | 5 | `▱▱▱▱▱▱▱▱▱▱` 0/5 |
@@ -34,7 +34,8 @@
 
 | Versión | Fecha | App | Roadmap | Resumen | Origen |
 |---|---|:---:|:---:|---|---|
-| **1.10** | 20/10/2026 | 0.2.3 | 3.8 | Licencia del pack de nylon completa: S-07 implementado y validado. 0 nuevos y 1 modificados: 92 en total. | Tu comprobación en Freesound |
+| **1.11** | 20/10/2026 | 0.2.3 | 3.9 | Interfaz aprobada (F3.1): C-06 validado. 1 nuevo (C-07) y 8 modificados: 93 en total. | Tu aprobación de `interfaz.md` |
+| 1.10 | 20/10/2026 | 0.2.3 | 3.8 | Licencia del pack de nylon completa: S-07 implementado y validado. 0 nuevos y 1 modificado: 92 en total. | Tu comprobación en Freesound |
 | 1.9 | 20/10/2026 | 0.2.3 | 3.7 | Dos decisiones cerradas y licencia de nylon comprobada en tres sonidos. 0 nuevos y 3 modificados: 92 en total. | Tus decisiones del 20/10 |
 | 1.8 | 19/10/2026 | 0.2.3 | 3.6 | Auditoría CP-2. 0 nuevos y 4 modificados: 92 en total. Dos decisiones nuevas. | AR-03 y AT-03 |
 | 1.7 | 19/10/2026 | 0.2.2 | 3.5 | S-08 reformulado con tu aprobación; registro agudo de nylon (F2.4). 0 nuevos y 2 modificados: 92 en total. | Etapa F2.4 |
@@ -46,9 +47,22 @@
 | 1.1 | 15/09/2026 | 0.1.1 | 2.0 | Reconciliación de estados. 11 nuevos (S-07, V-09, J-11, G-05, G-06, A-02-CA, E-02b, E-05b, X-01 a X-03): 81 en total. Seis decisiones cerradas. | Auditoría de requisitos AR-01 |
 | 1.0 | 14/09/2026 | 0.1.0 | — | Primera versión: 70 requisitos en 11 categorías. | Tu listado inicial |
 
+### Detalle de la versión 1.11
+
+**Requisito nuevo 🆕** — C-07: el botón o gesto «atrás» del sistema cierra Ajustes o vuelve al área anterior, sin bloquear la salida desde la primera área. Etapa F3.2, prioridad media.
+
+**Requisitos modificados ✏️** — G-05, V-01, V-04, C-01, C-02, C-03, C-04, C-06
+- **C-06:** implementado y validado con `interfaz.md` v1.0: revisada por el auditor (AR-04) y aprobada por ti.
+- **V-01:** criterio concreto del aviso para girar y de los 40 px por cuerda en horizontal, exigidos con un alto útil de 268 px o más.
+- **V-04:** en pantallas táctiles, trastes de al menos 40 px (como mucho 8 a la vista en el iPhone en vertical). Pasa a parcial hasta F3.2.
+- **G-05:** el criterio incluye controles y casillas de al menos 40 × 40 px en pantallas táctiles.
+- **C-01, C-02, C-03 y C-04:** solo las notas, para describir la interfaz aprobada.
+
+**Decisión cerrada:** especificación de interfaz (C-06). Ver sección 20.
+
 ### Detalle de la versión 1.10
 
-**Requisitos modificados ✏️** — S-07
+**Requisitos modificados** — S-07
 - **S-07:** pasa a implementado y validado. Los 161 sonidos del pack de nylon tienen licencia CC BY («Attribution»), con dos filtros de control a 0. Era lo único que faltaba.
 
 **Riesgos:** la licencia del audio pasa a resuelta.
@@ -180,7 +194,7 @@
 | **G-02** | La app se organiza en áreas accesibles desde una navegación principal: Libre, Adivinar, Afinador y Escalas. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Escalas visible pero deshabilitada hasta F5. |
 | **G-03** | La app funciona sin conexión una vez cargada **desde la web**. | Media | F6.2 · F7.2 | ⬜ | ⬜ | — | Service Worker en F6.2, decidido el 20/10: en la Sesión 1 el iPhone no prueba la app sin conexión. Depende de S-07. Se valida en dos pasos: en `localhost` en F6.2 y desde la web publicada en F7.2 (CP-1). En modo archivo (G-07) la autonomía se consigue de otra forma: el audio va dentro del archivo. |
 | **G-04** | La app es instalable como PWA (icono en la pantalla de inicio, pantalla completa). | Alta | F6.3 · F7.2 | 🟡 | ⬜ | 0.1.0 | Manifiesto incrustado como `data:` URL. Falta un archivo de manifiesto propio con iconos PNG (F6.3) y verificarla instalada desde la web publicada (F7.2): instalar solo es posible desde `https`. |
-| **G-05** | La interfaz cumple unos mínimos de accesibilidad: foco de teclado visible, respeto a `prefers-reduced-motion`, contraste suficiente y etiquetas accesibles en los controles solo-icono. | Media | F3.4 | 🟡 | ⬜ | 0.1.1 | Hecho: foco visible, movimiento reducido, interruptores con `role="switch"` (0.1.1), `aria-pressed` en los selectores y aviso del reto para lectores de pantalla (0.1.2). Falta: recorrer el mástil con teclado y auditar el contraste. |
+| **G-05** ✏️ | La interfaz cumple unos mínimos de accesibilidad: foco de teclado visible, respeto a `prefers-reduced-motion`, contraste suficiente y etiquetas accesibles en los controles solo-icono. | Media | F3.4 | 🟡 | ⬜ | 0.1.1 | Hecho: foco visible, movimiento reducido, interruptores con `role="switch"` (0.1.1), `aria-pressed` en los selectores y aviso del reto para lectores de pantalla (0.1.2). Falta: recorrer el mástil con teclado y auditar el contraste. **Añadido al criterio el 20/10** (`interfaz.md` v1.0, aprobada el 20/10): en pantallas táctiles, todo control y toda casilla del mástil mide al menos 40 × 40 px. |
 | **G-06** | El proyecto documenta sus dependencias externas y la licencia de cada recurso de terceros que distribuye, y la app muestra los créditos. | Media | F2.1 · F6.4 | 🟡 | ⬜ | — | `CREDITOS.md` (F2.1): origen, licencia, huella `sha256` y texto de atribución de cada muestra de audio, y Tone.js (MIT). Falta mostrar los créditos dentro de la app y elegir la licencia del propio código (F6.4). |
 | **G-07** | **Modo archivo autónomo** en Windows y Android: la app funciona completa —salvo el afinador por micrófono— abriendo el archivo directamente (`file://`), sin servidor y sin conexión. En iPhone, donde no se pueden abrir páginas desde Archivos, la autonomía llega por G-03. | Alta | F2.3 · F2.5 | ✅ | ⬜ | 0.2.1 | `dist/trasteando.html`: la app con sus 17 grabaciones dentro (1,46 MB). Límites revisados en CP-2: el audio no pasa de 1,45 MB, y bajar su calidad exige tu escucha; el archivo entero no pasa de 2 MB, para dejar sitio al código de F3 a F6. Lo que cuenta para ti es que abra en ≤ 3 s en Windows: en Chromium tarda 0,3 s, y en tu PC se mide en la Sesión 1 (F2.5). Redacción limitada a Windows y Android tras AR-03. |
 | **G-08** | El proyecto conserva **dos formas de distribución** equivalentes: el archivo autónomo (para llevárselo) y la web publicada (para instalarla como PWA). | Media | F4.1 · F6.1 | 🟡 | ⬜ | 0.1.0 | Desde la 0.2.1 hay dos formas reales: `index.html` para servir (Live Server y web) y `dist/trasteando.html`, generado a partir de él con `herramientas/generar-autonomo.py`. El banco comprueba que el autónomo está al día con `index.html`. Se vuelve más exigente al pasar a módulos (F4.1); F6.1 generará el archivo autónomo a partir de ellos. |
@@ -252,7 +266,7 @@
 | **S-04** | Si los samples no cargan, la app sigue sonando por síntesis. | Media | F1.1 | ✅ | ⬜ | 0.1.0 | Karplus-Strong con filtros que imitan la caja de resonancia. Desde 0.1.1 cada nota se calcula una sola vez y se reutiliza. |
 | **S-05** | El primer sonido requiere una interacción explícita del usuario. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Lo impone la política de reproducción automática de los navegadores. |
 | **S-06** | El timbre persiste entre sesiones. | Media | F1.1 | ✅ | ⬜ | 0.1.0 | — |
-| **S-07** ✏️ | Los samples de audio se alojan en el propio proyecto, con licencia verificada y documentada. | Alta | F2.1 · F2.3 | ✅ | ✅ | 0.2.3 | **Opción A, decidida el 14/10.** Hecho: licencias verificadas y los 16 archivos en `samples/`, con `CREDITOS.md` (F2.1); desde la 0.2.0 la app los usa y no descarga nada de otros servidores (F2.2). Desde la 0.2.1 van también dentro del archivo autónomo (F2.3). **El 20/10 se completó la licencia del pack de nylon:** en la búsqueda de Freesound, el pack tiene 161 sonidos y el filtro de licencia «Attribution» (CC BY) devuelve los 161; dos filtros de control («Attribution 4.0» y «Creative Commons 0») devuelven 0, lo que prueba que el filtro se aplica. Tres sonidos revisados uno a uno (183078, 183083 y 183089) son «Attribution 4.0». La búsqueda la hiciste tú en tu iPhone, porque está cerrada a los agentes. **Validado por inspección:** ninguna petición de audio sale del dominio propio (banco) y `CREDITOS.md` documenta origen y licencia de los 17 archivos. |
+| **S-07** | Los samples de audio se alojan en el propio proyecto, con licencia verificada y documentada. | Alta | F2.1 · F2.3 | ✅ | ✅ | 0.2.3 | **Opción A, decidida el 14/10.** Hecho: licencias verificadas y los 16 archivos en `samples/`, con `CREDITOS.md` (F2.1); desde la 0.2.0 la app los usa y no descarga nada de otros servidores (F2.2). Desde la 0.2.1 van también dentro del archivo autónomo (F2.3). **El 20/10 se completó la licencia del pack de nylon:** en la búsqueda de Freesound, el pack tiene 161 sonidos y el filtro de licencia «Attribution» (CC BY) devuelve los 161; dos filtros de control («Attribution 4.0» y «Creative Commons 0») devuelven 0, lo que prueba que el filtro se aplica. Tres sonidos revisados uno a uno (183078, 183083 y 183089) son «Attribution 4.0». La búsqueda la hiciste tú en tu iPhone, porque está cerrada a los agentes. **Validado por inspección:** ninguna petición de audio sale del dominio propio (banco) y `CREDITOS.md` documenta origen y licencia de los 17 archivos. |
 | **S-08** | Cada nota suena a menos de **5 cents** de su frecuencia, una vez corregida la desviación medida de su grabación. Cada grabación que usa la app es la nota a la que está asignada y tiene su desviación medida. | Alta | F2.1 · F2.2 · F2.4 | ✅ | ✅ | 0.1.3 | **Reformulado el 19/10, con tu aprobación:** antes exigía ±5 cents a la grabación sin corregir; desde la 0.2.0 la app corrige cada grabación con su medida, así que lo que importa y se comprueba es la nota que suena. Origen: el `D5.mp3` de nylon sonaba en Re♯5. Validado: el banco comprueba todas las notas posibles (±0,5 cents) y la grabación en el navegador lo confirma (V-02, V-03, V-04). |
 
 ---
@@ -335,10 +349,10 @@
 
 | ID | Requisito | Prior. | Etapa | Impl. | Valid. | Desde | Notas |
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
-| **V-01** | En móvil se **sugiere** la orientación horizontal con un aviso discreto; no se fuerza. | Alta | F3.2 | 🟡 | ⬜ | 0.1.0 | El bloqueo de orientación tiene mal soporte en iOS. Menos trastes visibles en vertical es la solución adoptada. Falta el aviso y un diseño apaisado que dé altura a las cuerdas. |
+| **V-01** ✏️ | En móvil se **sugiere** la orientación horizontal con un aviso discreto; no se fuerza. | Alta | F3.2 | 🟡 | ⬜ | 0.1.0 | **Criterio concreto el 20/10** (`interfaz.md` v1.0, aprobada el 20/10): el aviso sale solo en pantallas táctiles (`pointer: coarse`) en vertical de menos de 600 px de ancho, en Libre, Adivinar y Escalas, y nunca en el Afinador; si lo cierras, no vuelve (se guarda con los ajustes) y «Restablecer» lo recupera. En horizontal, raíl, mástil a todo el alto y panel: los bocetos dan 52 px por cuerda en el iPhone y 42 en un Android de 280 px de alto; los 40 px se exigen con un alto útil de 268 px o más. El bloqueo de orientación tiene mal soporte en iOS, así que no se fuerza. |
 | **V-02** | El afinador funciona en vertical y en horizontal. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
 | **V-03** | En escritorio el mástil aprovecha el ancho disponible. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Arranca mostrando el mástil completo en pantallas anchas. |
-| **V-04** | Control de zoom que determina qué porción del mástil se ve. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | De 3 a 24 trastes a la vista. Desde 0.1.1 la etiqueta indica los trastes que caben de verdad, y el zoom conserva el tramo que estabas mirando. |
+| **V-04** ✏️ | Control de zoom que determina qué porción del mástil se ve. | Alta | F1.1 · F3.2 | 🟡 | ⬜ | 0.1.0 | De 3 a 24 trastes a la vista. Desde 0.1.1 la etiqueta indica los trastes que caben de verdad, y el zoom conserva el tramo que estabas mirando. **Añadido el 20/10** (`interfaz.md` v1.0, aprobada el 20/10): con `pointer: coarse`, un traste mide al menos 40 px y el zoom guardado se ajusta a ese límite; en el iPhone en vertical quedan como mucho 8 trastes a la vista. Se hace en F3.2. |
 | **V-05** | Cuando el mástil no cabe, el usuario se desplaza lateralmente. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
 | **V-06** | El ancho de traste no cambia al desplazarse: el zoom fija el tamaño y el desplazamiento mueve la ventana. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
 | **V-07** | El mástil se readapta al redimensionar la ventana. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
@@ -351,12 +365,13 @@
 
 | ID | Requisito | Prior. | Etapa | Impl. | Valid. | Desde | Notas |
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
-| **C-01** | Menú de configuración accesible desde cualquier pantalla. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Panel deslizante desde la cabecera. |
-| **C-02** | El menú contiene nomenclatura, pentagrama, timbre, numeración de trastes (tres modos), ver todas las notas, señalar iguales y afinación activa, y muestra la versión de la app. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Ampliado en 0.1.2 con la numeración en tres modos y la versión (G-10). |
-| **C-03** | Los ajustes frecuentes tienen acceso rápido sin abrir el menú. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Nomenclatura, pentagrama y las dos pistas del juego. |
-| **C-04** | Navegación principal clara entre las áreas de la app. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Barra inferior con cuatro destinos. |
+| **C-01** ✏️ | Menú de configuración accesible desde cualquier pantalla. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Hoja que sube desde abajo en vertical; panel lateral en horizontal y en pantallas amplias (`interfaz.md` v1.0, aprobada el 20/10). |
+| **C-02** ✏️ | El menú contiene nomenclatura, pentagrama, timbre, numeración de trastes (tres modos), ver todas las notas, señalar iguales y afinación activa, y muestra la versión de la app. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Ampliado en 0.1.2 con la numeración en tres modos y la versión (G-10). En F6.4 se añade el grupo «Acerca de», con los créditos (G-06) y la privacidad (G-11) (`interfaz.md` v1.0, aprobada el 20/10). |
+| **C-03** ✏️ | Los ajustes frecuentes tienen acceso rápido sin abrir el menú. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Nomenclatura y pentagrama en chips bajo la cabecera, o en el panel en horizontal; las dos pistas del juego, en la tarjeta del reto desde F3.2 (`interfaz.md` v1.0, aprobada el 20/10). |
+| **C-04** ✏️ | Navegación principal clara entre las áreas de la app. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Barra inferior con cuatro destinos en vertical, raíl a la izquierda en horizontal y pestañas en la cabecera en pantallas amplias (`interfaz.md` v1.0, aprobada el 20/10). |
 | **C-05** | Todos los ajustes persisten entre sesiones. | Media | F1.1 | ✅ | ⬜ | 0.1.0 | Un único objeto de estado, validado campo a campo al leerlo (0.1.1). |
-| **C-06** | Especificación detallada de la interfaz: estructura de menús, jerarquía de controles y flujos de navegación. | Alta | F3.1 | ⬜ | ⬜ | — | Bloqueante de F3.2 y de toda F5. Requiere sesión dedicada. |
+| **C-06** ✏️ | Especificación detallada de la interfaz: estructura de menús, jerarquía de controles y flujos de navegación. | Alta | F3.1 | ✅ | ✅ | 0.2.3 | `docs/interfaz.md` v1.0, aprobada por ti el 20/10 tras la auditoría AR-04 (10 hallazgos resueltos). Bocetos al tamaño real de cada pantalla en `docs/interfaz/`, comprobados por `herramientas/capturar-wireframes.js`. Los cambios posteriores suben su versión. |
+| **C-07** 🆕 | **Botón «atrás» del sistema:** mientras haya un paso anterior en la sesión, el botón o gesto «atrás» cierra Ajustes o vuelve al área anterior; desde la primera área actúa el sistema. Al abrir la app se entra en Libre. | Media | F3.2 | ⬜ | ⬜ | — | Aprobado el 20/10 con `interfaz.md` v1.0. Usa el historial del navegador (`history`), estándar en todos los sistemas. En el iPhone instalado no hay botón atrás. |
 
 ---
 
@@ -386,7 +401,7 @@ Qué requisitos cierra o valida cada etapa del roadmap. Es la misma información
 | **F2.4** | S-01, S-08 |
 | **F2.5** | G-07, PL-01, PL-02, PL-03 |
 | **F3.1** | C-06 |
-| **F3.2** | PL-04, V-01 |
+| **F3.2** | PL-04, V-01, V-04, C-07 |
 | **F3.4** | G-05 |
 | **F4.1** | G-08 |
 | **F4.2** | A-02-CA |
@@ -438,14 +453,13 @@ Qué requisitos cierra o valida cada etapa del roadmap. Es la misma información
 
 | # | Decisión | Afecta a | Plazo |
 |---|---|---|---|
-| 1 | C-06: especificación de interfaz y navegación | C-06, V-01, F5 | Antes de F3.2 |
-| 2 | Paleta de colores por nota (la de la imagen inicial o la actual) | G-05 | Antes de F3.4 |
-| 3 | J-11: récord único o por afinación | J-11 | Antes de F4.4 |
-| 4 | E-01: catálogo inicial de escalas | E-01, E-02 | Antes de F5.2 |
-| 5 | Licencia del código (MIT u otra) | G-06 | Antes de F6.4 |
-| 6 | Tiendas: cuáles y en qué orden | G-09 | Antes de F7.4 |
+| 1 | Paleta de colores por nota (la de la imagen inicial o la actual) | G-05 | Antes de F3.4 |
+| 2 | J-11: récord único o por afinación | J-11 | Antes de F4.4 |
+| 3 | E-01: catálogo inicial de escalas | E-01, E-02 | Antes de F5.2 |
+| 4 | Licencia del código (MIT u otra) | G-06 | Antes de F6.4 |
+| 5 | Tiendas: cuáles y en qué orden | G-09 | Antes de F7.4 |
 
-**Cerradas el 20/10:** Service Worker → en F6.2, sin adelantarlo a la Sesión 1 · agudo de la acústica → aceptado como limitación conocida.
+**Cerradas el 20/10:** Service Worker → en F6.2, sin adelantarlo a la Sesión 1 · agudo de la acústica → aceptado como limitación conocida · C-06, especificación de interfaz → aprobada (`interfaz.md` v1.0).
 
 **Cerradas el 15/10:** despliegue de pruebas en `https`, sin anunciar → sí, antes de la Sesión 1 · Android de pruebas → ninguno por ahora; diseño pensado para todos los sistemas (PL-04).
 

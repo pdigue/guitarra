@@ -1,7 +1,7 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 3.8 · **Fecha:** 20 de octubre de 2026
-**Válido para:** app `0.2.3` · `requisitos.md` v1.10 · `matriz-cumplimiento` v1.8 · `compatibilidad.md` v1.1 · `automatizacion.md` v1.1 · `CHANGELOG.md`
+**Versión:** 3.9 · **Fecha:** 20 de octubre de 2026
+**Válido para:** app `0.2.3` · `requisitos.md` v1.11 · `matriz-cumplimiento` v1.9 · `interfaz.md` v1.0 · `compatibilidad.md` v1.1 · `automatizacion.md` v1.1 · `CHANGELOG.md`
 **Gestiona:** chat de Desarrollo
 
 > ⚡ **Modo acelerado activo desde el 14/10** (detalle en `automatizacion.md`). El agente ejecuta las etapas por bloques —F1 a F3, luego F4 a F6— y solo para en las decisiones. Las pruebas que necesitan tus manos se agrupan en dos sesiones: **Sesión 1** con el iPhone y el ordenador al cerrar F3, y **Sesión 2** con la guitarra al cerrar F6.
@@ -12,7 +12,7 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** F3.1, la propuesta de interfaz (`docs/interfaz.md`), parada hasta tu aprobación. F2 hecha salvo F2.5, que va a la Sesión 1.
+📍 **Estás aquí:** F3.2, el diseño en horizontal. F3.1 cerrada: interfaz aprobada (`docs/interfaz.md` v1.0). F2 hecha salvo F2.5, que va a la Sesión 1.
 
 | Fase | Objetivo | Versión | Dónde se usa | Etapas | Progreso |
 |------|----------|:---:|---|:---:|---|
@@ -168,8 +168,8 @@ Cada pieza del proyecto lleva su propio número, y todas se citan entre sí.
 
 | Etapa | Qué se hace | Requisitos | Cómo se valida | Aprenderás | Estado |
 |---|---|---|---|---|:---:|
-| **F3.1** | Especificar la interfaz pantalla a pantalla. **Bloquea F3.2 y toda F5**. En modo acelerado, el agente propone `interfaz.md` y **para** hasta que lo apruebes | C-06 | `interfaz.md` revisado por el auditor de requisitos y aprobado por ti | Wireframes, jerarquía visual, arquitectura de información | ⏸️ propuesta hecha, esperando tu aprobación |
-| **F3.2** | Diseño apaisado y aviso discreto para girar el móvil | PL-04, V-01 | En horizontal, cada cuerda tiene al menos 40 px | Diseño adaptable: media queries, unidades relativas | ⬜ |
+| **F3.1** | Especificar la interfaz pantalla a pantalla. **Bloquea F3.2 y toda F5**. En modo acelerado, el agente propone `interfaz.md` y **para** hasta que lo apruebes | C-06 | `interfaz.md` revisado por el auditor de requisitos y aprobado por ti | Wireframes, jerarquía visual, arquitectura de información | ✅ aprobada el 20/10 |
+| **F3.2** | Diseño apaisado (raíl, mástil y panel), aviso discreto para girar el móvil, zoom con trastes táctiles de al menos 40 px y botón «atrás» | PL-04, V-01, V-04, C-07 | En horizontal, con un alto útil de 268 px o más, cada cuerda mide al menos 40 px (iPhone en Safari e instalada; simulador de Android) | Diseño adaptable: media queries, unidades relativas | ⬜ |
 | **F3.3** | Quince minutos de uso real en el móvil, con la guitarra delante | Validación en móvil de los requisitos de F1.1 | Lista táctil y notas de lo incómodo | Eventos de puntero; latencia percibida | 📅 Sesión 1 |
 | **F3.4** | Accesibilidad completa y paleta de colores | G-05 | Recorrer la app solo con teclado; contraste 4,5:1; simulador de daltonismo | ARIA, contraste, por qué el color no debe ser la única señal | ⬜ |
 
@@ -406,14 +406,13 @@ flowchart TB
 
 | Decisión | Bloquea | Plazo |
 |---|---|---|
-| Especificación de interfaz | F3.2 y F5 | Antes de F3.2 |
 | Paleta de colores por nota | F3.4 | Antes de F3.4 |
 | Récord único o por afinación | F4.4 | Antes de F4.4 |
 | Catálogo de escalas | F5.2 | Antes de F5.2 |
 | Licencia del código | F6.4 | Antes de F6.4 |
 | Tiendas y orden | F7.4 | Antes de F7.4 |
 
-**Cerradas el 20/10:** Service Worker → en F6.2, sin adelantarlo a la Sesión 1 · agudo de la acústica → aceptado como limitación conocida.
+**Cerradas el 20/10:** Service Worker → en F6.2, sin adelantarlo a la Sesión 1 · agudo de la acústica → aceptado como limitación conocida · especificación de interfaz → aprobada (`interfaz.md` v1.0).
 
 **Cerradas el 15/10:** despliegue de pruebas en `https` → sí, antes de la Sesión 1 · Android de pruebas → ninguno por ahora, con diseño para todos los sistemas (PL-04).
 
@@ -451,7 +450,8 @@ flowchart TB
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **3.8** | 20/10/2026 | Licencia del pack de nylon completa: S-07 cerrado. |
+| **3.9** | 20/10/2026 | F3.1 cerrada con `interfaz.md` v1.0. F3.2 amplía su alcance (V-04, C-07) y su criterio (alto útil ≥ 268 px). |
+| 3.8 | 20/10/2026 | Licencia del pack de nylon completa: S-07 cerrado. |
 | 3.7 | 20/10/2026 | Dos decisiones cerradas: Service Worker en F6.2 y agudo de la acústica aceptado. F3.1 en curso. |
 | 3.6 | 19/10/2026 | CP-2: F2.1 y F2.4 cerradas, criterios de F2.3 y F2.5 revisados, despliegue de pruebas activo, comprobaciones nuevas para la Sesión 1 y dos decisiones abiertas. **Corrección:** la v3.2 prometía usar la app sin conexión en el iPhone durante la Sesión 1, y eso exige el Service Worker de F6.2. |
 | 3.5 | 19/10/2026 | F2.3 aprobada. F2.4 hecha en la `0.2.2`. |
