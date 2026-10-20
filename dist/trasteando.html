@@ -34,7 +34,7 @@
   --ko:#e86060;
 
   --label-w:30px;   /* ancho de la etiqueta de cuerda */
-  --nut-w:32px;     /* ancho de la cejuela = traste 0 */
+  --nut-w:40px;     /* ancho de la cejuela = traste 0; 40 px para el dedo (G-05) */
   --fret-w:64px;    /* ancho de cada traste, controlado por el zoom */
   --r:14px;
 }
@@ -79,34 +79,41 @@ button { font-family:inherit; color:inherit; }
 
 /* ===== CABECERA ===== */
 .header { flex-shrink:0; display:flex; align-items:center; justify-content:space-between;
-  padding:9px 12px; border-bottom:1px solid var(--line); }
+  min-height:46px; padding:3px 12px; border-bottom:1px solid var(--line); }
 .brand { font-family:Georgia,serif; font-style:italic; font-size:19px; color:var(--amber); }
 .icon-btn { background:var(--surface); border:1px solid var(--line); border-radius:9px;
-  width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+  width:40px; height:40px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
 .icon-btn svg { width:19px; height:19px; fill:none; stroke:var(--text); stroke-width:1.7;
   stroke-linecap:round; stroke-linejoin:round; }
 .icon-btn:active { background:var(--surface2); }
 
 /* ===== BARRA DE ACCESO RÁPIDO ===== */
-.quickbar { flex-shrink:0; display:flex; align-items:center; gap:7px; padding:7px 10px;
+.quickbar { flex-shrink:0; display:flex; align-items:center; gap:7px; padding:2px 10px;
   overflow-x:auto; border-bottom:1px solid var(--line); scrollbar-width:none; }
 .quickbar::-webkit-scrollbar { display:none; }
 .chip { flex-shrink:0; background:var(--surface); border:1px solid var(--line);
-  color:var(--muted); padding:6px 11px; border-radius:20px; font-size:12px;
-  font-weight:600; cursor:pointer; white-space:nowrap; transition:all .15s; }
+  color:var(--muted); min-height:40px; min-width:40px; padding:0 14px; border-radius:20px;
+  font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap; transition:all .15s;
+  display:inline-flex; align-items:center; justify-content:center; }
+/* El chip del pentagrama tiene dos rótulos: la palabra y, donde no cabe
+   (panel en horizontal), la clave de sol dibujada. */
+.chip .short { display:none; }
+.chip .short svg { display:block; }
 .chip.on { background:var(--amber); border-color:var(--amber); color:#1a1006; }
 .chip:active { transform:scale(0.95); }
 .qb-sep { flex-shrink:0; width:1px; height:18px; background:var(--line2); }
 .qb-label { flex-shrink:0; font-size:11px; color:var(--faint); margin-right:1px; }
 
 /* ===== RETO (modo adivinar) ===== */
-.challenge { flex-shrink:0; display:flex; align-items:center; gap:10px;
-  padding:9px 12px; background:var(--surface); border-bottom:1px solid var(--line); }
+.challenge { flex-shrink:0; display:flex; flex-direction:column; gap:2px;
+  padding:3px 12px; background:var(--surface); border-bottom:1px solid var(--line); }
+.ch-main { display:flex; align-items:center; gap:10px; }
+.ch-hints { display:flex; align-items:center; gap:7px; }
 .challenge[hidden] { display:none; }
 .challenge-text { flex:1; font-size:14px; line-height:1.35; min-width:0; }
 .challenge-text .dim { color:var(--muted); }
 .btn-repeat { flex-shrink:0; background:var(--surface2); border:1px solid var(--line2);
-  color:var(--amber); width:38px; height:38px; border-radius:10px; font-size:15px; cursor:pointer; }
+  color:var(--amber); width:40px; height:40px; border-radius:10px; font-size:15px; cursor:pointer; }
 .btn-repeat:active { background:var(--line); }
 .stats { flex-shrink:0; display:flex; flex-direction:column; align-items:flex-end;
   gap:1px; font-size:11px; font-variant-numeric:tabular-nums; }
@@ -118,12 +125,14 @@ button { font-family:inherit; color:inherit; }
 @keyframes fko { 0%,100%{background:var(--surface)} 30%{background:rgba(232,96,96,0.22)} }
 
 /* ===== PENTAGRAMA + NOTA ===== */
-.display { flex-shrink:0; overflow:hidden; border-bottom:1px solid var(--line);
+.display { flex-shrink:1; min-height:0; overflow:hidden; border-bottom:1px solid var(--line);
   transition:max-height .28s ease; max-height:150px; }
 .display.hidden { max-height:0; border-bottom:none; }
-.display-inner { display:flex; align-items:center; gap:10px; padding:6px 14px; }
-.staff-wrap { flex:1; min-width:0; display:flex; justify-content:center; }
-.staff-svg { width:100%; max-width:330px; height:128px; }
+.display-inner { display:flex; align-items:center; gap:10px; padding:6px 14px; height:100%; }
+.staff-wrap { flex:1; min-width:0; height:100%; display:flex; justify-content:center; }
+/* Si falta alto (Adivinar en un móvil), el pentagrama encoge antes que el
+   mástil: el mástil manda (interfaz.md §2). */
+.staff-svg { width:100%; max-width:330px; height:100%; max-height:128px; }
 .note-readout { flex-shrink:0; text-align:center; min-width:78px; }
 .note-name { font-family:Georgia,serif; font-style:italic; font-size:44px; line-height:1;
   min-height:44px; color:var(--note-color,var(--text));
@@ -198,9 +207,9 @@ button { font-family:inherit; color:inherit; }
 
 /* ===== ZOOM ===== */
 .zoombar { flex-shrink:0; display:flex; align-items:center; justify-content:center;
-  gap:12px; padding:6px 10px; }
+  gap:12px; padding:2px 10px; }
 .zoom-btn { background:var(--surface); border:1px solid var(--line); border-radius:8px;
-  width:32px; height:28px; font-size:16px; font-weight:700; color:var(--text); cursor:pointer; }
+  width:40px; height:40px; font-size:16px; font-weight:700; color:var(--text); cursor:pointer; }
 .zoom-btn:disabled { opacity:.3; cursor:default; }
 .zoom-btn:active:not(:disabled) { background:var(--surface2); }
 .zoom-label { font-size:11px; color:var(--muted); min-width:92px; text-align:center;
@@ -213,22 +222,22 @@ button { font-family:inherit; color:inherit; }
 .tuner p.lead { font-size:13px; color:var(--muted); margin:0 0 14px; line-height:1.5; }
 .tuning-row { display:flex; align-items:center; gap:8px; margin-bottom:14px; }
 .tuning-row label { font-size:12px; color:var(--muted); flex-shrink:0; }
-select { flex:1; background:var(--surface); border:1px solid var(--line2); color:var(--text);
+select { flex:1; min-height:40px; background:var(--surface); border:1px solid var(--line2); color:var(--text);
   padding:9px 10px; border-radius:9px; font-size:14px; font-family:inherit; }
 .strings-tuner { display:flex; flex-direction:column; gap:7px; margin-bottom:16px; }
 .tstring { display:flex; align-items:center; gap:9px; background:var(--surface);
-  border:1px solid var(--line); border-radius:11px; padding:8px 10px; }
+  border:1px solid var(--line); border-radius:11px; padding:4px 6px 4px 10px; }
 .tstring.ringing { border-color:var(--amber); background:var(--surface2); }
 .tstring-num { width:20px; font-size:11px; color:var(--faint); flex-shrink:0; }
-.tstring-play { flex:1; display:flex; align-items:baseline; gap:8px; background:none;
-  border:none; padding:0; cursor:pointer; text-align:left; }
+.tstring-play { flex:1; min-width:0; min-height:40px; display:flex; align-items:center; gap:8px;
+  background:none; border:none; padding:0; cursor:pointer; text-align:left; }
 .tstring-note { font-family:Georgia,serif; font-style:italic; font-size:25px;
   color:var(--tcol,var(--text)); line-height:1; }
 .tstring-oct { font-size:11px; color:var(--muted); }
 .tstring-hint { margin-left:auto; font-size:11px; color:var(--faint); }
 .semi { display:flex; gap:5px; flex-shrink:0; }
 .semi button { background:var(--surface2); border:1px solid var(--line2); color:var(--text);
-  width:30px; height:30px; border-radius:8px; font-size:15px; font-weight:700; cursor:pointer; }
+  width:40px; height:40px; border-radius:8px; font-size:15px; font-weight:700; cursor:pointer; }
 .semi button:active { background:var(--line); }
 .tuner-staff { background:var(--surface); border:1px solid var(--line); border-radius:11px;
   padding:6px; margin-bottom:14px; }
@@ -247,6 +256,36 @@ select { flex:1; background:var(--surface); border:1px solid var(--line2); color
   stroke-linecap:round; stroke-linejoin:round; }
 .tab.active { color:var(--amber); }
 .tab:disabled { opacity:.35; cursor:default; }
+.tab-settings { display:none; }   /* solo en el raíl, en horizontal */
+
+/* ===== AVISO PARA GIRAR (V-01) ===== */
+.rotate-hint { flex-shrink:0; display:flex; align-items:center; justify-content:space-between;
+  gap:6px; margin:6px 8px 0; padding:0 0 0 12px; border:1px dashed var(--line2);
+  border-radius:10px; font-size:12.5px; color:var(--muted); }
+.rotate-close { background:none; border:none; color:var(--muted); width:40px; height:40px;
+  font-size:15px; cursor:pointer; flex-shrink:0; }
+
+/* ===== ORDEN EN LA COLUMNA (vertical y amplia) =====
+   El panel no crea caja propia (display:contents): sus piezas se colocan entre
+   las demás con order. En horizontal pasa a ser la columna de la derecha. */
+.panel { display:contents; }
+.header { order:1; } .quickbar { order:2; } .challenge { order:3; } .display { order:4; }
+.rotate-hint { order:5; } .board-area { order:6; } .zoombar { order:7; } .tuner { order:8; }
+.tabbar { order:9; }
+
+/* En pantallas táctiles en vertical el mástil no baja de 40 px por cuerda
+   (G-05) si la pantalla mide al menos 660 px de alto, como un iPhone de 6,1"
+   con Safari. Si falta alto, encoge antes el pentagrama, que no baja de 60 px
+   para seguir leyéndose. En pantallas más bajas (iPhone SE) manda que la
+   navegación nunca se salga: el mástil encoge y el aviso sugiere girar
+   (AR-05 #1 y #2). */
+.display:not(.hidden) { min-height:60px; }
+@media (pointer:coarse) and (orientation:portrait) and (min-height:660px){
+  .board-area { min-height:calc(8px + 17px + 6 * 40px + 4px); }
+}
+@media (pointer:coarse) and (orientation:portrait) and (max-height:659px){
+  .display:not(.hidden) { flex:0 0 64px; }   /* legible y sin quitarle más al mástil */
+}
 
 /* ===== PANEL DE AJUSTES ===== */
 .sheet-bg { position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:900;
@@ -270,19 +309,23 @@ select { flex:1; background:var(--surface); border:1px solid var(--line2); color
 .set-row .txt small { display:block; font-size:11.5px; color:var(--muted); margin-top:2px; line-height:1.4; }
 .seg { display:flex; background:var(--surface2); border:1px solid var(--line2);
   border-radius:9px; overflow:hidden; flex-shrink:0; }
-.seg button { background:none; border:none; padding:7px 12px; font-size:12.5px;
+.seg button { background:none; border:none; min-height:40px; padding:0 12px; font-size:12.5px;
   font-weight:600; color:var(--muted); cursor:pointer; }
 .seg button.on { background:var(--amber); color:#1a1006; }
-.sw { position:relative; width:46px; height:27px; border-radius:14px; background:var(--surface2);
-  border:1px solid var(--line2); cursor:pointer; flex-shrink:0; transition:background .18s;
-  padding:0; appearance:none; -webkit-appearance:none; }
-.sw::after { content:''; position:absolute; top:2px; left:2px; width:21px; height:21px;
+/* El interruptor se dibuja con ::before (la pista) y ::after (la bola), y el
+   botón mide 52 × 40 px: así el dedo tiene 40 px aunque se vea más pequeño. */
+.sw { position:relative; width:52px; height:40px; background:none; border:none; cursor:pointer;
+  flex-shrink:0; padding:0; appearance:none; -webkit-appearance:none; }
+.sw::before { content:''; position:absolute; left:3px; top:6.5px; width:46px; height:27px;
+  border-radius:14px; background:var(--surface2); border:1px solid var(--line2);
+  box-sizing:border-box; transition:background .18s; }
+.sw::after { content:''; position:absolute; top:9.5px; left:6px; width:21px; height:21px;
   border-radius:50%; background:var(--muted); transition:transform .18s, background .18s; }
-.sw.on { background:var(--amber); border-color:var(--amber); }
+.sw.on::before { background:var(--amber); border-color:var(--amber); }
 .sw.on::after { transform:translateX(19px); background:#1a1006; }
 .version { text-align:center; font-size:11px; color:var(--faint); margin:14px 0 0;
   font-variant-numeric:tabular-nums; }
-.reset { width:100%; background:none; border:1px solid var(--line2); color:var(--ko);
+.reset { width:100%; min-height:44px; background:none; border:1px solid var(--line2); color:var(--ko);
   padding:11px; border-radius:10px; font-size:13px; cursor:pointer; }
 
 @media (max-height:520px){
@@ -291,29 +334,69 @@ select { flex:1; background:var(--surface); border:1px solid var(--line2); color
   .note-name { font-size:34px; min-height:34px; }
 }
 
-/* Móvil en horizontal (0.1.5, provisional hasta el diseño de F3.2).
-   Con todo apilado, al mástil le quedaban 3 px por cuerda en un iPhone.
-   Las pestañas pasan a una columna a la izquierda, la cabecera comparte fila
-   con los atajos y el pentagrama encoge: así cada cuerda conserva 20 px o más. */
+/* ===== MÓVIL EN HORIZONTAL (F3.2, interfaz.md §7) =====
+   Raíl | mástil | panel. Con la cabecera, los atajos, el reto y el pentagrama
+   apilados encima, al mástil le quedaban 29 px por cuerda en un iPhone. Ahora
+   todo eso va al panel de la derecha y el mástil tiene todo el alto: cada
+   cuerda mide (alto útil − 28 px) / 6, unos 52 px en el iPhone con Safari. */
 @media (orientation:landscape) and (max-height:520px){
-  body { display:grid; grid-template-columns:auto auto minmax(0,1fr);
-         grid-template-rows:auto auto auto minmax(0,1fr); }
-  .tabbar { grid-column:1; grid-row:1 / -1; flex-direction:column; justify-content:center;
-            border-top:none; border-right:1px solid var(--line); padding:0 0 env(safe-area-inset-bottom); }
-  .tab { flex:0 0 auto; padding:8px 6px; min-width:64px; }
-  .header { grid-column:2; grid-row:1; padding:4px 6px 4px 10px; gap:8px; border-bottom:none; }
-  .brand { font-size:16px; }
-  .icon-btn { width:32px; height:32px; }
-  .quickbar { grid-column:3; grid-row:1; padding:4px 8px; border-bottom:none; }
-  .challenge { grid-column:2 / -1; grid-row:2; padding-top:4px; padding-bottom:4px; }
-  .display { grid-column:2 / -1; grid-row:3; max-height:72px; border-top:1px solid var(--line); }
-  .display.hidden { border-top:none; }
-  .display-inner { padding:2px 14px; }
-  .staff-svg { height:66px; }
-  .note-name { font-size:28px; min-height:28px; }
-  #board-area, #tuner { grid-column:2 / -1; grid-row:4; min-height:0; }
-  .zoombar { padding:3px 10px; }
-  .zoom-btn { height:26px; }
+  body { display:grid; grid-template-columns:64px minmax(0,1fr) 176px;
+         grid-template-rows:minmax(0,1fr); padding-bottom:env(safe-area-inset-bottom); }
+  .header, .rotate-hint { display:none; }
+  .tabbar { grid-column:1; grid-row:1; flex-direction:column; justify-content:flex-start;
+            gap:2px; border-top:none; border-right:1px solid var(--line); padding:6px 0; }
+  .tab { flex:0 0 auto; min-height:48px; padding:6px 2px; }
+  .tab-settings { display:flex; margin-top:auto; }
+  #board-area { grid-column:2; grid-row:1; min-height:0; padding:6px 6px 2px; }
+  #tuner { grid-column:2 / -1; grid-row:1; min-height:0; }
+  .panel { grid-column:3; grid-row:1; display:flex; flex-direction:column; gap:6px;
+           min-height:0; overflow-y:auto; padding:8px 8px 0; border-left:1px solid var(--line); }
+  .quickbar { padding:0; border:none; overflow:visible; flex-wrap:wrap; gap:6px; }
+  .chip { padding:0 11px; }
+  .chip .long { display:none; }
+  .chip .short { display:inline-flex; }
+  .challenge { padding:0; gap:6px; background:none; border:none; }
+  .ch-main { flex-wrap:wrap; gap:6px; justify-content:space-between; }
+  .challenge-text { order:3; flex-basis:100%; font-size:13px; }
+  .ch-hints { flex-wrap:wrap; gap:4px 6px; }
+  .ch-hints .qb-label { flex-basis:100%; }
+  .ch-hints .chip { padding:0 9px; }
+  .display { flex-shrink:0; max-height:200px; border:none; }
+  .display-inner { flex-direction:column; padding:0; gap:0; height:auto; }
+  .staff-wrap { width:100%; height:auto; }
+  .staff-svg { height:62px; }
+  .note-name { font-size:30px; min-height:30px; }
+  /* El zoom se queda siempre a la vista, abajo del panel, aunque lo de
+     encima no quepa y haya que desplazarlo (Android con la barra visible). */
+  .zoombar { margin-top:auto; position:sticky; bottom:0; padding:4px 0 8px; gap:4px;
+             justify-content:space-between; background:var(--bg); }
+  .zoom-label { min-width:0; flex:1; white-space:normal; line-height:1.25; }
+  .strings-tuner { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); margin-bottom:10px; }
+  .tstring-hint, .tuner p.lead { display:none; }
+  .tuner h2 { margin-bottom:8px; }
+  .tuning-row { margin-bottom:10px; }
+  .tuner-staff svg { height:100px; }
+}
+
+/* ===== PANTALLAS AMPLIAS (ordenador, tableta; interfaz.md §8) =====
+   Las cuatro áreas pasan a la cabecera como pestañas. */
+@media (min-width:600px) and (min-height:521px){
+  .tabbar { position:absolute; top:calc(env(safe-area-inset-top) + 3px); left:50%;
+            transform:translateX(-50%); gap:4px; border:none; background:none; padding:0; z-index:5; }
+  .tab { flex:0 0 auto; flex-direction:row; min-height:40px; padding:0 15px; border-radius:20px;
+         border:1px solid var(--line); font-size:13px; }
+  .tab svg { display:none; }
+  .tab.active { background:var(--amber); border-color:var(--amber); color:#1a1006; }
+}
+
+/* Ajustes como panel lateral cuando hay anchura (interfaz.md §3). */
+@media (orientation:landscape) and (max-height:520px), (min-width:600px) and (min-height:521px){
+  .sheet { left:auto; top:0; width:min(400px, 92vw); max-height:none; border-top:none;
+           border-left:1px solid var(--line2); border-radius:var(--r) 0 0 var(--r);
+           padding:12px calc(16px + env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom)) 16px;
+           transform:translateX(102%); }
+  .sheet.open { transform:none; }
+  .grabber { display:none; }
 }
 </style>
 </head>
@@ -343,27 +426,63 @@ select { flex:1; background:var(--surface); border:1px solid var(--line2); color
   </button>
 </header>
 
-<!-- ============ ACCESO RÁPIDO ============ -->
+<!-- ============ NAVEGACIÓN ============
+     Va justo después de la cabecera para que el tabulador la recorra donde se
+     ve: arriba en pantallas amplias y a la izquierda en horizontal. En vertical
+     se dibuja abajo con order (AT-04 #4). -->
+<nav class="tabbar">
+  <button class="tab active" data-screen="free">
+    <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="9" y1="5" x2="9" y2="19"/><line x1="15" y1="5" x2="15" y2="19"/><line x1="3" y1="12" x2="21" y2="12"/></svg>
+    Libre
+  </button>
+  <button class="tab" data-screen="guess">
+    <svg viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg>
+    Adivinar
+  </button>
+  <button class="tab" data-screen="tuner">
+    <svg viewBox="0 0 24 24"><path d="M4 17a8 8 0 0 1 16 0"/><line x1="12" y1="17" x2="15.5" y2="11"/><circle cx="12" cy="17" r="1.4" fill="currentColor"/><line x1="5" y1="13.5" x2="6.5" y2="14.5"/><line x1="19" y1="13.5" x2="17.5" y2="14.5"/></svg>
+    Afinador
+  </button>
+  <button class="tab" disabled title="Próximamente">
+    <svg viewBox="0 0 24 24"><path d="M4 18V6"/><path d="M4 8h5l3-3 3 3h5"/><path d="M9 18v-6"/><path d="M15 18v-8"/><path d="M20 18V8"/></svg>
+    Escalas
+  </button>
+  <button class="tab tab-settings" id="btn-settings-rail" aria-label="Ajustes">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>
+    Ajustes
+  </button>
+</nav>
+
+<!-- ============ PANEL DE CONTROLES ============
+     En vertical y en pantallas amplias su contenido se reparte por la columna
+     como siempre (display:contents). En horizontal es la columna de la derecha,
+     y así el mástil se queda con todo el alto (F3.2, interfaz.md §7). -->
+<div class="panel" id="panel">
+
+<!-- Acceso rápido (C-03) -->
 <div class="quickbar" id="quickbar">
   <button class="chip" id="qb-notation">Do Re Mi</button>
-  <button class="chip" id="qb-staff">Pentagrama</button>
-  <div class="qb-sep" id="qb-sep" hidden></div>
-  <span class="qb-label" id="qb-hint-label" hidden>Pistas</span>
-  <button class="chip" id="qb-hint-note" hidden>Nombre</button>
-  <button class="chip" id="qb-hint-string" hidden>Cuerda</button>
+  <button class="chip" id="qb-staff" aria-label="Pentagrama"><span class="long">Pentagrama</span><span class="short" id="qb-staff-icon" aria-hidden="true"></span></button>
 </div>
 
-<!-- ============ RETO ============ -->
+<!-- Reto de Adivinar, con sus pistas dentro (interfaz.md §6) -->
 <div class="challenge" id="challenge" hidden>
-  <button class="btn-repeat" id="btn-repeat" aria-label="Repetir sonido">&#9654;</button>
-  <div class="challenge-text" id="challenge-text" aria-live="polite"></div>
-  <div class="stats">
-    <span class="streak" id="st-streak">Racha 0</span>
-    <span class="record" id="st-record">Récord 0</span>
+  <div class="ch-main">
+    <button class="btn-repeat" id="btn-repeat" aria-label="Repetir sonido">&#9654;</button>
+    <div class="challenge-text" id="challenge-text" aria-live="polite"></div>
+    <div class="stats">
+      <span class="streak" id="st-streak">Racha 0</span>
+      <span class="record" id="st-record">Récord 0</span>
+    </div>
+  </div>
+  <div class="ch-hints">
+    <span class="qb-label" id="qb-hint-label">Pistas</span>
+    <button class="chip" id="qb-hint-note">Nombre</button>
+    <button class="chip" id="qb-hint-string">Cuerda</button>
   </div>
 </div>
 
-<!-- ============ PENTAGRAMA ============ -->
+<!-- Pentagrama y nota leída -->
 <div class="display" id="display">
   <div class="display-inner">
     <div class="staff-wrap">
@@ -376,6 +495,21 @@ select { flex:1; background:var(--surface); border:1px solid var(--line2); color
   </div>
 </div>
 
+<!-- Zoom -->
+<div class="zoombar" id="zoombar">
+  <button class="zoom-btn" id="zoom-out" aria-label="Ver más trastes">&minus;</button>
+  <span class="zoom-label" id="zoom-label"></span>
+  <button class="zoom-btn" id="zoom-in" aria-label="Ver menos trastes">+</button>
+</div>
+
+</div>
+
+<!-- ============ AVISO PARA GIRAR (V-01) ============ -->
+<div class="rotate-hint" id="rotate-hint" hidden>
+  <span>&#10227; Gira el móvil para ver más trastes</span>
+  <button class="rotate-close" id="rotate-close" aria-label="Cerrar el aviso">&#10005;</button>
+</div>
+
 <!-- ============ MÁSTIL ============ -->
 <div class="board-area" id="board-area">
   <div class="board-scroll" id="board-scroll">
@@ -383,11 +517,6 @@ select { flex:1; background:var(--surface); border:1px solid var(--line2); color
       <div class="fret-nums" id="fret-nums"></div>
       <div class="strings" id="strings"></div>
     </div>
-  </div>
-  <div class="zoombar">
-    <button class="zoom-btn" id="zoom-out" aria-label="Ver más trastes">&minus;</button>
-    <span class="zoom-label" id="zoom-label"></span>
-    <button class="zoom-btn" id="zoom-in" aria-label="Ver menos trastes">+</button>
   </div>
 </div>
 
@@ -412,31 +541,11 @@ select { flex:1; background:var(--surface); border:1px solid var(--line2); color
   </div>
 </div>
 
-<!-- ============ NAVEGACIÓN ============ -->
-<nav class="tabbar">
-  <button class="tab active" data-screen="free">
-    <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="9" y1="5" x2="9" y2="19"/><line x1="15" y1="5" x2="15" y2="19"/><line x1="3" y1="12" x2="21" y2="12"/></svg>
-    Libre
-  </button>
-  <button class="tab" data-screen="guess">
-    <svg viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg>
-    Adivinar
-  </button>
-  <button class="tab" data-screen="tuner">
-    <svg viewBox="0 0 24 24"><path d="M4 17a8 8 0 0 1 16 0"/><line x1="12" y1="17" x2="15.5" y2="11"/><circle cx="12" cy="17" r="1.4" fill="currentColor"/><line x1="5" y1="13.5" x2="6.5" y2="14.5"/><line x1="19" y1="13.5" x2="17.5" y2="14.5"/></svg>
-    Afinador
-  </button>
-  <button class="tab" disabled title="Próximamente">
-    <svg viewBox="0 0 24 24"><path d="M4 18V6"/><path d="M4 8h5l3-3 3 3h5"/><path d="M9 18v-6"/><path d="M15 18v-8"/><path d="M20 18V8"/></svg>
-    Escalas
-  </button>
-</nav>
-
 <!-- ============ AJUSTES ============ -->
 <div class="sheet-bg" id="sheet-bg"></div>
-<div class="sheet" id="sheet">
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
   <div class="grabber"></div>
-  <h3>Ajustes</h3>
+  <h3 id="sheet-title">Ajustes</h3>
 
   <div class="set-group">
     <span>Notación</span>
@@ -522,7 +631,7 @@ select { flex:1; background:var(--surface); border:1px solid var(--line2); color
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.2.3';
+const APP_VERSION = '0.3.0';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -537,7 +646,16 @@ const COLORS = ['#e74c3c','#e67e22','#f39c12','#d4ac0d','#52be80','#16a085',
                 '#3498db','#5dade2','#7d3c98','#a569bd','#c0392b','#884ea0'];
 
 const NUM_FRETS = 24;
-const MIN_FRET_W = 34;   // ancho mínimo cómodo para el dedo
+const MIN_FRET_W = 34;   // ancho mínimo de un traste con ratón
+const MIN_TOUCH = 40;    // lado mínimo de lo que se toca con el dedo (G-05, V-04)
+
+/** ¿El puntero principal es un dedo? Se pregunta por la capacidad, no por el
+ *  sistema (PL-04): un portátil táctil con ratón dice que no, un móvil que sí. */
+function coarsePointer(){
+  return typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+}
+/** Ancho mínimo de un traste: 40 px con el dedo, 34 con ratón (V-04). */
+function minFretW(){ return coarsePointer() ? MIN_TOUCH : MIN_FRET_W; }
 const MAX_FRET_W = 110;
 
 // Afinaciones. Cada una es un array de 6 notas MIDI, de la cuerda más grave
@@ -602,7 +720,8 @@ const DEFAULTS = {
   customTuning:[40,45,50,55,59,64],
   visibleFrets:null,      // se calcula en el primer arranque según la pantalla
   maxChallengeFret:12,    // hasta dónde llegan los retos del modo Adivinar
-  record:0
+  record:0,
+  rotateHintClosed:false  // el aviso para girar, una vez cerrado, no vuelve (V-01)
 };
 
 const storage = {
@@ -633,7 +752,7 @@ function sanitize(raw){
   }
   if (!['latin','anglo'].includes(s.notation)) s.notation = DEFAULTS.notation;
   if (!['nylon','acoustic'].includes(s.timbre)) s.timbre = DEFAULTS.timbre;
-  ['showStaff','showAllNotes','showEquals','hintNote','hintString']
+  ['showStaff','showAllNotes','showEquals','hintNote','hintString','rotateHintClosed']
     .forEach(k => { s[k] = !!s[k]; });
   // fretNums sustituye al interruptor showFretNums de la 0.1.1. Quien lo tuviera
   // apagado conserva su elección al actualizar. Se mira el valor guardado (raw),
@@ -1235,13 +1354,13 @@ function defaultVisibleFrets(){
   return 5;                          // móvil vertical: pocos y anchos
 }
 
-const LABEL_W = 30, NUT_W = 32;   // deben coincidir con --label-w y --nut-w
+const LABEL_W = 30, NUT_W = 40;   // deben coincidir con --label-w y --nut-w
 
 /** Cuántos trastes caben de verdad sin bajar del ancho mínimo cómodo. */
 function maxVisibleFrets(){
   const scroll = document.getElementById('board-scroll');
   const avail = scroll.clientWidth - LABEL_W - NUT_W;
-  return Math.max(3, Math.min(NUM_FRETS, Math.floor(avail / MIN_FRET_W)));
+  return Math.max(3, Math.min(NUM_FRETS, Math.floor(avail / minFretW())));
 }
 
 function applyZoom(){
@@ -1257,7 +1376,11 @@ function applyZoom(){
     ? (scroll.scrollLeft + scroll.clientWidth/2 - NUT_W) / prevFw
     : null;
 
-  let fw = Math.max(MIN_FRET_W, Math.min(MAX_FRET_W, avail / state.visibleFrets));
+  // Con el dedo, un traste nunca mide menos de 40 px (V-04). Si el zoom
+  // guardado pide más trastes de los que caben así, se muestran los que caben
+  // y la etiqueta lo dice, pero no se pisa lo guardado: al girar el móvil
+  // vuelve el zoom elegido (V-08).
+  let fw = Math.max(minFretW(), Math.min(MAX_FRET_W, avail / state.visibleFrets));
   // La variable vive en #board, no en :root: cambiarla en la raíz obliga al
   // navegador a revalidar el estilo de todo el documento en cada resize.
   document.getElementById('board').style.setProperty('--fret-w', fw + 'px');
@@ -1525,14 +1648,11 @@ function setScreen(next){
 
   document.getElementById('board-area').hidden = isTuner;
   document.getElementById('tuner').hidden = !isTuner;
-  document.getElementById('display').style.display = isTuner ? 'none' : '';
-  document.getElementById('quickbar').style.display = isTuner ? 'none' : '';
+  // El panel lleva atajos, reto, pentagrama y zoom: nada de eso es del
+  // Afinador. Las pistas van dentro del reto, así que solo salen al adivinar.
+  document.getElementById('panel').hidden = isTuner;
   document.getElementById('challenge').hidden = !isGuess;
-
-  // Las pistas solo tienen sentido mientras adivinas.
-  ['qb-sep','qb-hint-label','qb-hint-note','qb-hint-string'].forEach(id => {
-    document.getElementById(id).hidden = !isGuess;
-  });
+  updateRotateHint();
 
   clearMarks(['active','equal','correct','wrong','reveal']);
   clearTimeout(nextTimer);
@@ -1589,21 +1709,79 @@ function syncUI(){
   updateScore();
 }
 
+let sheetOpener = null;   // botón que abrió Ajustes: el foco vuelve a él
+
 function openSheet(open){
   const sheet = document.getElementById('sheet');
   sheet.classList.toggle('open', open);
   document.getElementById('sheet-bg').classList.toggle('open', open);
   // Cerrado solo está desplazado con transform, así que sin inert seguiría
-  // recibiendo el foco al tabular por la página.
+  // recibiendo el foco al tabular por la página. Abierto, es lo único que se
+  // puede usar: el resto de la página queda inerte, como en un diálogo, y el
+  // teclado no puede cambiar de área por detrás (AT-04 #2).
   sheet.inert = !open;
-  if (open) sheet.querySelector('button, select, [tabindex]')?.focus();
-  else document.getElementById('btn-settings').focus();
+  for (const e of document.body.children)
+    if (e !== sheet && e.id !== 'sheet-bg' && e.id !== 'gate') e.inert = open;
+  if (open){ sheet.querySelector('button, select, [tabindex]')?.focus(); return; }
+  // El foco vuelve al botón que abrió Ajustes, o al otro si al girar el móvil
+  // ese ya no se ve (AT-04 #3).
+  const visible = b => b && (typeof b.getClientRects !== 'function' || b.getClientRects().length > 0);
+  [sheetOpener, document.getElementById('btn-settings'), document.getElementById('btn-settings-rail')]
+    .find(visible)?.focus();
 }
 
-document.addEventListener('keydown', ev => {
-  if (ev.key === 'Escape' && document.getElementById('sheet').classList.contains('open'))
-    openSheet(false);
+/* --- Botón «atrás» del sistema (C-07, interfaz.md §4) ---
+   Cada área tiene su dirección (#libre, #adivinar…) y cada cambio de área o
+   apertura de Ajustes apunta un paso en el historial del navegador. Así
+   «atrás» cierra Ajustes o vuelve al área anterior. Desde la primera área no
+   se bloquea nada: actúa el sistema. Es un estándar presente en todos los
+   navegadores; si faltara, la app funciona igual sin ese paso. */
+const SCREEN_HASH = { free:'libre', guess:'adivinar', tuner:'afinador', scales:'escalas' };
+const canHistory = typeof history !== 'undefined' && typeof history.pushState === 'function';
+const sheetIsOpen = () => document.getElementById('sheet').classList.contains('open');
+
+function goTo(next){
+  if (next === screen) return;   // tocar la pestaña en la que estás no reinicia nada
+  setScreen(next);
+  if (canHistory) history.pushState({ screen:next }, '', '#' + SCREEN_HASH[next]);
+}
+function showSettings(opener){
+  sheetOpener = opener || null;
+  openSheet(true);
+  if (canHistory) history.pushState({ screen, sheet:true }, '', '#' + SCREEN_HASH[screen]);
+}
+let closingSheet = false;   // un back() pendiente: no se pide otro (AT-04 #5)
+function hideSettings(){
+  // Si abrir Ajustes apuntó un paso, se deshace con back(): el cierre real lo
+  // hace el aviso popstate de abajo. Así el historial no acumula pasos.
+  if (closingSheet) return;
+  if (canHistory && history.state && history.state.sheet){ closingSheet = true; history.back(); }
+  else openSheet(false);
+}
+window.addEventListener('popstate', ev => {
+  closingSheet = false;
+  if (sheetIsOpen()){ openSheet(false); return; }
+  const target = ev.state && ev.state.screen;
+  if (target && target !== screen && SCREEN_HASH[target]) setScreen(target);
+  // Un paso que deja la misma área no hace nada visible: pasa, por ejemplo,
+  // tras recargar estando en Adivinar. Se sigue hacia atrás para que una
+  // pulsación de «atrás» siempre se note (AR-05 #6).
+  else if (canHistory && (!target || target === screen)) history.back();
 });
+
+document.addEventListener('keydown', ev => {
+  if (ev.key === 'Escape' && sheetIsOpen()) hideSettings();
+});
+
+/* --- Aviso para girar el móvil (V-01, interfaz.md §7) ---
+   Solo con el dedo, en vertical y en pantallas de menos de 600 px; nunca en
+   el Afinador, que funciona igual en las dos orientaciones. Cerrado no vuelve:
+   se guarda con los ajustes, y «Restablecer» lo recupera. */
+function updateRotateHint(){
+  const show = coarsePointer() && window.innerHeight > window.innerWidth &&
+               window.innerWidth < 600 && screen !== 'tuner' && !state.rotateHintClosed;
+  document.getElementById('rotate-hint').hidden = !show;
+}
 
 function toggleNotation(){
   state.notation = state.notation === 'latin' ? 'anglo' : 'latin';
@@ -1662,8 +1840,13 @@ document.getElementById('gate-btn').addEventListener('click', async () => {
   requestAnimationFrame(applyZoom);
 });
 
-document.getElementById('btn-settings').addEventListener('click', () => openSheet(true));
-document.getElementById('sheet-bg').addEventListener('click', () => openSheet(false));
+['btn-settings','btn-settings-rail'].forEach(id => {
+  document.getElementById(id).addEventListener('click', ev => showSettings(ev.currentTarget));
+});
+document.getElementById('sheet-bg').addEventListener('click', hideSettings);
+document.getElementById('rotate-close').addEventListener('click', () => {
+  state.rotateHintClosed = true; save(); updateRotateHint();
+});
 
 document.getElementById('qb-notation').addEventListener('click', toggleNotation);
 document.getElementById('qb-staff').addEventListener('click', () => {
@@ -1683,7 +1866,7 @@ document.getElementById('zoom-out').addEventListener('click', () => zoom(2));
 
 document.querySelectorAll('.tab[data-screen]').forEach(t => {
   // Tocar la pestaña en la que ya estás no hace nada: antes reiniciaba la racha.
-  t.addEventListener('click', () => { if (t.dataset.screen !== screen) setScreen(t.dataset.screen); });
+  t.addEventListener('click', () => goTo(t.dataset.screen));
 });
 
 document.querySelectorAll('#set-notation button').forEach(b => {
@@ -1726,7 +1909,8 @@ document.getElementById('set-reset').addEventListener('click', async () => {
   buildBoard();
   syncUI();
   applyZoom();
-  openSheet(false);
+  updateRotateHint();          // «Restablecer» recupera el aviso para girar
+  hideSettings();
   // El reto anterior puede referirse a una nota que ya no existe en la
   // afinación restablecida, y dejaría al usuario fallando indefinidamente.
   if (screen === 'guess'){ streak = 0; updateScore(); newChallenge(); }
@@ -1745,6 +1929,7 @@ document.getElementById('set-reset').addEventListener('click', async () => {
 // obsoleto. Además, ya no se pisa el zoom elegido por el usuario (V-08).
 let resizeFrame = null;
 window.addEventListener('resize', () => {
+  updateRotateHint();
   if (screen === 'tuner') return;
   if (resizeFrame) cancelAnimationFrame(resizeFrame);
   resizeFrame = requestAnimationFrame(applyZoom);
@@ -1756,12 +1941,22 @@ if (!state.visibleFrets) state.visibleFrets = defaultVisibleFrets();
 // que nadie lo haya abierto nunca.
 document.getElementById('sheet').inert = true;
 document.getElementById('app-version').textContent = 'Trasteando ' + APP_VERSION;
+// Rótulo corto del chip del pentagrama: la misma clave dibujada que en el
+// pentagrama, porque el carácter Unicode falla en muchos Android.
+(function(){
+  const svg = el('svg', { viewBox:'4 13 17 41', width:11, height:26, 'aria-hidden':'true' });
+  svg.appendChild(el('path', { d:CLEF_PATH, fill:'currentColor' }));
+  document.getElementById('qb-staff-icon').appendChild(svg);
+})();
+// Al abrir se entra siempre en Libre (L-01), aunque la dirección diga otra área.
+if (canHistory) history.replaceState({ screen:'free' }, '', '#libre');
 buildTuner();
 buildBoard();
 bindBoardInput();
 clearStaff();
 syncUI();
 applyZoom();
+updateRotateHint();
 </script>
 </body>
 </html>

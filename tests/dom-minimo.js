@@ -114,8 +114,10 @@ function appScript(src){
   return src.split('<script>\n', 2)[1].split('</script>')[0];
 }
 
-/** Arranca la app en un contexto aislado. `preset` simula ajustes ya guardados. */
-function boot(htmlPath, preset){
+/** Arranca la app en un contexto aislado. `preset` simula ajustes ya guardados;
+ *  `extra` añade o sustituye capacidades del navegador (matchMedia, history…)
+ *  para probar cómo responde la app a cada una (PL-04). */
+function boot(htmlPath, preset, extra){
   const src = fs.readFileSync(htmlPath, 'utf8');
   const body = parseBody(src);
   const html = new El('html'); html.appendChild(body);
@@ -135,8 +137,11 @@ function boot(htmlPath, preset){
     requestAnimationFrame: f => setTimeout(f, 0), cancelAnimationFrame: id => clearTimeout(id),
     setTimeout, clearTimeout, confirm: () => true, atob, btoa,
     console: { log(){}, warn(){}, error: (...a) => errors.push(a.map(String).join(' ')) },
-    addEventListener(){}
+    // Los avisos de la ventana (resize, popstate…) se guardan para poder lanzarlos.
+    winListeners: {},
+    addEventListener(t, f){ (this.winListeners[t] ||= []).push(f); }
   };
+  Object.assign(ctx, extra || {});
   ctx.window = ctx;
   vm.createContext(ctx);
   vm.runInContext(appScript(src), ctx, { filename: 'index.html' });
@@ -148,7 +153,8 @@ function boot(htmlPath, preset){
     if (drag) strings.dispatchEvent({ type: 'pointermove', clientX: 40, clientY: 10, pointerId: 1, target: cell });
     strings.dispatchEvent({ type: 'pointerup', clientX: drag ? 40 : 10, clientY: 10, pointerId: 1, target: cell });
   };
-  return { $, ev, doc, store, errors, press };
+  const fireWin = (type, ev) => (ctx.winListeners[type] || []).forEach(f => f(Object.assign({ type }, ev)));
+  return { $, ev, doc, store, errors, press, fireWin };
 }
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
