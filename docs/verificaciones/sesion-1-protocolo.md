@@ -65,7 +65,7 @@ La app en la pantalla de inicio.
 
 | # | Prueba | Qué haces | Resultado esperado | Requisitos |
 |---|---|---|---|---|
-| D01 | Instalar | En Safari, con la web abierta: botón Compartir → «Añadir a pantalla de inicio» → Añadir. | Aparece Trasteando en la pantalla de inicio. El icono puede verse genérico: el propio llega en F6.3. | G-04, PL-03 |
+| D01 | Instalar | Abre https://pdigue.github.io/guitarra/ en Safari (no desde dentro de la app de Claude: cópialo y pégalo en Safari). Botón Compartir (cuadrado con flecha hacia arriba, abajo; si no está, toca «…») → baja hasta «Añadir a pantalla de inicio» → «Añadir». | Aparece Trasteando en la pantalla de inicio. El icono puede verse genérico: el propio llega en F6.3. | G-04, PL-03 |
 | D02 | Abrir la app instalada | Ábrela desde el icono y toca «Empezar». | Se abre sin las barras de Safari, a pantalla completa, y suena. | G-04, PL-03 |
 | D03 | Horizontal en la app instalada | Gira el iPhone dentro de la app instalada. | Las cuerdas son aún más altas que en Safari. Nada queda tapado por la muesca. | V-01 |
 
