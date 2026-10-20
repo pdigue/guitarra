@@ -42,8 +42,15 @@ Nada todavía.
 - `herramientas/paleta.py`: genera la paleta y comprueba contraste, separación con tres tipos de daltonismo y que cada sostenido sea de la familia de su natural.
 - `herramientas/comprobar-accesibilidad.js`: recorre la app solo con teclado, mide el contraste de cada texto visible y comprueba el modo de movimiento reducido.
 
+### Corregido tras AR-06 y AT-05
+- **J-12 · G-05** · En Adivinar, un lector de pantalla podía leer la nota de las casillas sin foco. Ahora ninguna casilla la anuncia, y el texto de los puntos no se lee.
+- **L-03** · Con «Ver todas las notas», las posiciones del mismo sonido llevan además un anillo claro por fuera.
+- El asa de Ajustes termina el gesto aunque se suelte fuera y no rebota al cerrar. Mantener pulsado Intro no repite la nota. La casilla con foco no queda bajo el nombre de la cuerda.
+- `paleta.py` tiene umbrales escritos y falla por debajo de ellos.
+
 ### Verificado
-- Banco: 34 de 34. Cuatro pruebas nuevas, que fallan con la 0.3.0: la paleta, los grises, el mástil con teclado, y la fila y el asa de Ajustes.
+- Auditorías AR-06 y AT-05: 11 hallazgos, ninguno crítico ni alto; todos corregidos.
+- Banco: 35 de 35. Cinco pruebas nuevas: la paleta, los grises, el mástil con teclado, la fila y el asa de Ajustes, y que en Adivinar ninguna casilla anuncie su nota. Las cuatro primeras fallan con la 0.3.0.
 - `comprobar-accesibilidad.js`: «Todo correcto». Con la 0.3.0 encontraba 205 textos por debajo del contraste y un mástil al que no se llegaba con el teclado (V-07).
 - `comprobar-disposicion.js` y las 15 comprobaciones de F1.1 siguen bien. `dist/trasteando.html` regenerado: 1,48 MB.
 

@@ -166,7 +166,7 @@ Decisión del cliente: «elige tú los colores, para que las notas se distingan 
 - **Las 7 naturales**, bien separadas también con daltonismo: Do melocotón, Re verde, Mi amarillo, Fa lila, Sol rosa, La rojo y Si celeste.
 - **Cada sostenido**, un tono más claro de su natural: Do♯ es un Do más claro.
 - **Contraste** de 5,1:1 o más, con el texto de los puntos y como texto sobre el fondo.
-- La nota pulsada va **rellena**. Las demás posiciones de la misma nota y «Ver todas las notas» van **con contorno**, sin relleno.
+- La nota pulsada va **rellena**. Las demás posiciones de la misma nota y «Ver todas las notas» van **con contorno**, sin relleno. Con «Ver todas las notas», las del mismo sonido llevan además un anillo claro por fuera (L-03, AR-06).
 - El nombre de la nota se escribe siempre, por el principio 5.
 - El ámbar sigue siendo el color de lo activo, el verde el del acierto y el rojo el del error.
 

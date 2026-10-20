@@ -17,6 +17,11 @@ los semitonos sean colores derivados»):
 
 La distancia entre colores se mide en OKLab (× 100): por debajo de 3 cuesta
 distinguirlos lado a lado; por encima de 10 se distinguen sin esfuerzo.
+
+Umbrales (criterio de G-05 en la matriz, AR-06 #3): las 7 naturales, a 7,5 o
+más entre sí con visión normal y con cada simulación; las 12 notas, a 8 o más
+con visión normal. Entre sostenidos y naturales no emparentadas la separación
+baja con daltonismo: lo compensa que el nombre de la nota siempre está escrito.
 """
 import math
 import re
@@ -27,6 +32,8 @@ NOMBRES = ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La
 NATURALES = [0, 2, 4, 5, 7, 9, 11]
 TEXTO_OSCURO = '#160f07'   # texto de los puntos del mástil
 FONDO = '#140e09'          # fondo de la app (--bg)
+MIN_NATURALES = 7.5        # separación mínima entre naturales, en toda visión
+MIN_DOCE_NORMAL = 8.0      # separación mínima entre las 12, con visión normal
 
 # Paleta propuesta: notas naturales en OKLCH (luminosidad, croma, tono en
 # grados). Los tonos se reparten por el círculo y las luminosidades varían,
@@ -147,8 +154,10 @@ def informe(pal, titulo):
         d, x, y = pares[0]
         todas = sorted((distancia(pal[a], pal[b], m), NOMBRES[a], NOMBRES[b])
                        for a in range(12) for b in range(a + 1, 12))
+        malo = d < MIN_NATURALES or (m is None and todas[0][0] < MIN_DOCE_NORMAL)
+        fallos += malo
         print(f'  {vision:13s} naturales: par más parecido {x}–{y} a {d:4.1f}'
-              f' · las 12: {todas[0][1]}–{todas[0][2]} a {todas[0][0]:4.1f}')
+              f' · las 12: {todas[0][1]}–{todas[0][2]} a {todas[0][0]:4.1f}' + ('  ← por debajo del umbral' if malo else ''))
     familia = []
     for s in range(12):
         if s in NATURALES:

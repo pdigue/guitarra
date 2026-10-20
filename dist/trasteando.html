@@ -147,6 +147,7 @@ button { font-family:inherit; color:inherit; }
 /* ===== MÁSTIL ===== */
 .board-area { flex:1; min-height:0; display:flex; flex-direction:column; padding:8px 6px 0; }
 .board-scroll { flex:1; min-height:0; overflow-x:auto; overflow-y:hidden;
+  scroll-padding-left:var(--label-w);   /* el nombre de la cuerda va pegado a la izquierda */
   -webkit-overflow-scrolling:touch; scrollbar-width:thin; touch-action:pan-x; }
 .board-scroll::-webkit-scrollbar { height:4px; }
 .board-scroll::-webkit-scrollbar-thumb { background:var(--line2); border-radius:2px; }
@@ -203,6 +204,10 @@ button { font-family:inherit; color:inherit; }
   color:var(--dot); box-shadow:inset 0 0 0 2px var(--dot); }
 .board.show-all .dot { transform:scale(.88); }
 .fret-cell.equal .dot { transform:scale(.92); }
+/* Con «Ver todas las notas», las posiciones del mismo sonido (L-03) llevan
+   además un anillo claro por fuera, para no confundirse con las demás. */
+.board.show-all .fret-cell.equal .dot { transform:scale(1);
+  box-shadow:inset 0 0 0 2px var(--dot), 0 0 0 2px var(--text); }
 .board.show-all .fret-cell.active .dot { transform:scale(1); background:var(--dot); color:#160f07;
   box-shadow:0 2px 6px rgba(0,0,0,.45), inset 0 1px 1px rgba(255,255,255,.28); }
 .fret-cell.correct .dot { opacity:1; transform:scale(1); box-shadow:0 0 0 3px var(--ok), 0 2px 8px rgba(0,0,0,.5); }
@@ -1246,6 +1251,7 @@ function buildBoard(){
       const info = noteInfo(midi);
       const dot = document.createElement('div');
       dot.className = 'dot';
+      dot.setAttribute('aria-hidden', 'true');   // lo que se anuncia es la etiqueta de la casilla
       dot.style.setProperty('--dot', info.color);
       dot.textContent = noteName(midi);
       cell.appendChild(dot);
@@ -1263,6 +1269,7 @@ function buildBoard(){
   });
 
   setRoving(kbPos.row, kbPos.fret);
+  labelCells();
   applyBoardFlags();
 }
 
@@ -1288,8 +1295,14 @@ function setRoving(row, fret){
   if (old) old.setAttribute('tabindex', '-1');
   kbPos = { row, fret };
   const cell = cellAt(row, fret);
-  if (cell){ cell.setAttribute('tabindex', '0'); cell.setAttribute('aria-label', cellLabel(cell)); }
+  if (cell) cell.setAttribute('tabindex', '0');
   return cell;
+}
+/** Pone a todas las casillas su etiqueta. Se llama al construir el mástil y al
+ *  cambiar de área o de nomenclatura: en Adivinar ninguna casilla dice su nota,
+ *  ni siquiera las que no tienen el foco (AR-06 #1). */
+function labelCells(){
+  document.querySelectorAll('.fret-cell').forEach(c => c.setAttribute('aria-label', cellLabel(c)));
 }
 /** Primer y último traste que se ven enteros en la ventana del mástil. */
 function visibleFretRange(){
@@ -1314,7 +1327,7 @@ function bindBoardKeys(){
       case 'ArrowUp':    row = Math.max(0, row - 1); break;
       case 'Home':       fret = visibleFretRange()[0]; break;
       case 'End':        fret = visibleFretRange()[1]; break;
-      case 'Enter': case ' ': ev.preventDefault(); firePress(cell); return;
+      case 'Enter': case ' ': ev.preventDefault(); if (!ev.repeat) firePress(cell); return;
       default: return;
     }
     ev.preventDefault();
@@ -1335,7 +1348,7 @@ function refreshNoteNames(){
   document.querySelectorAll('.string-label').forEach((l,i) => {
     l.textContent = noteName(strs[i].openMidi);
   });
-  setRoving(kbPos.row, kbPos.fret);
+  labelCells();
 }
 
 function applyBoardFlags(){
@@ -1748,7 +1761,7 @@ function setScreen(next){
   clearTimeout(nextTimer);
   clearTimeout(playTimer);
   applyBoardFlags();          // «ver todas las notas» depende del modo (J-12)
-  setRoving(kbPos.row, kbPos.fret);   // su etiqueta dice la nota o no, según el área
+  labelCells();               // las etiquetas dicen la nota o no, según el área
 
   if (isGuess){
     streak = 0;
@@ -1811,6 +1824,7 @@ function openSheet(open){
   // puede usar: el resto de la página queda inerte, como en un diálogo, y el
   // teclado no puede cambiar de área por detrás (AT-04 #2).
   sheet.inert = !open;
+  if (!open) sheet.style.transform = '';   // por si se cerró deslizando el asa
   for (const e of document.body.children)
     if (e !== sheet && e.id !== 'sheet-bg' && e.id !== 'gate') e.inert = open;
   if (open){ sheet.querySelector('button, select, [tabindex]')?.focus(); return; }
@@ -1953,6 +1967,8 @@ document.getElementById('sheet').addEventListener('click', ev => {
   handle.addEventListener('pointerdown', ev => {
     if (typeof getComputedStyle === 'function' && getComputedStyle(grabber).display === 'none') return;
     drag = { y:ev.clientY, t:Date.now(), id:ev.pointerId, dy:0 };
+    // El asa se queda con el puntero: si se suelta fuera, el arrastre termina igual.
+    if (typeof handle.setPointerCapture === 'function') handle.setPointerCapture(ev.pointerId);
     sheet.classList.add('dragging');
   });
   handle.addEventListener('pointermove', ev => {
@@ -1960,17 +1976,20 @@ document.getElementById('sheet').addEventListener('click', ev => {
     drag.dy = Math.max(0, ev.clientY - drag.y);
     sheet.style.transform = 'translateY(' + drag.dy + 'px)';
   });
-  const end = () => {
-    if (!drag) return;
+  const end = ev => {
+    if (!drag || (ev && ev.pointerId !== undefined && ev.pointerId !== drag.id)) return;
     const rapido = drag.dy > 30 && drag.dy / Math.max(1, Date.now() - drag.t) > 0.5;
     const cerrar = drag.dy > 80 || rapido;
     drag = null;
     sheet.classList.remove('dragging');
-    sheet.style.transform = '';
+    // Si se cierra, la hoja sigue bajando desde donde la soltaste: openSheet
+    // quita el desplazamiento al cerrar, sin rebote (AT-05 #3).
     if (cerrar) hideSettings();
+    else sheet.style.transform = '';
   };
   handle.addEventListener('pointerup', end);
   handle.addEventListener('pointercancel', end);
+  handle.addEventListener('lostpointercapture', end);
 })();
 document.getElementById('rotate-close').addEventListener('click', () => {
   state.rotateHintClosed = true; save(); updateRotateHint();

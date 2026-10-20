@@ -512,13 +512,24 @@ test('el mástil se maneja con teclado y en Adivinar no dice la nota (G-05, J-12
   c = tecla('ArrowDown');
   assert.equal(c.dataset.row, '1');
   assert.match(c.getAttribute('aria-label'), /^Do4, 2ª cuerda, traste 1$/);
+  assert.equal(A.doc.activeElement, c, 'el foco se mueve de verdad a la casilla');
+  // Inicio y Fin van a lo que se ve: ventana de 300 px, etiqueta de 30, cejuela
+  // de 40 y trastes de 60 → se ven enteros el 0 al 3 (AT-05 #6).
+  A.$('board-scroll').getBoundingClientRect = () => ({ left: 0, right: 300 });
+  A.doc.querySelectorAll('.fret-cell[data-row="0"]').forEach(x => {
+    const f = +x.dataset.fret, left = f === 0 ? 30 : 70 + (f - 1) * 60;
+    x.getBoundingClientRect = () => ({ left, right: left + (f === 0 ? 40 : 60) });
+  });
   c = tecla('End');
-  assert.equal(c.dataset.fret, '24');
+  assert.equal(c.dataset.fret, '3', 'Fin: el último traste a la vista');
   c = tecla('Home');
   assert.equal(c.dataset.fret, '0');
   assert.equal(A.doc.querySelectorAll('.fret-cell[tabindex="0"]').length, 1);
   tecla('Enter');
   assert.equal(A.$('note-name').textContent, 'Si', 'Intro toca la nota, como el dedo');
+  A.$('note-name').textContent = '';
+  strings.dispatchEvent({ type: 'keydown', key: 'Enter', repeat: true, target: A.doc.querySelector('.fret-cell[tabindex="0"]') });
+  assert.equal(A.$('note-name').textContent, '', 'mantener Intro pulsado no repite la nota');
   A.doc.querySelector('.tab[data-screen="guess"]').click();
   c = A.doc.querySelector('.fret-cell[tabindex="0"]');
   assert.equal(c.getAttribute('aria-label'), '2ª cuerda, al aire', 'en Adivinar no se anuncia la nota');
@@ -544,4 +555,18 @@ test('en Ajustes la fila entera cambia el interruptor, y el asa cierra deslizand
   asa.dispatchEvent({ type: 'pointermove', clientY: 220, pointerId: 8 });
   asa.dispatchEvent({ type: 'pointerup', clientY: 220, pointerId: 8 });
   assert.ok(!A.$('sheet').classList.contains('open'), '120 px cierra');
+});
+
+test('en Adivinar ninguna casilla anuncia su nota a un lector de pantalla (J-12, G-05, AR-06 #1)', () => {
+  const A = boot(APP);
+  const strings = A.$('strings');
+  // Se visitan casillas en Libre con el teclado; luego se pasa a Adivinar.
+  for (let i = 0; i < 3; i++) strings.dispatchEvent({ type: 'keydown', key: 'ArrowRight', target: A.doc.querySelector('.fret-cell[tabindex="0"]') });
+  A.doc.querySelector('.tab[data-screen="guess"]').click();
+  const nombres = /\b(Do|Re|Mi|Fa|Sol|La|Si)#?\d/;
+  const conNota = A.doc.querySelectorAll('.fret-cell').filter(c => nombres.test(c.getAttribute('aria-label') || ''));
+  assert.equal(conNota.length, 0, 'ninguna etiqueta dice la nota');
+  assert.ok(A.doc.querySelectorAll('.dot').every(d => d.getAttribute('aria-hidden') === 'true'), 'el texto del punto no se lee');
+  A.doc.querySelector('.tab[data-screen="free"]').click();
+  assert.match(A.doc.querySelector('.fret-cell[data-row="0"][data-fret="0"]').getAttribute('aria-label'), /^Mi4, 1ª cuerda, al aire$/, 'en Libre sí');
 });

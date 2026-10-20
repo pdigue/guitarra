@@ -1,0 +1,3 @@
+# Cachés que genera Python al ejecutar las herramientas.
+__pycache__/
+*.pyc
