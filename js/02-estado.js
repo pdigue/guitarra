@@ -26,7 +26,10 @@ const DEFAULTS = {
   records:{},             // récord de racha de cada afinación: { standard: 7, dropd: 3 } (J-11)
   rotateHintClosed:false, // el aviso para girar, una vez cerrado, no vuelve (V-01)
   tunerMode:'ear',        // afinador: 'ear' de oído · 'mic' por micrófono (F4.3)
-  lang:null               // 'es' o 'en' (G-12); sin elegir, el del navegador
+  lang:null,              // 'es' o 'en' (G-12); sin elegir, el del navegador
+  scaleId:'mayor',        // Escalas (F5): tipo, tónica (clase de altura) y submodo
+  scalePc:0,
+  scaleMode:'show'        // 'show' Mostrar · 'practice' Práctica
 };
 
 const storage = {
@@ -59,6 +62,9 @@ function sanitize(raw){
   if (!['nylon','acoustic'].includes(s.timbre)) s.timbre = DEFAULTS.timbre;
   if (!['ear','mic'].includes(s.tunerMode)) s.tunerMode = DEFAULTS.tunerMode;
   if (!['es','en'].includes(s.lang)) s.lang = idiomaDelNavegador();
+  if (!ESCALAS.some(e => e.id === s.scaleId)) s.scaleId = DEFAULTS.scaleId;
+  if (!Number.isInteger(s.scalePc) || s.scalePc < 0 || s.scalePc > 11) s.scalePc = DEFAULTS.scalePc;
+  if (!['show','practice'].includes(s.scaleMode)) s.scaleMode = DEFAULTS.scaleMode;
   // Quien estrena la app en inglés empieza con C D E; luego decide en Ajustes.
   if (!(raw && raw.notation) && s.lang === 'en') s.notation = 'anglo';
   ['showStaff','showAllNotes','showEquals','hintNote','hintString','rotateHintClosed']

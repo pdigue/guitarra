@@ -114,6 +114,31 @@ button { font-family:inherit; color:inherit; }
 .challenge { flex-shrink:0; display:flex; flex-direction:column; gap:2px;
   padding:3px 12px; background:var(--surface); border-bottom:1px solid var(--line); }
 .ch-main { display:flex; align-items:center; gap:10px; }
+/* Escalas (F5) */
+.scales-card { flex-shrink:0; display:flex; flex-direction:column; gap:4px; padding:4px 12px;
+  background:var(--surface); border-bottom:1px solid var(--line); }
+.sc-top { display:flex; align-items:center; gap:6px; }
+.sc-top select { flex:1 1 0; min-width:0; }
+.sc-center { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; gap:1px; }
+.sc-line { display:flex; flex-wrap:wrap; justify-content:center; align-items:baseline; gap:1px 5px; font-size:13px; color:var(--text); }
+.sc-line .sc-gap { font-size:11px; color:var(--amber); }
+.sc-line .sc-note.now { color:var(--amber); font-weight:800; }
+.sc-practice { display:flex; align-items:center; gap:8px; }
+.sc-msg { flex:1; font-size:13.5px; line-height:1.35; min-width:0; }
+.sc-side { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.sc-count { font-size:13px; font-weight:700; color:var(--amber); }
+.sc-nav { flex-shrink:0; display:flex; align-items:center; justify-content:center; gap:10px; padding:2px 10px; }
+.sc-step-text { text-align:center; font-size:12px; color:var(--muted); line-height:1.3; }
+.zoom-btn:disabled { opacity:.35; cursor:default; }
+/* Mástil en Escalas: las notas de la escala con su nombre escrito; la tónica,
+   con anillo (no depende del color); el paso del guiado, resaltado. */
+.board.scales .fret-cell.scale .dot { opacity:1; transform:scale(.88); }
+.board.scales .fret-cell.scale-tonic .dot { transform:scale(.96); box-shadow:0 0 0 2px #160f07, 0 0 0 4px var(--text); }
+.board.scales .fret-cell.scale-step .dot { transform:scale(1.05); box-shadow:0 0 0 3px var(--amber), 0 2px 8px rgba(0,0,0,.5); }
+/* En Práctica no se ven: se encuentran. Tras un fallo se enseñan un momento. */
+.board.scales.practice .fret-cell.scale:not(.correct) .dot { opacity:0; }
+.board.scales.practice.reveal-scale .fret-cell.scale:not(.correct) .dot { opacity:1; background:rgba(20,14,9,.88);
+  color:var(--dot); box-shadow:inset 0 0 0 2px var(--dot); }
 .ch-hints { display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
 /* Pista encendida: el chip enseña la respuesta, con etiqueta pequeña y valor
    grande y borde discontinuo de «pista», para no confundirla con la nota que
@@ -332,7 +357,8 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
    las demás con order. En horizontal pasa a ser la columna de la derecha. */
 .panel { display:contents; }
 .header { order:1; } .quickbar { order:2; } .challenge { order:3; } .display { order:4; }
-.rotate-hint { order:5; } .board-area { order:6; } .zoombar { order:7; } .tuner { order:8; }
+.rotate-hint { order:5; } .board-area { order:6; } .sc-nav, .zoombar { order:7; } .tuner { order:8; }
+.scales-card { order:3; }
 .tabbar { order:9; }
 
 /* En pantallas táctiles en vertical el mástil no baja de 40 px por cuerda
@@ -425,6 +451,15 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .chip .long { display:none; }
   .chip .short { display:inline-flex; }
   .challenge { padding:0; gap:6px; background:none; border:none; }
+  .scales-card { padding:0; gap:6px; background:none; border:none; }
+  .sc-top { flex-wrap:wrap; }
+  .sc-top .seg { flex-basis:100%; }
+  .sc-practice { flex-wrap:wrap; }
+  .sc-top select { flex:1 1 100%; }           /* tónica y tipo, cada uno en su fila: «Pentatónica mayor» cabe */
+  .sc-nav { padding:0; gap:6px; flex-wrap:wrap; justify-content:space-between; }
+  .sc-center { order:3; flex-basis:100%; align-items:flex-start; }
+  .sc-line { justify-content:flex-start; }
+  .sc-step-text { text-align:left; }
   .ch-main { flex-wrap:wrap; gap:6px; justify-content:space-between; }
   .challenge-text { order:3; flex-basis:100%; font-size:13px; }
   .ch-hints { flex-wrap:wrap; gap:4px 6px; }
@@ -526,7 +561,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
     <svg viewBox="0 0 24 24"><path d="M4 17a8 8 0 0 1 16 0"/><line x1="12" y1="17" x2="15.5" y2="11"/><circle cx="12" cy="17" r="1.4" fill="currentColor"/><line x1="5" y1="13.5" x2="6.5" y2="14.5"/><line x1="19" y1="13.5" x2="17.5" y2="14.5"/></svg>
     <span data-t="tab.tuner">Afinador</span>
   </button>
-  <button class="tab" disabled title="Próximamente" data-t-title="soon">
+  <button class="tab" data-screen="scales">
     <svg viewBox="0 0 24 24"><path d="M4 18V6"/><path d="M4 8h5l3-3 3 3h5"/><path d="M9 18v-6"/><path d="M15 18v-8"/><path d="M20 18V8"/></svg>
     <span data-t="tab.scales">Escalas</span>
   </button>
@@ -566,6 +601,25 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   </div>
 </div>
 
+<!-- Escalas (F5): submodo, tónica y tipo; intervalos y estado de la práctica -->
+<div class="scales-card" id="scales-card" hidden>
+  <div class="sc-top">
+    <div class="seg" id="scale-mode" role="group" aria-label="Submodo" data-t-aria="scale.mode">
+      <button data-v="show" data-t="scale.show">Mostrar</button>
+      <button data-v="practice" data-t="scale.practice">Práctica</button>
+    </div>
+    <select id="scale-tonic" aria-label="Tónica" data-t-aria="scale.tonic"></select>
+    <select id="scale-type" aria-label="Tipo de escala" data-t-aria="scale.typeLabel"></select>
+  </div>
+  <div class="sc-practice" id="scale-practice" hidden>
+    <div class="sc-msg" id="scale-msg" aria-live="polite"></div>
+    <div class="sc-side">
+      <span class="sc-count" id="scale-count"></span>
+      <button class="chip" id="scale-reset" data-t="scale.reset">Otra vez</button>
+    </div>
+  </div>
+</div>
+
 <!-- Pentagrama y nota leída -->
 <div class="display" id="display">
   <div class="display-inner">
@@ -577,6 +631,17 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
       <div class="note-oct" id="note-oct"></div>
     </div>
   </div>
+</div>
+
+<!-- Paso a paso de Mostrar (E-06): va bajo el mástil, encima del zoom -->
+<div class="sc-nav" id="scale-nav" hidden>
+  <button class="zoom-btn" id="scale-prev" aria-label="Paso anterior" data-t-aria="scale.prev">&#9664;</button>
+  <!-- Las notas con sus intervalos y, debajo, el paso: así cabe en una fila -->
+  <div class="sc-center">
+    <div class="sc-line" id="scale-line" aria-label="Notas e intervalos" data-t-aria="scale.lineAria"></div>
+    <span class="sc-step-text" id="scale-step-text" aria-live="polite"></span>
+  </div>
+  <button class="zoom-btn" id="scale-next" aria-label="Paso siguiente" data-t-aria="scale.next">&#9654;</button>
 </div>
 
 <!-- Zoom -->
@@ -799,6 +864,20 @@ const TEXTOS = {
     'record.title': 'Récord de racha en la afinación {afin} (cada afinación tiene el suyo)',
     'hints': 'Pistas', 'hint.name': 'Nombre', 'hint.note': 'Nota', 'hint.string': 'Cuerda', 'hint.strings': 'Cuerdas',
     'reader.play': 'toca', 'octave': 'octava {n}',
+    'scale.mode': 'Submodo', 'scale.show': 'Mostrar', 'scale.practice': 'Práctica',
+    'scale.tonic': 'Tónica', 'scale.typeLabel': 'Tipo de escala', 'scale.lineAria': 'Notas e intervalos',
+    'scale.type.mayor': 'Mayor', 'scale.type.menor': 'Menor natural',
+    'scale.type.pentaMayor': 'Pentatónica mayor', 'scale.type.pentaMenor': 'Pentatónica menor',
+    'scale.name.mayor': '{t} mayor', 'scale.name.menor': '{t} menor',
+    'scale.name.pentaMayor': 'la pentatónica mayor de {t}', 'scale.name.pentaMenor': 'la pentatónica menor de {t}',
+    'scale.prev': 'Paso anterior', 'scale.next': 'Paso siguiente',
+    'scale.step': 'Paso {i} de {total}', 'scale.stepTonic': '{n}, la tónica',
+    'scale.stepUp': '{n}, {d} sobre {prev}',
+    'scale.gap.T': 'un tono', 'scale.gap.ST': 'un semitono', 'scale.gap.T½': 'un tono y medio',
+    'scale.count': '{n} de {total}', 'scale.reset': 'Otra vez',
+    'scale.practiceHint': 'Toca notas de {e}: cada una distinta cuenta',
+    'scale.yes': '✓ {n} está en {e}', 'scale.no': '✗ {n} no está en {e}',
+    'scale.allFound': '¡Todas! Ya tienes {e} entera',
     'zoom.less': 'Ver menos trastes', 'zoom.more': 'Ver más trastes',
     'zoom.n': '{n} trastes a la vista', 'zoom.all': 'Mástil completo',
     'rotate': 'Gira el móvil para ver más trastes', 'rotate.close': 'Cerrar el aviso',
@@ -870,6 +949,20 @@ const TEXTOS = {
     'record.title': 'Best streak in {afin} tuning (each tuning keeps its own)',
     'hints': 'Hints', 'hint.name': 'Name', 'hint.note': 'Note', 'hint.string': 'String', 'hint.strings': 'Strings',
     'reader.play': 'play', 'octave': 'octave {n}',
+    'scale.mode': 'Submode', 'scale.show': 'Show', 'scale.practice': 'Practice',
+    'scale.tonic': 'Root', 'scale.typeLabel': 'Scale type', 'scale.lineAria': 'Notes and intervals',
+    'scale.type.mayor': 'Major', 'scale.type.menor': 'Natural minor',
+    'scale.type.pentaMayor': 'Major pentatonic', 'scale.type.pentaMenor': 'Minor pentatonic',
+    'scale.name.mayor': '{t} major', 'scale.name.menor': '{t} minor',
+    'scale.name.pentaMayor': '{t} major pentatonic', 'scale.name.pentaMenor': '{t} minor pentatonic',
+    'scale.prev': 'Previous step', 'scale.next': 'Next step',
+    'scale.step': 'Step {i} of {total}', 'scale.stepTonic': '{n}, the root',
+    'scale.stepUp': '{n}, {d} above {prev}',
+    'scale.gap.T': 'a whole tone', 'scale.gap.ST': 'a semitone', 'scale.gap.T½': 'a tone and a half',
+    'scale.count': '{n} of {total}', 'scale.reset': 'Again',
+    'scale.practiceHint': 'Play notes of {e}: each different one counts',
+    'scale.yes': '✓ {n} is in {e}', 'scale.no': '✗ {n} is not in {e}',
+    'scale.allFound': 'All of them! You have the whole {e}',
     'zoom.less': 'Show fewer frets', 'zoom.more': 'Show more frets',
     'zoom.n': '{n} frets in view', 'zoom.all': 'Whole neck',
     'rotate': 'Turn your phone to see more frets', 'rotate.close': 'Close this tip',
@@ -965,7 +1058,7 @@ function aplicarIdioma(){
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.4.2';
+const APP_VERSION = '0.5.0';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -1042,6 +1135,79 @@ function noteName(midi){
 function sciName(midi){
   return ANGLO[((midi%12)+12)%12] + (Math.floor(midi/12)-1);
 }
+
+/* ============================================================
+   1b. NOTAS ESCRITAS Y ESCALAS (F5.1 y F5.2)
+   ============================================================ */
+
+/* Hasta aquí una nota era un sonido: el MIDI 70 se llama siempre «La#». Para
+   escribir escalas no basta. Si♭ y La♯ suenan igual, pero en Fa mayor la
+   cuarta nota es Si♭: cada escala mayor o menor usa las siete letras, una vez
+   cada una (Fa Sol La Si♭ Do Re Mi). Con La♯ habría dos «La» y ningún «Si».
+   Por eso una nota escrita es una LETRA (Do…Si) más una ALTERACIÓN (♭, ♯…),
+   y la letra la decide la escala, no el sonido. */
+
+const LETRAS_ANGLO = ['C','D','E','F','G','A','B'];
+const LETRAS_LATIN = ['Do','Re','Mi','Fa','Sol','La','Si'];
+const PC_LETRA = [0, 2, 4, 5, 7, 9, 11];          // semitonos de Do a cada letra
+const ALTERACION = { '-2':'𝄫', '-1':'♭', '0':'', '1':'♯', '2':'𝄪' };
+
+/** Clase de altura (0 = Do … 11 = Si) de una nota escrita { letra, alt }. */
+function pcEscrita(n){ return ((PC_LETRA[n.letra] + n.alt) % 12 + 12) % 12; }
+
+/** La nota escrita con esa letra que suena como la clase de altura pc. */
+function escribir(pc, letra){
+  let alt = ((pc - PC_LETRA[letra]) % 12 + 12) % 12;
+  if (alt > 6) alt -= 12;                          // −1 es ♭, no «+11»
+  return { letra, alt };
+}
+
+/** «Si♭» o «B♭», según la nomenclatura elegida. */
+function nombreEscrito(n){
+  return (state.notation === 'latin' ? LETRAS_LATIN : LETRAS_ANGLO)[n.letra] + ALTERACION[n.alt];
+}
+
+/** Octava de una nota escrita que suena en `midi`: Si♯3 es el MIDI 60, como Do4. */
+function octavaEscrita(n, midi){ return Math.floor((midi - n.alt - PC_LETRA[n.letra]) / 12) - 1; }
+
+/* Catálogo de escalas (E-01, decidido el 21/10). Cada una es un patrón de
+   semitonos desde la tónica y el salto de letra de cada grado: la mayor usa
+   las siete letras seguidas; las pentatónicas se saltan dos (la mayor no
+   tiene 4º ni 7º grado). */
+const ESCALAS = [
+  { id:'mayor',      modo:'mayor', semitonos:[0,2,4,5,7,9,11], letras:[0,1,2,3,4,5,6] },
+  { id:'menor',      modo:'menor', semitonos:[0,2,3,5,7,8,10], letras:[0,1,2,3,4,5,6] },
+  { id:'pentaMayor', modo:'mayor', semitonos:[0,2,4,7,9],      letras:[0,1,2,4,5] },
+  { id:'pentaMenor', modo:'menor', semitonos:[0,3,5,7,10],     letras:[0,2,3,4,6] }
+];
+
+/* Cómo se escribe cada tónica: la tonalidad con menos alteraciones (Re♭
+   mayor, 5 bemoles, y no Do♯ mayor, 7 sostenidos). En Fa♯ mayor y Re♯ menor
+   (6 sostenidos) empatan con Sol♭ mayor y Mi♭ menor (6 bemoles): se eligen
+   las de sostenidos, que son relativas entre sí. */
+const TONICAS = {
+  mayor: [[0,0],[1,-1],[1,0],[2,-1],[2,0],[3,0],[3,1],[4,0],[5,-1],[5,0],[6,-1],[6,0]],
+  menor: [[0,0],[0,1],[1,0],[1,1],[2,0],[3,0],[3,1],[4,0],[4,1],[5,0],[6,-1],[6,0]]
+};
+/** La tónica escrita de una escala que empieza en la clase de altura pc. */
+function tonicaEscrita(pc, modo){ const [letra, alt] = TONICAS[modo][pc]; return { letra, alt }; }
+
+/** Las notas escritas de una escala: tónica (clase de altura) y tipo. */
+function escribirEscala(pc, escala){
+  const tonica = tonicaEscrita(pc, escala.modo);
+  return escala.semitonos.map((s, i) => escribir((pc + s) % 12, (tonica.letra + escala.letras[i]) % 7));
+}
+
+/** Distancia de cada nota a la anterior: «T» (tono), «ST» (semitono) o, en
+ *  las pentatónicas, «T½» (tono y medio). La última vuelve a la tónica. */
+function intervalosEscala(escala){
+  const s = escala.semitonos, out = [];
+  for (let i = 0; i < s.length; i++){
+    const d = ((i + 1 < s.length ? s[i + 1] : 12) - s[i]);
+    out.push(d === 1 ? 'ST' : d === 2 ? 'T' : d === 3 ? 'T½' : d + 'st');
+  }
+  return out;
+}
 </script>
 <script>
 "use strict";
@@ -1072,7 +1238,10 @@ const DEFAULTS = {
   records:{},             // récord de racha de cada afinación: { standard: 7, dropd: 3 } (J-11)
   rotateHintClosed:false, // el aviso para girar, una vez cerrado, no vuelve (V-01)
   tunerMode:'ear',        // afinador: 'ear' de oído · 'mic' por micrófono (F4.3)
-  lang:null               // 'es' o 'en' (G-12); sin elegir, el del navegador
+  lang:null,              // 'es' o 'en' (G-12); sin elegir, el del navegador
+  scaleId:'mayor',        // Escalas (F5): tipo, tónica (clase de altura) y submodo
+  scalePc:0,
+  scaleMode:'show'        // 'show' Mostrar · 'practice' Práctica
 };
 
 const storage = {
@@ -1105,6 +1274,9 @@ function sanitize(raw){
   if (!['nylon','acoustic'].includes(s.timbre)) s.timbre = DEFAULTS.timbre;
   if (!['ear','mic'].includes(s.tunerMode)) s.tunerMode = DEFAULTS.tunerMode;
   if (!['es','en'].includes(s.lang)) s.lang = idiomaDelNavegador();
+  if (!ESCALAS.some(e => e.id === s.scaleId)) s.scaleId = DEFAULTS.scaleId;
+  if (!Number.isInteger(s.scalePc) || s.scalePc < 0 || s.scalePc > 11) s.scalePc = DEFAULTS.scalePc;
+  if (!['show','practice'].includes(s.scaleMode)) s.scaleMode = DEFAULTS.scaleMode;
   // Quien estrena la app en inglés empieza con C D E; luego decide en Ajustes.
   if (!(raw && raw.notation) && s.lang === 'en') s.notation = 'anglo';
   ['showStaff','showAllNotes','showEquals','hintNote','hintString','rotateHintClosed']
@@ -1576,6 +1748,13 @@ function staffY(midi){
   const e4  = 4*7 + 2;                         // Mi de la primera línea
   return STAFF_BOTTOM - (pos - e4) * GAP/2;
 }
+/** Altura de una nota ESCRITA (F5.1): la da su letra, no su sonido. Si♭3 va
+ *  en la línea del Si aunque suene como La♯3, que iría en el espacio del La. */
+function staffYEscrita(n, midi){
+  const written = midi + 12;
+  const pos = octavaEscrita(n, written) * 7 + n.letra;
+  return STAFF_BOTTOM - (pos - (4*7 + 2)) * GAP/2;
+}
 function isSharp(midi){ return [1,3,6,8,10].includes(((midi%12)+12)%12); }
 
 function drawStaffBase(svg, x1, x2){
@@ -1610,10 +1789,11 @@ function fitOctave(midi){
 }
 
 /** Dibuja una nota con sus líneas adicionales, su plica y su marca de octava. */
-function drawNote(svg, realMidi, x, color, withStem){
+function drawNote(svg, realMidi, x, color, withStem, esc){
   const { drawMidi, mark } = fitOctave(realMidi);
   const midi = drawMidi;
-  const y = staffY(midi);
+  // Con nota escrita (escalas), su letra y su alteración; si no, la de siempre.
+  const y = esc ? staffYEscrita(esc, midi) : staffY(midi);
   if (mark){
     const m = el('text',{x:x+13,y:y-6,fill:color,'font-size':11,
       'font-family':'Georgia, serif','font-style':'italic'});
@@ -1626,9 +1806,10 @@ function drawNote(svg, realMidi, x, color, withStem){
   // líneas adicionales por debajo
   for (let ly = STAFF_BOTTOM + GAP; ly <= y + GAP/4; ly += GAP)
     svg.appendChild(el('line',{x1:x-10,x2:x+10,y1:ly,y2:ly,class:'ledger-line'}));
-  if (isSharp(midi)){
-    const s = el('text',{x:x-14,y:y+3,fill:color,'font-size':16,'font-family':'Georgia, serif'});
-    s.textContent = '\u266F';
+  const alt = esc ? ALTERACION[esc.alt] : (isSharp(midi) ? '\u266F' : '');
+  if (alt){
+    const s = el('text',{x:x-14,y:y+3,fill:color,'font-size':16,'font-family':'Georgia, serif','text-anchor':'middle'});
+    s.textContent = alt;
     svg.appendChild(s);
   }
   svg.appendChild(el('ellipse',{cx:x,cy:y,rx:6,ry:4.5,fill:color,
@@ -1820,7 +2001,7 @@ function refreshNoteNames(){
 function applyBoardFlags(){
   // J-12: en Adivinar, ver todos los nombres sería tener la respuesta delante.
   document.getElementById('board').classList.toggle('show-all',
-    state.showAllNotes && screen !== 'guess');
+    state.showAllNotes && screen !== 'guess' && screen !== 'scales');   // en Escalas manda la escala
   const nums = document.getElementById('fret-nums');
   nums.classList.toggle('hidden', state.fretNums === 'none');
   nums.classList.toggle('guide',  state.fretNums === 'guide');
@@ -1893,7 +2074,7 @@ function pressFret(cell, midi, rowIdx){
   nameEl.style.setProperty('--note-color', info.color);
   nameEl.style.setProperty('--note-glow', info.color);
   document.getElementById('note-oct').textContent = t('octave', { n: info.octave });
-  showOnStaff(midi, info.color);
+  if (screen !== 'scales') showOnStaff(midi, info.color);   // en Escalas, el pentagrama escribe la escala
 
   // Señal secundaria: dónde más suena exactamente esta misma nota.
   if (state.showEquals){
@@ -1906,6 +2087,7 @@ function pressFret(cell, midi, rowIdx){
   activeTimer = setTimeout(() => clearMarks(['active','equal']), 2200);
 
   if (screen === 'guess') evaluate(cell, midi, rowIdx);
+  if (screen === 'scales') onScalePress(cell, midi);
 }
 
 function clearMarks(classes){
@@ -2267,6 +2449,7 @@ function onTuningChanged(){
   // Cada afinación tiene su récord (J-11): una racha no pasa de una a otra.
   if (screen === 'guess'){ streak = 0; newChallenge(); }
   updateScore();
+  renderScales();              // otra afinación: otras casillas para la misma escala
 }
 
 function resetReader(){
@@ -2294,6 +2477,7 @@ function setScreen(next){
 
   const isTuner = next === 'tuner';
   const isGuess = next === 'guess';
+  const isScales = next === 'scales';
 
   document.getElementById('board-area').hidden = isTuner;
   document.getElementById('tuner').hidden = !isTuner;
@@ -2302,6 +2486,8 @@ function setScreen(next){
   // Afinador. Las pistas van dentro del reto, así que solo salen al adivinar.
   document.getElementById('panel').hidden = isTuner;
   document.getElementById('challenge').hidden = !isGuess;
+  document.getElementById('scales-card').hidden = !isScales;
+  document.getElementById('scale-nav').hidden = !isScales;
   updateRotateHint();
 
   clearMarks(['active','equal','correct','wrong','reveal']);
@@ -2319,6 +2505,8 @@ function setScreen(next){
     challenge = null;
     renderClues();              // fuera de Adivinar, las pistas no enseñan respuesta
   }
+  if (isScales){ resetScalePractice(); sc.paso = 0; renderScales(); }
+  else leaveScales();
   if (!isTuner) requestAnimationFrame(applyZoom);
 }
 
@@ -2444,6 +2632,7 @@ function toggleNotation(){
   refreshNoteNames();
   renderTunerStrings();
   if (challenge) renderChallenge();
+  buildScaleSelects(); renderScales();     // los nombres escritos siguen la nomenclatura
   // El lector de nota se refresca desde lastMidi: la clase .active se limpia
   // a los 2,2 s, así que consultar el DOM fallaba pasado ese tiempo.
   if (lastMidi !== null)
@@ -2926,12 +3115,214 @@ function bindMicTuner(){
 <script>
 "use strict";
 
-// 12-arranque.js · Arranque: conecta los eventos y pone la app en marcha. Va el último porque usa todo lo anterior.
+// 13-escalas.js · Escalas (F5.3 y F5.4): Mostrar, con intervalos y paso a paso,
+// y Práctica, que comprueba si cada nota que tocas pertenece a la escala.
 // Se carga como <script> clásico, en el orden de index.html: lo declarado aquí
 // (const, let, function) lo ven los archivos que vienen después.
 
 /* ============================================================
-   12. ARRANQUE Y EVENTOS
+   13. ESCALAS
+   ============================================================ */
+
+/* La teoría (qué notas tiene cada escala y cómo se escriben) está en
+   01-teoria.js; aquí solo se enseña. Una nota del mástil pertenece a la
+   escala si su clase de altura (Do, Do♯…, sin octava) es una de las suyas, así
+   que funciona igual en cualquier afinación. */
+
+const sc = {
+  paso: 0,                  // paso del guiado (E-06)
+  encontradas: new Set(),   // clases de altura encontradas en Práctica
+  celdas: new Set(),        // casillas acertadas en Práctica ('fila-traste')
+  aviso: null,              // { clave, vars } del último aviso de Práctica
+  revelar: null, fallo: null
+};
+
+function escalaActual(){ return ESCALAS.find(e => e.id === state.scaleId) || ESCALAS[0]; }
+function pcsEscala(){ return escalaActual().semitonos.map(s => (state.scalePc + s) % 12); }
+function notasEscala(){ return escribirEscala(state.scalePc, escalaActual()); }
+
+/** «Do mayor», «la pentatónica menor de La»… */
+function nombreEscala(){
+  const e = escalaActual();
+  return t('scale.name.' + e.id, { t: nombreEscrito(tonicaEscrita(state.scalePc, e.modo)) });
+}
+
+/** El guiado (E-06): la escala subiendo una octava desde la tónica más grave
+ *  que tiene el mástil. Cada paso es un sonido concreto, con su nota escrita. */
+function pasosEscala(){
+  const grave = Math.min(...activeTuning());
+  const base = grave + ((state.scalePc - grave) % 12 + 12) % 12;
+  const e = escalaActual(), notas = notasEscala();
+  const pasos = e.semitonos.map((s, i) => ({ midi: base + s, esc: notas[i] }));
+  pasos.push({ midi: base + 12, esc: notas[0] });
+  return pasos;
+}
+
+/** Rellena los selectores de tónica y tipo (la tónica se escribe según el tipo:
+ *  Re♭ mayor, pero Do♯ menor). */
+function buildScaleSelects(){
+  const tipo = document.getElementById('scale-type'), ton = document.getElementById('scale-tonic');
+  tipo.innerHTML = '';
+  for (const e of ESCALAS){
+    const o = document.createElement('option'); o.value = e.id; o.textContent = t('scale.type.' + e.id); tipo.appendChild(o);
+  }
+  tipo.value = state.scaleId;
+  ton.innerHTML = '';
+  for (let pc = 0; pc < 12; pc++){
+    const o = document.createElement('option'); o.value = String(pc);
+    o.textContent = nombreEscrito(tonicaEscrita(pc, escalaActual().modo)); ton.appendChild(o);
+  }
+  ton.value = String(state.scalePc);
+}
+
+/** Pinta todo lo de Escalas: mástil, pentagrama, intervalos y el paso a paso
+ *  o el estado de la práctica. Solo actúa en el área de Escalas. */
+function renderScales(){
+  if (screen !== 'scales') return;
+  const practica = state.scaleMode === 'practice';
+  document.querySelectorAll('#scale-mode button').forEach(b => {
+    const on = b.dataset.v === state.scaleMode;
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+  });
+  document.getElementById('scale-line').hidden = practica;
+  document.getElementById('scale-nav').hidden = practica;
+  document.getElementById('scale-practice').hidden = !practica;
+
+  // Mástil: casillas de la escala, tónica con anillo, nombres escritos.
+  const pcs = pcsEscala(), notas = notasEscala(), pasos = pasosEscala();
+  const board = document.getElementById('board');
+  board.classList.add('scales');
+  board.classList.toggle('practice', practica);
+  const pasoMidi = practica ? null : pasos[sc.paso].midi;
+  document.querySelectorAll('.fret-cell').forEach(c => {
+    const midi = +c.dataset.midi, pc = ((midi % 12) + 12) % 12, i = pcs.indexOf(pc);
+    c.classList.toggle('scale', i >= 0);
+    c.classList.toggle('scale-tonic', i === 0);
+    c.classList.toggle('scale-step', midi === pasoMidi);
+    c.querySelector('.dot').textContent = i >= 0 ? nombreEscrito(notas[i]) : noteName(midi);
+  });
+
+  // Intervalos (E-04): «Do T Re T Mi ST Fa…».
+  const line = document.getElementById('scale-line');
+  line.textContent = '';
+  const iv = intervalosEscala(escalaActual());
+  pasos.forEach((p, i) => {
+    const n = document.createElement('span'); n.className = 'sc-note' + (i === sc.paso ? ' now' : '');
+    n.textContent = nombreEscrito(p.esc); line.appendChild(n);
+    if (i < iv.length){ const g = document.createElement('b'); g.className = 'sc-gap'; g.textContent = iv[i]; line.appendChild(g); }
+  });
+
+  // Paso a paso (E-06).
+  const p = pasos[sc.paso], total = pasos.length;
+  let que;
+  if (sc.paso === 0) que = t('scale.stepTonic', { n: nombreEscrito(p.esc) });
+  else que = t('scale.stepUp', { n: nombreEscrito(p.esc), d: t('scale.gap.' + iv[sc.paso - 1]), prev: nombreEscrito(pasos[sc.paso - 1].esc) });
+  document.getElementById('scale-step-text').textContent = t('scale.step', { i: sc.paso + 1, total }) + ' · ' + que;
+  document.getElementById('scale-prev').disabled = sc.paso === 0;
+  document.getElementById('scale-next').disabled = sc.paso === total - 1;
+
+  // Práctica (E-05).
+  document.getElementById('scale-count').textContent = t('scale.count', { n: sc.encontradas.size, total: pcs.length });
+  document.getElementById('scale-msg').textContent = sc.aviso ? t(sc.aviso.clave, sc.aviso.vars()) : t('scale.practiceHint', { e: nombreEscala() });
+  document.querySelectorAll('.fret-cell').forEach(c => c.classList.toggle('correct', practica && sc.celdas.has(c.dataset.row + '-' + c.dataset.fret)));
+
+  drawScaleStaff(pasos, practica);
+}
+
+/** El pentagrama escribe la escala (P-03). En Práctica, solo las notas que ya
+ *  has encontrado: si estuvieran todas, sería darte la respuesta. */
+function drawScaleStaff(pasos, practica){
+  const svg = document.getElementById('staff');
+  drawStaffBase(svg, 38, 320);
+  const visibles = practica ? pasos.filter((p, i) => i < pasos.length - 1 && sc.encontradas.has(pcEscrita(p.esc))) : pasos;
+  const n = visibles.length;
+  visibles.forEach((p, i) => {
+    const x = 78 + i * (n > 1 ? Math.min(34, 236 / (n - 1)) : 0);
+    const ahora = !practica && p === pasos[sc.paso];
+    if (ahora) svg.appendChild(el('rect', { x: x - 14, y: STAFF_TOP - 26, width: 28, height: 4 * GAP + 52, rx: 6, fill: 'rgba(232,164,92,.18)' }));
+    drawNote(svg, p.midi, x, ahora ? 'var(--amber)' : noteInfo(p.midi).color, false, p.esc);
+  });
+}
+
+/** ◀ ▶ del paso a paso: suena la nota del paso y se resalta. */
+function scaleStep(delta){
+  const pasos = pasosEscala();
+  sc.paso = Math.max(0, Math.min(pasos.length - 1, sc.paso + delta));
+  playMidi(pasos[sc.paso].midi);
+  renderScales();
+}
+
+/** Práctica: cada nota que tocas, ¿es de la escala? (E-05, solo pertenencia). */
+function onScalePress(cell, midi){
+  if (screen !== 'scales' || state.scaleMode !== 'practice') return;
+  const pc = ((midi % 12) + 12) % 12, i = pcsEscala().indexOf(pc);
+  if (i >= 0){
+    sc.encontradas.add(pc);
+    sc.celdas.add(cell.dataset.row + '-' + cell.dataset.fret);
+    const nota = nombreEscrito(notasEscala()[i]);
+    sc.aviso = sc.encontradas.size === pcsEscala().length
+      ? { clave: 'scale.allFound', vars: () => ({ e: nombreEscala() }) }
+      : { clave: 'scale.yes', vars: () => ({ n: nota, e: nombreEscala() }) };
+  } else {
+    // Se marca en rojo y, un momento, se enseñan las casillas que sí son.
+    cell.classList.add('wrong');
+    const nota = noteName(midi);
+    sc.aviso = { clave: 'scale.no', vars: () => ({ n: nota, e: nombreEscala() }) };
+    buzz([12, 60, 12]);
+    const board = document.getElementById('board');
+    board.classList.add('reveal-scale');
+    clearTimeout(sc.revelar); clearTimeout(sc.fallo);
+    sc.revelar = setTimeout(() => board.classList.remove('reveal-scale'), 2000);
+    sc.fallo = setTimeout(() => cell.classList.remove('wrong'), 1500);
+  }
+  renderScales();
+}
+
+function resetScalePractice(){
+  sc.encontradas.clear(); sc.celdas.clear(); sc.aviso = null;
+  clearTimeout(sc.revelar); clearTimeout(sc.fallo);
+  document.getElementById('board').classList.remove('reveal-scale');
+  clearMarks(['wrong']);
+}
+
+/** Al salir de Escalas, el mástil vuelve a ser el de siempre. */
+function leaveScales(){
+  const board = document.getElementById('board');
+  board.classList.remove('scales', 'practice', 'reveal-scale');
+  clearMarks(['scale', 'scale-tonic', 'scale-step', 'correct', 'wrong']);
+  refreshNoteNames();
+}
+
+function bindScales(){
+  buildScaleSelects();
+  document.getElementById('scale-type').addEventListener('change', ev => {
+    state.scaleId = ev.target.value; save();
+    buildScaleSelects();                     // la tónica se escribe según el tipo
+    sc.paso = 0; resetScalePractice(); renderScales();
+  });
+  document.getElementById('scale-tonic').addEventListener('change', ev => {
+    state.scalePc = +ev.target.value; save();
+    sc.paso = 0; resetScalePractice(); renderScales();
+  });
+  document.querySelectorAll('#scale-mode button').forEach(b => b.addEventListener('click', () => {
+    if (state.scaleMode === b.dataset.v) return;
+    state.scaleMode = b.dataset.v; save();
+    resetScalePractice(); renderScales();
+  }));
+  document.getElementById('scale-prev').addEventListener('click', () => scaleStep(-1));
+  document.getElementById('scale-next').addEventListener('click', () => scaleStep(1));
+  document.getElementById('scale-reset').addEventListener('click', () => { resetScalePractice(); renderScales(); });
+}
+</script>
+<script>
+"use strict";
+
+// 99-arranque.js · Arranque: conecta los eventos y pone la app en marcha. Va el último porque usa todo lo anterior.
+// Se carga como <script> clásico, en el orden de index.html: lo declarado aquí
+// (const, let, function) lo ven los archivos que vienen después.
+
+/* ============================================================
+   99. ARRANQUE Y EVENTOS
    ============================================================ */
 
 document.getElementById('gate-btn').addEventListener('click', async () => {
@@ -3053,6 +3444,7 @@ function refreshLanguage(antes){
   updateAudioStatus();
   updateScore();
   renderChallenge();
+  buildScaleSelects(); renderScales();
   if (lastMidi === null) document.getElementById('note-name').innerHTML = '<span class="note-placeholder">' + t('reader.play') + '</span>';
   else document.getElementById('note-oct').textContent = t('octave', { n: noteInfo(lastMidi).octave });
   syncUI();
@@ -3153,6 +3545,7 @@ buildTuner();
 buildBoard();
 bindBoardInput();
 bindMicTuner();
+bindScales();
 bindBoardKeys();
 clearStaff();
 syncUI();

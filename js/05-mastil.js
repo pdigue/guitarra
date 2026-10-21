@@ -165,7 +165,7 @@ function refreshNoteNames(){
 function applyBoardFlags(){
   // J-12: en Adivinar, ver todos los nombres sería tener la respuesta delante.
   document.getElementById('board').classList.toggle('show-all',
-    state.showAllNotes && screen !== 'guess');
+    state.showAllNotes && screen !== 'guess' && screen !== 'scales');   // en Escalas manda la escala
   const nums = document.getElementById('fret-nums');
   nums.classList.toggle('hidden', state.fretNums === 'none');
   nums.classList.toggle('guide',  state.fretNums === 'guide');
@@ -238,7 +238,7 @@ function pressFret(cell, midi, rowIdx){
   nameEl.style.setProperty('--note-color', info.color);
   nameEl.style.setProperty('--note-glow', info.color);
   document.getElementById('note-oct').textContent = t('octave', { n: info.octave });
-  showOnStaff(midi, info.color);
+  if (screen !== 'scales') showOnStaff(midi, info.color);   // en Escalas, el pentagrama escribe la escala
 
   // Señal secundaria: dónde más suena exactamente esta misma nota.
   if (state.showEquals){
@@ -251,6 +251,7 @@ function pressFret(cell, midi, rowIdx){
   activeTimer = setTimeout(() => clearMarks(['active','equal']), 2200);
 
   if (screen === 'guess') evaluate(cell, midi, rowIdx);
+  if (screen === 'scales') onScalePress(cell, midi);
 }
 
 function clearMarks(classes){

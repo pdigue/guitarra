@@ -1,11 +1,11 @@
 "use strict";
 
-// 12-arranque.js · Arranque: conecta los eventos y pone la app en marcha. Va el último porque usa todo lo anterior.
+// 99-arranque.js · Arranque: conecta los eventos y pone la app en marcha. Va el último porque usa todo lo anterior.
 // Se carga como <script> clásico, en el orden de index.html: lo declarado aquí
 // (const, let, function) lo ven los archivos que vienen después.
 
 /* ============================================================
-   12. ARRANQUE Y EVENTOS
+   99. ARRANQUE Y EVENTOS
    ============================================================ */
 
 document.getElementById('gate-btn').addEventListener('click', async () => {
@@ -127,6 +127,7 @@ function refreshLanguage(antes){
   updateAudioStatus();
   updateScore();
   renderChallenge();
+  buildScaleSelects(); renderScales();
   if (lastMidi === null) document.getElementById('note-name').innerHTML = '<span class="note-placeholder">' + t('reader.play') + '</span>';
   else document.getElementById('note-oct').textContent = t('octave', { n: noteInfo(lastMidi).octave });
   syncUI();
@@ -227,6 +228,7 @@ buildTuner();
 buildBoard();
 bindBoardInput();
 bindMicTuner();
+bindScales();
 bindBoardKeys();
 clearStaff();
 syncUI();

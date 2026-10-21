@@ -15,6 +15,7 @@ function setScreen(next){
 
   const isTuner = next === 'tuner';
   const isGuess = next === 'guess';
+  const isScales = next === 'scales';
 
   document.getElementById('board-area').hidden = isTuner;
   document.getElementById('tuner').hidden = !isTuner;
@@ -23,6 +24,8 @@ function setScreen(next){
   // Afinador. Las pistas van dentro del reto, así que solo salen al adivinar.
   document.getElementById('panel').hidden = isTuner;
   document.getElementById('challenge').hidden = !isGuess;
+  document.getElementById('scales-card').hidden = !isScales;
+  document.getElementById('scale-nav').hidden = !isScales;
   updateRotateHint();
 
   clearMarks(['active','equal','correct','wrong','reveal']);
@@ -40,6 +43,8 @@ function setScreen(next){
     challenge = null;
     renderClues();              // fuera de Adivinar, las pistas no enseñan respuesta
   }
+  if (isScales){ resetScalePractice(); sc.paso = 0; renderScales(); }
+  else leaveScales();
   if (!isTuner) requestAnimationFrame(applyZoom);
 }
 
@@ -165,6 +170,7 @@ function toggleNotation(){
   refreshNoteNames();
   renderTunerStrings();
   if (challenge) renderChallenge();
+  buildScaleSelects(); renderScales();     // los nombres escritos siguen la nomenclatura
   // El lector de nota se refresca desde lastMidi: la clase .active se limpia
   // a los 2,2 s, así que consultar el DOM fallaba pasado ese tiempo.
   if (lastMidi !== null)

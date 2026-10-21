@@ -884,7 +884,8 @@ test('idioma: cada texto existe en español y en inglés, y cada clave de la pá
   // Y las claves que usa el código: t('…') con una clave literal.
   for (const f of fs.readdirSync(path.join(__dirname, '..', 'js')).filter(f => f !== '00-idioma.js')){   // su comentario usa t('clave') de ejemplo
     const src = fs.readFileSync(path.join(__dirname, '..', 'js', f), 'utf8');
-    for (const m of src.matchAll(/\bt\('([\w.]+)'/g)) assert.ok(es.includes(m[1]) || m[1].startsWith('audio.'), `${f}: falta el texto de ${m[1]}`);
+    for (const m of src.matchAll(/\bt\('([\w.]+)'/g))   // una clave que acaba en «.» se completa en el código: basta con que exista alguna
+      assert.ok(m[1].endsWith('.') ? es.some(k => k.startsWith(m[1])) : es.includes(m[1]) || m[1].startsWith('audio.'), `${f}: falta el texto de ${m[1]}`);
   }
 });
 
@@ -937,4 +938,73 @@ test('idioma: la primera vez sigue al navegador (inglés → C D E); restablecer
   const H = boot(APP, { lang: 'es' }, { navigator: { language: 'en-US' } });
   H.$('set-reset').click(); await sleep(20);
   assert.equal(H.ev('state.notation'), 'latin', 'en español, restablecer deja Do Re Mi aunque el navegador esté en inglés');
+});
+
+// --- F5: Escalas ---
+
+const escalasA = (preset) => { const A = boot(APP, preset); A.doc.querySelector('.tab[data-screen="scales"]').click(); return A; };
+const celdasEscala = A => A.doc.querySelectorAll('.fret-cell.scale');
+const elegir = (A, id, v) => { const s = A.$(id); s.value = v; s.dispatchEvent({ type: 'change', target: s }); };
+
+test('Escalas › Mostrar: el mástil ilumina la escala con sus nombres escritos y la tónica con anillo; intervalos T y ST (E-01, E-03, E-04)', () => {
+  const A = escalasA();
+  assert.equal(A.$('scales-card').hidden, false);
+  assert.ok(A.$('board').classList.contains('scales'));
+  const pcs = new Set(celdasEscala(A).map(c => +c.dataset.midi % 12));
+  assert.deepEqual([...pcs].sort((a, b) => a - b), [0, 2, 4, 5, 7, 9, 11], 'Do mayor');
+  assert.ok(A.doc.querySelectorAll('.fret-cell.scale-tonic').every(c => +c.dataset.midi % 12 === 0));
+  assert.equal(A.$('scale-line').textContent, 'DoTReTMiSTFaTSolTLaTSiSTDo');
+  elegir(A, 'scale-tonic', '5');                                  // Fa mayor: Si♭, no La#
+  const sib = A.doc.querySelector('.fret-cell[data-midi="70"]');
+  assert.ok(sib.classList.contains('scale'));
+  assert.equal(sib.querySelector('.dot').textContent, 'Si♭');
+  elegir(A, 'scale-type', 'pentaMenor'); elegir(A, 'scale-tonic', '9');
+  assert.equal(A.$('scale-line').textContent, 'LaT½DoTReTMiT½SolTLa');
+  assert.equal(new Set(celdasEscala(A).map(c => +c.dataset.midi % 12)).size, 5);
+  const guardado = JSON.parse(A.store.get('trasteando.v1'));
+  assert.deepEqual([guardado.scaleId, guardado.scalePc], ['pentaMenor', 9]);
+  A.doc.querySelector('.tab[data-screen="free"]').click();
+  assert.equal(celdasEscala(A).length, 0, 'fuera de Escalas, el mástil de siempre');
+  assert.equal(A.doc.querySelector('.fret-cell[data-midi="70"] .dot').textContent, 'La#');
+});
+
+test('Escalas › Mostrar: el paso a paso sube la escala desde la tónica grave, suena y se resalta (E-06, P-03)', () => {
+  const A = escalasA();
+  A.ev('globalThis.__plays = []; playMidi = m => __plays.push(m);');
+  assert.match(A.$('scale-step-text').textContent, /^Paso 1 de 8 · Do, la tónica$/);
+  assert.equal(A.$('scale-prev').disabled, true);
+  A.$('scale-next').click(); A.$('scale-next').click();
+  assert.deepEqual(A.ev('JSON.stringify(__plays)'), '[50,52]', 'Re3 y Mi3, desde el Do3');
+  assert.equal(A.$('scale-step-text').textContent, 'Paso 3 de 8 · Mi, un tono sobre Re');
+  assert.ok(A.doc.querySelectorAll('.fret-cell.scale-step').every(c => +c.dataset.midi === 52));
+  assert.ok(A.doc.querySelectorAll('.fret-cell.scale-step').length >= 2, 'todas las posiciones de ese Mi');
+  assert.equal(A.$('staff').querySelectorAll('ellipse').length, 8, 'el pentagrama escribe la escala');
+  for (let i = 0; i < 9; i++) A.$('scale-next').click();
+  assert.match(A.$('scale-step-text').textContent, /^Paso 8 de 8 · Do, un semitono sobre Si$/);
+  assert.equal(A.$('scale-next').disabled, true);
+});
+
+test('Escalas › Práctica: las notas de la escala cuentan una vez cada una; una ajena se marca y enseña las buenas (E-05)', async () => {
+  const A = escalasA();
+  A.doc.querySelector('#scale-mode [data-v="practice"]').click();
+  assert.ok(A.$('board').classList.contains('practice'), 'las notas no se ven: se buscan');
+  assert.equal(A.$('scale-count').textContent, '0 de 7');
+  assert.equal(A.$('staff').querySelectorAll('ellipse').length, 0, 'el pentagrama no da la respuesta');
+  const pulsa = midi => A.press(A.doc.querySelector('.fret-cell[data-midi="' + midi + '"]'));
+  pulsa(48); pulsa(60);                                           // Do3 y Do4: la misma nota
+  assert.equal(A.$('scale-count').textContent, '1 de 7');
+  assert.match(A.$('scale-msg').textContent, /^✓ Do está en Do mayor$/);
+  pulsa(54);                                                      // Fa#3
+  assert.match(A.$('scale-msg').textContent, /^✗ Fa# no está en Do mayor$/);
+  assert.ok(A.doc.querySelector('.fret-cell[data-midi="54"]').classList.contains('wrong'));
+  assert.ok(A.$('board').classList.contains('reveal-scale'), 'un momento, se ven las buenas');
+  assert.equal(A.$('scale-count').textContent, '1 de 7');
+  for (const m of [50, 52, 53, 55, 57, 59]) pulsa(m);
+  assert.equal(A.$('scale-count').textContent, '7 de 7');
+  assert.match(A.$('scale-msg').textContent, /Todas/);
+  assert.equal(A.$('staff').querySelectorAll('ellipse').length, 7);
+  A.$('scale-reset').click();
+  assert.equal(A.$('scale-count').textContent, '0 de 7');
+  assert.equal(A.doc.querySelectorAll('.fret-cell.correct').length, 0);
+  await sleep(10);
 });

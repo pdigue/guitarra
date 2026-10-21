@@ -41,6 +41,13 @@ function staffY(midi){
   const e4  = 4*7 + 2;                         // Mi de la primera línea
   return STAFF_BOTTOM - (pos - e4) * GAP/2;
 }
+/** Altura de una nota ESCRITA (F5.1): la da su letra, no su sonido. Si♭3 va
+ *  en la línea del Si aunque suene como La♯3, que iría en el espacio del La. */
+function staffYEscrita(n, midi){
+  const written = midi + 12;
+  const pos = octavaEscrita(n, written) * 7 + n.letra;
+  return STAFF_BOTTOM - (pos - (4*7 + 2)) * GAP/2;
+}
 function isSharp(midi){ return [1,3,6,8,10].includes(((midi%12)+12)%12); }
 
 function drawStaffBase(svg, x1, x2){
@@ -75,10 +82,11 @@ function fitOctave(midi){
 }
 
 /** Dibuja una nota con sus líneas adicionales, su plica y su marca de octava. */
-function drawNote(svg, realMidi, x, color, withStem){
+function drawNote(svg, realMidi, x, color, withStem, esc){
   const { drawMidi, mark } = fitOctave(realMidi);
   const midi = drawMidi;
-  const y = staffY(midi);
+  // Con nota escrita (escalas), su letra y su alteración; si no, la de siempre.
+  const y = esc ? staffYEscrita(esc, midi) : staffY(midi);
   if (mark){
     const m = el('text',{x:x+13,y:y-6,fill:color,'font-size':11,
       'font-family':'Georgia, serif','font-style':'italic'});
@@ -91,9 +99,10 @@ function drawNote(svg, realMidi, x, color, withStem){
   // líneas adicionales por debajo
   for (let ly = STAFF_BOTTOM + GAP; ly <= y + GAP/4; ly += GAP)
     svg.appendChild(el('line',{x1:x-10,x2:x+10,y1:ly,y2:ly,class:'ledger-line'}));
-  if (isSharp(midi)){
-    const s = el('text',{x:x-14,y:y+3,fill:color,'font-size':16,'font-family':'Georgia, serif'});
-    s.textContent = '\u266F';
+  const alt = esc ? ALTERACION[esc.alt] : (isSharp(midi) ? '\u266F' : '');
+  if (alt){
+    const s = el('text',{x:x-14,y:y+3,fill:color,'font-size':16,'font-family':'Georgia, serif','text-anchor':'middle'});
+    s.textContent = alt;
     svg.appendChild(s);
   }
   svg.appendChild(el('ellipse',{cx:x,cy:y,rx:6,ry:4.5,fill:color,

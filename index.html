@@ -12,7 +12,7 @@
 <link rel="manifest" href='data:application/manifest+json,{"name":"Trasteando","short_name":"Trasteando","start_url":".","display":"standalone","background_color":"%23140e09","theme_color":"%23140e09","orientation":"any"}'>
 <link rel="icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" rx="40" fill="%23140e09"/><circle cx="90" cy="90" r="52" fill="none" stroke="%23e8a45c" stroke-width="5"/><circle cx="90" cy="90" r="40" fill="none" stroke="%236b4f30" stroke-width="3" stroke-dasharray="4 5"/><line x1="38" y1="74" x2="142" y2="74" stroke="%23e8dfd3" stroke-width="1.4"/><line x1="38" y1="82" x2="142" y2="82" stroke="%23e8dfd3" stroke-width="1.8"/><line x1="38" y1="90" x2="142" y2="90" stroke="%23e8dfd3" stroke-width="2.2"/><line x1="38" y1="98" x2="142" y2="98" stroke="%23e8dfd3" stroke-width="2.6"/><line x1="38" y1="106" x2="142" y2="106" stroke="%23e8dfd3" stroke-width="3"/></svg>'>  <!-- sin él, el navegador pide favicon.ico y da 404 (Sesión 1, A16) -->
 <link rel="apple-touch-icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" rx="40" fill="%23140e09"/><circle cx="90" cy="90" r="52" fill="none" stroke="%23e8a45c" stroke-width="5"/><circle cx="90" cy="90" r="40" fill="none" stroke="%236b4f30" stroke-width="3" stroke-dasharray="4 5"/><line x1="38" y1="74" x2="142" y2="74" stroke="%23e8dfd3" stroke-width="1.4"/><line x1="38" y1="82" x2="142" y2="82" stroke="%23e8dfd3" stroke-width="1.8"/><line x1="38" y1="90" x2="142" y2="90" stroke="%23e8dfd3" stroke-width="2.2"/><line x1="38" y1="98" x2="142" y2="98" stroke="%23e8dfd3" stroke-width="2.6"/><line x1="38" y1="106" x2="142" y2="106" stroke="%23e8dfd3" stroke-width="3"/></svg>'>
-<link rel="stylesheet" href="css/trasteando.css?v=0.4.2">
+<link rel="stylesheet" href="css/trasteando.css?v=0.5.0">
 </head>
 <body>
 
@@ -57,7 +57,7 @@
     <svg viewBox="0 0 24 24"><path d="M4 17a8 8 0 0 1 16 0"/><line x1="12" y1="17" x2="15.5" y2="11"/><circle cx="12" cy="17" r="1.4" fill="currentColor"/><line x1="5" y1="13.5" x2="6.5" y2="14.5"/><line x1="19" y1="13.5" x2="17.5" y2="14.5"/></svg>
     <span data-t="tab.tuner">Afinador</span>
   </button>
-  <button class="tab" disabled title="Próximamente" data-t-title="soon">
+  <button class="tab" data-screen="scales">
     <svg viewBox="0 0 24 24"><path d="M4 18V6"/><path d="M4 8h5l3-3 3 3h5"/><path d="M9 18v-6"/><path d="M15 18v-8"/><path d="M20 18V8"/></svg>
     <span data-t="tab.scales">Escalas</span>
   </button>
@@ -97,6 +97,25 @@
   </div>
 </div>
 
+<!-- Escalas (F5): submodo, tónica y tipo; intervalos y estado de la práctica -->
+<div class="scales-card" id="scales-card" hidden>
+  <div class="sc-top">
+    <div class="seg" id="scale-mode" role="group" aria-label="Submodo" data-t-aria="scale.mode">
+      <button data-v="show" data-t="scale.show">Mostrar</button>
+      <button data-v="practice" data-t="scale.practice">Práctica</button>
+    </div>
+    <select id="scale-tonic" aria-label="Tónica" data-t-aria="scale.tonic"></select>
+    <select id="scale-type" aria-label="Tipo de escala" data-t-aria="scale.typeLabel"></select>
+  </div>
+  <div class="sc-practice" id="scale-practice" hidden>
+    <div class="sc-msg" id="scale-msg" aria-live="polite"></div>
+    <div class="sc-side">
+      <span class="sc-count" id="scale-count"></span>
+      <button class="chip" id="scale-reset" data-t="scale.reset">Otra vez</button>
+    </div>
+  </div>
+</div>
+
 <!-- Pentagrama y nota leída -->
 <div class="display" id="display">
   <div class="display-inner">
@@ -108,6 +127,17 @@
       <div class="note-oct" id="note-oct"></div>
     </div>
   </div>
+</div>
+
+<!-- Paso a paso de Mostrar (E-06): va bajo el mástil, encima del zoom -->
+<div class="sc-nav" id="scale-nav" hidden>
+  <button class="zoom-btn" id="scale-prev" aria-label="Paso anterior" data-t-aria="scale.prev">&#9664;</button>
+  <!-- Las notas con sus intervalos y, debajo, el paso: así cabe en una fila -->
+  <div class="sc-center">
+    <div class="sc-line" id="scale-line" aria-label="Notas e intervalos" data-t-aria="scale.lineAria"></div>
+    <span class="sc-step-text" id="scale-step-text" aria-live="polite"></span>
+  </div>
+  <button class="zoom-btn" id="scale-next" aria-label="Paso siguiente" data-t-aria="scale.next">&#9654;</button>
 </div>
 
 <!-- Zoom -->
@@ -274,18 +304,19 @@
      comparten lo que declaran. herramientas/ensamblar.js los une en un solo archivo
      para dist/trasteando.html (G-08). El «?v=» lleva la versión de la app: así el
      navegador no mezcla archivos de dos versiones guardados en su caché (AT-07 #3). -->
-<script src="js/00-idioma.js?v=0.4.2"></script>
-<script src="js/01-teoria.js?v=0.4.2"></script>
-<script src="js/02-estado.js?v=0.4.2"></script>
-<script src="js/03-audio.js?v=0.4.2"></script>
-<script src="js/04-pentagrama.js?v=0.4.2"></script>
-<script src="js/05-mastil.js?v=0.4.2"></script>
-<script src="js/06-zoom.js?v=0.4.2"></script>
-<script src="js/07-adivinar.js?v=0.4.2"></script>
-<script src="js/08-afinador-referencia.js?v=0.4.2"></script>
-<script src="js/09-navegacion.js?v=0.4.2"></script>
-<script src="js/10-tono.js?v=0.4.2"></script>
-<script src="js/11-afinador-micro.js?v=0.4.2"></script>
-<script src="js/12-arranque.js?v=0.4.2"></script>
+<script src="js/00-idioma.js?v=0.5.0"></script>
+<script src="js/01-teoria.js?v=0.5.0"></script>
+<script src="js/02-estado.js?v=0.5.0"></script>
+<script src="js/03-audio.js?v=0.5.0"></script>
+<script src="js/04-pentagrama.js?v=0.5.0"></script>
+<script src="js/05-mastil.js?v=0.5.0"></script>
+<script src="js/06-zoom.js?v=0.5.0"></script>
+<script src="js/07-adivinar.js?v=0.5.0"></script>
+<script src="js/08-afinador-referencia.js?v=0.5.0"></script>
+<script src="js/09-navegacion.js?v=0.5.0"></script>
+<script src="js/10-tono.js?v=0.5.0"></script>
+<script src="js/11-afinador-micro.js?v=0.5.0"></script>
+<script src="js/13-escalas.js?v=0.5.0"></script>
+<script src="js/99-arranque.js?v=0.5.0"></script>
 </body>
 </html>

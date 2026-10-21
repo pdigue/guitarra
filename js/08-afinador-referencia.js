@@ -100,6 +100,7 @@ function onTuningChanged(){
   // Cada afinación tiene su récord (J-11): una racha no pasa de una a otra.
   if (screen === 'guess'){ streak = 0; newChallenge(); }
   updateScore();
+  renderScales();              // otra afinación: otras casillas para la misma escala
 }
 
 function resetReader(){

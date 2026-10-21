@@ -99,6 +99,31 @@ button { font-family:inherit; color:inherit; }
 .challenge { flex-shrink:0; display:flex; flex-direction:column; gap:2px;
   padding:3px 12px; background:var(--surface); border-bottom:1px solid var(--line); }
 .ch-main { display:flex; align-items:center; gap:10px; }
+/* Escalas (F5) */
+.scales-card { flex-shrink:0; display:flex; flex-direction:column; gap:4px; padding:4px 12px;
+  background:var(--surface); border-bottom:1px solid var(--line); }
+.sc-top { display:flex; align-items:center; gap:6px; }
+.sc-top select { flex:1 1 0; min-width:0; }
+.sc-center { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; gap:1px; }
+.sc-line { display:flex; flex-wrap:wrap; justify-content:center; align-items:baseline; gap:1px 5px; font-size:13px; color:var(--text); }
+.sc-line .sc-gap { font-size:11px; color:var(--amber); }
+.sc-line .sc-note.now { color:var(--amber); font-weight:800; }
+.sc-practice { display:flex; align-items:center; gap:8px; }
+.sc-msg { flex:1; font-size:13.5px; line-height:1.35; min-width:0; }
+.sc-side { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.sc-count { font-size:13px; font-weight:700; color:var(--amber); }
+.sc-nav { flex-shrink:0; display:flex; align-items:center; justify-content:center; gap:10px; padding:2px 10px; }
+.sc-step-text { text-align:center; font-size:12px; color:var(--muted); line-height:1.3; }
+.zoom-btn:disabled { opacity:.35; cursor:default; }
+/* Mástil en Escalas: las notas de la escala con su nombre escrito; la tónica,
+   con anillo (no depende del color); el paso del guiado, resaltado. */
+.board.scales .fret-cell.scale .dot { opacity:1; transform:scale(.88); }
+.board.scales .fret-cell.scale-tonic .dot { transform:scale(.96); box-shadow:0 0 0 2px #160f07, 0 0 0 4px var(--text); }
+.board.scales .fret-cell.scale-step .dot { transform:scale(1.05); box-shadow:0 0 0 3px var(--amber), 0 2px 8px rgba(0,0,0,.5); }
+/* En Práctica no se ven: se encuentran. Tras un fallo se enseñan un momento. */
+.board.scales.practice .fret-cell.scale:not(.correct) .dot { opacity:0; }
+.board.scales.practice.reveal-scale .fret-cell.scale:not(.correct) .dot { opacity:1; background:rgba(20,14,9,.88);
+  color:var(--dot); box-shadow:inset 0 0 0 2px var(--dot); }
 .ch-hints { display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
 /* Pista encendida: el chip enseña la respuesta, con etiqueta pequeña y valor
    grande y borde discontinuo de «pista», para no confundirla con la nota que
@@ -317,7 +342,8 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
    las demás con order. En horizontal pasa a ser la columna de la derecha. */
 .panel { display:contents; }
 .header { order:1; } .quickbar { order:2; } .challenge { order:3; } .display { order:4; }
-.rotate-hint { order:5; } .board-area { order:6; } .zoombar { order:7; } .tuner { order:8; }
+.rotate-hint { order:5; } .board-area { order:6; } .sc-nav, .zoombar { order:7; } .tuner { order:8; }
+.scales-card { order:3; }
 .tabbar { order:9; }
 
 /* En pantallas táctiles en vertical el mástil no baja de 40 px por cuerda
@@ -410,6 +436,15 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .chip .long { display:none; }
   .chip .short { display:inline-flex; }
   .challenge { padding:0; gap:6px; background:none; border:none; }
+  .scales-card { padding:0; gap:6px; background:none; border:none; }
+  .sc-top { flex-wrap:wrap; }
+  .sc-top .seg { flex-basis:100%; }
+  .sc-practice { flex-wrap:wrap; }
+  .sc-top select { flex:1 1 100%; }           /* tónica y tipo, cada uno en su fila: «Pentatónica mayor» cabe */
+  .sc-nav { padding:0; gap:6px; flex-wrap:wrap; justify-content:space-between; }
+  .sc-center { order:3; flex-basis:100%; align-items:flex-start; }
+  .sc-line { justify-content:flex-start; }
+  .sc-step-text { text-align:left; }
   .ch-main { flex-wrap:wrap; gap:6px; justify-content:space-between; }
   .challenge-text { order:3; flex-basis:100%; font-size:13px; }
   .ch-hints { flex-wrap:wrap; gap:4px 6px; }
