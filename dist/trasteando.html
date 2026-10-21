@@ -497,14 +497,14 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
     <line x1="38" y1="106" x2="142" y2="106" stroke="#e8dfd3" stroke-width="3"/>
   </svg>
   <div class="gate-title">Trasteando</div>
-  <div class="gate-sub" id="gate-sub">Aprende dónde vive cada nota en el mástil. Toca para cargar los sonidos de guitarra.</div>
-  <button class="gate-btn" id="gate-btn">Empezar</button>
+  <div class="gate-sub" id="gate-sub" data-t="gate.sub">Aprende dónde vive cada nota en el mástil. Toca para cargar los sonidos de guitarra.</div>
+  <button class="gate-btn" id="gate-btn" data-t="gate.btn">Empezar</button>
 </div>
 
 <!-- ============ CABECERA ============ -->
 <header class="header">
   <div class="brand">Trasteando</div>
-  <button class="icon-btn" id="btn-settings" aria-label="Ajustes">
+  <button class="icon-btn" id="btn-settings" aria-label="Ajustes" data-t-aria="settings">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>
   </button>
 </header>
@@ -516,23 +516,23 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 <nav class="tabbar">
   <button class="tab active" data-screen="free">
     <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="9" y1="5" x2="9" y2="19"/><line x1="15" y1="5" x2="15" y2="19"/><line x1="3" y1="12" x2="21" y2="12"/></svg>
-    Libre
+    <span data-t="tab.free">Libre</span>
   </button>
   <button class="tab" data-screen="guess">
     <svg viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg>
-    Adivinar
+    <span data-t="tab.guess">Adivinar</span>
   </button>
   <button class="tab" data-screen="tuner">
     <svg viewBox="0 0 24 24"><path d="M4 17a8 8 0 0 1 16 0"/><line x1="12" y1="17" x2="15.5" y2="11"/><circle cx="12" cy="17" r="1.4" fill="currentColor"/><line x1="5" y1="13.5" x2="6.5" y2="14.5"/><line x1="19" y1="13.5" x2="17.5" y2="14.5"/></svg>
-    Afinador
+    <span data-t="tab.tuner">Afinador</span>
   </button>
-  <button class="tab" disabled title="Próximamente">
+  <button class="tab" disabled title="Próximamente" data-t-title="soon">
     <svg viewBox="0 0 24 24"><path d="M4 18V6"/><path d="M4 8h5l3-3 3 3h5"/><path d="M9 18v-6"/><path d="M15 18v-8"/><path d="M20 18V8"/></svg>
-    Escalas
+    <span data-t="tab.scales">Escalas</span>
   </button>
-  <button class="tab tab-settings" id="btn-settings-rail" aria-label="Ajustes">
+  <button class="tab tab-settings" id="btn-settings-rail" aria-label="Ajustes" data-t-aria="settings">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>
-    Ajustes
+    <span data-t="settings">Ajustes</span>
   </button>
 </nav>
 
@@ -545,7 +545,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 <!-- Acceso rápido (C-03) -->
 <div class="quickbar" id="quickbar">
   <button class="chip" id="qb-notation">Do Re Mi</button>
-  <button class="chip" id="qb-staff" aria-label="Pentagrama"><span class="long">Pentagrama</span><span class="short" id="qb-staff-icon" aria-hidden="true"></span></button>
+  <button class="chip" id="qb-staff" aria-label="Pentagrama" data-t-aria="staff"><span class="long" data-t="staff">Pentagrama</span><span class="short" id="qb-staff-icon" aria-hidden="true"></span></button>
 </div>
 
 <!-- Reto de Adivinar, con sus pistas dentro (interfaz.md §6) -->
@@ -559,7 +559,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
     </div>
   </div>
   <div class="ch-hints">
-    <span class="qb-label" id="qb-hint-label">Pistas</span>
+    <span class="qb-label" id="qb-hint-label" data-t="hints">Pistas</span>
     <!-- Encendida, cada pista enseña su respuesta dentro, en grande (comentario del 21/10) -->
     <button class="chip" id="qb-hint-note" aria-pressed="false">Nombre</button>
     <button class="chip" id="qb-hint-string" aria-pressed="false">Cuerda</button>
@@ -573,7 +573,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
       <svg class="staff-svg" id="staff" viewBox="0 0 340 132" preserveAspectRatio="xMidYMid meet"></svg>
     </div>
     <div class="note-readout">
-      <div class="note-name" id="note-name"><span class="note-placeholder">toca</span></div>
+      <div class="note-name" id="note-name"><span class="note-placeholder" data-t="reader.play">toca</span></div>
       <div class="note-oct" id="note-oct"></div>
     </div>
   </div>
@@ -582,17 +582,17 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 <!-- Zoom -->
 <div class="zoombar" id="zoombar">
   <!-- «+» enseña más trastes y «−» menos, como pidió el cliente el 20/10. -->
-  <button class="zoom-btn" id="zoom-in" aria-label="Ver menos trastes">&minus;</button>
+  <button class="zoom-btn" id="zoom-in" aria-label="Ver menos trastes" data-t-aria="zoom.less">&minus;</button>
   <span class="zoom-label" id="zoom-label"></span>
-  <button class="zoom-btn" id="zoom-out" aria-label="Ver más trastes">+</button>
+  <button class="zoom-btn" id="zoom-out" aria-label="Ver más trastes" data-t-aria="zoom.more">+</button>
 </div>
 
 </div>
 
 <!-- ============ AVISO PARA GIRAR (V-01) ============ -->
 <div class="rotate-hint" id="rotate-hint" hidden>
-  <span>&#10227; Gira el móvil para ver más trastes</span>
-  <button class="rotate-close" id="rotate-close" aria-label="Cerrar el aviso">&#10005;</button>
+  <span>&#10227; <span data-t="rotate">Gira el móvil para ver más trastes</span></span>
+  <button class="rotate-close" id="rotate-close" aria-label="Cerrar el aviso" data-t-aria="rotate.close">&#10005;</button>
 </div>
 
 <!-- ============ MÁSTIL ============ -->
@@ -607,19 +607,19 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 
 <!-- ============ AFINADOR ============ -->
 <div class="tuner" id="tuner" hidden>
-  <div class="seg tuner-mode" id="tuner-mode" role="group" aria-label="Modo del afinador">
-    <button data-v="ear">De oído</button>
-    <button data-v="mic">Micrófono</button>
+  <div class="seg tuner-mode" id="tuner-mode" role="group" aria-label="Modo del afinador" data-t-aria="tuner.mode">
+    <button data-v="ear" data-t="tuner.ear">De oído</button>
+    <button data-v="mic" data-t="tuner.mic">Micrófono</button>
   </div>
 
   <div class="tuning-row">
-    <label for="tuning-select">Afinación</label>
+    <label for="tuning-select" data-t="tuning">Afinación</label>
     <select id="tuning-select"></select>
   </div>
 
   <!-- De oído (A-01): la app hace sonar cada cuerda al aire. -->
   <div id="tuner-ear">
-    <p class="lead">Pulsa una cuerda para oír cómo debería sonar y ajústala hasta que coincida.</p>
+    <p class="lead" data-t="tuner.lead">Pulsa una cuerda para oír cómo debería sonar y ajústala hasta que coincida.</p>
     <div class="strings-tuner" id="strings-tuner"></div>
     <div class="tuner-staff">
       <svg id="tuner-staff-svg" viewBox="0 0 340 132" preserveAspectRatio="xMidYMid meet"></svg>
@@ -629,16 +629,16 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   <!-- Micrófono (F4.3, A-02 a A-05): la app escucha la cuerda y dice cuánto subir o bajar. -->
   <div id="tuner-mic" hidden>
     <div class="tuning-row">
-      <span class="row-label" id="mic-string-label">Cuerda</span>
+      <span class="row-label" id="mic-string-label" data-t="mic.string">Cuerda</span>
       <div class="seg mic-string" id="mic-string" role="group" aria-labelledby="mic-string-label">
-        <button data-v="auto" aria-label="Cuerda automática">Auto</button><button data-v="6" aria-label="6ª cuerda">6</button><button data-v="5" aria-label="5ª cuerda">5</button><button data-v="4" aria-label="4ª cuerda">4</button><button data-v="3" aria-label="3ª cuerda">3</button><button data-v="2" aria-label="2ª cuerda">2</button><button data-v="1" aria-label="1ª cuerda">1</button>
+        <button data-v="auto" aria-label="Cuerda automática" data-t-aria="mic.auto">Auto</button><button data-v="6" aria-label="6ª cuerda">6</button><button data-v="5" aria-label="5ª cuerda">5</button><button data-v="4" aria-label="4ª cuerda">4</button><button data-v="3" aria-label="3ª cuerda">3</button><button data-v="2" aria-label="2ª cuerda">2</button><button data-v="1" aria-label="1ª cuerda">1</button>
       </div>
     </div>
 
     <div class="mic-panel" id="mic-intro">
-      <p>Toca una cuerda y la app te dirá si está afinada o cuánto subirla o bajarla. Para eso necesita <b>escuchar con el micrófono</b>. El sonido se analiza solo en tu dispositivo: no se graba ni se envía a ningún sitio.</p>
+      <p><span data-t="mic.intro1">Toca una cuerda y la app te dirá si está afinada o cuánto subirla o bajarla. Para eso necesita </span><b data-t="mic.intro2">escuchar con el micrófono</b><span data-t="mic.intro3">. El sonido se analiza solo en tu dispositivo: no se graba ni se envía a ningún sitio.</span></p>
       <p class="mic-why" id="mic-why" role="status"></p>
-      <button class="mic-btn primary" id="mic-start">Activar el micrófono</button>
+      <button class="mic-btn primary" id="mic-start" data-t="mic.start">Activar el micrófono</button>
     </div>
 
     <div class="mic-live" id="mic-live" hidden>
@@ -647,8 +647,8 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
         <div class="mic-note" id="mic-note">—</div>
         <div class="mic-detail" id="mic-detail">Toca una cuerda</div>
         <div class="mic-order" id="mic-order" aria-live="polite"></div>
-        <p class="mic-privacy">Afinada en la franja verde (±5 cents). El sonido se analiza solo en tu dispositivo.</p>
-        <button class="mic-btn" id="mic-stop">Detener el micrófono</button>
+        <p class="mic-privacy" data-t="mic.privacy">Afinada en la franja verde (±5 cents). El sonido se analiza solo en tu dispositivo.</p>
+        <button class="mic-btn" id="mic-stop" data-t="mic.stop">Detener el micrófono</button>
       </div>
     </div>
   </div>
@@ -659,70 +659,82 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
   <div class="sheet-handle" id="sheet-handle">
     <div class="grabber"></div>
-    <h3 id="sheet-title">Ajustes</h3>
+    <h3 id="sheet-title" data-t="settings">Ajustes</h3>
   </div>
 
   <div class="set-group">
-    <span>Notación</span>
+    <span lang="es">Idioma · <span lang="en">Language</span></span>
     <div class="set-row">
-      <div class="txt">Nomenclatura<small>Cómo se nombran las notas en toda la app</small></div>
+      <div class="txt"><span data-t="set.lang">Idioma</span><small data-t="set.lang.sub">Español o inglés</small></div>
+      <!-- Cada idioma se nombra en su propia lengua: así lo encuentra quien no lee la otra. -->
+      <div class="seg" id="set-lang">
+        <button data-v="es" lang="es">Español</button>
+        <button data-v="en" lang="en">English</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="set-group">
+    <span data-t="set.notation">Notación</span>
+    <div class="set-row">
+      <div class="txt"><span data-t="set.names">Nomenclatura</span><small data-t="set.names.sub">Cómo se nombran las notas en toda la app</small></div>
       <div class="seg" id="set-notation">
         <button data-v="latin">Do Re Mi</button>
         <button data-v="anglo">C D E</button>
       </div>
     </div>
     <div class="set-row">
-      <div class="txt">Pentagrama<small>Muestra en la partitura la nota que tocas</small></div>
+      <div class="txt"><span data-t="staff">Pentagrama</span><small data-t="set.staff.sub">Muestra en la partitura la nota que tocas</small></div>
       <button class="sw" type="button" role="switch" aria-checked="false" id="set-staff"></button>
     </div>
   </div>
 
   <div class="set-group">
-    <span>Mástil</span>
+    <span data-t="set.neck">Mástil</span>
     <div class="set-row">
-      <div class="txt">Números de traste<small>«Guía» deja solo los trastes con marca: 3, 5, 7, 9, 12…</small></div>
+      <div class="txt"><span data-t="set.fretnums">Números de traste</span><small data-t="set.fretnums.sub">«Guía» deja solo los trastes con marca: 3, 5, 7, 9, 12…</small></div>
       <div class="seg" id="set-fretnums">
-        <button data-v="all">Todos</button>
-        <button data-v="guide">Guía</button>
-        <button data-v="none">No</button>
+        <button data-t="set.all" data-v="all">Todos</button>
+        <button data-t="set.guide" data-v="guide">Guía</button>
+        <button data-t="set.none" data-v="none">No</button>
       </div>
     </div>
     <div class="set-row">
-      <div class="txt">Ver todas las notas<small>Muestra el nombre de cada posición. En Adivinar se desactiva para no darte la respuesta</small></div>
+      <div class="txt"><span data-t="set.showall">Ver todas las notas</span><small data-t="set.showall.sub">Muestra el nombre de cada posición. En Adivinar se desactiva para no darte la respuesta</small></div>
       <button class="sw" type="button" role="switch" aria-checked="false" id="set-showall"></button>
     </div>
     <div class="set-row">
-      <div class="txt">Señalar posiciones iguales<small>Marca dónde más suena exactamente la misma nota</small></div>
+      <div class="txt"><span data-t="set.equals">Señalar posiciones iguales</span><small data-t="set.equals.sub">Marca dónde más suena exactamente la misma nota</small></div>
       <button class="sw" type="button" role="switch" aria-checked="false" id="set-equals"></button>
     </div>
   </div>
 
   <div class="set-group">
-    <span>Sonido</span>
+    <span data-t="set.sound">Sonido</span>
     <div class="set-row">
-      <div class="txt">Guitarra<small id="timbre-note">Clásica de nylon o acústica de acero</small></div>
+      <div class="txt"><span data-t="set.guitar">Guitarra</span><small id="timbre-note">Clásica de nylon o acústica de acero</small></div>
       <div class="seg" id="set-timbre">
-        <button data-v="nylon">Clásica</button>
-        <button data-v="acoustic">Acústica</button>
+        <button data-t="set.classical" data-v="nylon">Clásica</button>
+        <button data-t="set.acoustic" data-v="acoustic">Acústica</button>
       </div>
     </div>
     <div class="set-row">
-      <div class="txt">Estado del sonido<small id="audio-state">sin iniciar</small></div>
-      <button class="audio-wake" id="audio-wake">Reactivar sonido</button>
+      <div class="txt"><span data-t="set.audio">Estado del sonido</span><small id="audio-state">sin iniciar</small></div>
+      <button class="audio-wake" id="audio-wake" data-t="set.audio.wake">Reactivar sonido</button>
     </div>
   </div>
 
   <div class="set-group">
-    <span>Afinación</span>
+    <span data-t="tuning">Afinación</span>
     <div class="set-row">
-      <div class="txt">Afinación activa<small>Se aplica al mástil y al afinador</small></div>
+      <div class="txt"><span data-t="set.tuning.active">Afinación activa</span><small data-t="set.tuning.sub">Se aplica al mástil y al afinador</small></div>
       <select id="set-tuning" style="max-width:52%"></select>
     </div>
   </div>
 
   <div class="set-group">
-    <button class="reset" id="set-reset">Restablecer todos los ajustes</button>
-    <button class="reset" id="set-clear-record">Borrar los récords de racha</button>
+    <button class="reset" id="set-reset" data-t="set.reset">Restablecer todos los ajustes</button>
+    <button class="reset" id="set-clear-record" data-t="set.clear">Borrar los récords de racha</button>
     <p class="version" id="app-version"></p>
   </div>
 </div>
@@ -753,13 +765,204 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 <script>
 "use strict";
 
+// 00-idioma.js · Los textos de la app en español y en inglés (G-12).
+// Se carga como <script> clásico, en el orden de index.html: lo declarado aquí
+// (const, let, function) lo ven los archivos que vienen después.
+
+/* ============================================================
+   0. IDIOMA
+   ============================================================ */
+
+/* Cada texto tiene una clave. En index.html, el atributo data-t="clave" dice
+   qué texto lleva un elemento (data-t-aria, su aria-label; data-t-title, su
+   title); en el código, t('clave') lo devuelve en el idioma elegido. Las
+   llaves {n} se rellenan: t('zoom.n', { n: 7 }) → «7 trastes a la vista».
+   Los nombres de las notas no van aquí: Do Re Mi o C D E es otro ajuste. */
+
+const TEXTOS = {
+  es: {
+    'gate.sub': 'Aprende dónde vive cada nota en el mástil. Toca para cargar los sonidos de guitarra.',
+    'gate.btn': 'Empezar',
+    'gate.loading': 'Cargando…',
+    'gate.downloading': 'Descargando las muestras de guitarra. Solo la primera vez.',
+    'gate.failed': 'No se han podido cargar las muestras. Sonará una guitarra sintetizada.',
+    'settings': 'Ajustes',
+    'tab.free': 'Libre', 'tab.guess': 'Adivinar', 'tab.tuner': 'Afinador', 'tab.scales': 'Escalas',
+    'soon': 'Próximamente',
+    'staff': 'Pentagrama',
+    'guess.repeat': 'Repetir sonido', 'guess.startAria': 'Empezar: oír la nota',
+    'guess.press1': 'Pulsa ▶', 'guess.pressSr': '(Empezar)', 'guess.press2': 'para oír la nota',
+    'guess.press3': 'y búscala en el mástil',
+    'guess.was': 'Era', 'guess.wasEnd': '(octava {n}). Mira dónde estaba.',
+    'guess.listen': 'Escucha y busca la nota',
+    'streak': 'Racha {n}', 'record': 'Récord {n} · {afin}',
+    'record.title': 'Récord de racha en la afinación {afin} (cada afinación tiene el suyo)',
+    'hints': 'Pistas', 'hint.name': 'Nombre', 'hint.note': 'Nota', 'hint.string': 'Cuerda', 'hint.strings': 'Cuerdas',
+    'reader.play': 'toca', 'octave': 'octava {n}',
+    'zoom.less': 'Ver menos trastes', 'zoom.more': 'Ver más trastes',
+    'zoom.n': '{n} trastes a la vista', 'zoom.all': 'Mástil completo',
+    'rotate': 'Gira el móvil para ver más trastes', 'rotate.close': 'Cerrar el aviso',
+    'board': 'Mástil. Flechas para moverte, Intro o Espacio para tocar',
+    'cell.open': '{o} cuerda, al aire', 'cell.fret': '{o} cuerda, traste {f}',
+    'tuner.mode': 'Modo del afinador', 'tuner.ear': 'De oído', 'tuner.mic': 'Micrófono',
+    'tuning': 'Afinación',
+    'tuner.lead': 'Pulsa una cuerda para oír cómo debería sonar y ajústala hasta que coincida.',
+    'tuner.tap': 'Pulsa para oírla', 'tuner.up': 'Subir la {o} cuerda', 'tuner.down': 'Bajar la {o} cuerda',
+    'mic.string': 'Cuerda', 'mic.auto': 'Cuerda automática', 'mic.nth': '{o} cuerda',
+    'mic.intro1': 'Toca una cuerda y la app te dirá si está afinada o cuánto subirla o bajarla. Para eso necesita ',
+    'mic.intro2': 'escuchar con el micrófono',
+    'mic.intro3': '. El sonido se analiza solo en tu dispositivo: no se graba ni se envía a ningún sitio.',
+    'mic.start': 'Activar el micrófono', 'mic.stop': 'Detener el micrófono', 'mic.play': 'Toca una cuerda',
+    'mic.privacy': 'Afinada en la franja verde (±5 cents). El sonido se analiza solo en tu dispositivo.',
+    'mic.detail': '{c} cents · {o} cuerda',
+    'mic.tuned': 'Afinada', 'mic.up': 'Sube', 'mic.upBit': 'Sube un poco', 'mic.down': 'Baja', 'mic.downBit': 'Baja un poco',
+    'mic.file': 'Abierta como archivo, el navegador no deja usar el micrófono. Usa la web de la app, o afina De oído.',
+    'mic.https': 'El micrófono solo funciona en una dirección segura (https). Usa la web de la app, o afina De oído.',
+    'mic.nobrowser': 'Este navegador no deja usar el micrófono. Puedes afinar De oído.',
+    'mic.denied': 'No hay permiso para el micrófono. En el iPhone: Ajustes › Safari › Micrófono › Permitir, o «aA» en la barra de direcciones › Ajustes del sitio web. En Chrome o Edge: el icono junto a la dirección › Micrófono › Permitir. Luego vuelve a pulsar el botón.',
+    'mic.nomic': 'No se encuentra ningún micrófono en este dispositivo.',
+    'mic.error': 'No se ha podido abrir el micrófono ({e}).',
+    'mic.cut': 'El sistema ha cortado el micrófono. Vuelve a activarlo.',
+    'mic.analyse': 'No se ha podido analizar el sonido del micrófono.',
+    'set.notation': 'Notación', 'set.names': 'Nomenclatura', 'set.names.sub': 'Cómo se nombran las notas en toda la app',
+    'set.staff.sub': 'Muestra en la partitura la nota que tocas',
+    'set.neck': 'Mástil', 'set.fretnums': 'Números de traste',
+    'set.fretnums.sub': '«Guía» deja solo los trastes con marca: 3, 5, 7, 9, 12…',
+    'set.all': 'Todos', 'set.guide': 'Guía', 'set.none': 'No',
+    'set.showall': 'Ver todas las notas',
+    'set.showall.sub': 'Muestra el nombre de cada posición. En Adivinar se desactiva para no darte la respuesta',
+    'set.equals': 'Señalar posiciones iguales', 'set.equals.sub': 'Marca dónde más suena exactamente la misma nota',
+    'set.sound': 'Sonido', 'set.guitar': 'Guitarra', 'set.guitar.sub': 'Clásica de nylon o acústica de acero',
+    'set.classical': 'Clásica', 'set.acoustic': 'Acústica',
+    'set.audio': 'Estado del sonido', 'set.audio.wake': 'Reactivar sonido',
+    'set.tuning.active': 'Afinación activa', 'set.tuning.sub': 'Se aplica al mástil y al afinador',
+    'set.lang': 'Idioma', 'set.lang.sub': 'Español o inglés',
+    'set.reset': 'Restablecer todos los ajustes', 'set.clear': 'Borrar los récords de racha',
+    'confirm.clear': '¿Borrar los récords de racha de todas las afinaciones?',
+    'confirm.reset': '¿Restablecer todos los ajustes? Tus récords se conservan.',
+    'timbre.nylon': 'Guitarra clásica de cuerdas de nylon', 'timbre.acoustic': 'Guitarra acústica de cuerdas de acero',
+    'timbre.loading': 'Cargando muestras…', 'timbre.failed': 'No se pudo cargar ese timbre. Se mantiene el anterior.',
+    'timbre.synth': 'No se pudieron cargar las grabaciones: suena la guitarra sintetizada.',
+    'audio.none': 'sin iniciar', 'audio.running': 'activo', 'audio.suspended': 'en pausa',
+    'audio.interrupted': 'interrumpido por el sistema', 'audio.closed': 'cerrado',
+    'audio.synth': ' · guitarra sintetizada', 'audio.loading': ' · cargando las grabaciones',
+    'audio.rebuild': ' · se rehace al tocar',
+    'tun.standard': 'Estándar (E A D G B E)', 'tun.standard.s': 'Estándar',
+    'tun.halfstep': 'Medio tono abajo', 'tun.halfstep.s': 'Medio tono abajo',
+    'tun.custom': 'Personalizada', 'tun.custom.s': 'Personalizada'
+  },
+  en: {
+    'gate.sub': 'Learn where every note lives on the fretboard. Tap to load the guitar sounds.',
+    'gate.btn': 'Start',
+    'gate.loading': 'Loading…',
+    'gate.downloading': 'Downloading the guitar samples. Only the first time.',
+    'gate.failed': 'The samples could not be loaded. A synthesized guitar will play.',
+    'settings': 'Settings',
+    'tab.free': 'Free', 'tab.guess': 'Guess', 'tab.tuner': 'Tuner', 'tab.scales': 'Scales',
+    'soon': 'Coming soon',
+    'staff': 'Staff',
+    'guess.repeat': 'Play again', 'guess.startAria': 'Start: hear the note',
+    'guess.press1': 'Press ▶', 'guess.pressSr': '(Start)', 'guess.press2': 'to hear the note',
+    'guess.press3': 'and find it on the fretboard',
+    'guess.was': 'It was', 'guess.wasEnd': '(octave {n}). See where it was.',
+    'guess.listen': 'Listen and find the note',
+    'streak': 'Streak {n}', 'record': 'Best {n} · {afin}',
+    'record.title': 'Best streak in {afin} tuning (each tuning keeps its own)',
+    'hints': 'Hints', 'hint.name': 'Name', 'hint.note': 'Note', 'hint.string': 'String', 'hint.strings': 'Strings',
+    'reader.play': 'play', 'octave': 'octave {n}',
+    'zoom.less': 'Show fewer frets', 'zoom.more': 'Show more frets',
+    'zoom.n': '{n} frets in view', 'zoom.all': 'Whole neck',
+    'rotate': 'Turn your phone to see more frets', 'rotate.close': 'Close this tip',
+    'board': 'Fretboard. Arrow keys to move, Enter or Space to play',
+    'cell.open': '{o} string, open', 'cell.fret': '{o} string, fret {f}',
+    'tuner.mode': 'Tuner mode', 'tuner.ear': 'By ear', 'tuner.mic': 'Microphone',
+    'tuning': 'Tuning',
+    'tuner.lead': 'Tap a string to hear how it should sound and adjust yours until they match.',
+    'tuner.tap': 'Tap to hear it', 'tuner.up': 'Raise the {o} string', 'tuner.down': 'Lower the {o} string',
+    'mic.string': 'String', 'mic.auto': 'Automatic string', 'mic.nth': '{o} string',
+    'mic.intro1': 'Play a string and the app will tell you whether it is in tune or how far to raise or lower it. To do that it needs to ',
+    'mic.intro2': 'listen through the microphone',
+    'mic.intro3': '. The sound is analysed only on your device: it is never recorded or sent anywhere.',
+    'mic.start': 'Turn on the microphone', 'mic.stop': 'Turn off the microphone', 'mic.play': 'Play a string',
+    'mic.privacy': 'In tune within the green band (±5 cents). The sound is analysed only on your device.',
+    'mic.detail': '{c} cents · {o} string',
+    'mic.tuned': 'In tune', 'mic.up': 'Tune up', 'mic.upBit': 'Up a little', 'mic.down': 'Tune down', 'mic.downBit': 'Down a little',
+    'mic.file': 'Opened as a file, the browser does not allow the microphone. Use the app’s website, or tune By ear.',
+    'mic.https': 'The microphone only works on a secure address (https). Use the app’s website, or tune By ear.',
+    'mic.nobrowser': 'This browser does not allow the microphone. You can tune By ear.',
+    'mic.denied': 'There is no permission for the microphone. On iPhone: Settings › Safari › Microphone › Allow, or «aA» in the address bar › Website Settings. In Chrome or Edge: the icon next to the address › Microphone › Allow. Then press the button again.',
+    'mic.nomic': 'No microphone was found on this device.',
+    'mic.error': 'The microphone could not be opened ({e}).',
+    'mic.cut': 'The system turned the microphone off. Turn it on again.',
+    'mic.analyse': 'The microphone sound could not be analysed.',
+    'set.notation': 'Notation', 'set.names': 'Note names', 'set.names.sub': 'How notes are named throughout the app',
+    'set.staff.sub': 'Shows the note you play on the staff',
+    'set.neck': 'Fretboard', 'set.fretnums': 'Fret numbers',
+    'set.fretnums.sub': '“Guide” keeps only the marked frets: 3, 5, 7, 9, 12…',
+    'set.all': 'All', 'set.guide': 'Guide', 'set.none': 'None',
+    'set.showall': 'Show all notes',
+    'set.showall.sub': 'Shows the name of every position. Turned off in Guess so it does not give the answer away',
+    'set.equals': 'Mark identical positions', 'set.equals.sub': 'Marks where else exactly the same note sounds',
+    'set.sound': 'Sound', 'set.guitar': 'Guitar', 'set.guitar.sub': 'Nylon-string classical or steel-string acoustic',
+    'set.classical': 'Classical', 'set.acoustic': 'Acoustic',
+    'set.audio': 'Sound status', 'set.audio.wake': 'Restart sound',
+    'set.tuning.active': 'Active tuning', 'set.tuning.sub': 'Applies to the fretboard and the tuner',
+    'set.lang': 'Language', 'set.lang.sub': 'Spanish or English',
+    'set.reset': 'Reset all settings', 'set.clear': 'Clear best streaks',
+    'confirm.clear': 'Clear the best streaks of every tuning?',
+    'confirm.reset': 'Reset all settings? Your best streaks are kept.',
+    'timbre.nylon': 'Classical guitar with nylon strings', 'timbre.acoustic': 'Acoustic guitar with steel strings',
+    'timbre.loading': 'Loading samples…', 'timbre.failed': 'That guitar could not be loaded. Keeping the previous one.',
+    'timbre.synth': 'The recordings could not be loaded: the synthesized guitar is playing.',
+    'audio.none': 'not started', 'audio.running': 'active', 'audio.suspended': 'paused',
+    'audio.interrupted': 'interrupted by the system', 'audio.closed': 'closed',
+    'audio.synth': ' · synthesized guitar', 'audio.loading': ' · loading the recordings',
+    'audio.rebuild': ' · restarts on your next tap',
+    'tun.standard': 'Standard (E A D G B E)', 'tun.standard.s': 'Standard',
+    'tun.halfstep': 'Half step down', 'tun.halfstep.s': 'Half step down',
+    'tun.custom': 'Custom', 'tun.custom.s': 'Custom'
+  }
+};
+
+/** El idioma activo: el elegido en Ajustes; si no hay, el del navegador. */
+function lang(){
+  return (typeof state !== 'undefined' && state && state.lang) || idiomaDelNavegador();
+}
+function idiomaDelNavegador(){
+  const l = typeof navigator !== 'undefined' && navigator.language;
+  return l && !/^es\b/i.test(l) ? 'en' : 'es';      // sin dato, español
+}
+
+/** El texto de una clave en el idioma activo, con sus {llaves} rellenas. */
+function t(clave, vars){
+  const s = TEXTOS[lang()][clave] ?? TEXTOS.es[clave] ?? clave;
+  return vars ? s.replace(/\{(\w+)\}/g, (_, k) => vars[k]) : s;
+}
+
+/** Número de cuerda: «3ª» en español, «3rd» en inglés. */
+function ord(n){
+  if (lang() !== 'en') return n + 'ª';
+  return n + (n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th');
+}
+
+/** Pone en su idioma todos los textos fijos de la página. */
+function aplicarIdioma(){
+  document.documentElement.lang = lang();
+  document.querySelectorAll('[data-t]').forEach(e => { e.textContent = t(e.dataset.t); });
+  document.querySelectorAll('[data-t-aria]').forEach(e => e.setAttribute('aria-label', t(e.dataset.tAria)));
+  document.querySelectorAll('[data-t-title]').forEach(e => e.setAttribute('title', t(e.dataset.tTitle)));
+}
+</script>
+<script>
+"use strict";
+
 // 01-teoria.js · Teoría musical: notas, nomenclaturas, afinaciones y colores. También la versión de la app.
 // Se carga como <script> clásico, en el orden de index.html: lo declarado aquí
 // (const, let, function) lo ven los archivos que vienen después.
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.4.1';
+const APP_VERSION = '0.4.2';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -798,13 +1001,13 @@ const MAX_FRET_W = 110;
 // a la más aguda. Todo el mástil se deriva de aquí: no hay ninguna nota
 // escrita a mano en el resto del código.
 const TUNINGS = [
-  { id:'standard', name:'Estándar (E A D G B E)', short:'Estándar', midi:[40,45,50,55,59,64] },
+  { id:'standard', get name(){ return t('tun.standard'); }, get short(){ return t('tun.standard.s'); }, midi:[40,45,50,55,59,64] },
   { id:'dropd',    name:'Drop D (D A D G B E)', short:'Drop D',   midi:[38,45,50,55,59,64] },
-  { id:'halfstep', name:'Medio tono abajo', short:'Medio tono abajo',        midi:[39,44,49,54,58,63] },
+  { id:'halfstep', get name(){ return t('tun.halfstep'); }, get short(){ return t('tun.halfstep.s'); },        midi:[39,44,49,54,58,63] },
   { id:'openg',    name:'Open G (D G D G B D)', short:'Open G',    midi:[38,43,50,55,59,62] },
   { id:'opend',    name:'Open D (D A D F# A D)', short:'Open D',   midi:[38,45,50,54,57,62] },
   { id:'dadgad',   name:'DADGAD', short:'DADGAD',                  midi:[38,45,50,55,57,62] },
-  { id:'custom',   name:'Personalizada', short:'Personalizada',           midi:[40,45,50,55,59,64] }
+  { id:'custom', get name(){ return t('tun.custom'); }, get short(){ return t('tun.custom.s'); },           midi:[40,45,50,55,59,64] }
 ];
 
 // Grosor visual de cada cuerda, de la más grave a la más aguda.
@@ -865,7 +1068,8 @@ const DEFAULTS = {
   maxChallengeFret:12,    // hasta dónde llegan los retos del modo Adivinar
   records:{},             // récord de racha de cada afinación: { standard: 7, dropd: 3 } (J-11)
   rotateHintClosed:false, // el aviso para girar, una vez cerrado, no vuelve (V-01)
-  tunerMode:'ear'         // afinador: 'ear' de oído · 'mic' por micrófono (F4.3)
+  tunerMode:'ear',        // afinador: 'ear' de oído · 'mic' por micrófono (F4.3)
+  lang:null               // 'es' o 'en' (G-12); sin elegir, el del navegador
 };
 
 const storage = {
@@ -897,6 +1101,9 @@ function sanitize(raw){
   if (!['latin','anglo'].includes(s.notation)) s.notation = DEFAULTS.notation;
   if (!['nylon','acoustic'].includes(s.timbre)) s.timbre = DEFAULTS.timbre;
   if (!['ear','mic'].includes(s.tunerMode)) s.tunerMode = DEFAULTS.tunerMode;
+  if (!['es','en'].includes(s.lang)) s.lang = idiomaDelNavegador();
+  // Quien estrena la app en inglés empieza con C D E; luego decide en Ajustes.
+  if (!(raw && raw.notation) && s.lang === 'en') s.notation = 'anglo';
   ['showStaff','showAllNotes','showEquals','hintNote','hintString','rotateHintClosed']
     .forEach(k => { s[k] = !!s[k]; });
   // fretNums sustituye al interruptor showFretNums de la 0.1.1. Quien lo tuviera
@@ -1197,24 +1404,23 @@ function rebuildAudio(){
     audioFallback = (r === false);
     const note = document.getElementById('timbre-note');
     if (note) note.textContent = r ? timbreText(state.timbre)
-      : 'No se pudieron cargar las grabaciones: suena la guitarra sintetizada.';
+      : t('timbre.synth');
     updateAudioStatus();
   });
   updateAudioStatus();
 }
 
 function timbreText(t){
-  return t === 'nylon' ? 'Guitarra clásica de cuerdas de nylon' : 'Guitarra acústica de cuerdas de acero';
+  return t === 'nylon' ? window.t('timbre.nylon') : window.t('timbre.acoustic');
 }
 
-const AUDIO_STATE = { running:'activo', suspended:'en pausa', interrupted:'interrumpido por el sistema', closed:'cerrado' };
 function updateAudioStatus(){
   const el = document.getElementById('audio-state');
   if (!el) return;
-  el.textContent = !audioCtx ? 'sin iniciar' :
-    (AUDIO_STATE[audioCtx.state] || audioCtx.state) +
-    (samplerReady ? '' : audioFallback ? ' · guitarra sintetizada' : ' · cargando las grabaciones') +
-    (rebuildOnNextGesture ? ' · se rehace al tocar' : '');
+  el.textContent = !audioCtx ? t('audio.none') :
+    (['running','suspended','interrupted','closed'].includes(audioCtx.state) ? t('audio.' + audioCtx.state) : audioCtx.state) +
+    (samplerReady ? '' : audioFallback ? t('audio.synth') : t('audio.loading')) +
+    (rebuildOnNextGesture ? t('audio.rebuild') : '');
 }
 
 function onVisibility(){
@@ -1477,7 +1683,7 @@ function buildBoard(){
   // El mástil es una cuadrícula para los lectores de pantalla y un único punto
   // de parada del tabulador: dentro, las flechas mueven el foco (roving tabindex).
   rows.setAttribute('role', 'grid');
-  rows.setAttribute('aria-label', 'Mástil. Flechas para moverte, Intro o Espacio para tocar');
+  rows.setAttribute('aria-label', t('board'));
   displayStrings().forEach((str, rowIdx) => {
     const row = document.createElement('div');
     row.className = 'string-row';
@@ -1543,7 +1749,7 @@ function cellAt(row, fret){
 function cellLabel(cell){
   const row = +cell.dataset.row, fret = +cell.dataset.fret;
   const str = displayStrings()[row];
-  const where = str.number + 'ª cuerda, ' + (fret === 0 ? 'al aire' : 'traste ' + fret);
+  const where = fret === 0 ? t('cell.open', { o: ord(str.number) }) : t('cell.fret', { o: ord(str.number), f: fret });
   const midi = +cell.dataset.midi;
   return screen === 'guess' ? where : noteName(midi) + (Math.floor(midi / 12) - 1) + ', ' + where;
 }
@@ -1683,7 +1889,7 @@ function pressFret(cell, midi, rowIdx){
   nameEl.textContent = noteName(midi);
   nameEl.style.setProperty('--note-color', info.color);
   nameEl.style.setProperty('--note-glow', info.color);
-  document.getElementById('note-oct').textContent = 'octava ' + info.octave;
+  document.getElementById('note-oct').textContent = t('octave', { n: info.octave });
   showOnStaff(midi, info.color);
 
   // Señal secundaria: dónde más suena exactamente esta misma nota.
@@ -1761,7 +1967,7 @@ function applyZoom(){
   const cap = maxVisibleFrets();
   const shown = Math.min(state.visibleFrets, cap);
   document.getElementById('zoom-label').textContent =
-    shown >= NUM_FRETS ? 'Mástil completo' : shown + ' trastes a la vista';
+    shown >= NUM_FRETS ? t('zoom.all') : t('zoom.n', { n: shown });
   document.getElementById('zoom-in').disabled  = state.visibleFrets <= 3;
   document.getElementById('zoom-out').disabled = state.visibleFrets >= cap;
 }
@@ -1799,10 +2005,10 @@ const NEXT_AFTER_REVEAL = 3000; // corrección → reto nuevo
 const NEXT_AFTER_HIT = 1500;    // acierto → reto nuevo
 
 function updateScore(){
-  document.getElementById('st-streak').textContent = 'Racha ' + streak;
+  document.getElementById('st-streak').textContent = t('streak', { n: streak });
   const r = document.getElementById('st-record');
-  r.textContent = 'Récord ' + currentRecord() + ' · ' + tuningShort();
-  r.title = 'Récord de racha en la afinación ' + tuningShort() + ' (cada afinación tiene el suyo)';
+  r.textContent = t('record', { n: currentRecord(), afin: tuningShort() });
+  r.title = t('record.title', { afin: tuningShort() });
 }
 
 /** Todas las posiciones del mástil que producen exactamente esta nota. */
@@ -1854,7 +2060,7 @@ function onRepeat(){
 
 /** El récord de la afinación activa (J-11). */
 function currentRecord(){ return state.records[state.tuningId] || 0; }
-function tuningShort(){ const t = TUNINGS.find(t => t.id === state.tuningId); return t ? t.short : ''; }
+function tuningShort(){ const a = TUNINGS.find(a => a.id === state.tuningId); return a ? a.short : ''; }
 
 /** Las pistas (comentario del 21/10): encendida, cada una enseña su respuesta
  *  dentro del propio botón, grande: «NOTA Sol#3», «CUERDAS 3ª 4ª». Se ven
@@ -1874,10 +2080,10 @@ function renderClues(){
   };
   const midi = challenge ? challenge.midi : null;
   const i = challenge ? noteInfo(midi) : null;
-  chip('qb-hint-note', state.hintNote && screen === 'guess', ['Nombre', 'Nota'],
+  chip('qb-hint-note', state.hintNote && screen === 'guess', [t('hint.name'), t('hint.note')],
        challenge ? noteName(midi) + i.octave : '', i && i.color);
-  const cuerdas = challenge ? positionsFor(midi).map(p => p.string.number + 'ª') : [];
-  chip('qb-hint-string', state.hintString && screen === 'guess', ['Cuerda', cuerdas.length > 1 ? 'Cuerdas' : 'Cuerda'],
+  const cuerdas = challenge ? positionsFor(midi).map(p => ord(p.string.number)) : [];
+  chip('qb-hint-string', state.hintString && screen === 'guess', [t('hint.string'), t(cuerdas.length > 1 ? 'hint.strings' : 'hint.string')],
        cuerdas.join(' '));
   document.querySelector('.ch-hints').classList.toggle('has-clue',
     !!challenge && screen === 'guess' && (state.hintNote || state.hintString));
@@ -1887,24 +2093,24 @@ function renderChallenge(){
   const box = document.getElementById('challenge-text');
   const btn = document.getElementById('btn-repeat');
   btn.classList.toggle('ready', !guessStarted);
-  btn.setAttribute('aria-label', guessStarted ? 'Repetir sonido' : 'Empezar: oír la nota');
+  btn.setAttribute('aria-label', guessStarted ? t('guess.repeat') : t('guess.startAria'));
   renderClues();
   if (!challenge){ box.textContent = ''; return; }
 
   if (!guessStarted){
-    box.innerHTML = '<b>Pulsa ▶ <span class="sr-only">(Empezar)</span> para oír la nota</b><br><span class="dim">y búscala en el mástil</span>';
+    box.innerHTML = '<b>' + t('guess.press1') + ' <span class="sr-only">' + t('guess.pressSr') + '</span> ' + t('guess.press2') +
+      '</b><br><span class="dim">' + t('guess.press3') + '</span>';
     return;
   }
 
   if (challenge.revealed){
     const i = noteInfo(challenge.midi);
-    box.innerHTML = '<span class="dim">Era</span> <b style="color:'+i.color+'">'
-      + noteName(challenge.midi) + '</b> <span class="dim">(octava ' + i.octave
-      + '). Mira dónde estaba.</span>';
+    box.innerHTML = '<span class="dim">' + t('guess.was') + '</span> <b style="color:'+i.color+'">'
+      + noteName(challenge.midi) + '</b> <span class="dim">' + t('guess.wasEnd', { n: i.octave }) + '</span>';
     return;
   }
 
-  box.innerHTML = '<span class="dim">Escucha y busca la nota</span>';
+  box.innerHTML = '<span class="dim">' + t('guess.listen') + '</span>';
 }
 
 function evaluate(cell, midi, rowIdx){
@@ -2000,8 +2206,8 @@ function renderTunerStrings(){
     play.className = 'tstring-play';
     play.innerHTML = '<span class="tstring-note" style="--tcol:'+info.color+'">'
                    + noteName(str.openMidi) + '</span>'
-                   + '<span class="tstring-oct">octava ' + info.octave + '</span>'
-                   + '<span class="tstring-hint">Pulsa para oírla</span>';
+                   + '<span class="tstring-oct">' + t('octave', { n: info.octave }) + '</span>'
+                   + '<span class="tstring-hint">' + t('tuner.tap') + '</span>';
     play.addEventListener('click', () => {
       playMidi(str.openMidi, 3);
       row.classList.add('ringing');
@@ -2016,7 +2222,7 @@ function renderTunerStrings(){
     [['−',-1],['+',1]].forEach(([txt,d]) => {
       const b = document.createElement('button');
       b.textContent = txt;
-      b.setAttribute('aria-label', (d>0?'Subir':'Bajar') + ' la ' + str.number + 'ª cuerda');
+      b.setAttribute('aria-label', t(d > 0 ? 'tuner.up' : 'tuner.down', { o: ord(str.number) }));
       b.addEventListener('click', () => shiftString(str.lowIndex, d));
       semi.appendChild(b);
     });
@@ -2063,7 +2269,7 @@ function onTuningChanged(){
 function resetReader(){
   lastMidi = null;
   clearStaff();
-  document.getElementById('note-name').innerHTML = '<span class="note-placeholder">toca</span>';
+  document.getElementById('note-name').innerHTML = '<span class="note-placeholder">' + t('reader.play') + '</span>';
   document.getElementById('note-oct').textContent = '';
 }
 </script>
@@ -2128,7 +2334,7 @@ function syncUI(){
   // Ajustes. Los selectores segmentados anuncian su opción activa también a
   // los lectores de pantalla (aria-pressed), no solo con el color.
   const segs = { 'set-notation': state.notation, 'set-timbre': state.timbre,
-                 'set-fretnums': state.fretNums };
+                 'set-fretnums': state.fretNums, 'set-lang': state.lang };
   for (const id in segs){
     document.querySelectorAll('#'+id+' button').forEach(b => {
       const on = b.dataset.v === segs[id];
@@ -2249,7 +2455,7 @@ async function setTimbre(timbre){
   state.timbre = timbre;
   save();
   syncUI();
-  note.textContent = 'Cargando muestras…';
+  note.textContent = t('timbre.loading');
   const ok = await loadSamples(timbre);
   // Llegó otra elección mientras tanto: manda la última.
   if (ok === 'stale' || state.timbre !== timbre){
@@ -2263,7 +2469,7 @@ async function setTimbre(timbre){
   } else {
     state.timbre = previous;
     save(); syncUI();
-    note.textContent = 'No se pudo cargar ese timbre. Se mantiene el anterior.';
+    note.textContent = t('timbre.failed');
   }
 }
 </script>
@@ -2449,11 +2655,11 @@ const centsEntre = (hz, ref) => 1200 * Math.log2(hz / ref);
 /** Por qué no se puede usar el micrófono aquí, o '' si se puede (PL-04). */
 function micUnavailable(){
   if (typeof location !== 'undefined' && location.protocol === 'file:')
-    return 'Abierta como archivo, el navegador no deja usar el micrófono. Usa la web de la app, o afina De oído.';
+    return t('mic.file');
   if (window.isSecureContext === false)
-    return 'El micrófono solo funciona en una dirección segura (https). Usa la web de la app, o afina De oído.';
+    return t('mic.https');
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia)
-    return 'Este navegador no deja usar el micrófono. Puedes afinar De oído.';
+    return t('mic.nobrowser');
   return '';
 }
 
@@ -2513,15 +2719,15 @@ function showMicReading(hzDetectada){
   nota.textContent = noteName(s.openMidi) + info.octave;
   const redondo = Math.round(c);
   document.getElementById('mic-detail').textContent =
-    (redondo > 0 ? '+' : redondo < 0 ? '−' : '') + Math.abs(redondo) + ' cents · ' + s.number + 'ª cuerda';
+    t('mic.detail', { c: (redondo > 0 ? '+' : redondo < 0 ? '−' : '') + Math.abs(redondo), o: ord(s.number) });
   // Se decide con el número que se ve (AT-07 #5). Ya afinada, hace falta
   // pasar de ±7 para dejar de estarlo: así el aviso no parpadea en el borde
   // y el lector de pantalla no lo repite sin parar (AT-07 #4).
   const limite = mic.orden === 'afinada' ? MIC.AFINADA + 2 : MIC.AFINADA;
   let orden, texto;
-  if (Math.abs(redondo) <= limite){ orden = 'afinada'; texto = ['✓', 'Afinada']; }
-  else if (redondo < 0){ orden = redondo < -50 ? 'sube' : 'sube-poco'; texto = ['▲', redondo < -50 ? 'Sube' : 'Sube un poco']; }
-  else { orden = redondo > 50 ? 'baja' : 'baja-poco'; texto = ['▼', redondo > 50 ? 'Baja' : 'Baja un poco']; }
+  if (Math.abs(redondo) <= limite){ orden = 'afinada'; texto = ['✓', t('mic.tuned')]; }
+  else if (redondo < 0){ orden = redondo < -50 ? 'sube' : 'sube-poco'; texto = ['▲', t(redondo < -50 ? 'mic.up' : 'mic.upBit')]; }
+  else { orden = redondo > 50 ? 'baja' : 'baja-poco'; texto = ['▼', t(redondo > 50 ? 'mic.down' : 'mic.downBit')]; }
   setMicOrder(orden, texto);
   setNeedle(c, true);
 }
@@ -2529,7 +2735,7 @@ function showMicReading(hzDetectada){
 function showMicIdle(){
   mic.lecturas = [];
   document.getElementById('mic-note').textContent = '—';
-  document.getElementById('mic-detail').textContent = 'Toca una cuerda';
+  document.getElementById('mic-detail').textContent = t('mic.play');
   setMicOrder('', null);
   setNeedle(0, false);
 }
@@ -2606,16 +2812,14 @@ async function startMic(){
     const negado = err && (err.name === 'NotAllowedError' || err.name === 'SecurityError');
     const sinMic = err && (err.name === 'NotFoundError' || err.name === 'OverconstrainedError');
     showMicPanel(negado
-      ? 'No hay permiso para el micrófono. En el iPhone: Ajustes › Safari › Micrófono › Permitir, o «aA» en la barra de direcciones › Ajustes del sitio web. En Chrome o Edge: el icono junto a la dirección › Micrófono › Permitir. Luego vuelve a pulsar el botón.'
-      : sinMic ? 'No se encuentra ningún micrófono en este dispositivo.'
-      : 'No se ha podido abrir el micrófono (' + ((err && err.name) || 'error') + ').');
+      ? t('mic.denied') : sinMic ? t('mic.nomic') : t('mic.error', { e: (err && err.name) || 'error' }));
     return;
   }
   mic.arrancando = false;
   if (screen !== 'tuner' || state.tunerMode !== 'mic' || document.hidden){ stopMic(); return; }   // te fuiste mientras pedía permiso
   wakeAudio();                              // iOS puede pausar el audio al cambiar la sesión
   // Si el sistema corta el micrófono (una llamada, otra app), se dice.
-  mic.stream.getTracks().forEach(t => { t.onended = () => { stopMic(); showMicPanel('El sistema ha cortado el micrófono. Vuelve a activarlo.'); }; });
+  mic.stream.getTracks().forEach(t => { t.onended = () => { stopMic(); showMicPanel(t('mic.cut')); }; });
   try {
     mic.src = audioCtx.createMediaStreamSource(mic.stream);
     mic.analyser = audioCtx.createAnalyser();
@@ -2625,7 +2829,7 @@ async function startMic(){
     while (tam < 2.2 * audioCtx.sampleRate / TONO.MIN_HZ && tam < 32768) tam *= 2;
     mic.analyser.fftSize = tam;
     mic.src.connect(mic.analyser);          // solo al analizador: no sale por el altavoz
-  } catch(e){ console.error(e); stopMic(); showMicPanel('No se ha podido analizar el sonido del micrófono.'); return; }
+  } catch(e){ console.error(e); stopMic(); showMicPanel(t('mic.analyse')); return; }
   mic.det = crearDetector(onMicReading);
   mic.timer = setInterval(micTick, MIC.PERIODO_MS);
   mic.ultima = 0;
@@ -2694,8 +2898,16 @@ function setMicString(v){
   });
 }
 
+/** Nombres accesibles de los botones de cuerda («6ª cuerda», «6th string»). */
+function labelMicStrings(){
+  document.querySelectorAll('#mic-string button').forEach(b => {
+    if (b.dataset.v !== 'auto') b.setAttribute('aria-label', t('mic.nth', { o: ord(+b.dataset.v) }));
+  });
+}
+
 function bindMicTuner(){
   drawGauge();
+  labelMicStrings();
   document.querySelectorAll('#tuner-mode button').forEach(b => b.addEventListener('click', () => setTunerMode(b.dataset.v)));
   document.querySelectorAll('#mic-string button').forEach(b => b.addEventListener('click', () => setMicString(b.dataset.v)));
   document.getElementById('mic-start').addEventListener('click', startMic);
@@ -2721,13 +2933,13 @@ document.getElementById('gate-btn').addEventListener('click', async () => {
   const btn = document.getElementById('gate-btn');
   const sub = document.getElementById('gate-sub');
   btn.disabled = true;
-  btn.textContent = 'Cargando…';
-  sub.textContent = 'Descargando las muestras de guitarra. Solo la primera vez.';
+  btn.textContent = t('gate.loading');
+  sub.textContent = t('gate.downloading');
 
   unlockAudio();
   const ok = await loadSamples(state.timbre);
   if (!ok){
-    sub.textContent = 'No se han podido cargar las muestras. Sonará una guitarra sintetizada.';
+    sub.textContent = t('gate.failed');
     await new Promise(r => setTimeout(r, 900));
   }
   document.getElementById('gate').classList.add('hidden');
@@ -2810,6 +3022,32 @@ document.querySelectorAll('#set-notation button').forEach(b => {
     if (state.notation !== b.dataset.v) toggleNotation();
   });
 });
+// Idioma (G-12): se cambian los textos fijos y se repinta lo que se escribe
+// desde el código. El estado del juego y del micrófono no se tocan.
+function setLang(l){
+  if (state.lang === l) return;
+  state.lang = l; save();
+  refreshLanguage();
+}
+function refreshLanguage(){
+  aplicarIdioma();
+  buildTuner();
+  labelCells();
+  labelMicStrings();
+  if (!mic.analyser) showMicPanel(micUnavailable());
+  else if (!mic.lecturas.length) showMicIdle();
+  document.getElementById('timbre-note').textContent = samplerReady ? timbreText(state.timbre) : t('set.guitar.sub');
+  updateAudioStatus();
+  updateScore();
+  renderChallenge();
+  if (lastMidi === null) document.getElementById('note-name').innerHTML = '<span class="note-placeholder">' + t('reader.play') + '</span>';
+  else document.getElementById('note-oct').textContent = t('octave', { n: noteInfo(lastMidi).octave });
+  syncUI();
+  applyZoom();
+}
+document.querySelectorAll('#set-lang button').forEach(b => {
+  b.addEventListener('click', () => setLang(b.dataset.v));
+});
 document.querySelectorAll('#set-timbre button').forEach(b => {
   b.addEventListener('click', () => setTimbre(b.dataset.v));
 });
@@ -2836,7 +3074,7 @@ document.getElementById('set-equals').addEventListener('click', () => {
   });
 });
 document.getElementById('set-clear-record').addEventListener('click', () => {
-  if (!confirm('¿Borrar los récords de racha de todas las afinaciones?')) return;
+  if (!confirm(t('confirm.clear'))) return;
   state.records = {}; save(); updateScore();
 });
 document.getElementById('audio-wake').addEventListener('click', rebuildAudio);
@@ -2844,10 +3082,11 @@ document.addEventListener('visibilitychange', onVisibility);
 ['pointerup', 'touchend', 'click'].forEach(t =>
   document.addEventListener(t, onGesture, { capture:true, passive:true }));
 document.getElementById('set-reset').addEventListener('click', async () => {
-  if (!confirm('¿Restablecer todos los ajustes? Tu récord se conserva.')) return;
-  const previousTimbre = state.timbre, records = state.records;
+  if (!confirm(t('confirm.reset'))) return;
+  const previousTimbre = state.timbre, records = state.records, idioma = state.lang;
   state = sanitize({});
   state.records = records;        // los récords son tuyos, no ajustes (Sesión 1, A14)
+  state.lang = idioma;            // y el idioma se queda: restablecer no debe cambiarte de lengua
   state.visibleFrets = defaultVisibleFrets();
   save();
   buildTuner();
@@ -2896,6 +3135,7 @@ document.getElementById('app-version').textContent = 'Trasteando ' + APP_VERSION
 })();
 // Al abrir se entra siempre en Libre (L-01), aunque la dirección diga otra área.
 if (canHistory) history.replaceState({ screen:'free' }, '', '#libre');
+aplicarIdioma();               // los textos fijos, en el idioma elegido (G-12)
 buildTuner();
 buildBoard();
 bindBoardInput();

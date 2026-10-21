@@ -23,10 +23,10 @@ const NEXT_AFTER_REVEAL = 3000; // corrección → reto nuevo
 const NEXT_AFTER_HIT = 1500;    // acierto → reto nuevo
 
 function updateScore(){
-  document.getElementById('st-streak').textContent = 'Racha ' + streak;
+  document.getElementById('st-streak').textContent = t('streak', { n: streak });
   const r = document.getElementById('st-record');
-  r.textContent = 'Récord ' + currentRecord() + ' · ' + tuningShort();
-  r.title = 'Récord de racha en la afinación ' + tuningShort() + ' (cada afinación tiene el suyo)';
+  r.textContent = t('record', { n: currentRecord(), afin: tuningShort() });
+  r.title = t('record.title', { afin: tuningShort() });
 }
 
 /** Todas las posiciones del mástil que producen exactamente esta nota. */
@@ -78,7 +78,7 @@ function onRepeat(){
 
 /** El récord de la afinación activa (J-11). */
 function currentRecord(){ return state.records[state.tuningId] || 0; }
-function tuningShort(){ const t = TUNINGS.find(t => t.id === state.tuningId); return t ? t.short : ''; }
+function tuningShort(){ const a = TUNINGS.find(a => a.id === state.tuningId); return a ? a.short : ''; }
 
 /** Las pistas (comentario del 21/10): encendida, cada una enseña su respuesta
  *  dentro del propio botón, grande: «NOTA Sol#3», «CUERDAS 3ª 4ª». Se ven
@@ -98,10 +98,10 @@ function renderClues(){
   };
   const midi = challenge ? challenge.midi : null;
   const i = challenge ? noteInfo(midi) : null;
-  chip('qb-hint-note', state.hintNote && screen === 'guess', ['Nombre', 'Nota'],
+  chip('qb-hint-note', state.hintNote && screen === 'guess', [t('hint.name'), t('hint.note')],
        challenge ? noteName(midi) + i.octave : '', i && i.color);
-  const cuerdas = challenge ? positionsFor(midi).map(p => p.string.number + 'ª') : [];
-  chip('qb-hint-string', state.hintString && screen === 'guess', ['Cuerda', cuerdas.length > 1 ? 'Cuerdas' : 'Cuerda'],
+  const cuerdas = challenge ? positionsFor(midi).map(p => ord(p.string.number)) : [];
+  chip('qb-hint-string', state.hintString && screen === 'guess', [t('hint.string'), t(cuerdas.length > 1 ? 'hint.strings' : 'hint.string')],
        cuerdas.join(' '));
   document.querySelector('.ch-hints').classList.toggle('has-clue',
     !!challenge && screen === 'guess' && (state.hintNote || state.hintString));
@@ -111,24 +111,24 @@ function renderChallenge(){
   const box = document.getElementById('challenge-text');
   const btn = document.getElementById('btn-repeat');
   btn.classList.toggle('ready', !guessStarted);
-  btn.setAttribute('aria-label', guessStarted ? 'Repetir sonido' : 'Empezar: oír la nota');
+  btn.setAttribute('aria-label', guessStarted ? t('guess.repeat') : t('guess.startAria'));
   renderClues();
   if (!challenge){ box.textContent = ''; return; }
 
   if (!guessStarted){
-    box.innerHTML = '<b>Pulsa ▶ <span class="sr-only">(Empezar)</span> para oír la nota</b><br><span class="dim">y búscala en el mástil</span>';
+    box.innerHTML = '<b>' + t('guess.press1') + ' <span class="sr-only">' + t('guess.pressSr') + '</span> ' + t('guess.press2') +
+      '</b><br><span class="dim">' + t('guess.press3') + '</span>';
     return;
   }
 
   if (challenge.revealed){
     const i = noteInfo(challenge.midi);
-    box.innerHTML = '<span class="dim">Era</span> <b style="color:'+i.color+'">'
-      + noteName(challenge.midi) + '</b> <span class="dim">(octava ' + i.octave
-      + '). Mira dónde estaba.</span>';
+    box.innerHTML = '<span class="dim">' + t('guess.was') + '</span> <b style="color:'+i.color+'">'
+      + noteName(challenge.midi) + '</b> <span class="dim">' + t('guess.wasEnd', { n: i.octave }) + '</span>';
     return;
   }
 
-  box.innerHTML = '<span class="dim">Escucha y busca la nota</span>';
+  box.innerHTML = '<span class="dim">' + t('guess.listen') + '</span>';
 }
 
 function evaluate(cell, midi, rowIdx){

@@ -5,6 +5,9 @@
 // Herramienta de desarrollo: necesita Playwright con Chromium.
 // Uso: node herramientas/comprobar-autonomo.js <dist/trasteando.html> <carpeta de salida>
 const { chromium } = require('playwright');
+// La app sigue el idioma del navegador (G-12): por defecto se comprueba en español;
+// con IDIOMA=en-US, en inglés.
+const LOCALE = process.env.IDIOMA || 'es-ES';
 const fs = require('fs'), path = require('path'), { execFileSync } = require('child_process');
 
 const [FILE, OUT] = process.argv.slice(2);
@@ -29,7 +32,7 @@ async function record(page, midi, file){
 
 (async () => {
   const browser = await chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required'] });
-  const ctx = await browser.newContext({ offline: true, viewport: { width: 1280, height: 800 } });
+  const ctx = await browser.newContext({ locale: LOCALE, offline: true, viewport: { width: 1280, height: 800 } });
   const intentos = [], errores = [];
   await ctx.route('**/*', r => { const u = r.request().url(); if (u.startsWith('file:') || u.startsWith('data:')) return r.continue(); intentos.push(u); r.abort(); });
   const page = await ctx.newPage();

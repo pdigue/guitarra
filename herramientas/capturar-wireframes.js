@@ -12,6 +12,9 @@
 'use strict';
 const path = require('path');
 const { chromium } = require('playwright');
+// La app sigue el idioma del navegador (G-12): por defecto se comprueba en español;
+// con IDIOMA=en-US, en inglés.
+const LOCALE = process.env.IDIOMA || 'es-ES';
 
 const RAIZ = path.resolve(__dirname, '..');
 const PAGINA = 'file://' + path.join(RAIZ, 'docs', 'interfaz', 'wireframes.html');
@@ -21,7 +24,7 @@ const MIN_TOQUE = 40;    // lado mínimo de un control táctil (G-05)
 
 (async () => {
   const navegador = await chromium.launch();
-  const pagina = await navegador.newPage({ viewport: { width: 1800, height: 1200 }, deviceScaleFactor: 1.5 });
+  const pagina = await navegador.newPage({ locale: LOCALE, viewport: { width: 1800, height: 1200 }, deviceScaleFactor: 1.5 });
   await pagina.goto(PAGINA);
   await pagina.waitForTimeout(300);
   let fallos = 0;

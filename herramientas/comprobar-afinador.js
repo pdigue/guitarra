@@ -7,6 +7,9 @@
 // hay micrófono, y guarda capturas en vertical y en horizontal.
 // Uso: node herramientas/comprobar-afinador.js <carpeta de salida>
 const { chromium } = require('playwright');
+// La app sigue el idioma del navegador (G-12): por defecto se comprueba en español;
+// con IDIOMA=en-US, en inglés.
+const LOCALE = process.env.IDIOMA || 'es-ES';
 const http = require('http'), fs = require('fs'), path = require('path');
 const RAIZ = path.resolve(__dirname, '..');
 const OUT = process.argv[2] || path.join(RAIZ, 'docs', 'verificaciones', 'capturas-afinador');
@@ -46,7 +49,7 @@ const server = http.createServer((req, res) => {
   const comprobar = (ok, texto) => { console.log((ok ? 'OK    ' : 'FALLA ') + texto); if (!ok) fallos.push(texto); };
 
   for (const [nombre, w, h] of [['vertical', 390, 664], ['horizontal', 750, 342]]){
-    const ctx = await browser.newContext({ viewport: { width: w, height: h }, hasTouch: true, isMobile: true });
+    const ctx = await browser.newContext({ locale: LOCALE, viewport: { width: w, height: h }, hasTouch: true, isMobile: true });
     await ctx.grantPermissions(['microphone'], { origin: 'http://127.0.0.1:5598' });
     const page = await ctx.newPage();
     page.on('pageerror', e => errores.push(e.message));
@@ -80,7 +83,7 @@ const server = http.createServer((req, res) => {
   }
 
   // Abierta como archivo: sin micrófono, con el motivo, y De oído intacto.
-  const ctx = await browser.newContext({ viewport: { width: 390, height: 664 } });
+  const ctx = await browser.newContext({ locale: LOCALE, viewport: { width: 390, height: 664 } });
   const page = await ctx.newPage();
   await page.goto('file://' + path.join(RAIZ, 'index.html'));
   await page.click('#gate-btn');

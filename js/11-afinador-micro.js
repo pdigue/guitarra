@@ -37,11 +37,11 @@ const centsEntre = (hz, ref) => 1200 * Math.log2(hz / ref);
 /** Por qué no se puede usar el micrófono aquí, o '' si se puede (PL-04). */
 function micUnavailable(){
   if (typeof location !== 'undefined' && location.protocol === 'file:')
-    return 'Abierta como archivo, el navegador no deja usar el micrófono. Usa la web de la app, o afina De oído.';
+    return t('mic.file');
   if (window.isSecureContext === false)
-    return 'El micrófono solo funciona en una dirección segura (https). Usa la web de la app, o afina De oído.';
+    return t('mic.https');
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia)
-    return 'Este navegador no deja usar el micrófono. Puedes afinar De oído.';
+    return t('mic.nobrowser');
   return '';
 }
 
@@ -101,15 +101,15 @@ function showMicReading(hzDetectada){
   nota.textContent = noteName(s.openMidi) + info.octave;
   const redondo = Math.round(c);
   document.getElementById('mic-detail').textContent =
-    (redondo > 0 ? '+' : redondo < 0 ? '−' : '') + Math.abs(redondo) + ' cents · ' + s.number + 'ª cuerda';
+    t('mic.detail', { c: (redondo > 0 ? '+' : redondo < 0 ? '−' : '') + Math.abs(redondo), o: ord(s.number) });
   // Se decide con el número que se ve (AT-07 #5). Ya afinada, hace falta
   // pasar de ±7 para dejar de estarlo: así el aviso no parpadea en el borde
   // y el lector de pantalla no lo repite sin parar (AT-07 #4).
   const limite = mic.orden === 'afinada' ? MIC.AFINADA + 2 : MIC.AFINADA;
   let orden, texto;
-  if (Math.abs(redondo) <= limite){ orden = 'afinada'; texto = ['✓', 'Afinada']; }
-  else if (redondo < 0){ orden = redondo < -50 ? 'sube' : 'sube-poco'; texto = ['▲', redondo < -50 ? 'Sube' : 'Sube un poco']; }
-  else { orden = redondo > 50 ? 'baja' : 'baja-poco'; texto = ['▼', redondo > 50 ? 'Baja' : 'Baja un poco']; }
+  if (Math.abs(redondo) <= limite){ orden = 'afinada'; texto = ['✓', t('mic.tuned')]; }
+  else if (redondo < 0){ orden = redondo < -50 ? 'sube' : 'sube-poco'; texto = ['▲', t(redondo < -50 ? 'mic.up' : 'mic.upBit')]; }
+  else { orden = redondo > 50 ? 'baja' : 'baja-poco'; texto = ['▼', t(redondo > 50 ? 'mic.down' : 'mic.downBit')]; }
   setMicOrder(orden, texto);
   setNeedle(c, true);
 }
@@ -117,7 +117,7 @@ function showMicReading(hzDetectada){
 function showMicIdle(){
   mic.lecturas = [];
   document.getElementById('mic-note').textContent = '—';
-  document.getElementById('mic-detail').textContent = 'Toca una cuerda';
+  document.getElementById('mic-detail').textContent = t('mic.play');
   setMicOrder('', null);
   setNeedle(0, false);
 }
@@ -194,16 +194,14 @@ async function startMic(){
     const negado = err && (err.name === 'NotAllowedError' || err.name === 'SecurityError');
     const sinMic = err && (err.name === 'NotFoundError' || err.name === 'OverconstrainedError');
     showMicPanel(negado
-      ? 'No hay permiso para el micrófono. En el iPhone: Ajustes › Safari › Micrófono › Permitir, o «aA» en la barra de direcciones › Ajustes del sitio web. En Chrome o Edge: el icono junto a la dirección › Micrófono › Permitir. Luego vuelve a pulsar el botón.'
-      : sinMic ? 'No se encuentra ningún micrófono en este dispositivo.'
-      : 'No se ha podido abrir el micrófono (' + ((err && err.name) || 'error') + ').');
+      ? t('mic.denied') : sinMic ? t('mic.nomic') : t('mic.error', { e: (err && err.name) || 'error' }));
     return;
   }
   mic.arrancando = false;
   if (screen !== 'tuner' || state.tunerMode !== 'mic' || document.hidden){ stopMic(); return; }   // te fuiste mientras pedía permiso
   wakeAudio();                              // iOS puede pausar el audio al cambiar la sesión
   // Si el sistema corta el micrófono (una llamada, otra app), se dice.
-  mic.stream.getTracks().forEach(t => { t.onended = () => { stopMic(); showMicPanel('El sistema ha cortado el micrófono. Vuelve a activarlo.'); }; });
+  mic.stream.getTracks().forEach(t => { t.onended = () => { stopMic(); showMicPanel(t('mic.cut')); }; });
   try {
     mic.src = audioCtx.createMediaStreamSource(mic.stream);
     mic.analyser = audioCtx.createAnalyser();
@@ -213,7 +211,7 @@ async function startMic(){
     while (tam < 2.2 * audioCtx.sampleRate / TONO.MIN_HZ && tam < 32768) tam *= 2;
     mic.analyser.fftSize = tam;
     mic.src.connect(mic.analyser);          // solo al analizador: no sale por el altavoz
-  } catch(e){ console.error(e); stopMic(); showMicPanel('No se ha podido analizar el sonido del micrófono.'); return; }
+  } catch(e){ console.error(e); stopMic(); showMicPanel(t('mic.analyse')); return; }
   mic.det = crearDetector(onMicReading);
   mic.timer = setInterval(micTick, MIC.PERIODO_MS);
   mic.ultima = 0;
@@ -282,8 +280,16 @@ function setMicString(v){
   });
 }
 
+/** Nombres accesibles de los botones de cuerda («6ª cuerda», «6th string»). */
+function labelMicStrings(){
+  document.querySelectorAll('#mic-string button').forEach(b => {
+    if (b.dataset.v !== 'auto') b.setAttribute('aria-label', t('mic.nth', { o: ord(+b.dataset.v) }));
+  });
+}
+
 function bindMicTuner(){
   drawGauge();
+  labelMicStrings();
   document.querySelectorAll('#tuner-mode button').forEach(b => b.addEventListener('click', () => setTunerMode(b.dataset.v)));
   document.querySelectorAll('#mic-string button').forEach(b => b.addEventListener('click', () => setMicString(b.dataset.v)));
   document.getElementById('mic-start').addEventListener('click', startMic);

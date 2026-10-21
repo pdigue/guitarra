@@ -868,3 +868,65 @@ test('cuerda automática: si el micrófono apenas capta la fundamental de la 6ª
   assert.deepEqual(lectura(A), { nota: 'Mi2', detalle: '−20 cents · 6ª cuerda', orden: '▲ Sube un poco' });
   A.doc.querySelector('.tab[data-screen="free"]').click();
 });
+
+// --- F4.5: idioma (G-12) ---
+
+test('idioma: cada texto existe en español y en inglés, y cada clave de la página tiene texto (G-12)', () => {
+  const A = boot(APP);
+  const es = JSON.parse(A.ev('JSON.stringify(Object.keys(TEXTOS.es).sort())'));
+  const en = JSON.parse(A.ev('JSON.stringify(Object.keys(TEXTOS.en).sort())'));
+  assert.deepEqual(en, es, 'las dos lenguas tienen las mismas claves');
+  const html = fs.readFileSync(APP, 'utf8');
+  const usadas = [...html.matchAll(/data-t(?:-aria|-title)?="([^"]+)"/g)].map(m => m[1]);
+  assert.ok(usadas.length > 40);
+  for (const k of usadas) assert.ok(es.includes(k), 'falta el texto de ' + k);
+  // Y las claves que usa el código: t('…') con una clave literal.
+  for (const f of fs.readdirSync(path.join(__dirname, '..', 'js')).filter(f => f !== '00-idioma.js')){   // su comentario usa t('clave') de ejemplo
+    const src = fs.readFileSync(path.join(__dirname, '..', 'js', f), 'utf8');
+    for (const m of src.matchAll(/\bt\('([\w.]+)'/g)) assert.ok(es.includes(m[1]) || m[1].startsWith('audio.'), `${f}: falta el texto de ${m[1]}`);
+  }
+});
+
+test('idioma: en Ajustes se cambia a inglés y vuelve al español; se guarda y no toca la racha (G-12)', async () => {
+  const A = boot(APP);
+  jugar(A);
+  A.ev('streak = 3; updateScore()');
+  A.doc.querySelector('#set-lang [data-v="en"]').click();
+  assert.equal(A.ev('state.lang'), 'en');
+  assert.equal(JSON.parse(A.store.get('trasteando.v1')).lang, 'en');
+  assert.equal(A.doc.documentElement.lang, 'en');
+  const pestañas = A.doc.querySelectorAll('.tab [data-t]').map(e => e.textContent).join(' ');
+  assert.equal(pestañas, 'Free Guess Tuner Scales Settings');
+  assert.equal(A.$('sheet-title').textContent, 'Settings');
+  assert.equal(A.$('st-streak').textContent, 'Streak 3', 'la racha sigue');
+  assert.equal(A.$('st-record').textContent, 'Best 0 · Standard');
+  assert.match(A.$('challenge-text').innerHTML, /Listen and find the note/);
+  assert.match(A.$('zoom-label').textContent, /frets in view|Whole neck/);
+  assert.equal(A.$('tuning-select').children[0].textContent, 'Standard (E A D G B E)');
+  assert.match(A.doc.querySelector('.fret-cell[data-row="0"][data-fret="0"]').getAttribute('aria-label'), /^1st string, open$/);
+  A.$('qb-hint-string').click();
+  assert.match(A.$('qb-hint-string').textContent, /^Strings?\d/);
+  // Nada de español en lo que se ve del Afinador.
+  A.doc.querySelector('.tab[data-screen="tuner"]').click();
+  A.doc.querySelector('#tuner-mode [data-v="mic"]').click();
+  const visto = ['tuner-mode', 'mic-string-label', 'mic-intro'].map(id => A.$(id).textContent).join(' ');
+  assert.doesNotMatch(visto, /Afinación|Cuerda|micrófono|dispositivo|De oído/);
+  A.doc.querySelector('#set-lang [data-v="es"]').click();
+  assert.equal(A.$('sheet-title').textContent, 'Ajustes');
+  assert.match(A.$('mic-intro').textContent, /escuchar con el micrófono/);
+});
+
+test('idioma: la primera vez sigue al navegador (inglés → C D E); restablecer no cambia el idioma (G-12)', async () => {
+  const E = boot(APP, null, { navigator: { language: 'en-GB' } });
+  assert.equal(E.ev('state.lang'), 'en');
+  assert.equal(E.ev('state.notation'), 'anglo', 'en inglés, de entrada, C D E');
+  assert.equal(E.$('gate-btn').textContent, 'Start');
+  const S = boot(APP, null, { navigator: { language: 'es-ES' } });
+  assert.equal(S.ev('state.lang'), 'es');
+  assert.equal(S.ev('state.notation'), 'latin');
+  const G = boot(APP, { lang: 'en', notation: 'latin' }, { navigator: { language: 'es-ES' } });
+  assert.equal(G.ev('state.lang'), 'en', 'lo elegido manda sobre el navegador');
+  assert.equal(G.ev('state.notation'), 'latin', 'y la nomenclatura elegida se respeta');
+  G.$('set-reset').click(); await sleep(20);
+  assert.equal(G.ev('state.lang'), 'en');
+});

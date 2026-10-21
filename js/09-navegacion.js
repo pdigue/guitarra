@@ -58,7 +58,7 @@ function syncUI(){
   // Ajustes. Los selectores segmentados anuncian su opción activa también a
   // los lectores de pantalla (aria-pressed), no solo con el color.
   const segs = { 'set-notation': state.notation, 'set-timbre': state.timbre,
-                 'set-fretnums': state.fretNums };
+                 'set-fretnums': state.fretNums, 'set-lang': state.lang };
   for (const id in segs){
     document.querySelectorAll('#'+id+' button').forEach(b => {
       const on = b.dataset.v === segs[id];
@@ -179,7 +179,7 @@ async function setTimbre(timbre){
   state.timbre = timbre;
   save();
   syncUI();
-  note.textContent = 'Cargando muestras…';
+  note.textContent = t('timbre.loading');
   const ok = await loadSamples(timbre);
   // Llegó otra elección mientras tanto: manda la última.
   if (ok === 'stale' || state.timbre !== timbre){
@@ -193,6 +193,6 @@ async function setTimbre(timbre){
   } else {
     state.timbre = previous;
     save(); syncUI();
-    note.textContent = 'No se pudo cargar ese timbre. Se mantiene el anterior.';
+    note.textContent = t('timbre.failed');
   }
 }

@@ -31,7 +31,7 @@ function buildBoard(){
   // El mástil es una cuadrícula para los lectores de pantalla y un único punto
   // de parada del tabulador: dentro, las flechas mueven el foco (roving tabindex).
   rows.setAttribute('role', 'grid');
-  rows.setAttribute('aria-label', 'Mástil. Flechas para moverte, Intro o Espacio para tocar');
+  rows.setAttribute('aria-label', t('board'));
   displayStrings().forEach((str, rowIdx) => {
     const row = document.createElement('div');
     row.className = 'string-row';
@@ -97,7 +97,7 @@ function cellAt(row, fret){
 function cellLabel(cell){
   const row = +cell.dataset.row, fret = +cell.dataset.fret;
   const str = displayStrings()[row];
-  const where = str.number + 'ª cuerda, ' + (fret === 0 ? 'al aire' : 'traste ' + fret);
+  const where = fret === 0 ? t('cell.open', { o: ord(str.number) }) : t('cell.fret', { o: ord(str.number), f: fret });
   const midi = +cell.dataset.midi;
   return screen === 'guess' ? where : noteName(midi) + (Math.floor(midi / 12) - 1) + ', ' + where;
 }
@@ -237,7 +237,7 @@ function pressFret(cell, midi, rowIdx){
   nameEl.textContent = noteName(midi);
   nameEl.style.setProperty('--note-color', info.color);
   nameEl.style.setProperty('--note-glow', info.color);
-  document.getElementById('note-oct').textContent = 'octava ' + info.octave;
+  document.getElementById('note-oct').textContent = t('octave', { n: info.octave });
   showOnStaff(midi, info.color);
 
   // Señal secundaria: dónde más suena exactamente esta misma nota.

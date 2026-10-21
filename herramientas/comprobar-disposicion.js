@@ -21,6 +21,9 @@
 const path = require('path');
 const fs = require('fs');
 const { chromium } = require('playwright');
+// La app sigue el idioma del navegador (G-12): por defecto se comprueba en español;
+// con IDIOMA=en-US, en inglés.
+const LOCALE = process.env.IDIOMA || 'es-ES';
 
 const RAIZ = path.resolve(__dirname, '..');
 const APP = 'file://' + path.join(RAIZ, process.env.APP_HTML || 'index.html');
@@ -54,7 +57,7 @@ const PANTALLAS = [
   const fallo = (pantalla, msg) => { fallos++; console.log(`FALLO ${pantalla}: ${msg}`); };
 
   for (const [nombre, w, h, dedo, area, avisoEsperado, ajustes] of PANTALLAS) {
-    const ctx = await navegador.newContext({ viewport: { width: w, height: h }, hasTouch: dedo,
+    const ctx = await navegador.newContext({ locale: LOCALE, viewport: { width: w, height: h }, hasTouch: dedo,
                                              isMobile: dedo, deviceScaleFactor: 2 });
     const pagina = await ctx.newPage();
     await pagina.goto(APP);

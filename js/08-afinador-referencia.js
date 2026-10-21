@@ -42,8 +42,8 @@ function renderTunerStrings(){
     play.className = 'tstring-play';
     play.innerHTML = '<span class="tstring-note" style="--tcol:'+info.color+'">'
                    + noteName(str.openMidi) + '</span>'
-                   + '<span class="tstring-oct">octava ' + info.octave + '</span>'
-                   + '<span class="tstring-hint">Pulsa para oírla</span>';
+                   + '<span class="tstring-oct">' + t('octave', { n: info.octave }) + '</span>'
+                   + '<span class="tstring-hint">' + t('tuner.tap') + '</span>';
     play.addEventListener('click', () => {
       playMidi(str.openMidi, 3);
       row.classList.add('ringing');
@@ -58,7 +58,7 @@ function renderTunerStrings(){
     [['−',-1],['+',1]].forEach(([txt,d]) => {
       const b = document.createElement('button');
       b.textContent = txt;
-      b.setAttribute('aria-label', (d>0?'Subir':'Bajar') + ' la ' + str.number + 'ª cuerda');
+      b.setAttribute('aria-label', t(d > 0 ? 'tuner.up' : 'tuner.down', { o: ord(str.number) }));
       b.addEventListener('click', () => shiftString(str.lowIndex, d));
       semi.appendChild(b);
     });
@@ -105,6 +105,6 @@ function onTuningChanged(){
 function resetReader(){
   lastMidi = null;
   clearStaff();
-  document.getElementById('note-name').innerHTML = '<span class="note-placeholder">toca</span>';
+  document.getElementById('note-name').innerHTML = '<span class="note-placeholder">' + t('reader.play') + '</span>';
   document.getElementById('note-oct').textContent = '';
 }

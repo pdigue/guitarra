@@ -12,13 +12,13 @@ document.getElementById('gate-btn').addEventListener('click', async () => {
   const btn = document.getElementById('gate-btn');
   const sub = document.getElementById('gate-sub');
   btn.disabled = true;
-  btn.textContent = 'Cargando…';
-  sub.textContent = 'Descargando las muestras de guitarra. Solo la primera vez.';
+  btn.textContent = t('gate.loading');
+  sub.textContent = t('gate.downloading');
 
   unlockAudio();
   const ok = await loadSamples(state.timbre);
   if (!ok){
-    sub.textContent = 'No se han podido cargar las muestras. Sonará una guitarra sintetizada.';
+    sub.textContent = t('gate.failed');
     await new Promise(r => setTimeout(r, 900));
   }
   document.getElementById('gate').classList.add('hidden');
@@ -101,6 +101,32 @@ document.querySelectorAll('#set-notation button').forEach(b => {
     if (state.notation !== b.dataset.v) toggleNotation();
   });
 });
+// Idioma (G-12): se cambian los textos fijos y se repinta lo que se escribe
+// desde el código. El estado del juego y del micrófono no se tocan.
+function setLang(l){
+  if (state.lang === l) return;
+  state.lang = l; save();
+  refreshLanguage();
+}
+function refreshLanguage(){
+  aplicarIdioma();
+  buildTuner();
+  labelCells();
+  labelMicStrings();
+  if (!mic.analyser) showMicPanel(micUnavailable());
+  else if (!mic.lecturas.length) showMicIdle();
+  document.getElementById('timbre-note').textContent = samplerReady ? timbreText(state.timbre) : t('set.guitar.sub');
+  updateAudioStatus();
+  updateScore();
+  renderChallenge();
+  if (lastMidi === null) document.getElementById('note-name').innerHTML = '<span class="note-placeholder">' + t('reader.play') + '</span>';
+  else document.getElementById('note-oct').textContent = t('octave', { n: noteInfo(lastMidi).octave });
+  syncUI();
+  applyZoom();
+}
+document.querySelectorAll('#set-lang button').forEach(b => {
+  b.addEventListener('click', () => setLang(b.dataset.v));
+});
 document.querySelectorAll('#set-timbre button').forEach(b => {
   b.addEventListener('click', () => setTimbre(b.dataset.v));
 });
@@ -127,7 +153,7 @@ document.getElementById('set-equals').addEventListener('click', () => {
   });
 });
 document.getElementById('set-clear-record').addEventListener('click', () => {
-  if (!confirm('¿Borrar los récords de racha de todas las afinaciones?')) return;
+  if (!confirm(t('confirm.clear'))) return;
   state.records = {}; save(); updateScore();
 });
 document.getElementById('audio-wake').addEventListener('click', rebuildAudio);
@@ -135,10 +161,11 @@ document.addEventListener('visibilitychange', onVisibility);
 ['pointerup', 'touchend', 'click'].forEach(t =>
   document.addEventListener(t, onGesture, { capture:true, passive:true }));
 document.getElementById('set-reset').addEventListener('click', async () => {
-  if (!confirm('¿Restablecer todos los ajustes? Tu récord se conserva.')) return;
-  const previousTimbre = state.timbre, records = state.records;
+  if (!confirm(t('confirm.reset'))) return;
+  const previousTimbre = state.timbre, records = state.records, idioma = state.lang;
   state = sanitize({});
   state.records = records;        // los récords son tuyos, no ajustes (Sesión 1, A14)
+  state.lang = idioma;            // y el idioma se queda: restablecer no debe cambiarte de lengua
   state.visibleFrets = defaultVisibleFrets();
   save();
   buildTuner();
@@ -187,6 +214,7 @@ document.getElementById('app-version').textContent = 'Trasteando ' + APP_VERSION
 })();
 // Al abrir se entra siempre en Libre (L-01), aunque la dirección diga otra área.
 if (canHistory) history.replaceState({ screen:'free' }, '', '#libre');
+aplicarIdioma();               // los textos fijos, en el idioma elegido (G-12)
 buildTuner();
 buildBoard();
 bindBoardInput();

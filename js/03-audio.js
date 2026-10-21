@@ -249,24 +249,23 @@ function rebuildAudio(){
     audioFallback = (r === false);
     const note = document.getElementById('timbre-note');
     if (note) note.textContent = r ? timbreText(state.timbre)
-      : 'No se pudieron cargar las grabaciones: suena la guitarra sintetizada.';
+      : t('timbre.synth');
     updateAudioStatus();
   });
   updateAudioStatus();
 }
 
 function timbreText(t){
-  return t === 'nylon' ? 'Guitarra clásica de cuerdas de nylon' : 'Guitarra acústica de cuerdas de acero';
+  return t === 'nylon' ? window.t('timbre.nylon') : window.t('timbre.acoustic');
 }
 
-const AUDIO_STATE = { running:'activo', suspended:'en pausa', interrupted:'interrumpido por el sistema', closed:'cerrado' };
 function updateAudioStatus(){
   const el = document.getElementById('audio-state');
   if (!el) return;
-  el.textContent = !audioCtx ? 'sin iniciar' :
-    (AUDIO_STATE[audioCtx.state] || audioCtx.state) +
-    (samplerReady ? '' : audioFallback ? ' · guitarra sintetizada' : ' · cargando las grabaciones') +
-    (rebuildOnNextGesture ? ' · se rehace al tocar' : '');
+  el.textContent = !audioCtx ? t('audio.none') :
+    (['running','suspended','interrupted','closed'].includes(audioCtx.state) ? t('audio.' + audioCtx.state) : audioCtx.state) +
+    (samplerReady ? '' : audioFallback ? t('audio.synth') : t('audio.loading')) +
+    (rebuildOnNextGesture ? t('audio.rebuild') : '');
 }
 
 function onVisibility(){

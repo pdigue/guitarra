@@ -9,6 +9,9 @@
 // Uso: node herramientas/comprobar-en-navegador.js <repo> index.html <salida>
 
 const { chromium, devices } = require('playwright');
+// La app sigue el idioma del navegador (G-12): por defecto se comprueba en español;
+// con IDIOMA=en-US, en inglés.
+const LOCALE = process.env.IDIOMA || 'es-ES';
 const http = require('http'), fs = require('fs'), path = require('path');
 
 const [REPO, HTML, OUT] = process.argv.slice(2);
@@ -92,7 +95,7 @@ async function record(page, midi, file){
 
   // ---------------- Escritorio ----------------
   const errors = [];
-  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const ctx = await browser.newContext({ locale: LOCALE, viewport: { width: 1280, height: 800 } });
   const external = await setup(ctx);
   const page = await newPage(ctx, errors);
   await start(page, URL);
@@ -201,9 +204,9 @@ async function record(page, midi, file){
   await sleep(3000);
   const t13 = await page.evaluate(() => challenge.midi);
   await page.locator(`.fret-cell[data-midi="${t13}"]`).first().click(); await sleep(200);
-  const before = await page.evaluate(() => ({ record: state.record, fretNums: state.fretNums, showAll: state.showAllNotes }));
+  const before = await page.evaluate(() => ({ record: state.records[state.tuningId] || 0, fretNums: state.fretNums, showAll: state.showAllNotes }));
   await page.reload(); await page.click('#gate-btn'); await sleep(500);
-  const after = await page.evaluate(() => ({ record: state.record, fretNums: state.fretNums, showAll: state.showAllNotes }));
+  const after = await page.evaluate(() => ({ record: state.records[state.tuningId] || 0, fretNums: state.fretNums, showAll: state.showAllNotes }));
   check(13, 'El récord y los ajustes sobreviven a recargar', before.record >= 1 && JSON.stringify(before) === JSON.stringify(after), `${JSON.stringify(before)} → ${JSON.stringify(after)}`);
 
   // 8. Ventana estrecha y zoom al mínimo
@@ -239,7 +242,7 @@ async function record(page, midi, file){
   // ---------------- iPhone (emulado en Chromium) ----------------
   const ierr = [];
   for (const [name, dev] of [['iphone', devices['iPhone 13']], ['iphone-apaisado', devices['iPhone 13 landscape']]]){
-    const ictx = await browser.newContext({ ...dev });
+    const ictx = await browser.newContext({ locale: LOCALE, ...dev });
     await setup(ictx);
     const ip = await newPage(ictx, ierr);
     await start(ip, URL);

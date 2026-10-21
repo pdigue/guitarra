@@ -55,7 +55,7 @@ function applyZoom(){
   const cap = maxVisibleFrets();
   const shown = Math.min(state.visibleFrets, cap);
   document.getElementById('zoom-label').textContent =
-    shown >= NUM_FRETS ? 'Mástil completo' : shown + ' trastes a la vista';
+    shown >= NUM_FRETS ? t('zoom.all') : t('zoom.n', { n: shown });
   document.getElementById('zoom-in').disabled  = state.visibleFrets <= 3;
   document.getElementById('zoom-out').disabled = state.visibleFrets >= cap;
 }
