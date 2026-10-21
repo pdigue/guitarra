@@ -1444,3 +1444,12 @@ test('AT-10: cambiar de compás sonando no mueve el pulso; tras un bloqueo no se
   assert.equal(A.$('chord-search').value, '');
   assert.equal(A.doc.querySelectorAll('#chord-list .cl-head').length, 2, 'populares y todos otra vez');
 });
+
+// --- Continuidad entre conversaciones (21/10): ESTADO.md no puede quedarse atrás ---
+
+test('docs/ESTADO.md está al día con la versión de la app (memoria entre conversaciones)', () => {
+  const v = fs.readFileSync(path.join(__dirname, '..', 'js', '01-teoria.js'), 'utf8').match(/APP_VERSION = '([\d.]+)'/)[1];
+  const estado = fs.readFileSync(path.join(__dirname, '..', 'docs', 'ESTADO.md'), 'utf8');
+  const linea = estado.split('\n').find(l => l.startsWith('**Actualizado:**')) || '';
+  assert.ok(linea.includes('`' + v + '`'), `ESTADO.md dice «${linea}», pero la app es la ${v}: actualízalo antes de cerrar`);
+});

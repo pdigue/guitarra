@@ -31,7 +31,7 @@ El original vive en el repositorio (`docs/ESTADO.md`) y hay una copia idéntica 
 ## 3. Cómo se trabaja (lo práctico)
 
 **Comprobaciones:**
-- **Banco:** `node --test`, que debe dar 79 de 79. Cada prueba usa `tests/dom-minimo.js`.
+- **Banco:** `node --test`, que debe dar 80 de 80. Cada prueba usa `tests/dom-minimo.js`.
 - **Pruebas sueltas:** `node --test-name-pattern="texto" tests/banco.test.js`.
 - **Archivo autónomo:** tras cada cambio en `js/`, `css/` o `index.html`, regenerarlo con `python3 herramientas/generar-autonomo.py`. Si no, falla la prueba 19.
 - **En Chromium**, con la salida siempre en la carpeta temporal de la conversación:

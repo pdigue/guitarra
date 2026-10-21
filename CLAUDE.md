@@ -14,9 +14,15 @@ Idioma: español en todo (código comentado, commits, informes y respuestas).
 3. Con este archivo y ESTADO.md basta para seguir; los demás documentos se leen
    solo cuando la tarea los necesita, y por partes (con grep o por secciones).
 
-## Al cerrar cada etapa o conversación
-Actualiza docs/ESTADO.md, haz commit y push, y sube la misma versión al proyecto
-como claude/ESTADO.md (también CLAUDE.md, como claude/CLAUDE.md, si cambió).
+## Cuándo se actualiza ESTADO.md (sin que Pablo tenga que vigilarlo)
+- En cada versión nueva de la app, en el mismo commit que sube APP_VERSION. El
+  banco lo exige: una prueba falla si ESTADO.md no menciona la versión actual,
+  y ninguna etapa se cierra con el banco en rojo.
+- Tras cada fusión en main, decisión de Pablo o cambio de pendientes.
+- Al cerrar cada etapa o conversación, como último paso.
+Cada vez: commit y push, y la misma versión al proyecto como claude/ESTADO.md
+(y CLAUDE.md como claude/CLAUDE.md si cambió). El mensaje final a Pablo termina
+con una línea: «ESTADO actualizado: versión X, siguiente paso Y».
 
 ## Documentos que mandan
 - docs/ESTADO.md — memoria entre conversaciones: estado, pendientes y comandos.
