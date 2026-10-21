@@ -129,6 +129,7 @@ function refreshLanguage(antes){
   renderChallenge();
   buildScaleSelects(); renderScales();
   refreshMetro();
+  refreshChords();
   if (lastMidi === null) document.getElementById('note-name').innerHTML = '<span class="note-placeholder">' + t('reader.play') + '</span>';
   else refrescarLector();
   syncUI();
@@ -183,15 +184,17 @@ document.getElementById('set-showall').addEventListener('click', () => {
 document.getElementById('set-equals').addEventListener('click', () => {
   state.showEquals = !state.showEquals; save(); syncUI();
 });
+/** Cambia la afinación activa (desde el Afinador, Ajustes o Acordes). */
+function setTuning(id){
+  state.tuningId = id;
+  if (state.tuningId === 'custom' && !state.customTuning) state.customTuning = activeTuning();
+  save();
+  document.getElementById('tuning-select').value = state.tuningId;
+  document.getElementById('set-tuning').value = state.tuningId;
+  onTuningChanged();
+}
 ['tuning-select','set-tuning'].forEach(id => {
-  document.getElementById(id).addEventListener('change', ev => {
-    state.tuningId = ev.target.value;
-    if (state.tuningId === 'custom' && !state.customTuning) state.customTuning = activeTuning();
-    save();
-    document.getElementById('tuning-select').value = state.tuningId;
-    document.getElementById('set-tuning').value = state.tuningId;
-    onTuningChanged();
-  });
+  document.getElementById(id).addEventListener('change', ev => setTuning(ev.target.value));
 });
 document.getElementById('set-clear-record').addEventListener('click', () => {
   if (!confirm(t('confirm.clear'))) return;
@@ -267,6 +270,7 @@ bindBoardInput();
 bindMicTuner();
 bindScales();
 bindMetro();
+bindChords();
 buildAccidentals();
 bindBoardKeys();
 clearStaff();

@@ -104,6 +104,7 @@ function onTuningChanged(){
   // nota: el progreso empieza de nuevo (AT-09 #3).
   if (screen === 'scales') resetScalePractice();
   renderScales();              // otra afinación: otras casillas para la misma escala
+  renderChords();              // y Acordes avisa si ya no es la estándar (AC-05)
 }
 
 function resetReader(){

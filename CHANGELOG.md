@@ -6,11 +6,12 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.5.4** | 21/10/2026 | F5.6 · metrónomo | Rama `auto/F5.6-metronomo` |
-| 0.5.3 | 21/10/2026 | F5.5 · reintentar por defecto y auditoría AT-09 | Rama `auto/F5.5-ajustes-visuales` · PR #13, pendiente de fusionar |
-| 0.5.2 | 21/10/2026 | F5.5 · ♯ o ♭ por nota y ajustes visuales | Rama `auto/F5.5-ajustes-visuales` |
-| 0.5.1 | 21/10/2026 | F5.5 · reintentar en Adivinar | Rama `auto/F5.1-notas` |
-| 0.5.0 | 21/10/2026 | F5.1 a F5.4 · escalas | Rama `auto/F5.1-notas` |
+| **0.5.5** | 21/10/2026 | F5.7 · librería de acordes | Rama `auto/F5.7-acordes` |
+| 0.5.4 | 21/10/2026 | F5.6 · metrónomo | Rama `auto/F5.6-metronomo` · PR #14 |
+| 0.5.3 | 21/10/2026 | F5.5 · reintentar por defecto y auditoría AT-09 | `main`, fusionada el 21/10 (PR #13) |
+| 0.5.2 | 21/10/2026 | F5.5 · ♯ o ♭ por nota y ajustes visuales | `main`, fusionada el 21/10 (PR #13) |
+| 0.5.1 | 21/10/2026 | F5.5 · reintentar en Adivinar | `main`, fusionada el 21/10 (PR #13) |
+| 0.5.0 | 21/10/2026 | F5.1 a F5.4 · escalas | `main`, fusionada el 21/10 (PR #13) |
 | 0.4.2 | 21/10/2026 | F4.5 · idioma español o inglés | `main`, fusionada el 21/10 (PR #12) |
 | 0.4.1 | 21/10/2026 | F4.4 · pistas grandes y récord por afinación | `main`, fusionada el 21/10 (PR #12) |
 | 0.4.0 | 21/10/2026 | F4.1 a F4.3 · afinador por micrófono | `main`, fusionada el 21/10 (PR #12) |
@@ -36,6 +37,21 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.5.5] — 21/10/2026 · Librería de acordes
+
+### Añadido
+- **AC-01** · Acordes, un área propia, como la describiste. A un lado está el listado: arriba los populares (C, G, D, A, E, Am, Em, Dm y F) y debajo los 30 acordes más habituales. Al otro lado, el acorde dibujado en el mástil. En vertical, el listado va arriba; en horizontal, a la derecha.
+- **AC-06** · Buscador: «G» deja G, Gm, G7 y G/B; «Sol» encuentra lo mismo.
+- **AC-02** · Cada dedo tiene su número y su color, siempre los mismos: 1 azul, 2 naranja, 3 rosa y 4 verde. Las cuerdas al aire llevan ○ y las que no suenan ✕, junto a su nombre. La cejilla se dibuja como una barra.
+- **AC-03, AC-04** · El pentagrama escribe el acorde con sus notas apiladas, como manda el acorde (B7 lleva Re♯). El acorde suena rasgueado al elegirlo y con «Tocar».
+- **AC-05** · Con otra afinación, Acordes lo avisa y ofrece pasar a la estándar.
+
+### Verificado
+- Banco: 78 de 78, con cinco pruebas nuevas. Comprueban, entre otras cosas, que las 30 digitaciones suenan a su acorde y se pueden tocar con cuatro dedos, y el contraste de los colores de los dedos.
+- Disposición en seis pantallas, accesibilidad y archivo autónomo.
 
 ---
 

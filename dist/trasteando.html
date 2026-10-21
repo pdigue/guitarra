@@ -341,6 +341,51 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .mic-order.ok { color:var(--ok); } .mic-order.ko { color:var(--ko); }
 .mic-privacy { font-size:12px; color:var(--muted); text-align:center; margin:6px 0 8px; line-height:1.45; }
 
+/* ===== ACORDES (F5.7, AC-01 a AC-06) =====
+   Buscador y listado a un lado (arriba en vertical, a la derecha en horizontal);
+   el acorde, en el mástil. Cada dedo, su número y su color, los mismos en todos
+   los acordes (Okabe-Ito: se distinguen también con daltonismo). */
+:root { --f1:#56b4e9; --f2:#e69f00; --f3:#cc79a7; --f4:#2bb58a; }
+.chords-card { flex-shrink:0; display:flex; flex-direction:column; gap:6px; padding:6px 12px;
+  background:var(--surface); border-bottom:1px solid var(--line); }
+.chord-search { width:100%; min-height:40px; box-sizing:border-box; padding:0 12px; border-radius:10px; font:inherit; font-size:15px;
+  background:var(--bg); border:1px solid var(--line2); color:var(--text); }
+.chord-search::placeholder { color:var(--faint); }
+.chord-list { max-height:132px; overflow-y:auto; display:flex; flex-direction:column; gap:3px; touch-action:pan-y; }
+.cl-head { font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-top:2px; }
+.cl-group { display:flex; flex-wrap:wrap; gap:5px; }
+.chord-chip { min-width:52px; min-height:40px; padding:0 10px; border-radius:10px; cursor:pointer; font:inherit;
+  font-size:14px; font-weight:700; background:var(--surface2); border:1px solid var(--line2); color:var(--text); }
+.chord-chip.on { background:var(--amber); border-color:var(--amber); color:#1a1006; }
+.cl-empty { margin:4px 0; font-size:13px; color:var(--muted); }
+/* En vertical no cabe todo: el listado deja ver dos filas y se desplaza; el
+   pentagrama y el zoom se apartan para que el mástil conserve sus 40 px por
+   cuerda (V-01). El acorde ya se ve entero en el mástil; al girar el móvil,
+   vuelve el pentagrama con el acorde escrito. */
+@media (orientation:portrait) and (max-width:599px){
+  .chords-card { gap:4px; padding:5px 12px; }
+  .chord-list { max-height:92px; }
+  body[data-screen="chords"] .display, body[data-screen="chords"] .zoombar { display:none; }
+}
+.chord-info { display:flex; align-items:center; gap:10px; min-height:40px; }
+.chord-name { font-family:Georgia,serif; font-size:24px; font-weight:700; color:var(--amber); }
+.chord-notes { flex:1; min-width:0; font-size:13px; color:var(--muted); }
+.chord-play { flex-shrink:0; }
+.chord-tuning { margin:0; display:flex; align-items:center; flex-wrap:wrap; gap:6px 10px; font-size:13px; color:var(--ko); }
+/* En el mástil: las notas no se ven (show-all se apaga); se ven los dedos. */
+.finger { position:absolute; z-index:4; width:28px; height:28px; max-width:80%; max-height:80%; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:800; color:#10151c;
+  box-shadow:0 0 0 2px #160f07, 0 2px 6px rgba(0,0,0,.5); pointer-events:none; }
+.finger.f1 { background:var(--f1); } .finger.f2 { background:var(--f2); }
+.finger.f3 { background:var(--f3); } .finger.f4 { background:var(--f4); }
+.fret-cell.barre::after { content:''; position:absolute; z-index:3; left:50%; width:16px; margin-left:-8px;
+  top:0; bottom:0; background:var(--f1); opacity:.75; pointer-events:none; }
+.fret-cell.barre.barre-top::after { top:50%; border-radius:0; }
+.fret-cell.barre.barre-bottom::after { bottom:50%; }
+.board.chords .string-label[data-mark]::after { content:attr(data-mark); position:absolute; right:-1px; top:50%;
+  transform:translate(100%,-50%); z-index:5; font-size:13px; font-weight:800; color:var(--text);
+  background:var(--bg); border-radius:50%; width:16px; height:16px; display:flex; align-items:center; justify-content:center; }
+
 /* ===== METRÓNOMO (F5.6, MT-01 a MT-05) =====
    Área propia, sin mástil, como el Afinador: igual en vertical y en horizontal.
    Arriba la barra del tempo; en medio el nombre, el número y un punto por pulso;
@@ -447,7 +492,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .panel { display:contents; }
 .header { order:1; } .quickbar { order:2; } .challenge { order:3; } .display { order:4; }
 .rotate-hint { order:5; } .board-area { order:6; } .sc-nav, .zoombar { order:7; } .tuner, .metro { order:8; }
-.scales-card { order:3; }
+.scales-card, .chords-card { order:3; }
 .tabbar { order:9; }
 
 /* En pantallas táctiles en vertical el mástil no baja de 40 px por cuerda
@@ -560,6 +605,13 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .chip .short { display:inline-flex; }
   .challenge { padding:0; gap:6px; background:none; border:none; }
   .scales-card { padding:0; gap:6px; background:none; border:none; }
+  .chords-card { padding:0; gap:5px; background:none; border:none; }
+  body[data-screen="chords"] .zoombar { display:none; }   /* el acorde ya cabe: diez trastes a la vista */
+  .chord-list { max-height:min(150px, 40vh); }
+  .chord-chip { min-width:44px; padding:0 7px; font-size:13px; }
+  .chord-info { flex-wrap:wrap; gap:2px 8px; }
+  .chord-name { font-size:20px; }
+  .chord-notes { flex-basis:100%; order:3; font-size:12px; }
   .sc-top { flex-wrap:wrap; }
   .sc-top .seg { flex-basis:100%; }
   .sc-practice { flex-wrap:wrap; }
@@ -618,9 +670,11 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .metro { width:100%; max-width:460px; margin:0 auto; padding:20px 20px 12px; }
   .metro-slider { max-height:300px; }
 }
-/* Entre 600 y 959 px, las pestañas se estrechan para no pisar el nombre. */
+/* Entre 600 y 959 px, seis pestañas no caben centradas sin pisar el nombre:
+   se estrechan y se alinean a la derecha, junto a Ajustes. */
 @media (min-width:600px) and (max-width:959px) and (min-height:521px){
-  .tab { padding:0 10px; font-size:12.5px; }
+  .tabbar { left:auto; right:60px; transform:none; gap:3px; }
+  .tab { padding:0 8px; font-size:12px; }
 }
 
 /* Ajustes como panel lateral cuando hay anchura (interfaz.md §3). */
@@ -681,6 +735,10 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   <button class="tab" data-screen="scales">
     <svg viewBox="0 0 24 24"><path d="M4 18V6"/><path d="M4 8h5l3-3 3 3h5"/><path d="M9 18v-6"/><path d="M15 18v-8"/><path d="M20 18V8"/></svg>
     <span data-t="tab.scales">Escalas</span>
+  </button>
+  <button class="tab" data-screen="chords">
+    <svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1.5"/><line x1="5" y1="7" x2="19" y2="7"/><line x1="10" y1="3" x2="10" y2="21"/><line x1="14.5" y1="3" x2="14.5" y2="21"/><circle cx="10" cy="11" r="1.6" fill="currentColor"/><circle cx="14.5" cy="15" r="1.6" fill="currentColor"/></svg>
+    <span data-t="tab.chords">Acordes</span>
   </button>
   <button class="tab" data-screen="metro">
     <svg viewBox="0 0 24 24"><path d="M9.5 3.5h5L18 20H6z"/><line x1="7" y1="16" x2="18" y2="16"/><line x1="12" y1="16" x2="16.5" y2="6"/></svg>
@@ -743,6 +801,20 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
       <button class="chip" id="scale-reset" data-t="scale.reset">Otra vez</button>
     </div>
   </div>
+</div>
+
+<!-- Acordes (F5.7): buscador y listado a un lado; el acorde, en el mástil (AC-01 a AC-06) -->
+<div class="chords-card" id="chords-card" hidden>
+  <input type="search" class="chord-search" id="chord-search" placeholder="Buscar: G, Am…" data-t-placeholder="chord.search"
+         aria-label="Buscar acorde por su nombre" data-t-aria="chord.searchAria" autocomplete="off" autocapitalize="off" spellcheck="false">
+  <div class="chord-list" id="chord-list" role="group" aria-label="Acordes" data-t-aria="tab.chords"></div>
+  <div class="chord-info">
+    <span class="chord-name" id="chord-name">C</span>
+    <span class="chord-notes" id="chord-notes"></span>
+    <button class="chip chord-play" id="chord-play" aria-label="Tocar el acorde" data-t-aria="chord.playAria">&#9654; <span data-t="chord.play">Tocar</span></button>
+  </div>
+  <p class="chord-tuning" id="chord-tuning" hidden><span data-t="chord.tuning">Las digitaciones son para la afinación estándar.</span>
+    <button class="chip" id="chord-standard" data-t="chord.toStandard">Pasar a estándar</button></p>
 </div>
 
 <!-- Pentagrama y nota leída -->
@@ -1129,7 +1201,13 @@ const TEXTOS = {
     'metro.noAudio': 'El sonido aún no está listo. Vuelve a pulsar.',
     'metro.stoppedMic': 'El metrónomo se ha parado: su clic confundiría al afinador.',
     'metro.stoppedHidden': 'Se paró al salir de la app.',
-    'metro.running': 'Metrónomo en marcha'
+    'metro.running': 'Metrónomo en marcha',
+    // Acordes (F5.7, AC-01 a AC-06)
+    'tab.chords': 'Acordes', 'chord.search': 'Buscar: G, Am…', 'chord.searchAria': 'Buscar acorde por su nombre',
+    'chord.popular': 'Populares', 'chord.all': 'Todos ({n})', 'chord.results': 'Resultados ({n})',
+    'chord.none': 'Ningún acorde empieza por «{q}».', 'chord.play': 'Tocar', 'chord.playAria': 'Tocar el acorde',
+    'chord.tuning': 'Las digitaciones son para la afinación estándar.', 'chord.toStandard': 'Pasar a estándar',
+    'chord.finger': 'dedo {n}', 'chord.open': 'al aire', 'chord.muted': 'no suena', 'chord.stringAria': '{o} cuerda: {e}'
   },
   en: {
     'gate.sub': 'Learn where every note lives on the fretboard. Tap to load the guitar sounds.',
@@ -1234,7 +1312,13 @@ const TEXTOS = {
     'metro.noAudio': 'Sound is not ready yet. Tap again.',
     'metro.stoppedMic': 'The metronome stopped: its click would confuse the tuner.',
     'metro.stoppedHidden': 'It stopped when you left the app.',
-    'metro.running': 'Metronome running'
+    'metro.running': 'Metronome running',
+    // Chords (F5.7, AC-01 to AC-06)
+    'tab.chords': 'Chords', 'chord.search': 'Search: G, Am…', 'chord.searchAria': 'Search a chord by name',
+    'chord.popular': 'Popular', 'chord.all': 'All ({n})', 'chord.results': 'Results ({n})',
+    'chord.none': 'No chord starts with “{q}”.', 'chord.play': 'Play', 'chord.playAria': 'Play the chord',
+    'chord.tuning': 'These fingerings are for standard tuning.', 'chord.toStandard': 'Switch to standard',
+    'chord.finger': 'finger {n}', 'chord.open': 'open', 'chord.muted': 'not played', 'chord.stringAria': '{o} string: {e}'
   }
 };
 
@@ -1268,6 +1352,7 @@ function aplicarIdioma(){
   document.querySelectorAll('[data-t]').forEach(e => { e.textContent = t(e.dataset.t); });
   document.querySelectorAll('[data-t-aria]').forEach(e => e.setAttribute('aria-label', t(e.dataset.tAria)));
   document.querySelectorAll('[data-t-title]').forEach(e => e.setAttribute('title', t(e.dataset.tTitle)));
+  document.querySelectorAll('[data-t-placeholder]').forEach(e => e.setAttribute('placeholder', t(e.dataset.tPlaceholder)));
 }
 </script>
 <script>
@@ -1279,7 +1364,7 @@ function aplicarIdioma(){
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.5.4';
+const APP_VERSION = '0.5.5';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -1491,7 +1576,8 @@ const DEFAULTS = {
   scaleMode:'show',       // 'show' Mostrar · 'practice' Práctica
   onMiss:'retry',         // Adivinar, al fallar: 'retry' seguir intentando (por defecto, 21/10) · 'reveal' ver la respuesta (J-13)
   accidentals:{},         // tecla negra → 'sharp' o 'flat' (N-06); sin dato, sostenido
-  metro:{ bpm:80, sig:'4/4', sub:1, accent:true }   // metrónomo (MT-05): tempo, compás, golpes por pulso y acento en el primero
+  metro:{ bpm:80, sig:'4/4', sub:1, accent:true },  // metrónomo (MT-05): tempo, compás, golpes por pulso y acento en el primero
+  chordId:'C'             // acorde elegido en Acordes (F5.7), por su nombre en inglés
 };
 
 const storage = {
@@ -1543,6 +1629,7 @@ function sanitize(raw){
   };
   // Quien estrena la app en inglés empieza con C D E; luego decide en Ajustes.
   if (!(raw && raw.notation) && s.lang === 'en') s.notation = 'anglo';
+  if (typeof s.chordId !== 'string') s.chordId = DEFAULTS.chordId;   // si no existe, Acordes enseña el primero
   ['showStaff','showAllNotes','showEquals','hintNote','hintString','rotateHintClosed']
     .forEach(k => { s[k] = !!s[k]; });
   // fretNums sustituye al interruptor showFretNums de la 0.1.1. Quien lo tuviera
@@ -2209,7 +2296,8 @@ function cellLabel(cell){
   const midi = +cell.dataset.midi;
   if (screen === 'guess') return where;
   const e = escrituraEnPantalla(midi);   // en Escalas, como la escribe la escala (AT-09 #5)
-  return nombreEscrito(e) + octavaEscrita(e, midi) + ', ' + where;
+  const dedo = cell.querySelector('.finger');   // en Acordes, también el dedo (AC-02)
+  return nombreEscrito(e) + octavaEscrita(e, midi) + ', ' + where + (dedo ? ', ' + t('chord.finger', { n: dedo.textContent }) : '');
 }
 function setRoving(row, fret){
   const old = cellAt(kbPos.row, kbPos.fret);
@@ -2275,7 +2363,7 @@ function refreshNoteNames(){
 function applyBoardFlags(){
   // J-12: en Adivinar, ver todos los nombres sería tener la respuesta delante.
   document.getElementById('board').classList.toggle('show-all',
-    state.showAllNotes && screen !== 'guess' && screen !== 'scales');   // en Escalas manda la escala
+    state.showAllNotes && screen !== 'guess' && screen !== 'scales' && screen !== 'chords');   // en Escalas y Acordes mandan ellos
   const nums = document.getElementById('fret-nums');
   nums.classList.toggle('hidden', state.fretNums === 'none');
   nums.classList.toggle('guide',  state.fretNums === 'guide');
@@ -2334,6 +2422,10 @@ function firePress(cell){
 let activeTimer = null;
 let lastMidi = null;        // última nota tocada, para refrescar al cambiar notación
 
+/** Escalas y Acordes dibujan en el pentagrama lo suyo (la escala, el acorde):
+ *  ahí una nota tocada no lo sustituye. */
+const pantallaConPentagramaPropio = () => screen === 'scales' || screen === 'chords';
+
 /** Escribe en el lector grande la última nota tocada, como se escribe en la
  *  pantalla actual: en Escalas, como la escribe la escala (AT-09 #5). Se
  *  llama al tocar, al cambiar de nomenclatura o de ♯/♭ y al salir de Escalas. */
@@ -2367,7 +2459,7 @@ function pressFret(cell, midi, rowIdx){
   nameEl.style.setProperty('--note-color', info.color);
   nameEl.style.setProperty('--note-glow', info.color);
   refrescarLector();
-  if (screen !== 'scales') showOnStaff(midi, info.color);   // en Escalas, el pentagrama escribe la escala
+  if (!pantallaConPentagramaPropio()) showOnStaff(midi, info.color);   // en Escalas y Acordes, el pentagrama es suyo
 
   // Señal secundaria: dónde más suena exactamente esta misma nota.
   if (state.showEquals){
@@ -2777,6 +2869,7 @@ function onTuningChanged(){
   // nota: el progreso empieza de nuevo (AT-09 #3).
   if (screen === 'scales') resetScalePractice();
   renderScales();              // otra afinación: otras casillas para la misma escala
+  renderChords();              // y Acordes avisa si ya no es la estándar (AC-05)
 }
 
 function resetReader(){
@@ -2799,6 +2892,7 @@ function resetReader(){
 
 function setScreen(next){
   screen = next;
+  document.body.dataset.screen = next;   // para lo que cambia de disposición según el área (Acordes en vertical)
   document.querySelectorAll('.tab[data-screen]').forEach(t =>
     t.classList.toggle('active', t.dataset.screen === next));
 
@@ -2806,6 +2900,7 @@ function setScreen(next){
   const isGuess = next === 'guess';
   const isScales = next === 'scales';
   const isMetro = next === 'metro';
+  const isChords = next === 'chords';
   const sinMastil = isTuner || isMetro;   // áreas sin mástil: Afinador y Metrónomo
 
   document.getElementById('board-area').hidden = sinMastil;
@@ -2818,6 +2913,7 @@ function setScreen(next){
   document.getElementById('panel').hidden = sinMastil;
   document.getElementById('challenge').hidden = !isGuess;
   document.getElementById('scales-card').hidden = !isScales;
+  document.getElementById('chords-card').hidden = !isChords;
   document.getElementById('scale-nav').hidden = !isScales;
   updateRotateHint();
 
@@ -2836,8 +2932,10 @@ function setScreen(next){
     challenge = null;
     renderClues();              // fuera de Adivinar, las pistas no enseñan respuesta
   }
+  if (!isChords) leaveChords();
   if (isScales){ resetScalePractice(); sc.paso = 0; renderScales(); }
   else leaveScales();
+  if (isChords) renderChords();     // después de leaveScales: el pentagrama es del acorde
   if (!sinMastil) requestAnimationFrame(applyZoom);
 }
 
@@ -2913,7 +3011,7 @@ function openSheet(open){
    «atrás» cierra Ajustes o vuelve al área anterior. Desde la primera área no
    se bloquea nada: actúa el sistema. Es un estándar presente en todos los
    navegadores; si faltara, la app funciona igual sin ese paso. */
-const SCREEN_HASH = { free:'libre', guess:'adivinar', tuner:'afinador', scales:'escalas', metro:'metronomo' };
+const SCREEN_HASH = { free:'libre', guess:'adivinar', tuner:'afinador', scales:'escalas', chords:'acordes', metro:'metronomo' };
 const canHistory = typeof history !== 'undefined' && typeof history.pushState === 'function';
 const sheetIsOpen = () => document.getElementById('sheet').classList.contains('open');
 
@@ -2978,10 +3076,11 @@ function refreshNoteText(){
   renderTunerStaff();
   if (challenge) renderChallenge();
   buildScaleSelects(); renderScales();     // los nombres escritos siguen la nomenclatura
+  refreshChords();
   // El lector de nota se refresca desde lastMidi: la clase .active se limpia
   // a los 2,2 s, así que consultar el DOM fallaba pasado ese tiempo.
   refrescarLector();
-  if (lastMidi !== null && screen !== 'scales') showOnStaff(lastMidi, noteInfo(lastMidi).color);
+  if (lastMidi !== null && !pantallaConPentagramaPropio()) showOnStaff(lastMidi, noteInfo(lastMidi).color);
   syncUI();
 }
 
@@ -3499,6 +3598,10 @@ function escrituraEnPantalla(midi){
     const i = pcsEscala().indexOf(((midi % 12) + 12) % 12);
     if (i >= 0) return notasEscala()[i];
   }
+  if (screen === 'chords'){                     // en Acordes, como lo escribe el acorde (B7: Re♯)
+    const e = escrituraEnAcorde(acordeActual(), midi);
+    if (e) return e;
+  }
   return escrituraPreferida(midi);
 }
 
@@ -3656,6 +3759,7 @@ function leaveScales(){
   clearMarks(['scale', 'scale-tonic', 'scale-step', 'correct', 'wrong']);
   refreshNoteNames();
   refrescarLector();
+  if (pantallaConPentagramaPropio()) return;   // Acordes dibuja el suyo
   if (lastMidi !== null) showOnStaff(lastMidi, noteInfo(lastMidi).color);
   else clearStaff();
 }
@@ -4086,6 +4190,288 @@ function refreshMetro(){
 <script>
 "use strict";
 
+// 15-acordes.js · Librería de acordes (F5.7, AC-01 a AC-06): un listado con
+// buscador a un lado y, al otro, el acorde dibujado en el mástil, con el número
+// y el color de cada dedo.
+// Se carga como <script> clásico, en el orden de index.html: lo declarado aquí
+// (const, let, function) lo ven los archivos que vienen después.
+
+/* ============================================================
+   15. ACORDES
+   ============================================================ */
+
+/* Tipos de acorde: cada nota es [semitonos sobre la raíz, letras sobre la raíz].
+   Las letras dicen cómo se escribe: la tercera de Si es Re♯ (dos letras más
+   arriba), no Mi♭. Es la misma idea de las escalas (F5.1). */
+const TIPOS_ACORDE = {
+  '':     [[0,0], [4,2], [7,4]],               // mayor
+  'm':    [[0,0], [3,2], [7,4]],               // menor
+  '7':    [[0,0], [4,2], [7,4], [10,6]],       // séptima (de dominante)
+  'm7':   [[0,0], [3,2], [7,4], [10,6]],       // menor séptima
+  'maj7': [[0,0], [4,2], [7,4], [11,6]],       // séptima mayor
+  'sus4': [[0,0], [5,3], [7,4]]                // cuarta suspendida
+};
+
+/* El catálogo (AC-01): los 30 más habituales en canciones, en afinación
+   estándar. `t` son los trastes de la 6ª a la 1ª cuerda (x = no suena,
+   0 = al aire); `d`, el dedo de cada una (1 índice, 2 medio, 3 anular,
+   4 meñique; - ninguno); `c`, la cejilla: [traste, de la cuerda, a la cuerda].
+   `raiz` es la letra (0 = Do … 6 = Si); `bajo`, la letra del bajo si no es la raíz. */
+const ACORDES = [
+  { raiz:0, tipo:'',     t:'x32010', d:'-32-1-' },
+  { raiz:0, tipo:'m',    t:'x35543', d:'-13421', c:[3,5,1] },
+  { raiz:0, tipo:'7',    t:'x32310', d:'-3241-' },
+  { raiz:0, tipo:'maj7', t:'x32000', d:'-32---' },
+  { raiz:0, tipo:'',     t:'332010', d:'342-1-', bajo:4 },        // C/G
+  { raiz:1, tipo:'',     t:'xx0232', d:'---132' },
+  { raiz:1, tipo:'m',    t:'xx0231', d:'---231' },
+  { raiz:1, tipo:'7',    t:'xx0212', d:'---213' },
+  { raiz:1, tipo:'m7',   t:'xx0211', d:'---211', c:[1,2,1] },
+  { raiz:1, tipo:'maj7', t:'xx0222', d:'---123' },
+  { raiz:1, tipo:'sus4', t:'xx0233', d:'---134' },
+  { raiz:2, tipo:'',     t:'022100', d:'-231--' },
+  { raiz:2, tipo:'m',    t:'022000', d:'-23---' },
+  { raiz:2, tipo:'7',    t:'020100', d:'-2-1--' },
+  { raiz:2, tipo:'m7',   t:'020000', d:'-2----' },
+  { raiz:3, tipo:'',     t:'133211', d:'134211', c:[1,6,1] },
+  { raiz:3, tipo:'m',    t:'133111', d:'134111', c:[1,6,1] },
+  { raiz:3, tipo:'maj7', t:'xx3210', d:'--321-' },
+  { raiz:4, tipo:'',     t:'320003', d:'21---3' },
+  { raiz:4, tipo:'m',    t:'355333', d:'134111', c:[3,6,1] },
+  { raiz:4, tipo:'7',    t:'320001', d:'32---1' },
+  { raiz:4, tipo:'',     t:'x20003', d:'-1---3', bajo:6 },        // G/B
+  { raiz:5, tipo:'',     t:'x02220', d:'--123-' },
+  { raiz:5, tipo:'m',    t:'x02210', d:'--231-' },
+  { raiz:5, tipo:'7',    t:'x02020', d:'--2-3-' },
+  { raiz:5, tipo:'m7',   t:'x02010', d:'--2-1-' },
+  { raiz:6, tipo:'',     t:'x24442', d:'-12341', c:[2,5,1] },
+  { raiz:6, tipo:'m',    t:'x24432', d:'-13421', c:[2,5,1] },
+  { raiz:6, tipo:'7',    t:'x21202', d:'-213-4' },
+  { raiz:6, tipo:'m7',   t:'x24232', d:'-13121', c:[2,5,1] }
+];
+/** Los más tocados, arriba del listado (tu petición del 21/10). */
+const ACORDES_POPULARES = ['C', 'G', 'D', 'A', 'E', 'Am', 'Em', 'Dm', 'F'];
+const AFINACION_ESTANDAR = [40, 45, 50, 55, 59, 64];      // de la 6ª a la 1ª
+
+/** Nombre del acorde: «Am», «G/B»… o «Lam», «Sol/Si». */
+function nombreAcorde(a, notacion){
+  const L = (notacion || state.notation) === 'latin' ? LETRAS_LATIN : LETRAS_ANGLO;
+  return L[a.raiz] + a.tipo + (a.bajo !== undefined ? '/' + L[a.bajo] : '');
+}
+/** Identificador estable (en notación inglesa): «Am», «G/B». */
+const idAcorde = a => nombreAcorde(a, 'anglo');
+const acordePorId = id => ACORDES.find(a => idAcorde(a) === id);
+
+/** Cada cuerda: { cuerda (6…1), traste (null si no suena), dedo, midi }. */
+function cuerdasAcorde(a){
+  return [...a.t].map((ch, i) => {
+    const traste = ch === 'x' ? null : +ch, dedo = a.d[i] === '-' ? 0 : +a.d[i];
+    return { cuerda: 6 - i, traste, dedo, midi: traste === null ? null : AFINACION_ESTANDAR[i] + traste };
+  });
+}
+
+/** Las notas del acorde, escritas como manda (B7: Si, Re♯, Fa♯, La). */
+function notasAcorde(a){
+  const raizPc = PC_LETRA[a.raiz];
+  return TIPOS_ACORDE[a.tipo].map(([semis, letras]) => escribir((raizPc + semis) % 12, (a.raiz + letras) % 7));
+}
+/** Cómo se escribe, dentro del acorde, una nota que suena (o null si no es suya). */
+function escrituraEnAcorde(a, midi){
+  const pc = ((midi % 12) + 12) % 12;
+  return notasAcorde(a).find(n => pcEscrita(n) === pc) || null;
+}
+
+/* --- Buscador (AC-06) ---
+   «G» deja los acordes que empiezan por G: G, G7, G/B… Vale en las dos
+   nomenclaturas: «Sol» encuentra lo mismo. Una sola letra solo se busca en la
+   inglesa, para que «D» no traiga también los Do. # y b valen por ♯ y ♭. */
+function normalizarBusqueda(q){
+  return String(q || '').trim().replace(/\s+/g, '').replace(/#/g, '♯')
+    .replace(/^([A-Ga-g])b/, '$1♭').toLowerCase();
+}
+function filtrarAcordes(q){
+  const n = normalizarBusqueda(q);
+  if (!n) return ACORDES.slice();
+  return ACORDES.filter(a => nombreAcorde(a, 'anglo').toLowerCase().startsWith(n) ||
+    (n.length >= 2 && nombreAcorde(a, 'latin').toLowerCase().startsWith(n)));
+}
+
+const cr = { strum: [] };   // temporizadores del rasgueo en marcha
+
+function acordeActual(){ return acordePorId(state.chordId) || ACORDES[0]; }
+const afinacionEstandar = () => activeTuning().every((m, i) => m === AFINACION_ESTANDAR[i]);
+
+/** Rasguea el acorde de grave a agudo, 35 ms entre cuerdas (AC-04). */
+function strumChord(a){
+  cr.strum.forEach(clearTimeout); cr.strum = [];
+  cuerdasAcorde(a).filter(c => c.midi !== null).forEach((c, i) => {
+    cr.strum.push(setTimeout(() => playMidi(c.midi, 2.4), i * 35));
+  });
+}
+
+/* --- Listado --- */
+
+function chipAcorde(a){
+  const b = document.createElement('button');
+  b.className = 'chord-chip';
+  b.dataset.id = idAcorde(a);
+  b.textContent = nombreAcorde(a);
+  b.addEventListener('click', () => selectChord(idAcorde(a), true));
+  return b;
+}
+function seccionAcordes(box, titulo, lista){
+  const h = document.createElement('div'); h.className = 'cl-head'; h.textContent = titulo;
+  const g = document.createElement('div'); g.className = 'cl-group';
+  lista.forEach(a => g.appendChild(chipAcorde(a)));
+  box.appendChild(h); box.appendChild(g);
+}
+function buildChordList(){
+  const box = document.getElementById('chord-list');
+  const q = document.getElementById('chord-search').value;
+  box.innerHTML = '';
+  const hallados = filtrarAcordes(q);
+  if (!normalizarBusqueda(q)){
+    seccionAcordes(box, t('chord.popular'), ACORDES_POPULARES.map(acordePorId));
+    seccionAcordes(box, t('chord.all', { n: ACORDES.length }), ACORDES);
+  } else if (hallados.length){
+    seccionAcordes(box, t('chord.results', { n: hallados.length }), hallados);
+  } else {
+    const p = document.createElement('p'); p.className = 'cl-empty';
+    p.textContent = t('chord.none', { q: q.trim() });
+    box.appendChild(p);
+  }
+  marcarSeleccion();
+}
+function marcarSeleccion(){
+  document.querySelectorAll('#chord-list .chord-chip').forEach(b => {
+    const on = b.dataset.id === state.chordId;
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+  });
+}
+
+function selectChord(id, sonar){
+  if (!acordePorId(id)) return;
+  state.chordId = id;
+  save();
+  marcarSeleccion();
+  renderChords();
+  if (sonar && afinacionEstandar()) strumChord(acordeActual());
+}
+
+/* --- El acorde en el mástil (AC-02) --- */
+
+/** Quita dedos, cejilla y marcas de cuerda del mástil. */
+function limpiarAcorde(){
+  document.querySelectorAll('#board .finger').forEach(f => f.remove());
+  document.querySelectorAll('#board .fret-cell.barre, #board .fret-cell.chord-tone').forEach(c =>
+    c.classList.remove('barre', 'barre-top', 'barre-bottom', 'chord-tone'));
+  document.querySelectorAll('#board .string-label').forEach(l => {
+    delete l.dataset.mark; l.removeAttribute('aria-label');
+  });
+}
+
+/** Lleva la vista del mástil a los trastes del acorde. */
+function verTrastesAcorde(a){
+  const scroll = document.getElementById('board-scroll');
+  const fw = parseFloat(getComputedStyle(document.getElementById('board')).getPropertyValue('--fret-w')) || 0;
+  if (!fw || !scroll.clientWidth) return;
+  const trastes = cuerdasAcorde(a).map(c => c.traste).filter(f => f);
+  const lo = Math.min(...trastes), hi = Math.max(...trastes);
+  const visible = scroll.clientWidth - LABEL_W;
+  scroll.scrollLeft = NUT_W + hi * fw <= visible ? 0 : NUT_W + (lo - 1) * fw;
+}
+
+function renderChords(){
+  if (screen !== 'chords') return;
+  const a = acordeActual();
+  const estandar = afinacionEstandar();
+  limpiarAcorde();
+  document.getElementById('board').classList.add('chords');
+  document.getElementById('chord-tuning').hidden = estandar;
+  document.getElementById('chord-play').disabled = !estandar;
+  // Nombre y notas, escritas como manda el acorde.
+  document.getElementById('chord-name').textContent = nombreAcorde(a);
+  document.getElementById('chord-notes').textContent = notasAcorde(a).map(nombreEscrito).join(' · ');
+  marcarSeleccion();
+  if (!estandar){ clearStaff(); labelCells(); return; }   // con otra afinación, el dibujo mentiría (AC-05)
+
+  const filas = displayStrings();
+  const [cejTraste, cejDe, cejA] = a.c || [];
+  for (const c of cuerdasAcorde(a)){
+    const fila = filas.findIndex(s => s.number === c.cuerda);
+    // Al aire (○) o que no suena (✕), junto al nombre de la cuerda: siempre a la vista.
+    const label = document.querySelectorAll('#board .string-label')[fila];
+    if (label && (c.traste === null || c.traste === 0)){
+      label.dataset.mark = c.traste === null ? '✕' : '○';
+      label.setAttribute('aria-label', t('chord.stringAria', { o: ord(c.cuerda), e: t(c.traste === null ? 'chord.muted' : 'chord.open') }));
+    }
+    if (!c.traste) continue;
+    const cell = cellAt(fila, c.traste);
+    if (!cell) continue;
+    cell.classList.add('chord-tone');
+    const f = document.createElement('span');
+    f.className = 'finger f' + c.dedo;
+    f.setAttribute('aria-hidden', 'true');
+    f.textContent = String(c.dedo);
+    cell.appendChild(f);
+  }
+  // La cejilla: una barra que une todas las cuerdas que pisa el índice, también
+  // las que otro dedo pisa más arriba (en Fa, la 5ª, la 4ª y la 3ª).
+  if (cejTraste){
+    for (let cuerda = cejA; cuerda <= cejDe; cuerda++){
+      const cell = cellAt(filas.findIndex(s => s.number === cuerda), cejTraste);
+      if (!cell) continue;
+      cell.classList.add('barre');
+      cell.classList.toggle('barre-top', cuerda === cejA);          // la 1ª cuerda va arriba
+      cell.classList.toggle('barre-bottom', cuerda === cejDe);
+    }
+  }
+  labelCells();
+  drawChordStaff(a);
+  requestAnimationFrame(() => verTrastesAcorde(a));
+}
+
+/** El pentagrama escribe el acorde con sus notas apiladas (AC-03). Dos notas
+ *  a un paso de distancia no caben una encima de otra: la de arriba va a la derecha. */
+function drawChordStaff(a){
+  const svg = document.getElementById('staff');
+  svg.setAttribute('viewBox', STAFF_CORTO);
+  drawStaffBase(svg, 38, 166);
+  const notas = cuerdasAcorde(a).filter(c => c.midi !== null).map(c => ({ midi: c.midi, esc: escrituraEnAcorde(a, c.midi) }));
+  let anteriorY = null, desplazada = false;
+  notas.forEach(n => {
+    const y = staffYEscrita(n.esc, n.midi);
+    desplazada = anteriorY !== null && Math.abs(anteriorY - y) < GAP * 0.75 && !desplazada;
+    drawNote(svg, n.midi, desplazada ? 124 : 108, 'var(--text)', false, n.esc);
+    anteriorY = y;
+  });
+}
+
+function leaveChords(){
+  cr.strum.forEach(clearTimeout); cr.strum = [];
+  document.getElementById('board').classList.remove('chords');
+  limpiarAcorde();
+}
+
+function bindChords(){
+  const q = document.getElementById('chord-search');
+  q.addEventListener('input', buildChordList);
+  document.getElementById('chord-play').addEventListener('click', () => strumChord(acordeActual()));
+  document.getElementById('chord-standard').addEventListener('click', () => {
+    setTuning('standard');
+  });
+  buildChordList();
+}
+
+/** Nomenclatura o idioma cambiados: los nombres del listado, otra vez. */
+function refreshChords(){
+  buildChordList();
+  renderChords();
+}
+</script>
+<script>
+"use strict";
+
 // 99-arranque.js · Arranque: conecta los eventos y pone la app en marcha. Va el último porque usa todo lo anterior.
 // Se carga como <script> clásico, en el orden de index.html: lo declarado aquí
 // (const, let, function) lo ven los archivos que vienen después.
@@ -4215,6 +4601,7 @@ function refreshLanguage(antes){
   renderChallenge();
   buildScaleSelects(); renderScales();
   refreshMetro();
+  refreshChords();
   if (lastMidi === null) document.getElementById('note-name').innerHTML = '<span class="note-placeholder">' + t('reader.play') + '</span>';
   else refrescarLector();
   syncUI();
@@ -4269,15 +4656,17 @@ document.getElementById('set-showall').addEventListener('click', () => {
 document.getElementById('set-equals').addEventListener('click', () => {
   state.showEquals = !state.showEquals; save(); syncUI();
 });
+/** Cambia la afinación activa (desde el Afinador, Ajustes o Acordes). */
+function setTuning(id){
+  state.tuningId = id;
+  if (state.tuningId === 'custom' && !state.customTuning) state.customTuning = activeTuning();
+  save();
+  document.getElementById('tuning-select').value = state.tuningId;
+  document.getElementById('set-tuning').value = state.tuningId;
+  onTuningChanged();
+}
 ['tuning-select','set-tuning'].forEach(id => {
-  document.getElementById(id).addEventListener('change', ev => {
-    state.tuningId = ev.target.value;
-    if (state.tuningId === 'custom' && !state.customTuning) state.customTuning = activeTuning();
-    save();
-    document.getElementById('tuning-select').value = state.tuningId;
-    document.getElementById('set-tuning').value = state.tuningId;
-    onTuningChanged();
-  });
+  document.getElementById(id).addEventListener('change', ev => setTuning(ev.target.value));
 });
 document.getElementById('set-clear-record').addEventListener('click', () => {
   if (!confirm(t('confirm.clear'))) return;
@@ -4353,6 +4742,7 @@ bindBoardInput();
 bindMicTuner();
 bindScales();
 bindMetro();
+bindChords();
 buildAccidentals();
 bindBoardKeys();
 clearStaff();

@@ -32,7 +32,8 @@ const DEFAULTS = {
   scaleMode:'show',       // 'show' Mostrar · 'practice' Práctica
   onMiss:'retry',         // Adivinar, al fallar: 'retry' seguir intentando (por defecto, 21/10) · 'reveal' ver la respuesta (J-13)
   accidentals:{},         // tecla negra → 'sharp' o 'flat' (N-06); sin dato, sostenido
-  metro:{ bpm:80, sig:'4/4', sub:1, accent:true }   // metrónomo (MT-05): tempo, compás, golpes por pulso y acento en el primero
+  metro:{ bpm:80, sig:'4/4', sub:1, accent:true },  // metrónomo (MT-05): tempo, compás, golpes por pulso y acento en el primero
+  chordId:'C'             // acorde elegido en Acordes (F5.7), por su nombre en inglés
 };
 
 const storage = {
@@ -84,6 +85,7 @@ function sanitize(raw){
   };
   // Quien estrena la app en inglés empieza con C D E; luego decide en Ajustes.
   if (!(raw && raw.notation) && s.lang === 'en') s.notation = 'anglo';
+  if (typeof s.chordId !== 'string') s.chordId = DEFAULTS.chordId;   // si no existe, Acordes enseña el primero
   ['showStaff','showAllNotes','showEquals','hintNote','hintString','rotateHintClosed']
     .forEach(k => { s[k] = !!s[k]; });
   // fretNums sustituye al interruptor showFretNums de la 0.1.1. Quien lo tuviera

@@ -1,7 +1,7 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 1.11 · **Fecha:** 21 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0); la sección 7b (seis áreas, con Metrónomo y Acordes), aprobada el 21/10. Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
-**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.5.4` · `requisitos.md` v1.21 · `roadmap.md` v3.19
+**Versión:** 1.12 · **Fecha:** 21 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0); la sección 7b (seis áreas, con Metrónomo y Acordes), aprobada el 21/10. Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
+**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.5.5` · `requisitos.md` v1.22 · `roadmap.md` v3.20
 **Revisión:** auditoría de requisitos AR-04 (`auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
 
@@ -169,9 +169,12 @@ Tu petición del 21/10 y tu decisión del mismo día: **el metrónomo es una fun
   - **Pantalla principal**, de arriba abajo: una **barra vertical** para el tempo (arriba, más rápido; también con las flechas del teclado); el **nombre del tempo** en italiano (Lento, Andante, Allegro…); **− 80 +**; **un punto por pulso**, el primero más grande si lleva acento y relleno el que suena; abajo, el **compás** escrito como en la partitura (4 sobre 4) y «Marcar» (tocas a ritmo y lo calcula), y el botón **Empezar**. En horizontal, la barra a la izquierda, el tempo en medio y los controles a la derecha.
   - **Al tocar el compás** se abre una ventana: los doce compases en círculos (1/4, 2/4, 3/4, 4/4, 5/4, 6/4, 3/8, 5/8, 6/8, 7/8, 9/8, 12/8), las cuatro figuras (solo el pulso, dos, tres o cuatro golpes por pulso), la casilla **Acento en el primer tiempo** y «Listo». En 6/8, 9/8 y 12/8 el pulso es la negra con puntillo: dos, tres o cuatro puntos. «Atrás», Escape o tocar fuera también la cierran. En horizontal, en dos columnas.
   - **Sigue sonando al cambiar de área**, para tocar encima en Libre, Escalas o Acordes. Mientras suena, su pestaña lleva un punto que se enciende con cada pulso; para pararlo, vuelves a ella. Se para al ocultar la app y **al escuchar con el micrófono** en el Afinador, con un aviso: su clic confundiría al detector.
-- **Acordes** (AC-01 a AC-05): tónica y tipo arriba, como en Escalas. En el mástil, cada nota del acorde es un círculo **del color de su dedo** —1 índice, 2 medio, 3 anular, 4 meñique— con el número dentro; ○ y ✕ junto a la cejuela para las cuerdas al aire y las que no suenan, y la cejilla como una barra. Debajo, el nombre de las notas y el pentagrama con las notas apiladas. Tocar el acorde lo hace sonar rasgueado; cada casilla suena suelta.
-  - **Colores de dedo:** cuatro, fijos para todos los acordes, distintos de la paleta de notas (que va por nota) y distinguibles también con daltonismo; además llevan el número, así que el color nunca va solo (principio 5). Cada círculo contrasta al menos 3:1 con el mástil y su número al menos 4,5:1 con el círculo (G-05).
-  - En vertical, como Libre y Escalas, sugiere girar el móvil.
+- **Acordes** (AC-01 a AC-06, hecho en la 0.5.5), como lo describiste el 21/10: **a un lado el listado, al otro el acorde en el mástil**.
+  - **El listado:** un buscador arriba («G» deja G, Gm, G7, G/B…; también en Do Re Mi); debajo, **Populares** (C, G, D, A, E, Am, Em, Dm y F) y **Todos**, los 30 más habituales. Tocar un nombre lo elige y lo hace sonar rasgueado. Bajo el listado, el nombre del acorde, sus notas y «Tocar».
+  - **El mástil:** cada nota del acorde es un círculo **del color de su dedo** —1 azul, 2 naranja, 3 rosa, 4 verde, siempre los mismos— con el número dentro; ○ y ✕ junto al nombre de cada cuerda (al aire o que no suena) y la cejilla como una barra que une sus cuerdas. Los colores son de la paleta Okabe-Ito, que se distingue también con daltonismo, y en Acordes no se ven los colores de nota. La vista se mueve sola a los trastes del acorde.
+  - **En vertical** el listado va arriba (dos filas a la vista, el resto desplazando) y el mástil abajo; el pentagrama y el zoom se apartan para que las cuerdas conserven sus 40 px, y sugiere girar el móvil. **En horizontal**, el listado va en el panel de la derecha, con el pentagrama del acorde debajo. **En pantallas amplias**, todo a la vez.
+  - Con otra afinación activa, avisa de que las digitaciones son para la estándar y ofrece pasar a ella.
+- **Seis pestañas:** con seis, las pestañas de la cabecera entre 600 y 959 px se estrechan y se alinean a la derecha, para no pisar el nombre.
 - **Con la aprobación cambian:** G-02 y C-04 (seis destinos), el mapa de la sección 4 (con `#acordes` y `#metronomo` para el botón «atrás»), el raíl de la sección 7, las pestañas de la sección 8 y el diagrama del roadmap.
 - **Alternativa considerada:** Acordes como tercer modo de Escalas (Mostrar · Práctica · Acordes) y el metrónomo como chip; mantendría cuatro destinos, pero tú los pediste como funciones propias.
 
@@ -250,7 +253,8 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.11** | 21/10/2026 | Sección 7b aprobada. El metrónomo, rehecho con tu guía (la app que nos enseñaste): barra vertical, nombre del tempo, un punto por pulso y una ventana con compás, figura y acento en el primer tiempo. |
+| **1.12** | 21/10/2026 | Acordes, como lo describiste: listado con buscador, populares y los 30 acordes a un lado; el acorde en el mástil al otro. Disposición en vertical, horizontal y amplia. |
+| 1.11 | 21/10/2026 | Sección 7b aprobada. El metrónomo, rehecho con tu guía (la app que nos enseñaste): barra vertical, nombre del tempo, un punto por pulso y una ventana con compás, figura y acento en el primer tiempo. |
 | 1.10 | 21/10/2026 | Sección 7b rehecha con tu decisión del 21/10: el metrónomo es un área propia. Seis áreas, medidas de la barra y del raíl, el metrónomo sonando en otras áreas y parado con el micrófono, y los colores de dedo de Acordes. Pendiente de tu visto bueno. Mapa, raíl y alternativas al día (AR-10). |
 | 1.9 | 21/10/2026 | Ajustes con «Notas alteradas» y «Al fallar»; propuesta de metrónomo (chip y panel) y de Acordes (quinta pestaña), tu petición del 21/10. |
 | 1.8 | 21/10/2026 | §6 Escalas: cómo quedó en la 0.5.0 (intervalos dentro del paso a paso, Práctica con «Otra vez»). |

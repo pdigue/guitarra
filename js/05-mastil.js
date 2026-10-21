@@ -101,7 +101,8 @@ function cellLabel(cell){
   const midi = +cell.dataset.midi;
   if (screen === 'guess') return where;
   const e = escrituraEnPantalla(midi);   // en Escalas, como la escribe la escala (AT-09 #5)
-  return nombreEscrito(e) + octavaEscrita(e, midi) + ', ' + where;
+  const dedo = cell.querySelector('.finger');   // en Acordes, también el dedo (AC-02)
+  return nombreEscrito(e) + octavaEscrita(e, midi) + ', ' + where + (dedo ? ', ' + t('chord.finger', { n: dedo.textContent }) : '');
 }
 function setRoving(row, fret){
   const old = cellAt(kbPos.row, kbPos.fret);
@@ -167,7 +168,7 @@ function refreshNoteNames(){
 function applyBoardFlags(){
   // J-12: en Adivinar, ver todos los nombres sería tener la respuesta delante.
   document.getElementById('board').classList.toggle('show-all',
-    state.showAllNotes && screen !== 'guess' && screen !== 'scales');   // en Escalas manda la escala
+    state.showAllNotes && screen !== 'guess' && screen !== 'scales' && screen !== 'chords');   // en Escalas y Acordes mandan ellos
   const nums = document.getElementById('fret-nums');
   nums.classList.toggle('hidden', state.fretNums === 'none');
   nums.classList.toggle('guide',  state.fretNums === 'guide');
@@ -226,6 +227,10 @@ function firePress(cell){
 let activeTimer = null;
 let lastMidi = null;        // última nota tocada, para refrescar al cambiar notación
 
+/** Escalas y Acordes dibujan en el pentagrama lo suyo (la escala, el acorde):
+ *  ahí una nota tocada no lo sustituye. */
+const pantallaConPentagramaPropio = () => screen === 'scales' || screen === 'chords';
+
 /** Escribe en el lector grande la última nota tocada, como se escribe en la
  *  pantalla actual: en Escalas, como la escribe la escala (AT-09 #5). Se
  *  llama al tocar, al cambiar de nomenclatura o de ♯/♭ y al salir de Escalas. */
@@ -259,7 +264,7 @@ function pressFret(cell, midi, rowIdx){
   nameEl.style.setProperty('--note-color', info.color);
   nameEl.style.setProperty('--note-glow', info.color);
   refrescarLector();
-  if (screen !== 'scales') showOnStaff(midi, info.color);   // en Escalas, el pentagrama escribe la escala
+  if (!pantallaConPentagramaPropio()) showOnStaff(midi, info.color);   // en Escalas y Acordes, el pentagrama es suyo
 
   // Señal secundaria: dónde más suena exactamente esta misma nota.
   if (state.showEquals){

@@ -1,11 +1,13 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 1.19 · **Fecha:** 21 de octubre de 2026 · **Base:** `requisitos.md` v1.21 · app `0.5.4` · `roadmap.md` v3.19  
+**Versión:** 1.20 · **Fecha:** 21 de octubre de 2026 · **Base:** `requisitos.md` v1.22 · app `0.5.5` · `roadmap.md` v3.20  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
+
+**Cambios en la 1.20:** la librería de acordes (AC-01 a AC-06), hecha y verificada por el banco.
 
 **Cambios en la 1.19:** el metrónomo (MT-01 a MT-05), hecho y verificado por el banco.
 
@@ -45,7 +47,7 @@
 
 | Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 108 | 87 | 7 | 10 | 4 | 51 | 10 |
+| 109 | 93 | 7 | 5 | 4 | 57 | 10 |
 
 | ID | Etapa | Método | Criterio de aceptación | Declaración | Evidencia | Verificación | Origen |
 |---|---|:---:|---|---|---|---|---|
@@ -132,11 +134,12 @@
 | **MT-03** | F5.6 | T | Cada figura reparte el pulso en 1, 2, 3 o 4 golpes iguales, más suaves que el pulso; cambiarla sonando empieza en el próximo pulso, sin mover el pulso. | Cumple | Banco (node --test): separación de las corcheas, volumen menor, cambio sonando | Verificado | Cliente · 21/10 |
 | **MT-04** | F5.6 | T | Los golpes programados a 30, 120 y 250 ppm se separan exactamente 60/tempo s (±1 ms), nunca se programan más de 100 ms por adelantado y el punto del pulso se ilumina; al ocultar la app se para. | Cumple | Banco (node --test): separación a 30, 120 y 250 ppm, cambio de tempo sonando sin adelantar ni repetir, parada al ocultar | Verificado | Cliente · 21/10 |
 | **MT-05** | F5.6 | D | El metrónomo tiene su pestaña; en marcha, sigue sonando en las demás áreas y su pestaña late con el pulso; al escuchar con el micrófono se para y lo dice; tempo, compás, figura y acento se recuerdan. | Cumple | Banco (node --test): sigue en Libre, pestaña que late, parada con el micrófono y aviso, datos guardados | Verificado | Cliente · 21/10 |
-| **AC-01** | F5.7 | T | El catálogo tiene mayores, menores, 7, maj7 y m7 abiertos y cejillas habituales; cada digitación produce exactamente las notas del acorde. | No cumple | — | Pendiente | Cliente · 21/10 |
-| **AC-02** | F5.7 | D | Cada dedo tiene su número y su color, iguales en todos los acordes y distintos de la paleta de notas; círculo ≥ 3:1 contra el mástil y número ≥ 4,5:1 contra el círculo; cuerdas al aire y apagadas marcadas; cejilla marcada. | No cumple | — | Pendiente | Cliente · 21/10 |
-| **AC-03** | F5.7 | D | El pentagrama escribe las notas del acorde apiladas y se oculta con su ajuste. | No cumple | — | Pendiente | Cliente · 21/10 |
-| **AC-04** | F5.7 | D | El acorde suena rasgueado de grave a agudo; cada cuerda se puede tocar suelta. | No cumple | — | Pendiente | Cliente · 21/10 |
-| **AC-05** | F5.7 | I | Las digitaciones indican que son para la afinación estándar; con otra afinación, Acordes lo avisa y ofrece pasar a la estándar; el selector no ofrece combinaciones sin digitación. | No cumple | — | Pendiente | Cliente · 21/10 |
+| **AC-01** | F5.7 | T | El listado tiene populares arriba y los 30 acordes debajo; cada digitación suena solo a notas del acorde, con la raíz, la tercera y la séptima (la quinta se puede omitir) y la raíz o el bajo indicado como nota más grave. | Cumple | Banco (node --test): las 30 digitaciones, una a una; populares y listado | Verificado | Cliente · 21/10 |
+| **AC-02** | F5.7 | D | Cada dedo tiene su número y su color, iguales en todos los acordes (Okabe-Ito); círculo ≥ 3:1 contra el mástil y número ≥ 4,5:1 contra el círculo; ○ y ✕ junto al nombre de la cuerda; cejilla como barra; el lector de pantalla dice el dedo. | Cumple | Banco (node --test): La menor y Fa dibujados, contraste de los cuatro colores · comprobar-accesibilidad: Acordes con Fa | Verificado | Cliente · 21/10 |
+| **AC-03** | F5.7 | D | El pentagrama escribe las notas del acorde apiladas, escritas como manda el acorde, y se oculta con su ajuste; en el móvil en vertical se aparta y vuelve al girarlo. | Cumple | Banco (node --test): cinco notas de La menor; B7 con Re♯ · comprobar-disposicion: seis pantallas | Verificado | Cliente · 21/10 |
+| **AC-04** | F5.7 | D | El acorde suena rasgueado de grave a agudo al elegirlo y con «Tocar»; cada cuerda se puede tocar suelta. | Cumple | Banco (node --test): orden del rasgueo | Verificado | Cliente · 21/10 |
+| **AC-05** | F5.7 | T | Con otra afinación, Acordes avisa, no dibuja las digitaciones y «Pasar a estándar» las recupera. | Cumple | Banco (node --test): Drop D y vuelta a la estándar | Verificado | Cliente · 21/10 |
+| **AC-06** | F5.7 | T | El buscador deja los acordes que empiezan por lo escrito, sin distinguir mayúsculas y en las dos nomenclaturas; una letra sola, solo en la inglesa. | Cumple | Banco (node --test): G, g, Sol, D, Am, f# y vacío | Verificado | Cliente · 21/10 |
 | **V-01** | F3.2 | D | En horizontal, con un alto útil de 268 px o más, cada cuerda mide al menos 40 px (iPhone en Safari e instalada; simulador de Android). En vertical, en pantallas táctiles de menos de 600 px de ancho y en Libre, Adivinar y Escalas, aparece el aviso para girar; nunca en el Afinador; cerrado, no vuelve y «Restablecer» lo recupera. | Cumple | V-06: comprobar-disposicion.js en 14 pantallas: 52,8 / 60,8 / 42,5 px · Banco (node --test): aviso para girar · Sesión 1: C02, C03 y D03 | Verificado | Cliente · 20/10 (interfaz.md v1.0) |
 | **V-02** | F1.1 | D | El afinador se usa con comodidad en vertical y en horizontal. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **V-03** | F1.1 | D | En una pantalla de 1280 px se ven los 24 trastes sin desplazarse. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |

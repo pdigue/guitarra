@@ -1,7 +1,7 @@
 # Trasteando — Especificación de Requisitos
 
-**Versión del documento:** 1.21 · **Fecha:** 21 de octubre de 2026  
-**Válido para:** app `0.5.4` · `roadmap.md` v3.19 · `matriz-cumplimiento` v1.19 · fase en curso **F5**, en modo acelerado  
+**Versión del documento:** 1.22 · **Fecha:** 21 de octubre de 2026  
+**Válido para:** app `0.5.5` · `roadmap.md` v3.20 · `matriz-cumplimiento` v1.20 · fase en curso **F5**, en modo acelerado  
 **Repositorio:** github.com/pdigue/guitarra, carpeta `docs/` · **Gestiona:** chat de Desarrollo  
 **Tipo de producto:** aplicación web progresiva (PWA), desarrollada en local y publicada al final del roadmap
 
@@ -11,7 +11,7 @@
 
 | Total | ✅ Implementados | 🟡 Parciales | ⬜ Pendientes | ✅ Validados |
 |:---:|:---:|:---:|:---:|:---:|
-| 108 | 87 | 7 | 14 | 51 |
+| 109 | 93 | 7 | 9 | 57 |
 
 > Un requisito implementado no cuenta como cumplido hasta superar su prueba. El primero validado fue **S-08**, en la 0.2.0. La Sesión 1 (20/10, en tu iPhone y tu PC) validó 35 de golpe; lo que cambió la 0.3.3 y el sonido en el iPhone esperan a la Sesión 2.
 
@@ -21,7 +21,7 @@
 | **F2** | Sonido propio y archivo autónomo | 9 | `▰▰▰▰▱▱▱▱▱▱` 4/9 |
 | **F3** | Interfaz y adaptación | 6 | `▰▰▰▰▰▰▰▰▱▱` 5/6 |
 | **F4** | Afinador por micrófono | 8 | `▰▰▰▰▰▰▰▰▰▱` 7/8 |
-| **F5** | Escalas, metrónomo y acordes | 19 | `▰▰▰▰▰▰▰▱▱▱` 14/19 |
+| **F5** | Escalas, metrónomo y acordes | 20 | `▰▰▰▰▰▰▰▰▰▰` 20/20 |
 | **F6** | Preparación para distribución | 5 | `▱▱▱▱▱▱▱▱▱▱` 0/5 |
 | **F7** | Publicación y lanzamiento | 9 | `▱▱▱▱▱▱▱▱▱▱` 0/9 |
 | **Posterior** | Fuera del alcance actual | 4 | `▱▱▱▱▱▱▱▱▱▱` 0/4 |
@@ -34,7 +34,8 @@
 
 | Versión | Fecha | App | Roadmap | Resumen | Origen |
 |---|---|:---:|:---:|---|---|
-| **1.21** | 21/10/2026 | 0.5.4 | 3.19 | F5.6: el metrónomo hecho, con tu guía del 21/10 (la app de referencia): MT-01 a MT-05 implementados y validados por el banco; un solo acento, en el primer tiempo (MT-02). 0 nuevos y 7 modificados: 108 en total. | Tu guía del 21/10 y la etapa F5.6 |
+| **1.22** | 21/10/2026 | 0.5.5 | 3.20 | F5.7: la librería de acordes, con tu guía del 21/10 (listado con populares y 30 acordes, buscador, el acorde en el mástil). AC-01 a AC-05 implementados y validados por el banco; AC-06, el buscador, nuevo. 1 nuevos y 7 modificados: 109 en total. | Tu guía del 21/10 y la etapa F5.7 |
+| 1.21 | 21/10/2026 | 0.5.4 | 3.19 | F5.6: el metrónomo hecho, con tu guía del 21/10 (la app de referencia): MT-01 a MT-05 implementados y validados por el banco; un solo acento, en el primer tiempo (MT-02). 0 nuevos y 7 modificados: 108 en total. | Tu guía del 21/10 y la etapa F5.6 |
 | 1.20 | 21/10/2026 | 0.5.3 | 3.18 | Tus decisiones del 21/10: el metrónomo es un área propia con su pestaña (MT-05) y en Adivinar se sigue intentando por defecto (J-13). Correcciones de las auditorías AR-10 y AT-09. 0 nuevos y 12 modificados: 108 en total. | Tus decisiones del 21/10, AR-10 y AT-09 |
 | 1.19 | 21/10/2026 | 0.5.2 | 3.17 | Tus comentarios del 21/10: reintentar en Adivinar (J-13) y ♯ o ♭ por nota (N-06), hechos; metrónomo (MT-01 a MT-05) y librería de acordes (AC-01 a AC-05), planificados en F5.6 y F5.7. 12 nuevos y 2 modificados: 108 en total. | Tus comentarios del 21/10 |
 | 1.18 | 21/10/2026 | 0.5.0 | 3.16 | F5: escalas. E-01 (catálogo decidido) a E-06 y P-03 implementados; E-02 y E-05 validados por el banco. 0 nuevos y 8 modificados: 96 en total. | Etapas F5.1 a F5.4 y tu elección del catálogo |
@@ -57,9 +58,22 @@
 | 1.1 | 15/09/2026 | 0.1.1 | 2.0 | Reconciliación de estados. 11 nuevos (S-07, V-09, J-11, G-05, G-06, A-02-CA, E-02b, E-05b, X-01 a X-03): 81 en total. Seis decisiones cerradas. | Auditoría de requisitos AR-01 |
 | 1.0 | 14/09/2026 | 0.1.0 | — | Primera versión: 70 requisitos en 11 categorías. | Tu listado inicial |
 
+### Detalle de la versión 1.22
+
+**Requisito nuevo 🆕** — AC-06
+- **AC-06:** el buscador del listado de acordes: «G» deja G, Gm, G7, G/B…, también en Do Re Mi. Hecho y validado por el banco.
+
+**Requisitos modificados ✏️** — G-02, AC-01, AC-02, AC-03, AC-04, AC-05, C-04
+- **AC-01:** el listado que pediste: populares arriba y los 30 más habituales debajo, a un lado; el acorde en el mástil, al otro.
+- **AC-02 a AC-05:** implementados en la 0.5.5 y validados por el banco: las 30 digitaciones suenan a su acorde, dedos con número y color, ○ y ✕, cejilla, pentagrama, rasgueo y aviso con otra afinación.
+- **AC-03:** en el móvil en vertical, el pentagrama se aparta para que quepan el listado y el mástil; se ve al girarlo.
+- **G-02 y C-04:** seis áreas desde la 0.5.5.
+
+Con esto hay 57 requisitos validados.
+
 ### Detalle de la versión 1.21
 
-**Requisitos modificados ✏️** — G-02, MT-01, MT-02, MT-03, MT-04, MT-05, C-04
+**Requisitos modificados** — G-02, MT-01, MT-02, MT-03, MT-04, MT-05, C-04
 - **MT-01 a MT-05:** implementados en la 0.5.4 y validados por el banco (golpes con menos de 1 ms de desviación, compases, figuras, acento, «Marcar», sonar en otras áreas y pararse con el micrófono o al ocultar la app). Falta que lo uses con la guitarra.
 - **MT-01:** barra vertical del tempo y su nombre italiano, como en la app que nos enseñaste.
 - **MT-02:** doce compases en una ventana, un punto por pulso y **un solo acento**, en el primer tiempo, que se puede quitar (antes: acentos en cada tiempo). Tu decisión del 21/10.
@@ -79,8 +93,6 @@
 - **C-02, J-06, E-05 y N-06:** al día con la 0.5.1 a la 0.5.3 (AR-10 y AT-09).
 
 **Decisión cerrada:** metrónomo → función propia, con su pestaña. **Decisión nueva:** la distribución de las seis pestañas (`interfaz.md` §7b). Ver «Decisiones abiertas».
-
-Con esto hay 51 requisitos validados.
 
 ### Detalle de la versión 1.19
 
@@ -312,7 +324,7 @@ Con esto hay 51 requisitos validados.
 | ID | Requisito | Prior. | Etapa | Impl. | Valid. | Desde | Notas |
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
 | **G-01** | La aplicación se llama *Trasteando*. El nombre aparece en la pantalla de entrada, el título de la pestaña y el manifiesto PWA. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Naming cerrado: se descarta *Trasting*. **Validado en la Sesión 1** (20/10, informe `V-08`): A01. **Desde la 0.5.2**, el nombre es más nítido y en horizontal, donde no hay cabecera, va arriba del panel (tu comentario del 21/10). |
-| **G-02** ✏️ | La app se organiza en áreas accesibles desde una navegación principal: Libre, Adivinar, Afinador y Escalas. Cada área nueva (Metrónomo y Acordes, en F5) se suma a esa navegación. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Escalas, habilitada desde la 0.5.0. Metrónomo, área propia desde la 0.5.4; Acordes lo será en F5.7 (tu decisión del 21/10). **Validado en la Sesión 1** (20/10, informe `V-08`): A12. |
+| **G-02** ✏️ | La app se organiza en áreas accesibles desde una navegación principal: Libre, Adivinar, Afinador y Escalas. Cada área nueva (Metrónomo y Acordes, en F5) se suma a esa navegación. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Escalas, habilitada desde la 0.5.0. Metrónomo, área propia desde la 0.5.4, y Acordes desde la 0.5.5 (tu decisión del 21/10). **Validado en la Sesión 1** (20/10, informe `V-08`): A12. |
 | **G-03** | La app funciona sin conexión una vez cargada **desde la web**. | Media | F6.2 · F7.2 | ⬜ | ⬜ | — | Service Worker en F6.2, decidido el 20/10: en la Sesión 1 el iPhone no prueba la app sin conexión. Depende de S-07. Se valida en dos pasos: en `localhost` en F6.2 y desde la web publicada en F7.2 (CP-1). En modo archivo (G-07) la autonomía se consigue de otra forma: el audio va dentro del archivo. |
 | **G-04** | La app es instalable como PWA (icono en la pantalla de inicio, pantalla completa). | Alta | F6.3 · F7.2 | 🟡 | ⬜ | 0.1.0 | Manifiesto incrustado como `data:` URL. Falta un archivo de manifiesto propio con iconos PNG (F6.3) y verificarla instalada desde la web publicada (F7.2): instalar solo es posible desde `https`. |
 | **G-05** | La interfaz cumple unos mínimos de accesibilidad: foco de teclado visible, respeto a `prefers-reduced-motion`, contraste suficiente y etiquetas accesibles en los controles solo-icono. | Media | F3.4 | ✅ | ✅ | 0.1.1 | **Hecho en la 0.3.1** (F3.4, V-07). Con el teclado se llega a todo y el foco se ve; el mástil es una cuadrícula (`role="grid"`) que se recorre con las flechas y se toca con Intro; en Adivinar ninguna casilla anuncia su nota (J-12). Todos los textos a 4,5:1 o más, medidos en Chromium sobre su fondo real (con la 0.3.0 había 205 por debajo). Con «reducir movimiento» nada se anima. Con el dedo, controles y casillas de 40 × 40 px, también en Ajustes (salvo si pides más trastes con «+», que pueden estrecharse hasta 28 px); la fila entera cambia su interruptor, y el asa cierra Ajustes deslizando. **Paleta por nota** con tu criterio del 20/10: 7 naturales bien separadas, también con daltonismo, y sostenidos derivados (`herramientas/paleta.py`). **Excepción** (AR-05): en vertical, por debajo de 660 px de alto, la navegación manda sobre los 40 px por cuerda. **Validado en la Sesión 1** (20/10, informe `V-08`): A18, C05 y C06. |
@@ -455,11 +467,11 @@ Con esto hay 51 requisitos validados.
 
 | ID | Requisito | Prior. | Etapa | Impl. | Valid. | Desde | Notas |
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
-| **MT-01** ✏️ | **Metrónomo:** tempo de 30 a 250 pulsos por minuto con una barra vertical, − y + y «Marcar» (tocando a ritmo), con su nombre italiano (Lento, Andante, Allegro…); arranca y para con un toque. | Media | F5.6 | ✅ | ✅ | 0.5.4 | Tu petición del 21/10 y tu guía con la app que nos enseñaste: lo más directo. Se usa igual en vertical y en horizontal: como el Afinador, no pide girar el móvil. La barra se mueve también con las flechas del teclado. **Hecho en la 0.5.4** y validado por el banco; falta que lo uses con la guitarra (Sesión 2). |
-| **MT-02** ✏️ | Compás elegible entre 1/4, 2/4, 3/4, 4/4, 5/4, 6/4, 3/8, 5/8, 6/8, 7/8, 9/8 y 12/8, en una ventana que se abre al tocar el compás; un punto por pulso (en 6/8, 9/8 y 12/8 el pulso es la negra con puntillo: dos, tres o cuatro puntos), y acento en el primer tiempo, que se puede quitar. | Media | F5.6 | ✅ | ✅ | 0.5.4 | Tu decisión del 21/10: como la app de referencia, un solo acento (el del primer tiempo) en vez de acentos en cada tiempo. Por defecto, con acento. **Hecho en la 0.5.4** y validado por el banco; falta que lo uses con la guitarra (Sesión 2). |
-| **MT-03** ✏️ | Subdivisión elegible con figuras en la misma ventana: solo el pulso, dos, tres o cuatro golpes por pulso; la subdivisión suena más suave que el pulso. | Media | F5.6 | ✅ | ✅ | 0.5.4 | Tu petición del 21/10 («ritmos»). En los compases compuestos, tres golpes por pulso son las corcheas. **Hecho en la 0.5.4** y validado por el banco; falta que lo uses con la guitarra (Sesión 2). |
-| **MT-04** ✏️ | Cada golpe se programa con el reloj de audio, con menos de 1 ms de desviación frente al tempo, y la pantalla marca el tiempo en curso. Se para al ocultar la app. | Media | F5.6 | ✅ | ✅ | 0.5.4 | Con un temporizador normal el pulso «se arrastra»: el reloj de audio es exacto. Lo de pararse sigue la regla del sonido en segundo plano (Sesión 1, C07). **Hecho en la 0.5.4** y validado por el banco; falta que lo uses con la guitarra (Sesión 2). |
-| **MT-05** ✏️ | El metrónomo es un **área propia**, con su pestaña en la navegación principal. Sigue sonando al pasar a Libre, Adivinar, Escalas o Acordes hasta que lo pares, y su pestaña late con el pulso mientras suena. Recuerda el último tempo, compás, acentos y subdivisión. | Media | F5.6 | ✅ | ✅ | 0.5.4 | Tu decisión del 21/10: función propia, no un chip del acceso rápido. Al escuchar con el micrófono en el Afinador, el metrónomo se para y lo dice: su clic confundiría al detector. Distribución: `interfaz.md` §7b, aprobada el 21/10. **Hecho en la 0.5.4** y validado por el banco; falta que lo uses con la guitarra (Sesión 2). |
+| **MT-01** | **Metrónomo:** tempo de 30 a 250 pulsos por minuto con una barra vertical, − y + y «Marcar» (tocando a ritmo), con su nombre italiano (Lento, Andante, Allegro…); arranca y para con un toque. | Media | F5.6 | ✅ | ✅ | 0.5.4 | Tu petición del 21/10 y tu guía con la app que nos enseñaste: lo más directo. Se usa igual en vertical y en horizontal: como el Afinador, no pide girar el móvil. La barra se mueve también con las flechas del teclado. **Hecho en la 0.5.4** y validado por el banco; falta que lo uses con la guitarra (Sesión 2). |
+| **MT-02** | Compás elegible entre 1/4, 2/4, 3/4, 4/4, 5/4, 6/4, 3/8, 5/8, 6/8, 7/8, 9/8 y 12/8, en una ventana que se abre al tocar el compás; un punto por pulso (en 6/8, 9/8 y 12/8 el pulso es la negra con puntillo: dos, tres o cuatro puntos), y acento en el primer tiempo, que se puede quitar. | Media | F5.6 | ✅ | ✅ | 0.5.4 | Tu decisión del 21/10: como la app de referencia, un solo acento (el del primer tiempo) en vez de acentos en cada tiempo. Por defecto, con acento. **Hecho en la 0.5.4** y validado por el banco; falta que lo uses con la guitarra (Sesión 2). |
+| **MT-03** | Subdivisión elegible con figuras en la misma ventana: solo el pulso, dos, tres o cuatro golpes por pulso; la subdivisión suena más suave que el pulso. | Media | F5.6 | ✅ | ✅ | 0.5.4 | Tu petición del 21/10 («ritmos»). En los compases compuestos, tres golpes por pulso son las corcheas. **Hecho en la 0.5.4** y validado por el banco; falta que lo uses con la guitarra (Sesión 2). |
+| **MT-04** | Cada golpe se programa con el reloj de audio, con menos de 1 ms de desviación frente al tempo, y la pantalla marca el tiempo en curso. Se para al ocultar la app. | Media | F5.6 | ✅ | ✅ | 0.5.4 | Con un temporizador normal el pulso «se arrastra»: el reloj de audio es exacto. Lo de pararse sigue la regla del sonido en segundo plano (Sesión 1, C07). **Hecho en la 0.5.4** y validado por el banco; falta que lo uses con la guitarra (Sesión 2). |
+| **MT-05** | El metrónomo es un **área propia**, con su pestaña en la navegación principal. Sigue sonando al pasar a Libre, Adivinar, Escalas o Acordes hasta que lo pares, y su pestaña late con el pulso mientras suena. Recuerda el último tempo, compás, acentos y subdivisión. | Media | F5.6 | ✅ | ✅ | 0.5.4 | Tu decisión del 21/10: función propia, no un chip del acceso rápido. Al escuchar con el micrófono en el Afinador, el metrónomo se para y lo dice: su clic confundiría al detector. Distribución: `interfaz.md` §7b, aprobada el 21/10. **Hecho en la 0.5.4** y validado por el banco; falta que lo uses con la guitarra (Sesión 2). |
 
 ---
 
@@ -467,11 +479,12 @@ Con esto hay 51 requisitos validados.
 
 | ID | Requisito | Prior. | Etapa | Impl. | Valid. | Desde | Notas |
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
-| **AC-01** | **Librería de acordes** con tónica y tipo: mayores, menores y de séptima (7, maj7 y m7) en posición abierta, más las cejillas más habituales. | Media | F5.7 | ⬜ | ⬜ | — | Tu petición del 21/10; el catálogo lo propone el agente: unos 30 acordes, los que salen en la mayoría de canciones. Es un **área propia**, con su pestaña (`interfaz.md` §7b). |
-| **AC-02** | En el mástil, cada nota del acorde lleva un círculo del color de su dedo (1 índice, 2 medio, 3 anular, 4 meñique; el mismo color en todos los acordes) con el número del dedo dentro. Junto a la cejuela, ○ para cuerda al aire y ✕ para cuerda que no suena; la cejilla, marcada. | Media | F5.7 | ⬜ | ⬜ | — | Tu petición del 21/10: número y color a la vez, con el color constante entre acordes. Los cuatro colores de dedo son distintos de la paleta de notas (que va por nota) y distintos entre sí también para daltónicos; cada círculo contrasta al menos 3:1 con el mástil y su número al menos 4,5:1 con el círculo (G-05). |
-| **AC-03** | El pentagrama escribe el acorde con sus notas apiladas; se oculta con el ajuste de pentagrama de siempre. | Baja | F5.7 | ⬜ | ⬜ | — | — |
-| **AC-04** | El acorde suena rasgueado, de grave a agudo, al tocarlo; cada cuerda se puede tocar suelta. | Media | F5.7 | ⬜ | ⬜ | — | — |
-| **AC-05** | Las digitaciones son para la afinación estándar en la primera entrega. | Media | F5.7 | ⬜ | ⬜ | — | Las digitaciones dependen de la afinación; las demás, para después. Con otra afinación activa, Acordes lo avisa y ofrece pasar a la estándar. El selector de tipo solo ofrece los tipos que el catálogo tiene para esa tónica: no hay combinaciones vacías. |
+| **AC-01** ✏️ | **Librería de acordes**, un área propia: a un lado, el listado de nombres, con una sección de **populares** arriba y debajo los **30 acordes** más habituales; al otro, el acorde dibujado en el mástil. | Media | F5.7 | ✅ | ✅ | 0.5.5 | Tu petición del 21/10 («ya iremos ampliando»). Populares: C, G, D, A, E, Am, Em, Dm y F. Los 30: mayores, menores, 7, m7 y maj7 de uso común, Dsus4, C/G y G/B, en posición abierta o con las cejillas más habituales. En vertical el listado va arriba y el mástil abajo; en horizontal, el listado a la derecha. **Hecho en la 0.5.5** y validado por el banco; falta que lo compares con tu guitarra (Sesión 2). |
+| **AC-02** ✏️ | En el mástil, cada nota del acorde lleva un círculo del color de su dedo (1 índice, 2 medio, 3 anular, 4 meñique; el mismo color en todos los acordes) con el número del dedo dentro. Junto al nombre de cada cuerda, ○ si suena al aire y ✕ si no suena; la cejilla, como una barra que une sus cuerdas. | Media | F5.7 | ✅ | ✅ | 0.5.5 | Tu petición del 21/10: número y color a la vez, con el color constante entre acordes. Colores de la paleta Okabe-Ito, que se distinguen también con daltonismo; en Acordes no se ven los colores de nota, así que no se confunden con ellos. Cada círculo contrasta al menos 3:1 con el mástil y su número al menos 4,5:1 con el círculo (G-05). El lector de pantalla dice el dedo de cada casilla. **Hecho en la 0.5.5** y validado por el banco; falta que lo compares con tu guitarra (Sesión 2). |
+| **AC-03** ✏️ | El pentagrama escribe el acorde con sus notas apiladas, escritas como manda el acorde (B7: Re♯); se oculta con el ajuste de pentagrama de siempre. | Baja | F5.7 | ✅ | ✅ | 0.5.5 | En el móvil en vertical el pentagrama se aparta para que el listado y el mástil quepan; se ve al girar el móvil y en pantallas amplias. **Hecho en la 0.5.5** y validado por el banco; falta que lo compares con tu guitarra (Sesión 2). |
+| **AC-04** ✏️ | El acorde suena rasgueado, de grave a agudo, al elegirlo y con «Tocar»; cada cuerda se puede tocar suelta. | Media | F5.7 | ✅ | ✅ | 0.5.5 | 35 ms entre cuerda y cuerda. **Hecho en la 0.5.5** y validado por el banco; falta que lo compares con tu guitarra (Sesión 2). |
+| **AC-05** ✏️ | Las digitaciones son para la afinación estándar en la primera entrega: con otra afinación activa, Acordes lo avisa, no las dibuja y ofrece pasar a la estándar. | Media | F5.7 | ✅ | ✅ | 0.5.5 | Las digitaciones dependen de la afinación; las demás, para después. **Hecho en la 0.5.5** y validado por el banco; falta que lo compares con tu guitarra (Sesión 2). |
+| **AC-06** 🆕 | Un **buscador** filtra el listado por cómo empieza el nombre: «G» deja G, Gm, G7, G/B…; vale en las dos nomenclaturas («Sol» encuentra lo mismo) y sin distinguir mayúsculas. | Media | F5.7 | ✅ | ✅ | 0.5.5 | Tu petición del 21/10. Una sola letra solo se busca en la nomenclatura inglesa, para que «D» no traiga también los Do; # y b valen por ♯ y ♭. **Hecho en la 0.5.5** y validado por el banco; falta que lo compares con tu guitarra (Sesión 2). |
 
 ---
 
@@ -517,7 +530,7 @@ Con esto hay 51 requisitos validados.
 | **C-01** | Menú de configuración accesible desde cualquier pantalla. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Hoja que sube desde abajo en vertical; panel lateral en horizontal y en pantallas amplias, con un segundo botón en el raíl (0.3.0). Es un diálogo: mientras está abierto, el resto de la página no responde (AT-04). **Validado en la Sesión 1** (20/10, informe `V-08`): A19 y C05. |
 | **C-02** | El menú contiene nomenclatura, pentagrama, timbre, numeración de trastes (tres modos), ver todas las notas, señalar iguales y afinación activa, y muestra la versión de la app. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Ampliado en 0.1.2 con la numeración en tres modos y la versión (G-10). En F6.4 se añade el grupo «Acerca de», con los créditos (G-06) y la privacidad (G-11) (`interfaz.md` v1.0, aprobada el 20/10). **Desde la 0.4.2**, Ajustes empieza con el grupo «Idioma · Language» (G-12). Tiene también «Al fallar» en Adivinar (J-13, 0.5.1) y «Notas alteradas», ♯ o ♭ por tecla negra (N-06, 0.5.2). |
 | **C-03** | Los ajustes frecuentes tienen acceso rápido sin abrir el menú. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Nomenclatura y pentagrama en chips bajo la cabecera, o en el panel en horizontal, donde el pentagrama se rotula con la clave de sol; las dos pistas del juego, en la tarjeta del reto (0.3.0). |
-| **C-04** ✏️ | Navegación principal clara entre las áreas de la app. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Barra inferior con un destino por área en vertical (cinco desde la 0.5.4, con Metrónomo; seis con Acordes; en el raíl, pestañas de 44 px), raíl a la izquierda en horizontal y pestañas en la cabecera en pantallas amplias (0.3.0). En pantallas bajas la barra nunca se sale (AR-05). **Validado en la Sesión 1** (20/10, informe `V-08`): A19. |
+| **C-04** ✏️ | Navegación principal clara entre las áreas de la app. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Barra inferior con un destino por área en vertical (seis desde la 0.5.5, con Metrónomo y Acordes; en el raíl, pestañas de 44 px; entre 600 y 959 px, las pestañas se alinean a la derecha), raíl a la izquierda en horizontal y pestañas en la cabecera en pantallas amplias (0.3.0). En pantallas bajas la barra nunca se sale (AR-05). **Validado en la Sesión 1** (20/10, informe `V-08`): A19. |
 | **C-05** | Todos los ajustes persisten entre sesiones. | Media | F1.1 | ✅ | ✅ | 0.1.0 | Un único objeto de estado, validado campo a campo al leerlo (0.1.1). **Validado en la Sesión 1** (20/10, informe `V-08`): A14 y A15. |
 | **C-06** | Especificación detallada de la interfaz: estructura de menús, jerarquía de controles y flujos de navegación. | Alta | F3.1 | ✅ | ✅ | 0.2.3 | `docs/interfaz.md` v1.0, aprobada por ti el 20/10 tras la auditoría AR-04 (10 hallazgos resueltos). Bocetos al tamaño real de cada pantalla en `docs/interfaz/`, comprobados por `herramientas/capturar-wireframes.js`. Los cambios posteriores suben su versión. |
 | **C-07** | **Botón «atrás» del sistema:** mientras haya un paso anterior en la sesión, el botón o gesto «atrás» cierra Ajustes o vuelve al área anterior; desde la primera área actúa el sistema. Al abrir la app se entra en Libre. | Media | F3.2 | ✅ | ✅ | 0.3.0 | **Hecho en la 0.3.0** con el historial del navegador (`history`): cada área tiene su dirección (`#libre`, `#adivinar`…). Un paso que deja la misma área, como tras recargar, se salta. El banco lo prueba con un historial simulado que avisa como el de verdad. Falta la prueba a mano en Windows y en el simulador de Android (Sesión 1). En el iPhone instalado no hay botón atrás. **Validado en la Sesión 1** (20/10, informe `V-08`): A17. |
@@ -563,7 +576,7 @@ Qué requisitos cierra o valida cada etapa del roadmap. Es la misma información
 | **F5.4** | E-05 |
 | **F5.5** | N-06, J-13 |
 | **F5.6** | MT-01, MT-02, MT-03, MT-04, MT-05 |
-| **F5.7** | AC-01, AC-02, AC-03, AC-04, AC-05 |
+| **F5.7** | AC-01, AC-02, AC-03, AC-04, AC-05, AC-06 |
 | **F6.1** | G-08 |
 | **F6.2** | G-03 |
 | **F6.3** | G-04 |
