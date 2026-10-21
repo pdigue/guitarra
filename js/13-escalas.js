@@ -118,6 +118,7 @@ function renderScales(){
  *  has encontrado: si estuvieran todas, sería darte la respuesta. */
 function drawScaleStaff(pasos, practica){
   const svg = document.getElementById('staff');
+  svg.setAttribute('viewBox', '0 0 340 132');      // la escala necesita todo el ancho
   drawStaffBase(svg, 38, 320);
   const visibles = practica ? pasos.filter((p, i) => i < pasos.length - 1 && sc.encontradas.has(pcEscrita(p.esc))) : pasos;
   const n = visibles.length;

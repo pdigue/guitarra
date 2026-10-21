@@ -30,7 +30,8 @@ const DEFAULTS = {
   scaleId:'mayor',        // Escalas (F5): tipo, tónica (clase de altura) y submodo
   scalePc:0,
   scaleMode:'show',       // 'show' Mostrar · 'practice' Práctica
-  onMiss:'reveal'         // Adivinar, al fallar: 'reveal' ver la respuesta · 'retry' seguir intentando (J-13)
+  onMiss:'reveal',        // Adivinar, al fallar: 'reveal' ver la respuesta · 'retry' seguir intentando (J-13)
+  accidentals:{}          // tecla negra → 'sharp' o 'flat' (N-06); sin dato, sostenido
 };
 
 const storage = {
@@ -67,6 +68,10 @@ function sanitize(raw){
   if (!Number.isInteger(s.scalePc) || s.scalePc < 0 || s.scalePc > 11) s.scalePc = DEFAULTS.scalePc;
   if (!['show','practice'].includes(s.scaleMode)) s.scaleMode = DEFAULTS.scaleMode;
   if (!['reveal','retry'].includes(s.onMiss)) s.onMiss = DEFAULTS.onMiss;
+  const alt = {};
+  if (s.accidentals && typeof s.accidentals === 'object')
+    for (const pc of NEGRAS) if (['sharp','flat'].includes(s.accidentals[pc])) alt[pc] = s.accidentals[pc];
+  s.accidentals = alt;
   // Quien estrena la app en inglés empieza con C D E; luego decide en Ajustes.
   if (!(raw && raw.notation) && s.lang === 'en') s.notation = 'anglo';
   ['showStaff','showAllNotes','showEquals','hintNote','hintString','rotateHintClosed']

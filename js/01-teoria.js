@@ -6,7 +6,7 @@
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.5.1';
+const APP_VERSION = '0.5.2';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -75,9 +75,10 @@ function noteInfo(midi){
   };
 }
 /** Nombre en la nomenclatura activa. */
+/** Nombre de una nota del mástil: «Fa♯» o «Sol♭» según lo elegido para esa
+ *  tecla negra en Ajustes (comentario del 21/10); siempre igual para la misma. */
 function noteName(midi){
-  const i = noteInfo(midi);
-  return state.notation === 'latin' ? i.latin : i.anglo;
+  return nombreEscrito(escrituraPreferida(midi));
 }
 /** Nombre científico (C4, F#3...), el que usan los nombres de archivo de las muestras. */
 function sciName(midi){
@@ -113,6 +114,18 @@ function escribir(pc, letra){
 /** «Si♭» o «B♭», según la nomenclatura elegida. */
 function nombreEscrito(n){
   return (state.notation === 'latin' ? LETRAS_LATIN : LETRAS_ANGLO)[n.letra] + ALTERACION[n.alt];
+}
+
+/* Las cinco teclas negras: Do♯/Re♭ (1), Re♯/Mi♭ (3), Fa♯/Sol♭ (6), Sol♯/La♭ (8)
+   y La♯/Si♭ (10). Fuera de las escalas, cada una se escribe siempre igual, con
+   ♯ o con ♭ según Ajustes; dentro de una escala manda la escala (Si♭ en Fa mayor). */
+const NEGRAS = [1, 3, 6, 8, 10];
+/** La nota escrita que la app usa para un sonido, según tus preferencias. */
+function escrituraPreferida(midi){
+  const pc = ((midi % 12) + 12) % 12;
+  if (!NEGRAS.includes(pc)) return escribir(pc, PC_LETRA.indexOf(pc));
+  const bemol = typeof state !== 'undefined' && state.accidentals && state.accidentals[pc] === 'flat';
+  return escribir(pc, bemol ? PC_LETRA.indexOf(pc + 1) : PC_LETRA.indexOf(pc - 1));
 }
 
 /** Octava de una nota escrita que suena en `midi`: Si♯3 es el MIDI 60, como Do4. */

@@ -965,7 +965,7 @@ test('Escalas › Mostrar: el mástil ilumina la escala con sus nombres escritos
   assert.deepEqual([guardado.scaleId, guardado.scalePc], ['pentaMenor', 9]);
   A.doc.querySelector('.tab[data-screen="free"]').click();
   assert.equal(celdasEscala(A).length, 0, 'fuera de Escalas, el mástil de siempre');
-  assert.equal(A.doc.querySelector('.fret-cell[data-midi="70"] .dot').textContent, 'La#');
+  assert.equal(A.doc.querySelector('.fret-cell[data-midi="70"] .dot').textContent, 'La♯');
 });
 
 test('Escalas › Mostrar: el paso a paso sube la escala desde la tónica grave, suena y se resalta (E-06, P-03)', () => {
@@ -995,7 +995,7 @@ test('Escalas › Práctica: las notas de la escala cuentan una vez cada una; un
   assert.equal(A.$('scale-count').textContent, '1 de 7');
   assert.match(A.$('scale-msg').textContent, /^✓ Do está en Do mayor$/);
   pulsa(54);                                                      // Fa#3
-  assert.match(A.$('scale-msg').textContent, /^✗ Fa# no está en Do mayor$/);
+  assert.match(A.$('scale-msg').textContent, /^✗ Fa♯ no está en Do mayor$/);
   assert.ok(A.doc.querySelector('.fret-cell[data-midi="54"]').classList.contains('wrong'));
   assert.ok(A.$('board').classList.contains('reveal-scale'), 'un momento, se ven las buenas');
   assert.equal(A.$('scale-count').textContent, '1 de 7');
@@ -1049,4 +1049,32 @@ test('el ajuste «Al fallar» se guarda y por defecto enseña la respuesta (J-13
   assert.equal(JSON.parse(A.store.get('trasteando.v1')).onMiss, 'retry');
   assert.equal(A.doc.querySelector('#set-onmiss [data-v="retry"]').getAttribute('aria-pressed'), 'true');
   assert.equal(boot(APP, { onMiss: 'x' }).ev('state.onMiss'), 'reveal');
+});
+
+// --- 0.5.2: ♯ o ♭ por cada tecla negra (N-06, tu comentario del 21/10) ---
+
+test('cada tecla negra se escribe con ♯ o con ♭ según Ajustes, igual en toda la app; dentro de una escala manda la escala (N-06)', () => {
+  const A = boot(APP);
+  const dot = m => A.doc.querySelector('.fret-cell[data-midi="' + m + '"] .dot').textContent;
+  assert.equal(dot(54), 'Fa♯', 'por defecto, sostenido');
+  const sol_b = A.doc.querySelector('#set-accidentals [data-pc="6"][data-v="flat"]');
+  assert.equal(sol_b.textContent, 'Sol♭');
+  sol_b.click();
+  assert.equal(dot(54), 'Sol♭');
+  assert.equal(dot(66), 'Sol♭', 'todas las de esa tecla');
+  assert.equal(dot(56), 'Sol♯', 'las demás no cambian');
+  assert.deepEqual(JSON.parse(A.store.get('trasteando.v1')).accidentals, { 6: 'flat' });
+  A.press(A.doc.querySelector('.fret-cell[data-midi="54"]'));
+  assert.equal(A.$('note-name').textContent, 'Sol♭');
+  assert.ok(A.$('staff').querySelectorAll('text').some(t => t.textContent === '♭'), 'el pentagrama la escribe con ♭');
+  // En Sol mayor, el Fa♯ es Fa♯ aunque prefieras Sol♭.
+  A.doc.querySelector('.tab[data-screen="scales"]').click();
+  const s = A.$('scale-tonic'); s.value = '7'; s.dispatchEvent({ type: 'change', target: s });
+  assert.equal(dot(54), 'Fa♯');
+  A.doc.querySelector('.tab[data-screen="free"]').click();
+  assert.equal(dot(54), 'Sol♭');
+  // Con C D E, los botones dicen «G♭».
+  A.$('qb-notation').click();
+  assert.equal(A.doc.querySelector('#set-accidentals [data-pc="6"][data-v="flat"]').textContent, 'G♭');
+  assert.equal(boot(APP, { accidentals: { 6: 'flat', 2: 'flat', 8: 'x' } }).ev('JSON.stringify(state.accidentals)'), '{"6":"flat"}');
 });

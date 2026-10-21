@@ -117,11 +117,18 @@ function drawNote(svg, realMidi, x, color, withStem, esc){
   }
 }
 
+/* Para una sola nota bastan unas líneas cortas: con un dibujo más estrecho,
+   el navegador lo amplía para llenar el hueco y se ve más grande (sobre todo
+   en horizontal, comentario del 21/10). Las escalas usan el ancho entero. */
+const STAFF_CORTO = '0 0 176 132';
 function showOnStaff(midi, color){
   const svg = document.getElementById('staff');
-  drawStaffBase(svg, 38, 320);
-  drawNote(svg, midi, 185, color, true);
+  svg.setAttribute('viewBox', STAFF_CORTO);
+  drawStaffBase(svg, 38, 166);
+  drawNote(svg, midi, 112, color, true, escrituraPreferida(midi));
 }
 function clearStaff(){
-  drawStaffBase(document.getElementById('staff'), 38, 320);
+  const svg = document.getElementById('staff');
+  svg.setAttribute('viewBox', STAFF_CORTO);
+  drawStaffBase(svg, 38, 166);
 }

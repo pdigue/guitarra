@@ -85,7 +85,10 @@ button { font-family:inherit; color:inherit; }
 /* ===== CABECERA ===== */
 .header { flex-shrink:0; display:flex; align-items:center; justify-content:space-between;
   min-height:46px; padding:3px 12px; border-bottom:1px solid var(--line); }
-.brand { font-family:Georgia,serif; font-style:italic; font-size:19px; color:var(--amber); }
+/* Más nítido en el iPhone (comentario del 21/10): algo más grande y con trazo más firme. */
+.brand, .panel-brand { font-family:Georgia,serif; font-style:italic; font-weight:700; font-size:20px; color:#f0b06a;
+  letter-spacing:.01em; -webkit-font-smoothing:antialiased; text-rendering:geometricPrecision; }
+.panel-brand { display:none; }
 .icon-btn { background:var(--surface); border:1px solid var(--line); border-radius:9px;
   width:40px; height:40px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
 .icon-btn svg { width:19px; height:19px; fill:none; stroke:var(--text); stroke-width:1.7;
@@ -181,11 +184,13 @@ button { font-family:inherit; color:inherit; }
 /* Si falta alto (Adivinar en un móvil), el pentagrama encoge antes que el
    mástil: el mástil manda (interfaz.md §2). */
 .staff-svg { width:100%; max-width:330px; height:100%; max-height:128px; }
-.note-readout { flex-shrink:0; text-align:center; min-width:78px; }
-.note-name { font-family:Georgia,serif; font-style:italic; font-size:44px; line-height:1;
-  min-height:44px; color:var(--note-color,var(--text));
+/* Alto fijo: con «La♯» o con «Fa» la lectura mide lo mismo y nada se mueve
+   (comentario del 21/10: el mástil bailaba unos píxeles según la nota). */
+.note-readout { flex-shrink:0; text-align:center; min-width:78px; height:62px; }
+.note-name { font-family:Georgia,serif; font-style:italic; font-size:44px; line-height:44px;
+  height:44px; white-space:nowrap; color:var(--note-color,var(--text));
   text-shadow:0 0 22px var(--note-glow,transparent); transition:color .18s; }
-.note-oct { font-size:11px; color:var(--muted); margin-top:3px; }
+.note-oct { font-size:11px; line-height:14px; height:14px; color:var(--muted); margin-top:3px; }
 .note-placeholder { color:var(--faint); font-size:15px; }
 .staff-line, .ledger-line { stroke:var(--faint); stroke-width:1; }
 
@@ -423,13 +428,17 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .audio-wake { flex-shrink:0; min-height:40px; padding:0 14px; border-radius:10px; cursor:pointer;
   background:var(--surface2); border:1px solid var(--line2); color:var(--text); font:inherit; font-size:13px; font-weight:600; }
 .audio-wake:active { background:var(--line); }
+.acc-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:6px; width:100%; }
+.acc-grid .seg button { flex:1; }
+.set-row-wrap { flex-wrap:wrap; }
 .reset { width:100%; min-height:44px; background:none; border:1px solid var(--line2); color:var(--ko);
   padding:11px; border-radius:10px; font-size:13px; cursor:pointer; }
 
 @media (max-height:520px){
   .display { max-height:104px; }
   .staff-svg { height:96px; }
-  .note-name { font-size:34px; min-height:34px; }
+  .note-name { font-size:34px; line-height:34px; height:34px; }
+  .note-readout { height:52px; }
 }
 
 /* ===== MÓVIL EN HORIZONTAL (F3.2, interfaz.md §7) =====
@@ -476,8 +485,10 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .display { flex-shrink:0; max-height:200px; border:none; }
   .display-inner { flex-direction:column; padding:0; gap:0; height:auto; }
   .staff-wrap { width:100%; height:auto; }
-  .staff-svg { height:62px; }
-  .note-name { font-size:30px; min-height:30px; }
+  .staff-svg { height:104px; }                 /* más grande: el dibujo de una nota es estrecho */
+  .note-name { font-size:30px; line-height:30px; height:30px; }
+  .note-readout { height:48px; }
+  .panel-brand { display:block; font-size:17px; line-height:20px; padding:0 2px; }
   /* El zoom se queda siempre a la vista, abajo del panel, aunque lo de
      encima no quepa y haya que desplazarlo (Android con la barra visible). */
   .zoombar { margin-top:auto; position:sticky; bottom:0; padding:4px 0 8px; gap:4px;
@@ -579,6 +590,8 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
      como siempre (display:contents). En horizontal es la columna de la derecha,
      y así el mástil se queda con todo el alto (F3.2, interfaz.md §7). -->
 <div class="panel" id="panel">
+<!-- En horizontal no hay cabecera: el nombre va arriba del panel (comentario del 21/10) -->
+<div class="panel-brand" aria-hidden="true">Trasteando</div>
 
 <!-- Acceso rápido (C-03) -->
 <div class="quickbar" id="quickbar">
@@ -753,6 +766,10 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
         <button data-v="anglo">C D E</button>
       </div>
     </div>
+    <div class="set-row set-row-wrap">
+      <div class="txt"><span data-t="set.accidentals">Notas alteradas</span><small data-t="set.accidentals.sub">Cómo se escribe cada una: con sostenido (♯) o con bemol (♭). Dentro de una escala manda la escala</small></div>
+      <div class="acc-grid" id="set-accidentals"></div>
+    </div>
     <div class="set-row">
       <div class="txt"><span data-t="staff">Pentagrama</span><small data-t="set.staff.sub">Muestra en la partitura la nota que tocas</small></div>
       <button class="sw" type="button" role="switch" aria-checked="false" id="set-staff"></button>
@@ -877,6 +894,7 @@ const TEXTOS = {
     'guess.was': 'Era', 'guess.wasEnd': '(octava {n}). Mira dónde estaba.',
     'guess.listen': 'Escucha y busca la nota',
     'guess.miss': '✗ No es esa.', 'guess.tryAgain': 'Prueba otra vez; ▶ la repite.', 'guess.giveup': 'Ver la respuesta',
+    'set.accidentals': 'Notas alteradas', 'set.accidentals.sub': 'Cómo se escribe cada una: con sostenido (♯) o con bemol (♭). Dentro de una escala manda la escala',
     'set.onMiss': 'Al fallar', 'set.onMiss.sub': 'Ver dónde estaba la nota o seguir buscándola',
     'set.reveal': 'Ver respuesta', 'set.retry': 'Reintentar',
     'streak': 'Racha {n}', 'record': 'Récord {n} · {afin}',
@@ -965,6 +983,7 @@ const TEXTOS = {
     'guess.was': 'It was', 'guess.wasEnd': '(octave {n}). See where it was.',
     'guess.listen': 'Listen and find the note',
     'guess.miss': '✗ Not that one.', 'guess.tryAgain': 'Try again; ▶ plays it again.', 'guess.giveup': 'Show the answer',
+    'set.accidentals': 'Sharps and flats', 'set.accidentals.sub': 'How each one is written: with a sharp (♯) or a flat (♭). Inside a scale, the scale decides',
     'set.onMiss': 'When you miss', 'set.onMiss.sub': 'See where the note was or keep looking for it',
     'set.reveal': 'Show answer', 'set.retry': 'Try again',
     'streak': 'Streak {n}', 'record': 'Best {n} · {afin}',
@@ -1080,7 +1099,7 @@ function aplicarIdioma(){
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.5.1';
+const APP_VERSION = '0.5.2';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -1149,9 +1168,10 @@ function noteInfo(midi){
   };
 }
 /** Nombre en la nomenclatura activa. */
+/** Nombre de una nota del mástil: «Fa♯» o «Sol♭» según lo elegido para esa
+ *  tecla negra en Ajustes (comentario del 21/10); siempre igual para la misma. */
 function noteName(midi){
-  const i = noteInfo(midi);
-  return state.notation === 'latin' ? i.latin : i.anglo;
+  return nombreEscrito(escrituraPreferida(midi));
 }
 /** Nombre científico (C4, F#3...), el que usan los nombres de archivo de las muestras. */
 function sciName(midi){
@@ -1187,6 +1207,18 @@ function escribir(pc, letra){
 /** «Si♭» o «B♭», según la nomenclatura elegida. */
 function nombreEscrito(n){
   return (state.notation === 'latin' ? LETRAS_LATIN : LETRAS_ANGLO)[n.letra] + ALTERACION[n.alt];
+}
+
+/* Las cinco teclas negras: Do♯/Re♭ (1), Re♯/Mi♭ (3), Fa♯/Sol♭ (6), Sol♯/La♭ (8)
+   y La♯/Si♭ (10). Fuera de las escalas, cada una se escribe siempre igual, con
+   ♯ o con ♭ según Ajustes; dentro de una escala manda la escala (Si♭ en Fa mayor). */
+const NEGRAS = [1, 3, 6, 8, 10];
+/** La nota escrita que la app usa para un sonido, según tus preferencias. */
+function escrituraPreferida(midi){
+  const pc = ((midi % 12) + 12) % 12;
+  if (!NEGRAS.includes(pc)) return escribir(pc, PC_LETRA.indexOf(pc));
+  const bemol = typeof state !== 'undefined' && state.accidentals && state.accidentals[pc] === 'flat';
+  return escribir(pc, bemol ? PC_LETRA.indexOf(pc + 1) : PC_LETRA.indexOf(pc - 1));
 }
 
 /** Octava de una nota escrita que suena en `midi`: Si♯3 es el MIDI 60, como Do4. */
@@ -1264,7 +1296,8 @@ const DEFAULTS = {
   scaleId:'mayor',        // Escalas (F5): tipo, tónica (clase de altura) y submodo
   scalePc:0,
   scaleMode:'show',       // 'show' Mostrar · 'practice' Práctica
-  onMiss:'reveal'         // Adivinar, al fallar: 'reveal' ver la respuesta · 'retry' seguir intentando (J-13)
+  onMiss:'reveal',        // Adivinar, al fallar: 'reveal' ver la respuesta · 'retry' seguir intentando (J-13)
+  accidentals:{}          // tecla negra → 'sharp' o 'flat' (N-06); sin dato, sostenido
 };
 
 const storage = {
@@ -1301,6 +1334,10 @@ function sanitize(raw){
   if (!Number.isInteger(s.scalePc) || s.scalePc < 0 || s.scalePc > 11) s.scalePc = DEFAULTS.scalePc;
   if (!['show','practice'].includes(s.scaleMode)) s.scaleMode = DEFAULTS.scaleMode;
   if (!['reveal','retry'].includes(s.onMiss)) s.onMiss = DEFAULTS.onMiss;
+  const alt = {};
+  if (s.accidentals && typeof s.accidentals === 'object')
+    for (const pc of NEGRAS) if (['sharp','flat'].includes(s.accidentals[pc])) alt[pc] = s.accidentals[pc];
+  s.accidentals = alt;
   // Quien estrena la app en inglés empieza con C D E; luego decide en Ajustes.
   if (!(raw && raw.notation) && s.lang === 'en') s.notation = 'anglo';
   ['showStaff','showAllNotes','showEquals','hintNote','hintString','rotateHintClosed']
@@ -1848,13 +1885,20 @@ function drawNote(svg, realMidi, x, color, withStem, esc){
   }
 }
 
+/* Para una sola nota bastan unas líneas cortas: con un dibujo más estrecho,
+   el navegador lo amplía para llenar el hueco y se ve más grande (sobre todo
+   en horizontal, comentario del 21/10). Las escalas usan el ancho entero. */
+const STAFF_CORTO = '0 0 176 132';
 function showOnStaff(midi, color){
   const svg = document.getElementById('staff');
-  drawStaffBase(svg, 38, 320);
-  drawNote(svg, midi, 185, color, true);
+  svg.setAttribute('viewBox', STAFF_CORTO);
+  drawStaffBase(svg, 38, 166);
+  drawNote(svg, midi, 112, color, true, escrituraPreferida(midi));
 }
 function clearStaff(){
-  drawStaffBase(document.getElementById('staff'), 38, 320);
+  const svg = document.getElementById('staff');
+  svg.setAttribute('viewBox', STAFF_CORTO);
+  drawStaffBase(svg, 38, 166);
 }
 </script>
 <script>
@@ -2589,6 +2633,10 @@ function syncUI(){
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
   }
+  document.querySelectorAll('#set-accidentals [data-pc]').forEach(b => {
+    const on = (state.accidentals[b.dataset.pc] || 'sharp') === b.dataset.v;
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
   const switches = {
     'set-staff': state.showStaff,
     'set-showall': state.showAllNotes,
@@ -2685,14 +2733,22 @@ function updateRotateHint(){
 function toggleNotation(){
   state.notation = state.notation === 'latin' ? 'anglo' : 'latin';
   save();
+  refreshNoteText();
+}
+
+/** Repinta todos los nombres de nota (nomenclatura o ♯/♭ cambiados). */
+function refreshNoteText(){
   refreshNoteNames();
+  if (typeof buildAccidentals === 'function' && document.getElementById('set-accidentals').children.length) buildAccidentals();
   renderTunerStrings();
   if (challenge) renderChallenge();
   buildScaleSelects(); renderScales();     // los nombres escritos siguen la nomenclatura
   // El lector de nota se refresca desde lastMidi: la clase .active se limpia
   // a los 2,2 s, así que consultar el DOM fallaba pasado ese tiempo.
-  if (lastMidi !== null)
+  if (lastMidi !== null){
     document.getElementById('note-name').textContent = noteName(lastMidi);
+    if (screen !== 'scales') showOnStaff(lastMidi, noteInfo(lastMidi).color);
+  }
   syncUI();
 }
 
@@ -3289,6 +3345,7 @@ function renderScales(){
  *  has encontrado: si estuvieran todas, sería darte la respuesta. */
 function drawScaleStaff(pasos, practica){
   const svg = document.getElementById('staff');
+  svg.setAttribute('viewBox', '0 0 340 132');      // la escala necesita todo el ancho
   drawStaffBase(svg, 38, 320);
   const visibles = practica ? pasos.filter((p, i) => i < pasos.length - 1 && sc.encontradas.has(pcEscrita(p.esc))) : pasos;
   const n = visibles.length;
@@ -3506,6 +3563,27 @@ function refreshLanguage(antes){
   syncUI();
   applyZoom();
 }
+// ♯ o ♭ para cada tecla negra (N-06): los botones se crean con sus nombres.
+function buildAccidentals(){
+  const box = document.getElementById('set-accidentals');
+  box.innerHTML = '';
+  for (const pc of NEGRAS){
+    const seg = document.createElement('div'); seg.className = 'seg';
+    for (const v of ['sharp', 'flat']){
+      const b = document.createElement('button');
+      b.dataset.pc = String(pc); b.dataset.v = v;
+      const n = escribir(pc, PC_LETRA.indexOf(v === 'sharp' ? pc - 1 : pc + 1));
+      b.textContent = nombreEscrito(n);
+      b.addEventListener('click', () => {
+        state.accidentals[pc] = v; save();
+        refreshNoteText();
+      });
+      seg.appendChild(b);
+    }
+    box.appendChild(seg);
+  }
+  syncUI();
+}
 document.querySelectorAll('#set-onmiss button').forEach(b => {
   b.addEventListener('click', () => { state.onMiss = b.dataset.v; save(); syncUI(); });
 });
@@ -3606,6 +3684,7 @@ buildBoard();
 bindBoardInput();
 bindMicTuner();
 bindScales();
+buildAccidentals();
 bindBoardKeys();
 clearStaff();
 syncUI();

@@ -133,6 +133,27 @@ function refreshLanguage(antes){
   syncUI();
   applyZoom();
 }
+// ♯ o ♭ para cada tecla negra (N-06): los botones se crean con sus nombres.
+function buildAccidentals(){
+  const box = document.getElementById('set-accidentals');
+  box.innerHTML = '';
+  for (const pc of NEGRAS){
+    const seg = document.createElement('div'); seg.className = 'seg';
+    for (const v of ['sharp', 'flat']){
+      const b = document.createElement('button');
+      b.dataset.pc = String(pc); b.dataset.v = v;
+      const n = escribir(pc, PC_LETRA.indexOf(v === 'sharp' ? pc - 1 : pc + 1));
+      b.textContent = nombreEscrito(n);
+      b.addEventListener('click', () => {
+        state.accidentals[pc] = v; save();
+        refreshNoteText();
+      });
+      seg.appendChild(b);
+    }
+    box.appendChild(seg);
+  }
+  syncUI();
+}
 document.querySelectorAll('#set-onmiss button').forEach(b => {
   b.addEventListener('click', () => { state.onMiss = b.dataset.v; save(); syncUI(); });
 });
@@ -233,6 +254,7 @@ buildBoard();
 bindBoardInput();
 bindMicTuner();
 bindScales();
+buildAccidentals();
 bindBoardKeys();
 clearStaff();
 syncUI();

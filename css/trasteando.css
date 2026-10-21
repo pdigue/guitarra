@@ -70,7 +70,10 @@ button { font-family:inherit; color:inherit; }
 /* ===== CABECERA ===== */
 .header { flex-shrink:0; display:flex; align-items:center; justify-content:space-between;
   min-height:46px; padding:3px 12px; border-bottom:1px solid var(--line); }
-.brand { font-family:Georgia,serif; font-style:italic; font-size:19px; color:var(--amber); }
+/* Más nítido en el iPhone (comentario del 21/10): algo más grande y con trazo más firme. */
+.brand, .panel-brand { font-family:Georgia,serif; font-style:italic; font-weight:700; font-size:20px; color:#f0b06a;
+  letter-spacing:.01em; -webkit-font-smoothing:antialiased; text-rendering:geometricPrecision; }
+.panel-brand { display:none; }
 .icon-btn { background:var(--surface); border:1px solid var(--line); border-radius:9px;
   width:40px; height:40px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
 .icon-btn svg { width:19px; height:19px; fill:none; stroke:var(--text); stroke-width:1.7;
@@ -166,11 +169,13 @@ button { font-family:inherit; color:inherit; }
 /* Si falta alto (Adivinar en un móvil), el pentagrama encoge antes que el
    mástil: el mástil manda (interfaz.md §2). */
 .staff-svg { width:100%; max-width:330px; height:100%; max-height:128px; }
-.note-readout { flex-shrink:0; text-align:center; min-width:78px; }
-.note-name { font-family:Georgia,serif; font-style:italic; font-size:44px; line-height:1;
-  min-height:44px; color:var(--note-color,var(--text));
+/* Alto fijo: con «La♯» o con «Fa» la lectura mide lo mismo y nada se mueve
+   (comentario del 21/10: el mástil bailaba unos píxeles según la nota). */
+.note-readout { flex-shrink:0; text-align:center; min-width:78px; height:62px; }
+.note-name { font-family:Georgia,serif; font-style:italic; font-size:44px; line-height:44px;
+  height:44px; white-space:nowrap; color:var(--note-color,var(--text));
   text-shadow:0 0 22px var(--note-glow,transparent); transition:color .18s; }
-.note-oct { font-size:11px; color:var(--muted); margin-top:3px; }
+.note-oct { font-size:11px; line-height:14px; height:14px; color:var(--muted); margin-top:3px; }
 .note-placeholder { color:var(--faint); font-size:15px; }
 .staff-line, .ledger-line { stroke:var(--faint); stroke-width:1; }
 
@@ -408,13 +413,17 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .audio-wake { flex-shrink:0; min-height:40px; padding:0 14px; border-radius:10px; cursor:pointer;
   background:var(--surface2); border:1px solid var(--line2); color:var(--text); font:inherit; font-size:13px; font-weight:600; }
 .audio-wake:active { background:var(--line); }
+.acc-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:6px; width:100%; }
+.acc-grid .seg button { flex:1; }
+.set-row-wrap { flex-wrap:wrap; }
 .reset { width:100%; min-height:44px; background:none; border:1px solid var(--line2); color:var(--ko);
   padding:11px; border-radius:10px; font-size:13px; cursor:pointer; }
 
 @media (max-height:520px){
   .display { max-height:104px; }
   .staff-svg { height:96px; }
-  .note-name { font-size:34px; min-height:34px; }
+  .note-name { font-size:34px; line-height:34px; height:34px; }
+  .note-readout { height:52px; }
 }
 
 /* ===== MÓVIL EN HORIZONTAL (F3.2, interfaz.md §7) =====
@@ -461,8 +470,10 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .display { flex-shrink:0; max-height:200px; border:none; }
   .display-inner { flex-direction:column; padding:0; gap:0; height:auto; }
   .staff-wrap { width:100%; height:auto; }
-  .staff-svg { height:62px; }
-  .note-name { font-size:30px; min-height:30px; }
+  .staff-svg { height:104px; }                 /* más grande: el dibujo de una nota es estrecho */
+  .note-name { font-size:30px; line-height:30px; height:30px; }
+  .note-readout { height:48px; }
+  .panel-brand { display:block; font-size:17px; line-height:20px; padding:0 2px; }
   /* El zoom se queda siempre a la vista, abajo del panel, aunque lo de
      encima no quepa y haya que desplazarlo (Android con la barra visible). */
   .zoombar { margin-top:auto; position:sticky; bottom:0; padding:4px 0 8px; gap:4px;

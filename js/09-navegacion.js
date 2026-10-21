@@ -71,6 +71,10 @@ function syncUI(){
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
   }
+  document.querySelectorAll('#set-accidentals [data-pc]').forEach(b => {
+    const on = (state.accidentals[b.dataset.pc] || 'sharp') === b.dataset.v;
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
   const switches = {
     'set-staff': state.showStaff,
     'set-showall': state.showAllNotes,
@@ -167,14 +171,22 @@ function updateRotateHint(){
 function toggleNotation(){
   state.notation = state.notation === 'latin' ? 'anglo' : 'latin';
   save();
+  refreshNoteText();
+}
+
+/** Repinta todos los nombres de nota (nomenclatura o ♯/♭ cambiados). */
+function refreshNoteText(){
   refreshNoteNames();
+  if (typeof buildAccidentals === 'function' && document.getElementById('set-accidentals').children.length) buildAccidentals();
   renderTunerStrings();
   if (challenge) renderChallenge();
   buildScaleSelects(); renderScales();     // los nombres escritos siguen la nomenclatura
   // El lector de nota se refresca desde lastMidi: la clase .active se limpia
   // a los 2,2 s, así que consultar el DOM fallaba pasado ese tiempo.
-  if (lastMidi !== null)
+  if (lastMidi !== null){
     document.getElementById('note-name').textContent = noteName(lastMidi);
+    if (screen !== 'scales') showOnStaff(lastMidi, noteInfo(lastMidi).color);
+  }
   syncUI();
 }
 
