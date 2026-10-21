@@ -86,7 +86,8 @@ function onMicReading(r){
   if (mic.lecturas.length < 2) return;
   mic.ultima = ahora;
   const ordenadas = [...mic.lecturas].sort((a, b) => a - b);
-  showMicReading(ordenadas[ordenadas.length >> 1]);
+  mic.ultimaHz = ordenadas[ordenadas.length >> 1];
+  showMicReading(mic.ultimaHz);
 }
 
 function showMicReading(hzDetectada){
@@ -201,7 +202,8 @@ async function startMic(){
   if (screen !== 'tuner' || state.tunerMode !== 'mic' || document.hidden){ stopMic(); return; }   // te fuiste mientras pedía permiso
   wakeAudio();                              // iOS puede pausar el audio al cambiar la sesión
   // Si el sistema corta el micrófono (una llamada, otra app), se dice.
-  mic.stream.getTracks().forEach(t => { t.onended = () => { stopMic(); showMicPanel(t('mic.cut')); }; });
+  // (la variable no se llama «t»: taparía la función de los textos; AT-08 #1)
+  mic.stream.getTracks().forEach(pista => { pista.onended = () => { stopMic(); showMicPanel(t('mic.cut')); }; });
   try {
     mic.src = audioCtx.createMediaStreamSource(mic.stream);
     mic.analyser = audioCtx.createAnalyser();
@@ -236,7 +238,7 @@ function stopMic(){
   if (mic.det){ mic.det.cerrar(); mic.det = null; }
   if (mic.src){ try { mic.src.disconnect(); } catch(e){} mic.src = null; }
   mic.analyser = null;
-  if (mic.stream){ mic.stream.getTracks().forEach(t => t.stop()); mic.stream = null; restoreAudioSession(); }
+  if (mic.stream){ mic.stream.getTracks().forEach(pista => pista.stop()); mic.stream = null; restoreAudioSession(); }
   mic.lecturas = [];
   showMicPanel('');
   if (conFoco) document.getElementById('mic-start').focus();

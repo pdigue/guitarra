@@ -35,7 +35,7 @@ function renderTunerStrings(){
 
     const num = document.createElement('div');
     num.className = 'tstring-num';
-    num.textContent = str.number + 'ª';
+    num.textContent = ord(str.number);
     row.appendChild(num);
 
     const play = document.createElement('button');

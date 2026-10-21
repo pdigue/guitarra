@@ -255,8 +255,8 @@ function rebuildAudio(){
   updateAudioStatus();
 }
 
-function timbreText(t){
-  return t === 'nylon' ? window.t('timbre.nylon') : window.t('timbre.acoustic');
+function timbreText(timbre){
+  return timbre === 'nylon' ? t('timbre.nylon') : t('timbre.acoustic');
 }
 
 function updateAudioStatus(){

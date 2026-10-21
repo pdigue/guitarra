@@ -91,7 +91,7 @@ function renderClues(){
     if (!on || !challenge){ b.classList.remove('clue'); b.textContent = etiqueta[0]; return; }
     b.classList.add('clue');
     const k = document.createElement('span'), v = document.createElement('b');
-    k.className = 'clue-k'; k.textContent = etiqueta[1];
+    k.className = 'clue-k'; k.textContent = etiqueta[1] + ' ';   // el lector lee «Nota Sol#3», no «NotaSol#3»
     v.className = 'clue-v'; v.textContent = valor;
     if (color) v.style.color = color;
     b.appendChild(k); b.appendChild(v);

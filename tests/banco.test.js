@@ -29,10 +29,11 @@ test('arranque: mástil, numeración, versión y panel (D-01, G-10)', () => {
 });
 
 test('migración de ajustes de la 0.1.1 (C-05, D-04)', () => {
-  const B = boot(APP, { showFretNums: false, record: 7 });
+  const B = boot(APP, { showFretNums: false, record: 7, records: { standard: 4, dropd: 2 } });
   assert.equal(B.ev('state.fretNums'), 'none');
   assert.ok(B.$('fret-nums').classList.contains('hidden'));
-  assert.equal(B.ev('state.records.standard'), 7, 'el récord único de antes pasa a la afinación estándar (J-11)');
+  assert.equal(B.ev('state.records.standard'), 7, 'el récord único de antes pasa a la afinación estándar si es mayor (J-11)');
+  assert.equal(B.ev('state.records.dropd'), 2);
   assert.equal(B.ev('"record" in state'), false);
   assert.equal(B.ev('"showFretNums" in state'), false);
 });
@@ -111,7 +112,6 @@ test('un récord por afinación: cambiar de afinación empieza la racha y enseñ
   assert.equal(A.ev('streak'), 0, 'la racha no pasa de una afinación a otra');
   assert.equal(A.$('st-record').textContent, 'Récord 2 · Drop D');
   await sleep(400);
-  const midi = A.ev('challenge.midi');
   for (let i = 0; i < 3; i++){
     const m = A.ev('challenge.midi');
     A.press(A.doc.querySelectorAll('.fret-cell').find(c => +c.dataset.midi === m));
@@ -471,6 +471,7 @@ test('en Adivinar la lectura grande es la nota que tocas; cada pista encendida e
   assert.ok(nota.classList.contains('clue'), 'tras fallar, las pistas siguen');
   nota.click();
   assert.equal(nota.textContent, 'Nombre');
+  assert.equal(nota.getAttribute('aria-pressed'), 'false');
   A.doc.querySelector('.tab[data-screen="free"]').click();
   assert.equal(cuerda.textContent, 'Cuerda', 'fuera de Adivinar, sin respuesta');
 });
@@ -905,7 +906,8 @@ test('idioma: en Ajustes se cambia a inglés y vuelve al español; se guarda y n
   assert.equal(A.$('tuning-select').children[0].textContent, 'Standard (E A D G B E)');
   assert.match(A.doc.querySelector('.fret-cell[data-row="0"][data-fret="0"]').getAttribute('aria-label'), /^1st string, open$/);
   A.$('qb-hint-string').click();
-  assert.match(A.$('qb-hint-string').textContent, /^Strings?\d/);
+  assert.match(A.$('qb-hint-string').textContent, /^Strings? \d/);
+  assert.match(A.$('strings-tuner').textContent, /6th/, 'el afinador de oído numera en inglés');
   // Nada de español en lo que se ve del Afinador.
   A.doc.querySelector('.tab[data-screen="tuner"]').click();
   A.doc.querySelector('#tuner-mode [data-v="mic"]').click();
@@ -921,6 +923,9 @@ test('idioma: la primera vez sigue al navegador (inglés → C D E); restablecer
   assert.equal(E.ev('state.lang'), 'en');
   assert.equal(E.ev('state.notation'), 'anglo', 'en inglés, de entrada, C D E');
   assert.equal(E.$('gate-btn').textContent, 'Start');
+  assert.equal(E.$('timbre-note').textContent, 'Nylon-string classical or steel-string acoustic', 'también los textos fijos de Ajustes');
+  const C = boot(APP, null, { navigator: { languages: ['ca-ES', 'en'] } });
+  assert.equal(C.ev('state.lang'), 'es', 'con catalán, español');
   const S = boot(APP, null, { navigator: { language: 'es-ES' } });
   assert.equal(S.ev('state.lang'), 'es');
   assert.equal(S.ev('state.notation'), 'latin');
@@ -929,4 +934,7 @@ test('idioma: la primera vez sigue al navegador (inglés → C D E); restablecer
   assert.equal(G.ev('state.notation'), 'latin', 'y la nomenclatura elegida se respeta');
   G.$('set-reset').click(); await sleep(20);
   assert.equal(G.ev('state.lang'), 'en');
+  const H = boot(APP, { lang: 'es' }, { navigator: { language: 'en-US' } });
+  H.$('set-reset').click(); await sleep(20);
+  assert.equal(H.ev('state.notation'), 'latin', 'en español, restablecer deja Do Re Mi aunque el navegador esté en inglés');
 });

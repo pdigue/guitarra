@@ -82,14 +82,14 @@
 <!-- Reto de Adivinar, con sus pistas dentro (interfaz.md §6) -->
 <div class="challenge" id="challenge" hidden>
   <div class="ch-main">
-    <button class="btn-repeat" id="btn-repeat" aria-label="Repetir sonido">&#9654;</button>
+    <button class="btn-repeat" id="btn-repeat" aria-label="Repetir sonido" data-t-aria="guess.repeat">&#9654;</button>
     <div class="challenge-text" id="challenge-text" aria-live="polite"></div>
     <div class="stats">
       <span class="streak" id="st-streak">Racha 0</span>
       <span class="record" id="st-record">Récord 0</span>
     </div>
   </div>
-  <div class="ch-hints">
+  <div class="ch-hints" role="group" aria-labelledby="qb-hint-label">
     <span class="qb-label" id="qb-hint-label" data-t="hints">Pistas</span>
     <!-- Encendida, cada pista enseña su respuesta dentro, en grande (comentario del 21/10) -->
     <button class="chip" id="qb-hint-note" aria-pressed="false">Nombre</button>
@@ -243,7 +243,7 @@
   <div class="set-group">
     <span data-t="set.sound">Sonido</span>
     <div class="set-row">
-      <div class="txt"><span data-t="set.guitar">Guitarra</span><small id="timbre-note">Clásica de nylon o acústica de acero</small></div>
+      <div class="txt"><span data-t="set.guitar">Guitarra</span><small id="timbre-note" data-t="set.guitar.sub">Clásica de nylon o acústica de acero</small></div>
       <div class="seg" id="set-timbre">
         <button data-t="set.classical" data-v="nylon">Clásica</button>
         <button data-t="set.acoustic" data-v="acoustic">Acústica</button>

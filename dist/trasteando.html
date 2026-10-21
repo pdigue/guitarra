@@ -551,14 +551,14 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 <!-- Reto de Adivinar, con sus pistas dentro (interfaz.md §6) -->
 <div class="challenge" id="challenge" hidden>
   <div class="ch-main">
-    <button class="btn-repeat" id="btn-repeat" aria-label="Repetir sonido">&#9654;</button>
+    <button class="btn-repeat" id="btn-repeat" aria-label="Repetir sonido" data-t-aria="guess.repeat">&#9654;</button>
     <div class="challenge-text" id="challenge-text" aria-live="polite"></div>
     <div class="stats">
       <span class="streak" id="st-streak">Racha 0</span>
       <span class="record" id="st-record">Récord 0</span>
     </div>
   </div>
-  <div class="ch-hints">
+  <div class="ch-hints" role="group" aria-labelledby="qb-hint-label">
     <span class="qb-label" id="qb-hint-label" data-t="hints">Pistas</span>
     <!-- Encendida, cada pista enseña su respuesta dentro, en grande (comentario del 21/10) -->
     <button class="chip" id="qb-hint-note" aria-pressed="false">Nombre</button>
@@ -712,7 +712,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   <div class="set-group">
     <span data-t="set.sound">Sonido</span>
     <div class="set-row">
-      <div class="txt"><span data-t="set.guitar">Guitarra</span><small id="timbre-note">Clásica de nylon o acústica de acero</small></div>
+      <div class="txt"><span data-t="set.guitar">Guitarra</span><small id="timbre-note" data-t="set.guitar.sub">Clásica de nylon o acústica de acero</small></div>
       <div class="seg" id="set-timbre">
         <button data-t="set.classical" data-v="nylon">Clásica</button>
         <button data-t="set.acoustic" data-v="acoustic">Acústica</button>
@@ -929,8 +929,11 @@ function lang(){
   return (typeof state !== 'undefined' && state && state.lang) || idiomaDelNavegador();
 }
 function idiomaDelNavegador(){
-  const l = typeof navigator !== 'undefined' && navigator.language;
-  return l && !/^es\b/i.test(l) ? 'en' : 'es';      // sin dato, español
+  const nav = typeof navigator !== 'undefined' ? navigator : {};
+  const l = (nav.languages && nav.languages[0]) || nav.language;
+  // Sin dato, español; también para catalán, gallego y euskera, más cerca del
+  // español que del inglés para quien los tiene puestos (AT-08 #7).
+  return l && !/^(es|ca|gl|eu)\b/i.test(l) ? 'en' : 'es';
 }
 
 /** El texto de una clave en el idioma activo, con sus {llaves} rellenas. */
@@ -1410,8 +1413,8 @@ function rebuildAudio(){
   updateAudioStatus();
 }
 
-function timbreText(t){
-  return t === 'nylon' ? window.t('timbre.nylon') : window.t('timbre.acoustic');
+function timbreText(timbre){
+  return timbre === 'nylon' ? t('timbre.nylon') : t('timbre.acoustic');
 }
 
 function updateAudioStatus(){
@@ -2073,7 +2076,7 @@ function renderClues(){
     if (!on || !challenge){ b.classList.remove('clue'); b.textContent = etiqueta[0]; return; }
     b.classList.add('clue');
     const k = document.createElement('span'), v = document.createElement('b');
-    k.className = 'clue-k'; k.textContent = etiqueta[1];
+    k.className = 'clue-k'; k.textContent = etiqueta[1] + ' ';   // el lector lee «Nota Sol#3», no «NotaSol#3»
     v.className = 'clue-v'; v.textContent = valor;
     if (color) v.style.color = color;
     b.appendChild(k); b.appendChild(v);
@@ -2199,7 +2202,7 @@ function renderTunerStrings(){
 
     const num = document.createElement('div');
     num.className = 'tstring-num';
-    num.textContent = str.number + 'ª';
+    num.textContent = ord(str.number);
     row.appendChild(num);
 
     const play = document.createElement('button');
@@ -2704,7 +2707,8 @@ function onMicReading(r){
   if (mic.lecturas.length < 2) return;
   mic.ultima = ahora;
   const ordenadas = [...mic.lecturas].sort((a, b) => a - b);
-  showMicReading(ordenadas[ordenadas.length >> 1]);
+  mic.ultimaHz = ordenadas[ordenadas.length >> 1];
+  showMicReading(mic.ultimaHz);
 }
 
 function showMicReading(hzDetectada){
@@ -2819,7 +2823,8 @@ async function startMic(){
   if (screen !== 'tuner' || state.tunerMode !== 'mic' || document.hidden){ stopMic(); return; }   // te fuiste mientras pedía permiso
   wakeAudio();                              // iOS puede pausar el audio al cambiar la sesión
   // Si el sistema corta el micrófono (una llamada, otra app), se dice.
-  mic.stream.getTracks().forEach(t => { t.onended = () => { stopMic(); showMicPanel(t('mic.cut')); }; });
+  // (la variable no se llama «t»: taparía la función de los textos; AT-08 #1)
+  mic.stream.getTracks().forEach(pista => { pista.onended = () => { stopMic(); showMicPanel(t('mic.cut')); }; });
   try {
     mic.src = audioCtx.createMediaStreamSource(mic.stream);
     mic.analyser = audioCtx.createAnalyser();
@@ -2854,7 +2859,7 @@ function stopMic(){
   if (mic.det){ mic.det.cerrar(); mic.det = null; }
   if (mic.src){ try { mic.src.disconnect(); } catch(e){} mic.src = null; }
   mic.analyser = null;
-  if (mic.stream){ mic.stream.getTracks().forEach(t => t.stop()); mic.stream = null; restoreAudioSession(); }
+  if (mic.stream){ mic.stream.getTracks().forEach(pista => pista.stop()); mic.stream = null; restoreAudioSession(); }
   mic.lecturas = [];
   showMicPanel('');
   if (conFoco) document.getElementById('mic-start').focus();
@@ -3026,16 +3031,24 @@ document.querySelectorAll('#set-notation button').forEach(b => {
 // desde el código. El estado del juego y del micrófono no se tocan.
 function setLang(l){
   if (state.lang === l) return;
+  const antes = state.lang;
   state.lang = l; save();
-  refreshLanguage();
+  refreshLanguage(antes);
 }
-function refreshLanguage(){
+function refreshLanguage(antes){
+  // El motivo que enseñaba el micrófono (sin permiso, cortado…) se traduce
+  // buscando su clave en el idioma anterior (AT-08 #4).
+  const why = document.getElementById('mic-why');
+  const clave = antes && Object.keys(TEXTOS[antes]).find(k => TEXTOS[antes][k] === why.textContent);
   aplicarIdioma();
   buildTuner();
   labelCells();
   labelMicStrings();
-  if (!mic.analyser) showMicPanel(micUnavailable());
-  else if (!mic.lecturas.length) showMicIdle();
+  if (!mic.analyser) showMicPanel(micUnavailable() || (clave ? t(clave) : ''));
+  else {
+    mic.orden = null;                         // fuerza a repintar la orden en el idioma nuevo
+    if (mic.lecturas.length >= 2 && mic.ultimaHz) showMicReading(mic.ultimaHz); else showMicIdle();
+  }
   document.getElementById('timbre-note').textContent = samplerReady ? timbreText(state.timbre) : t('set.guitar.sub');
   updateAudioStatus();
   updateScore();
@@ -3084,7 +3097,7 @@ document.addEventListener('visibilitychange', onVisibility);
 document.getElementById('set-reset').addEventListener('click', async () => {
   if (!confirm(t('confirm.reset'))) return;
   const previousTimbre = state.timbre, records = state.records, idioma = state.lang;
-  state = sanitize({});
+  state = sanitize({ lang: idioma });   // con el idioma, para que la nomenclatura por defecto sea la suya (AT-08 #5)
   state.records = records;        // los récords son tuyos, no ajustes (Sesión 1, A14)
   state.lang = idioma;            // y el idioma se queda: restablecer no debe cambiarte de lengua
   state.visibleFrets = defaultVisibleFrets();

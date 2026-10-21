@@ -164,8 +164,11 @@ function lang(){
   return (typeof state !== 'undefined' && state && state.lang) || idiomaDelNavegador();
 }
 function idiomaDelNavegador(){
-  const l = typeof navigator !== 'undefined' && navigator.language;
-  return l && !/^es\b/i.test(l) ? 'en' : 'es';      // sin dato, español
+  const nav = typeof navigator !== 'undefined' ? navigator : {};
+  const l = (nav.languages && nav.languages[0]) || nav.language;
+  // Sin dato, español; también para catalán, gallego y euskera, más cerca del
+  // español que del inglés para quien los tiene puestos (AT-08 #7).
+  return l && !/^(es|ca|gl|eu)\b/i.test(l) ? 'en' : 'es';
 }
 
 /** El texto de una clave en el idioma activo, con sus {llaves} rellenas. */

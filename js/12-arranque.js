@@ -105,16 +105,24 @@ document.querySelectorAll('#set-notation button').forEach(b => {
 // desde el código. El estado del juego y del micrófono no se tocan.
 function setLang(l){
   if (state.lang === l) return;
+  const antes = state.lang;
   state.lang = l; save();
-  refreshLanguage();
+  refreshLanguage(antes);
 }
-function refreshLanguage(){
+function refreshLanguage(antes){
+  // El motivo que enseñaba el micrófono (sin permiso, cortado…) se traduce
+  // buscando su clave en el idioma anterior (AT-08 #4).
+  const why = document.getElementById('mic-why');
+  const clave = antes && Object.keys(TEXTOS[antes]).find(k => TEXTOS[antes][k] === why.textContent);
   aplicarIdioma();
   buildTuner();
   labelCells();
   labelMicStrings();
-  if (!mic.analyser) showMicPanel(micUnavailable());
-  else if (!mic.lecturas.length) showMicIdle();
+  if (!mic.analyser) showMicPanel(micUnavailable() || (clave ? t(clave) : ''));
+  else {
+    mic.orden = null;                         // fuerza a repintar la orden en el idioma nuevo
+    if (mic.lecturas.length >= 2 && mic.ultimaHz) showMicReading(mic.ultimaHz); else showMicIdle();
+  }
   document.getElementById('timbre-note').textContent = samplerReady ? timbreText(state.timbre) : t('set.guitar.sub');
   updateAudioStatus();
   updateScore();
@@ -163,7 +171,7 @@ document.addEventListener('visibilitychange', onVisibility);
 document.getElementById('set-reset').addEventListener('click', async () => {
   if (!confirm(t('confirm.reset'))) return;
   const previousTimbre = state.timbre, records = state.records, idioma = state.lang;
-  state = sanitize({});
+  state = sanitize({ lang: idioma });   // con el idioma, para que la nomenclatura por defecto sea la suya (AT-08 #5)
   state.records = records;        // los récords son tuyos, no ajustes (Sesión 1, A14)
   state.lang = idioma;            // y el idioma se queda: restablecer no debe cambiarte de lengua
   state.visibleFrets = defaultVisibleFrets();
