@@ -32,16 +32,18 @@ test('migración de ajustes de la 0.1.1 (C-05, D-04)', () => {
   const B = boot(APP, { showFretNums: false, record: 7 });
   assert.equal(B.ev('state.fretNums'), 'none');
   assert.ok(B.$('fret-nums').classList.contains('hidden'));
-  assert.equal(B.ev('state.record'), 7);
+  assert.equal(B.ev('state.records.standard'), 7, 'el récord único de antes pasa a la afinación estándar (J-11)');
+  assert.equal(B.ev('"record" in state'), false);
   assert.equal(B.ev('"showFretNums" in state'), false);
 });
 
 test('ajustes corruptos no rompen la app (C-05)', () => {
-  const B = boot(APP, { tuningId: 'no-existe', customTuning: [1, 2], notation: 'x', visibleFrets: 999, record: -3 });
+  const B = boot(APP, { tuningId: 'no-existe', customTuning: [1, 2], notation: 'x', visibleFrets: 999, record: -3,
+    records: { standard: -1, dropd: 'x', inventada: 4, dadgad: 5 } });
   assert.equal(B.ev('state.tuningId'), 'standard');
   assert.equal(B.ev('state.customTuning.length'), 6);
   assert.equal(B.ev('state.notation'), 'latin');
-  assert.equal(B.ev('state.record'), 0);
+  assert.equal(B.ev('JSON.stringify(state.records)'), '{"dadgad":5}', 'solo récords válidos de afinaciones que existen');
 });
 
 test('numeración en tres modos (D-04, V-09)', () => {
@@ -96,7 +98,27 @@ test('Adivinar: acierto en cualquier posición y récord guardado (J-02, J-07, J
   const cells = A.doc.querySelectorAll('.fret-cell').filter(c => +c.dataset.midi === midi);
   A.press(cells[cells.length - 1]);
   assert.equal(A.ev('streak'), 1);
-  assert.ok(JSON.parse(A.store.get('trasteando.v1')).record >= 1);
+  assert.equal(JSON.parse(A.store.get('trasteando.v1')).records.standard, 1);
+  assert.equal(A.$('st-record').textContent, 'Récord 1 · Estándar');
+});
+
+test('un récord por afinación: cambiar de afinación empieza la racha y enseña el récord de esa (J-11, decisión del 21/10)', async () => {
+  const A = boot(APP, { records: { standard: 9, dropd: 2 } });
+  jugar(A);
+  assert.equal(A.$('st-record').textContent, 'Récord 9 · Estándar');
+  A.ev('streak = 4');
+  const sel = A.$('set-tuning'); sel.value = 'dropd'; sel.dispatchEvent({ type: 'change', target: sel });
+  assert.equal(A.ev('streak'), 0, 'la racha no pasa de una afinación a otra');
+  assert.equal(A.$('st-record').textContent, 'Récord 2 · Drop D');
+  await sleep(400);
+  const midi = A.ev('challenge.midi');
+  for (let i = 0; i < 3; i++){
+    const m = A.ev('challenge.midi');
+    A.press(A.doc.querySelectorAll('.fret-cell').find(c => +c.dataset.midi === m));
+    await sleep(1600);
+  }
+  const guardado = JSON.parse(A.store.get('trasteando.v1')).records;
+  assert.deepEqual(guardado, { standard: 9, dropd: 3 }, 'sube solo el de Drop D');
 });
 
 test('arrastrar el mástil no cuenta como pulsación en Adivinar (AUD-02)', async () => {
@@ -125,16 +147,16 @@ test('cambiar de afinación durante una revelación no revela el reto nuevo (A-1
 
 test('restablecer vuelve a los valores por defecto y conserva el récord; el récord se borra aparte (C-05, Sesión 1 A14)', async () => {
   const A = boot(APP);
-  A.ev('state.record = 7; save()');
+  A.ev('state.records = { standard: 7, dadgad: 2 }; save()');
   A.doc.querySelector('#set-fretnums [data-v="none"]').click();
   A.$('set-reset').click();
   await sleep(50);
   assert.equal(A.ev('state.tuningId'), 'standard');
   assert.equal(A.ev('state.fretNums'), 'all');
-  assert.equal(JSON.parse(A.store.get('trasteando.v1')).record, 7, 'el récord no es un ajuste');
+  assert.deepEqual(JSON.parse(A.store.get('trasteando.v1')).records, { standard: 7, dadgad: 2 }, 'los récords no son ajustes');
   A.$('set-clear-record').click();
-  assert.equal(JSON.parse(A.store.get('trasteando.v1')).record, 0);
-  assert.equal(A.$('st-record').textContent, 'Récord 0');
+  assert.deepEqual(JSON.parse(A.store.get('trasteando.v1')).records, {});
+  assert.equal(A.$('st-record').textContent, 'Récord 0 · Estándar');
 });
 
 test('pentagrama: ninguna nota del rango posible se sale del dibujo (P-01)', () => {
@@ -427,20 +449,30 @@ test('en Adivinar nada suena ni puntúa hasta pulsar ▶, y luego cada reto suen
   assert.equal(A.ev('__plays'), 4, 'cada visita vuelve a esperar a ▶');
 });
 
-test('en Adivinar la lectura grande es la nota buscada: «?» hasta acertar o fallar (Sesión 1, E06)', async () => {
+test('en Adivinar la lectura grande es la nota que tocas; cada pista encendida enseña su respuesta en grande, también antes de ▶ (J-06, comentario del 21/10)', async () => {
   const A = boot(APP);
-  jugar(A);
-  const midi = A.ev('challenge.midi'), nombre = A.ev('noteName(challenge.midi)');
+  A.doc.querySelector('.tab[data-screen="guess"]').click();
+  const nota = A.$('qb-hint-note'), cuerda = A.$('qb-hint-string');
+  assert.equal(nota.textContent, 'Nombre');
+  cuerda.click();
+  assert.ok(cuerda.classList.contains('clue'), 'antes de ▶ ya se ve la pista');
+  assert.equal(cuerda.getAttribute('aria-pressed'), 'true');
+  const pos = A.ev('positionsFor(challenge.midi).map(p => p.string.number + "ª").join(" ")');
+  assert.equal(cuerda.querySelector('.clue-v').textContent, pos);
+  assert.equal(nota.textContent, 'Nombre', 'la otra sigue apagada');
+  nota.click();
+  assert.equal(nota.querySelector('.clue-v').textContent, A.ev('noteName(challenge.midi) + noteInfo(challenge.midi).octave'));
+  assert.doesNotMatch(A.$('challenge-text').innerHTML, /Cuerda|Es /, 'las pistas ya no van en el texto del reto');
+  A.$('btn-repeat').click();
+  const midi = A.ev('challenge.midi');
   const otra = A.doc.querySelectorAll('.fret-cell').find(c => +c.dataset.midi !== midi);
-  assert.match(A.$('note-name').innerHTML, /\?/);
-  A.ev('state.hintNote = true'); A.ev('renderChallenge()');
-  assert.equal(A.$('note-name').textContent, nombre, 'con la pista de nota se ve la buscada');
-  A.ev('state.hintNote = false'); A.ev('renderChallenge()');
   A.press(otra);
-  assert.equal(A.$('note-name').textContent, nombre, 'tras fallar, la buscada; no la pulsada');
-  assert.match(A.$('note-oct').textContent, /buscada/);
+  assert.equal(A.$('note-name').textContent, A.ev('noteName(' + otra.dataset.midi + ')'), 'la lectura grande es la tocada');
+  assert.ok(nota.classList.contains('clue'), 'tras fallar, las pistas siguen');
+  nota.click();
+  assert.equal(nota.textContent, 'Nombre');
   A.doc.querySelector('.tab[data-screen="free"]').click();
-  assert.match(A.$('note-name').innerHTML, /toca/, 'en Libre vuelve a ser la nota que tocas');
+  assert.equal(cuerda.textContent, 'Cuerda', 'fuera de Adivinar, sin respuesta');
 });
 
 test('cambiar de guitarra no hace sonar ninguna nota (Sesión 1, A14)', async () => {

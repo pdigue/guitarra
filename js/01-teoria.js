@@ -6,7 +6,7 @@
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.4.0';
+const APP_VERSION = '0.4.1';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -45,13 +45,13 @@ const MAX_FRET_W = 110;
 // a la más aguda. Todo el mástil se deriva de aquí: no hay ninguna nota
 // escrita a mano en el resto del código.
 const TUNINGS = [
-  { id:'standard', name:'Estándar (E A D G B E)', midi:[40,45,50,55,59,64] },
-  { id:'dropd',    name:'Drop D (D A D G B E)',   midi:[38,45,50,55,59,64] },
-  { id:'halfstep', name:'Medio tono abajo',        midi:[39,44,49,54,58,63] },
-  { id:'openg',    name:'Open G (D G D G B D)',    midi:[38,43,50,55,59,62] },
-  { id:'opend',    name:'Open D (D A D F# A D)',   midi:[38,45,50,54,57,62] },
-  { id:'dadgad',   name:'DADGAD',                  midi:[38,45,50,55,57,62] },
-  { id:'custom',   name:'Personalizada',           midi:[40,45,50,55,59,64] }
+  { id:'standard', name:'Estándar (E A D G B E)', short:'Estándar', midi:[40,45,50,55,59,64] },
+  { id:'dropd',    name:'Drop D (D A D G B E)', short:'Drop D',   midi:[38,45,50,55,59,64] },
+  { id:'halfstep', name:'Medio tono abajo', short:'Medio tono abajo',        midi:[39,44,49,54,58,63] },
+  { id:'openg',    name:'Open G (D G D G B D)', short:'Open G',    midi:[38,43,50,55,59,62] },
+  { id:'opend',    name:'Open D (D A D F# A D)', short:'Open D',   midi:[38,45,50,54,57,62] },
+  { id:'dadgad',   name:'DADGAD', short:'DADGAD',                  midi:[38,45,50,55,57,62] },
+  { id:'custom',   name:'Personalizada', short:'Personalizada',           midi:[40,45,50,55,59,64] }
 ];
 
 // Grosor visual de cada cuerda, de la más grave a la más aguda.

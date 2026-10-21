@@ -114,7 +114,16 @@ button { font-family:inherit; color:inherit; }
 .challenge { flex-shrink:0; display:flex; flex-direction:column; gap:2px;
   padding:3px 12px; background:var(--surface); border-bottom:1px solid var(--line); }
 .ch-main { display:flex; align-items:center; gap:10px; }
-.ch-hints { display:flex; align-items:center; gap:7px; }
+.ch-hints { display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+/* Pista encendida: el chip enseña la respuesta, con etiqueta pequeña y valor
+   grande y borde discontinuo de «pista», para no confundirla con la nota que
+   tocas (la lectura grande de abajo). Comentario del 21/10. */
+.chip.clue { background:rgba(232,164,92,.10); border:1.5px dashed var(--amber); color:var(--text);
+  gap:6px; padding:0 11px; align-items:baseline; }
+/* Con una pista encendida, sobra el rótulo «Pistas»: así caben las dos en una fila. */
+.ch-hints.has-clue .qb-label { display:none; }
+.chip.clue .clue-k { font-size:10.5px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+.chip.clue .clue-v { font-size:18px; font-weight:800; line-height:38px; }
 .challenge[hidden] { display:none; }
 .challenge-text { flex:1; font-size:14px; line-height:1.35; min-width:0; }
 .challenge-text .dim { color:var(--muted); }
@@ -421,6 +430,11 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .ch-hints { flex-wrap:wrap; gap:4px 6px; }
   .ch-hints .qb-label { flex-basis:100%; }
   .ch-hints .chip { padding:0 9px; }
+  /* En el panel estrecho, la respuesta de la pista puede partirse en dos líneas. */
+  .ch-hints .chip.clue { max-width:100%; white-space:normal; flex-direction:column; align-items:flex-start;
+    justify-content:center; gap:0; padding:2px 10px; }
+  .chip.clue .clue-k { line-height:12px; }
+  .chip.clue .clue-v { font-size:16px; line-height:20px; }
   .display { flex-shrink:0; max-height:200px; border:none; }
   .display-inner { flex-direction:column; padding:0; gap:0; height:auto; }
   .staff-wrap { width:100%; height:auto; }
@@ -546,8 +560,9 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   </div>
   <div class="ch-hints">
     <span class="qb-label" id="qb-hint-label">Pistas</span>
-    <button class="chip" id="qb-hint-note">Nombre</button>
-    <button class="chip" id="qb-hint-string">Cuerda</button>
+    <!-- Encendida, cada pista enseña su respuesta dentro, en grande (comentario del 21/10) -->
+    <button class="chip" id="qb-hint-note" aria-pressed="false">Nombre</button>
+    <button class="chip" id="qb-hint-string" aria-pressed="false">Cuerda</button>
   </div>
 </div>
 
@@ -707,7 +722,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 
   <div class="set-group">
     <button class="reset" id="set-reset">Restablecer todos los ajustes</button>
-    <button class="reset" id="set-clear-record">Borrar el récord de racha</button>
+    <button class="reset" id="set-clear-record">Borrar los récords de racha</button>
     <p class="version" id="app-version"></p>
   </div>
 </div>
@@ -744,7 +759,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.4.0';
+const APP_VERSION = '0.4.1';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -783,13 +798,13 @@ const MAX_FRET_W = 110;
 // a la más aguda. Todo el mástil se deriva de aquí: no hay ninguna nota
 // escrita a mano en el resto del código.
 const TUNINGS = [
-  { id:'standard', name:'Estándar (E A D G B E)', midi:[40,45,50,55,59,64] },
-  { id:'dropd',    name:'Drop D (D A D G B E)',   midi:[38,45,50,55,59,64] },
-  { id:'halfstep', name:'Medio tono abajo',        midi:[39,44,49,54,58,63] },
-  { id:'openg',    name:'Open G (D G D G B D)',    midi:[38,43,50,55,59,62] },
-  { id:'opend',    name:'Open D (D A D F# A D)',   midi:[38,45,50,54,57,62] },
-  { id:'dadgad',   name:'DADGAD',                  midi:[38,45,50,55,57,62] },
-  { id:'custom',   name:'Personalizada',           midi:[40,45,50,55,59,64] }
+  { id:'standard', name:'Estándar (E A D G B E)', short:'Estándar', midi:[40,45,50,55,59,64] },
+  { id:'dropd',    name:'Drop D (D A D G B E)', short:'Drop D',   midi:[38,45,50,55,59,64] },
+  { id:'halfstep', name:'Medio tono abajo', short:'Medio tono abajo',        midi:[39,44,49,54,58,63] },
+  { id:'openg',    name:'Open G (D G D G B D)', short:'Open G',    midi:[38,43,50,55,59,62] },
+  { id:'opend',    name:'Open D (D A D F# A D)', short:'Open D',   midi:[38,45,50,54,57,62] },
+  { id:'dadgad',   name:'DADGAD', short:'DADGAD',                  midi:[38,45,50,55,57,62] },
+  { id:'custom',   name:'Personalizada', short:'Personalizada',           midi:[40,45,50,55,59,64] }
 ];
 
 // Grosor visual de cada cuerda, de la más grave a la más aguda.
@@ -848,7 +863,7 @@ const DEFAULTS = {
   customTuning:[40,45,50,55,59,64],
   visibleFrets:null,      // se calcula en el primer arranque según la pantalla
   maxChallengeFret:12,    // hasta dónde llegan los retos del modo Adivinar
-  record:0,
+  records:{},             // récord de racha de cada afinación: { standard: 7, dropd: 3 } (J-11)
   rotateHintClosed:false, // el aviso para girar, una vez cerrado, no vuelve (V-01)
   tunerMode:'ear'         // afinador: 'ear' de oído · 'mic' por micrófono (F4.3)
 };
@@ -895,7 +910,14 @@ function sanitize(raw){
     s.visibleFrets = null;
   if (!Number.isInteger(s.maxChallengeFret) || s.maxChallengeFret < 3 || s.maxChallengeFret > NUM_FRETS)
     s.maxChallengeFret = DEFAULTS.maxChallengeFret;
-  if (!Number.isInteger(s.record) || s.record < 0) s.record = 0;
+  // J-11 (decisión del 21/10): un récord por afinación. El récord único de
+  // antes pasa a la afinación estándar.
+  const rec = {};
+  if (s.records && typeof s.records === 'object')
+    for (const t of TUNINGS) if (Number.isInteger(s.records[t.id]) && s.records[t.id] > 0) rec[t.id] = s.records[t.id];
+  if (Number.isInteger(raw && raw.record) && raw.record > (rec.standard || 0)) rec.standard = raw.record;
+  s.records = rec;
+  delete s.record;
   return s;
 }
 
@@ -1654,15 +1676,15 @@ function pressFret(cell, midi, rowIdx){
 
   const info = noteInfo(midi);
   playMidi(midi);
-  if (screen !== 'guess'){          // en Adivinar, el lector es de la nota buscada
-    lastMidi = midi;
-    const nameEl = document.getElementById('note-name');
-    nameEl.textContent = noteName(midi);
-    nameEl.style.setProperty('--note-color', info.color);
-    nameEl.style.setProperty('--note-glow', info.color);
-    document.getElementById('note-oct').textContent = 'octava ' + info.octave;
-    showOnStaff(midi, info.color);
-  }
+  // La lectura grande es siempre la nota que tocas, también en Adivinar; las
+  // pistas van aparte, en la tarjeta del reto (comentario del 21/10).
+  lastMidi = midi;
+  const nameEl = document.getElementById('note-name');
+  nameEl.textContent = noteName(midi);
+  nameEl.style.setProperty('--note-color', info.color);
+  nameEl.style.setProperty('--note-glow', info.color);
+  document.getElementById('note-oct').textContent = 'octava ' + info.octave;
+  showOnStaff(midi, info.color);
 
   // Señal secundaria: dónde más suena exactamente esta misma nota.
   if (state.showEquals){
@@ -1778,7 +1800,9 @@ const NEXT_AFTER_HIT = 1500;    // acierto → reto nuevo
 
 function updateScore(){
   document.getElementById('st-streak').textContent = 'Racha ' + streak;
-  document.getElementById('st-record').textContent = 'Récord ' + state.record;
+  const r = document.getElementById('st-record');
+  r.textContent = 'Récord ' + currentRecord() + ' · ' + tuningShort();
+  r.title = 'Récord de racha en la afinación ' + tuningShort() + ' (cada afinación tiene el suyo)';
 }
 
 /** Todas las posiciones del mástil que producen exactamente esta nota. */
@@ -1828,26 +1852,35 @@ function onRepeat(){
   playChallenge();
 }
 
-/** En Adivinar, la lectura grande y el pentagrama muestran la nota BUSCADA:
- *  «?» mientras no se sabe y la nota cuando se acierta, se revela o la pista
- *  de nota está activa. La nota pulsada ya se ve en su punto del mástil.
- *  Antes mostraban la última nota pulsada y confundían (Sesión 1, E06). */
-function showGuessReader(){
-  const nameEl = document.getElementById('note-name');
-  const octEl = document.getElementById('note-oct');
-  const known = challenge && (challenge.revealed || challenge.solved || state.hintNote);
-  if (!known){
-    nameEl.innerHTML = '<span class="note-placeholder">?</span>';
-    octEl.textContent = 'nota buscada';
-    clearStaff();
-    return;
-  }
-  const i = noteInfo(challenge.midi);
-  nameEl.textContent = noteName(challenge.midi);
-  nameEl.style.setProperty('--note-color', i.color);
-  nameEl.style.setProperty('--note-glow', i.color);
-  octEl.textContent = 'buscada · octava ' + i.octave;
-  showOnStaff(challenge.midi, i.color);
+/** El récord de la afinación activa (J-11). */
+function currentRecord(){ return state.records[state.tuningId] || 0; }
+function tuningShort(){ const t = TUNINGS.find(t => t.id === state.tuningId); return t ? t.short : ''; }
+
+/** Las pistas (comentario del 21/10): encendida, cada una enseña su respuesta
+ *  dentro del propio botón, grande: «NOTA Sol#3», «CUERDAS 3ª 4ª». Se ven
+ *  también antes de pulsar ▶ y tras un fallo. Apagadas, dicen «Nombre» y «Cuerda». */
+function renderClues(){
+  const chip = (id, on, etiqueta, valor, color) => {
+    const b = document.getElementById(id);
+    b.setAttribute('aria-pressed', String(!!on));
+    b.textContent = '';
+    if (!on || !challenge){ b.classList.remove('clue'); b.textContent = etiqueta[0]; return; }
+    b.classList.add('clue');
+    const k = document.createElement('span'), v = document.createElement('b');
+    k.className = 'clue-k'; k.textContent = etiqueta[1];
+    v.className = 'clue-v'; v.textContent = valor;
+    if (color) v.style.color = color;
+    b.appendChild(k); b.appendChild(v);
+  };
+  const midi = challenge ? challenge.midi : null;
+  const i = challenge ? noteInfo(midi) : null;
+  chip('qb-hint-note', state.hintNote && screen === 'guess', ['Nombre', 'Nota'],
+       challenge ? noteName(midi) + i.octave : '', i && i.color);
+  const cuerdas = challenge ? positionsFor(midi).map(p => p.string.number + 'ª') : [];
+  chip('qb-hint-string', state.hintString && screen === 'guess', ['Cuerda', cuerdas.length > 1 ? 'Cuerdas' : 'Cuerda'],
+       cuerdas.join(' '));
+  document.querySelector('.ch-hints').classList.toggle('has-clue',
+    !!challenge && screen === 'guess' && (state.hintNote || state.hintString));
 }
 
 function renderChallenge(){
@@ -1855,8 +1888,8 @@ function renderChallenge(){
   const btn = document.getElementById('btn-repeat');
   btn.classList.toggle('ready', !guessStarted);
   btn.setAttribute('aria-label', guessStarted ? 'Repetir sonido' : 'Empezar: oír la nota');
+  renderClues();
   if (!challenge){ box.textContent = ''; return; }
-  showGuessReader();
 
   if (!guessStarted){
     box.innerHTML = '<b>Pulsa ▶ <span class="sr-only">(Empezar)</span> para oír la nota</b><br><span class="dim">y búscala en el mástil</span>';
@@ -1871,19 +1904,7 @@ function renderChallenge(){
     return;
   }
 
-  const parts = ['<span class="dim">Escucha y busca la nota</span>'];
-
-  if (state.hintNote){
-    const i = noteInfo(challenge.midi);
-    parts.push('Es <b style="color:'+i.color+'">' + noteName(challenge.midi) +
-               '</b> <span class="dim">(octava ' + i.octave + ')</span>');
-  }
-  if (state.hintString){
-    const pos = positionsFor(challenge.midi);
-    const names = pos.map(p => p.string.number + 'ª');
-    parts.push('<span class="dim">Cuerda' + (names.length>1?'s':'') + ': </span>' + names.join(', '));
-  }
-  box.innerHTML = parts.join('<br>');
+  box.innerHTML = '<span class="dim">Escucha y busca la nota</span>';
 }
 
 function evaluate(cell, midi, rowIdx){
@@ -1896,7 +1917,7 @@ function evaluate(cell, midi, rowIdx){
   if (hit){
     locked = true;
     streak++;
-    if (streak > state.record){ state.record = streak; save(); }
+    if (streak > currentRecord()){ state.records[state.tuningId] = streak; save(); }
     cell.classList.add('correct');
     box.classList.add('flash-ok');
     buzz(18);
@@ -1905,8 +1926,6 @@ function evaluate(cell, midi, rowIdx){
       const c = document.querySelector('.fret-cell[data-row="'+p.rowIdx+'"][data-fret="'+p.fret+'"]');
       if (c && c !== cell) c.classList.add('equal');
     });
-    challenge.solved = true;
-    showGuessReader();
     updateScore();
     clearTimeout(nextTimer);
     nextTimer = setTimeout(newChallenge, NEXT_AFTER_HIT);
@@ -2036,7 +2055,9 @@ function onTuningChanged(){
   renderTunerStrings();
   renderTunerStaff();
   resetReader();
-  if (screen === 'guess') newChallenge();
+  // Cada afinación tiene su récord (J-11): una racha no pasa de una a otra.
+  if (screen === 'guess'){ streak = 0; newChallenge(); }
+  updateScore();
 }
 
 function resetReader(){
@@ -2086,8 +2107,8 @@ function setScreen(next){
     updateScore();
     newChallenge();
   } else {
-    if (challenge) resetReader();   // venimos de Adivinar: fuera la nota buscada
     challenge = null;
+    renderClues();              // fuera de Adivinar, las pistas no enseñan respuesta
   }
   if (!isTuner) requestAnimationFrame(applyZoom);
 }
@@ -2216,7 +2237,7 @@ function toggleNotation(){
   if (challenge) renderChallenge();
   // El lector de nota se refresca desde lastMidi: la clase .active se limpia
   // a los 2,2 s, así que consultar el DOM fallaba pasado ese tiempo.
-  if (lastMidi !== null && screen !== 'guess')
+  if (lastMidi !== null)
     document.getElementById('note-name').textContent = noteName(lastMidi);
   syncUI();
 }
@@ -2815,8 +2836,8 @@ document.getElementById('set-equals').addEventListener('click', () => {
   });
 });
 document.getElementById('set-clear-record').addEventListener('click', () => {
-  if (!confirm('¿Borrar el récord de racha?')) return;
-  state.record = 0; save(); updateScore();
+  if (!confirm('¿Borrar los récords de racha de todas las afinaciones?')) return;
+  state.records = {}; save(); updateScore();
 });
 document.getElementById('audio-wake').addEventListener('click', rebuildAudio);
 document.addEventListener('visibilitychange', onVisibility);
@@ -2824,9 +2845,9 @@ document.addEventListener('visibilitychange', onVisibility);
   document.addEventListener(t, onGesture, { capture:true, passive:true }));
 document.getElementById('set-reset').addEventListener('click', async () => {
   if (!confirm('¿Restablecer todos los ajustes? Tu récord se conserva.')) return;
-  const previousTimbre = state.timbre, record = state.record;
+  const previousTimbre = state.timbre, records = state.records;
   state = sanitize({});
-  state.record = record;          // el récord es tuyo, no un ajuste (Sesión 1, A14)
+  state.records = records;        // los récords son tuyos, no ajustes (Sesión 1, A14)
   state.visibleFrets = defaultVisibleFrets();
   save();
   buildTuner();

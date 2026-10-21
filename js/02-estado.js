@@ -23,7 +23,7 @@ const DEFAULTS = {
   customTuning:[40,45,50,55,59,64],
   visibleFrets:null,      // se calcula en el primer arranque según la pantalla
   maxChallengeFret:12,    // hasta dónde llegan los retos del modo Adivinar
-  record:0,
+  records:{},             // récord de racha de cada afinación: { standard: 7, dropd: 3 } (J-11)
   rotateHintClosed:false, // el aviso para girar, una vez cerrado, no vuelve (V-01)
   tunerMode:'ear'         // afinador: 'ear' de oído · 'mic' por micrófono (F4.3)
 };
@@ -70,7 +70,14 @@ function sanitize(raw){
     s.visibleFrets = null;
   if (!Number.isInteger(s.maxChallengeFret) || s.maxChallengeFret < 3 || s.maxChallengeFret > NUM_FRETS)
     s.maxChallengeFret = DEFAULTS.maxChallengeFret;
-  if (!Number.isInteger(s.record) || s.record < 0) s.record = 0;
+  // J-11 (decisión del 21/10): un récord por afinación. El récord único de
+  // antes pasa a la afinación estándar.
+  const rec = {};
+  if (s.records && typeof s.records === 'object')
+    for (const t of TUNINGS) if (Number.isInteger(s.records[t.id]) && s.records[t.id] > 0) rec[t.id] = s.records[t.id];
+  if (Number.isInteger(raw && raw.record) && raw.record > (rec.standard || 0)) rec.standard = raw.record;
+  s.records = rec;
+  delete s.record;
   return s;
 }
 

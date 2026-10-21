@@ -127,8 +127,8 @@ document.getElementById('set-equals').addEventListener('click', () => {
   });
 });
 document.getElementById('set-clear-record').addEventListener('click', () => {
-  if (!confirm('¿Borrar el récord de racha?')) return;
-  state.record = 0; save(); updateScore();
+  if (!confirm('¿Borrar los récords de racha de todas las afinaciones?')) return;
+  state.records = {}; save(); updateScore();
 });
 document.getElementById('audio-wake').addEventListener('click', rebuildAudio);
 document.addEventListener('visibilitychange', onVisibility);
@@ -136,9 +136,9 @@ document.addEventListener('visibilitychange', onVisibility);
   document.addEventListener(t, onGesture, { capture:true, passive:true }));
 document.getElementById('set-reset').addEventListener('click', async () => {
   if (!confirm('¿Restablecer todos los ajustes? Tu récord se conserva.')) return;
-  const previousTimbre = state.timbre, record = state.record;
+  const previousTimbre = state.timbre, records = state.records;
   state = sanitize({});
-  state.record = record;          // el récord es tuyo, no un ajuste (Sesión 1, A14)
+  state.records = records;        // los récords son tuyos, no ajustes (Sesión 1, A14)
   state.visibleFrets = defaultVisibleFrets();
   save();
   buildTuner();

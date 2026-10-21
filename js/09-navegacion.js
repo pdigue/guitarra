@@ -37,8 +37,8 @@ function setScreen(next){
     updateScore();
     newChallenge();
   } else {
-    if (challenge) resetReader();   // venimos de Adivinar: fuera la nota buscada
     challenge = null;
+    renderClues();              // fuera de Adivinar, las pistas no enseñan respuesta
   }
   if (!isTuner) requestAnimationFrame(applyZoom);
 }
@@ -167,7 +167,7 @@ function toggleNotation(){
   if (challenge) renderChallenge();
   // El lector de nota se refresca desde lastMidi: la clase .active se limpia
   // a los 2,2 s, así que consultar el DOM fallaba pasado ese tiempo.
-  if (lastMidi !== null && screen !== 'guess')
+  if (lastMidi !== null)
     document.getElementById('note-name').textContent = noteName(lastMidi);
   syncUI();
 }

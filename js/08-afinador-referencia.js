@@ -97,7 +97,9 @@ function onTuningChanged(){
   renderTunerStrings();
   renderTunerStaff();
   resetReader();
-  if (screen === 'guess') newChallenge();
+  // Cada afinación tiene su récord (J-11): una racha no pasa de una a otra.
+  if (screen === 'guess'){ streak = 0; newChallenge(); }
+  updateScore();
 }
 
 function resetReader(){

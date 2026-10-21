@@ -230,15 +230,15 @@ function pressFret(cell, midi, rowIdx){
 
   const info = noteInfo(midi);
   playMidi(midi);
-  if (screen !== 'guess'){          // en Adivinar, el lector es de la nota buscada
-    lastMidi = midi;
-    const nameEl = document.getElementById('note-name');
-    nameEl.textContent = noteName(midi);
-    nameEl.style.setProperty('--note-color', info.color);
-    nameEl.style.setProperty('--note-glow', info.color);
-    document.getElementById('note-oct').textContent = 'octava ' + info.octave;
-    showOnStaff(midi, info.color);
-  }
+  // La lectura grande es siempre la nota que tocas, también en Adivinar; las
+  // pistas van aparte, en la tarjeta del reto (comentario del 21/10).
+  lastMidi = midi;
+  const nameEl = document.getElementById('note-name');
+  nameEl.textContent = noteName(midi);
+  nameEl.style.setProperty('--note-color', info.color);
+  nameEl.style.setProperty('--note-glow', info.color);
+  document.getElementById('note-oct').textContent = 'octava ' + info.octave;
+  showOnStaff(midi, info.color);
 
   // Señal secundaria: dónde más suena exactamente esta misma nota.
   if (state.showEquals){
