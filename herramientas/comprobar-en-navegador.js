@@ -187,6 +187,7 @@ async function record(page, midi, file){
   check(10, '«Ver todas las notas»: en Libre se ven, en Adivinar no', libre > 100 && adiv < 10, `celdas con nombre visible: Libre ${libre}, Adivinar ${adiv}`);
   await page.screenshot({ path: path.join(OUT, 'escritorio-adivinar.jpg'), quality: 60, type: 'jpeg' });
   await page.click('#btn-repeat');            // desde la 0.3.3 el juego empieza con ▶
+  await page.evaluate(() => { state.onMiss = 'reveal'; });   // la comprobación 9 es la del modo «Ver respuesta» (desde la 0.5.3 se reintenta por defecto)
 
   // 9. Fallar en Adivinar
   await page.evaluate(() => { window.__plays = []; const o = playMidi; playMidi = (m, d) => { __plays.push(m); return o(m, d); }; });

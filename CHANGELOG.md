@@ -6,9 +6,13 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.4.2** | 21/10/2026 | F4.5 · idioma español o inglés | Rama `auto/F4.5-idioma` |
-| 0.4.1 | 21/10/2026 | F4.4 · pistas grandes y récord por afinación | Rama `auto/F4.4-pistas-record` |
-| 0.4.0 | 21/10/2026 | F4.1 a F4.3 · afinador por micrófono | Rama `auto/F4.1-modulos` (PR #12) |
+| **0.5.3** | 21/10/2026 | F5.5 · reintentar por defecto y auditoría AT-09 | Rama `auto/F5.5-ajustes-visuales` |
+| 0.5.2 | 21/10/2026 | F5.5 · ♯ o ♭ por nota y ajustes visuales | Rama `auto/F5.5-ajustes-visuales` |
+| 0.5.1 | 21/10/2026 | F5.5 · reintentar en Adivinar | Rama `auto/F5.1-notas` |
+| 0.5.0 | 21/10/2026 | F5.1 a F5.4 · escalas | Rama `auto/F5.1-notas` |
+| 0.4.2 | 21/10/2026 | F4.5 · idioma español o inglés | `main`, fusionada el 21/10 (PR #12) |
+| 0.4.1 | 21/10/2026 | F4.4 · pistas grandes y récord por afinación | `main`, fusionada el 21/10 (PR #12) |
+| 0.4.0 | 21/10/2026 | F4.1 a F4.3 · afinador por micrófono | `main`, fusionada el 21/10 (PR #12) |
 | 0.3.3 | 20/10/2026 | F3.3 · correcciones de la Sesión 1 | `main`, fusionada el 20/10 (PR #11); etiqueta `v0.3.3` |
 | 0.3.2 | 20/10/2026 | F3 · tu comentario sobre el zoom | `main`, fusionada el 20/10 (PR #10) |
 | 0.3.1 | 20/10/2026 | F3.4 | `main`, fusionada el 20/10 (PR #9) |
@@ -31,6 +35,61 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.5.3] — 21/10/2026 · Reintentar por defecto y auditoría AT-09
+
+### Cambiado
+- **J-13** · En Adivinar, al fallar se sigue intentando **por defecto** (tu decisión del 21/10): la respuesta solo se ve si pulsas «Ver la respuesta». «Ver respuesta» sigue en Ajustes › Adivinar › *Al fallar* para quien la prefiera.
+
+### Corregido (auditoría AT-09)
+- **E-01, N-06** · En Escalas, el lector grande y el lector de pantalla escriben la nota como la escala: en Fa mayor, Si♭ y no La♯.
+- **P-03** · Al salir de Escalas, el pentagrama deja de enseñar la escala y vuelve a tu última nota.
+- **E-05** · Al cambiar de afinación en Práctica, el progreso empieza de nuevo: cada casilla suena ya a otra nota.
+- **E-05, J-13** · Dos fallos seguidos ya no dejan una casilla roja para siempre.
+- **C-02** · «Restablecer» devuelve también Escalas y los botones ♯/♭ a lo de fábrica.
+- **E-05** · El aviso de Práctica cambia de nombre si pasas de Do Re Mi a C D E.
+- **A-01, N-06** · El pentagrama del Afinador respeta tu elección de ♯ o ♭.
+- **G-05** · Pulsar un botón ♯/♭ ya no hace perder el foco del teclado.
+- **J-13** · Con el reto en pausa (al volver a la app), «Ver la respuesta» espera a ▶.
+
+### Verificado
+- Banco: 68 de 68, con dos pruebas nuevas para lo de AT-09.
+
+---
+
+## [0.5.2] — 21/10/2026 · ♯ o ♭ por nota y ajustes visuales
+
+### Añadido
+- **N-06** · Ajustes › Notación › *Notas alteradas*: cada tecla negra se escribe con ♯ o con ♭, como prefieras, igual en toda la app (mástil, lectura, pentagrama, afinador). Dentro de una escala manda la escala: en Sol mayor, Fa♯ aunque prefieras Sol♭. Los nombres usan ya los signos ♯ y ♭.
+
+### Corregido
+- **P-01** · La lectura grande tiene alto fijo: el mástil ya no se mueve unos píxeles según la nota.
+- **P-01** · El pentagrama de una nota es más corto y se dibuja más grande: el doble en horizontal.
+- **G-01** · El título, más nítido; en horizontal, donde no hay cabecera, va arriba del panel.
+
+### Verificado
+- Banco: 66 de 66. Disposición en español y en inglés, accesibilidad, afinador, las 15 comprobaciones de F1.1 y el archivo autónomo, bien.
+
+---
+
+## [0.5.1] — 21/10/2026 · Al fallar, seguir intentando
+
+### Añadido
+- **J-13** · Ajustes › Adivinar › *Al fallar*: Ver respuesta (como siempre) o Reintentar. Reintentando, el reto sigue, el fallo se marca un momento y rompe la racha; «Ver la respuesta» te la enseña cuando quieras; acertar tras fallar pasa al siguiente sin sumar a la racha.
+
+---
+
+## [0.5.0] — 21/10/2026 · Escalas (F5)
+
+### Añadido
+- **E-01 · E-02** · *Escalas*, con el catálogo que elegiste: mayor, menor natural, pentatónica mayor y pentatónica menor, en las 12 tónicas. Cada escala se escribe como en un libro de solfeo: en Fa mayor sale **Si♭**, no La#; cada mayor y menor usa las siete letras una vez.
+- **E-03 · E-04 · E-06 · P-03** · *Mostrar:* el mástil enseña solo las notas de la escala, con su nombre escrito y la tónica con anillo. Debajo, las notas con sus intervalos («Do T Re T Mi ST Fa…») y el paso a paso: ◀ ▶ recorre la escala desde la tónica más grave, cada paso suena y se resalta («Paso 3 de 8 · Mi, un tono sobre Re»). El pentagrama escribe la escala con sus alteraciones.
+- **E-05** · *Práctica:* tocas notas y la app te dice si están en la escala y cuántas distintas llevas («3 de 7»). Una ajena se marca en rojo y se enseñan un momento las buenas. «Otra vez» empieza de nuevo.
+
+### Verificado
+- Banco: 63 de 63, con `tests/escalas.test.js` (las 48 escalas frente al círculo de quintas, siete letras, intervalos) y 3 pruebas de la pantalla. `comprobar-disposicion.js` con 3 pantallas nuevas de Escalas, en español y en inglés; accesibilidad, afinador, las 15 comprobaciones de F1.1 y el archivo autónomo, bien.
 
 ---
 

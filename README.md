@@ -29,7 +29,7 @@ simulado y comprueba los requisitos que se pueden verificar sin pantalla.
 guitarra/
 ├── index.html            la estructura de la app; carga css/ y js/
 ├── css/                  el estilo
-├── js/                   la lógica, un archivo por tema (01-teoria … 12-arranque)
+├── js/                   la lógica, un archivo por tema (00-idioma … 13-escalas y 99-arranque)
 ├── CHANGELOG.md          qué cambió en cada versión
 ├── CREDITOS.md           origen y licencia de lo que no es nuestro
 ├── CLAUDE.md             reglas para los agentes que trabajan en el proyecto

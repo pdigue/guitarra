@@ -15,6 +15,7 @@ function setScreen(next){
 
   const isTuner = next === 'tuner';
   const isGuess = next === 'guess';
+  const isScales = next === 'scales';
 
   document.getElementById('board-area').hidden = isTuner;
   document.getElementById('tuner').hidden = !isTuner;
@@ -23,6 +24,8 @@ function setScreen(next){
   // Afinador. Las pistas van dentro del reto, así que solo salen al adivinar.
   document.getElementById('panel').hidden = isTuner;
   document.getElementById('challenge').hidden = !isGuess;
+  document.getElementById('scales-card').hidden = !isScales;
+  document.getElementById('scale-nav').hidden = !isScales;
   updateRotateHint();
 
   clearMarks(['active','equal','correct','wrong','reveal']);
@@ -40,6 +43,8 @@ function setScreen(next){
     challenge = null;
     renderClues();              // fuera de Adivinar, las pistas no enseñan respuesta
   }
+  if (isScales){ resetScalePractice(); sc.paso = 0; renderScales(); }
+  else leaveScales();
   if (!isTuner) requestAnimationFrame(applyZoom);
 }
 
@@ -58,7 +63,7 @@ function syncUI(){
   // Ajustes. Los selectores segmentados anuncian su opción activa también a
   // los lectores de pantalla (aria-pressed), no solo con el color.
   const segs = { 'set-notation': state.notation, 'set-timbre': state.timbre,
-                 'set-fretnums': state.fretNums, 'set-lang': state.lang };
+                 'set-fretnums': state.fretNums, 'set-lang': state.lang, 'set-onmiss': state.onMiss };
   for (const id in segs){
     document.querySelectorAll('#'+id+' button').forEach(b => {
       const on = b.dataset.v === segs[id];
@@ -66,6 +71,10 @@ function syncUI(){
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
   }
+  document.querySelectorAll('#set-accidentals [data-pc]').forEach(b => {
+    const on = (state.accidentals[b.dataset.pc] || 'sharp') === b.dataset.v;
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
   const switches = {
     'set-staff': state.showStaff,
     'set-showall': state.showAllNotes,
@@ -162,13 +171,21 @@ function updateRotateHint(){
 function toggleNotation(){
   state.notation = state.notation === 'latin' ? 'anglo' : 'latin';
   save();
+  refreshNoteText();
+}
+
+/** Repinta todos los nombres de nota (nomenclatura o ♯/♭ cambiados). */
+function refreshNoteText(){
   refreshNoteNames();
+  if (typeof buildAccidentals === 'function' && document.getElementById('set-accidentals').children.length) buildAccidentals();
   renderTunerStrings();
+  renderTunerStaff();
   if (challenge) renderChallenge();
+  buildScaleSelects(); renderScales();     // los nombres escritos siguen la nomenclatura
   // El lector de nota se refresca desde lastMidi: la clase .active se limpia
   // a los 2,2 s, así que consultar el DOM fallaba pasado ese tiempo.
-  if (lastMidi !== null)
-    document.getElementById('note-name').textContent = noteName(lastMidi);
+  refrescarLector();
+  if (lastMidi !== null && screen !== 'scales') showOnStaff(lastMidi, noteInfo(lastMidi).color);
   syncUI();
 }
 

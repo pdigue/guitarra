@@ -1,11 +1,11 @@
 "use strict";
 
-// 12-arranque.js · Arranque: conecta los eventos y pone la app en marcha. Va el último porque usa todo lo anterior.
+// 99-arranque.js · Arranque: conecta los eventos y pone la app en marcha. Va el último porque usa todo lo anterior.
 // Se carga como <script> clásico, en el orden de index.html: lo declarado aquí
 // (const, let, function) lo ven los archivos que vienen después.
 
 /* ============================================================
-   12. ARRANQUE Y EVENTOS
+   99. ARRANQUE Y EVENTOS
    ============================================================ */
 
 document.getElementById('gate-btn').addEventListener('click', async () => {
@@ -127,11 +127,43 @@ function refreshLanguage(antes){
   updateAudioStatus();
   updateScore();
   renderChallenge();
+  buildScaleSelects(); renderScales();
   if (lastMidi === null) document.getElementById('note-name').innerHTML = '<span class="note-placeholder">' + t('reader.play') + '</span>';
-  else document.getElementById('note-oct').textContent = t('octave', { n: noteInfo(lastMidi).octave });
+  else refrescarLector();
   syncUI();
   applyZoom();
 }
+// ♯ o ♭ para cada tecla negra (N-06): los botones se crean con sus nombres.
+function buildAccidentals(){
+  const box = document.getElementById('set-accidentals');
+  const nombre = (pc, v) => nombreEscrito(escribir(pc, PC_LETRA.indexOf(v === 'sharp' ? pc - 1 : pc + 1)));
+  // Si ya existen, solo cambian sus nombres (nomenclatura o idioma): rehacerlos
+  // borraba el botón que acababas de pulsar y el teclado perdía el foco (AT-09 #8).
+  if (box.children.length){
+    box.querySelectorAll('button').forEach(b => { b.textContent = nombre(+b.dataset.pc, b.dataset.v); });
+    syncUI();
+    return;
+  }
+  for (const pc of NEGRAS){
+    const seg = document.createElement('div'); seg.className = 'seg';
+    for (const v of ['sharp', 'flat']){
+      const b = document.createElement('button');
+      b.dataset.pc = String(pc); b.dataset.v = v;
+      b.textContent = nombre(pc, v);
+      b.addEventListener('click', () => {
+        state.accidentals[pc] = v; save();
+        refreshNoteText();
+      });
+      seg.appendChild(b);
+    }
+    box.appendChild(seg);
+  }
+  syncUI();
+}
+document.querySelectorAll('#set-onmiss button').forEach(b => {
+  b.addEventListener('click', () => { state.onMiss = b.dataset.v; save(); syncUI(); });
+});
+document.getElementById('qb-giveup').addEventListener('click', () => revealAnswer(0));
 document.querySelectorAll('#set-lang button').forEach(b => {
   b.addEventListener('click', () => setLang(b.dataset.v));
 });
@@ -182,6 +214,10 @@ document.getElementById('set-reset').addEventListener('click', async () => {
   applyZoom();
   updateRotateHint();          // «Restablecer» recupera el aviso para girar
   setTunerMode(state.tunerMode);   // el afinador vuelve a «De oído»
+  // Escalas, ♯/♭ y nomenclatura también vuelven a lo de fábrica: sin esto, los
+  // selectores y los botones seguían diciendo lo de antes (AT-09 #1).
+  resetScalePractice(); sc.paso = 0;
+  refreshNoteText();
   hideSettings();
   // El reto anterior puede referirse a una nota que ya no existe en la
   // afinación restablecida, y dejaría al usuario fallando indefinidamente.
@@ -227,6 +263,8 @@ buildTuner();
 buildBoard();
 bindBoardInput();
 bindMicTuner();
+bindScales();
+buildAccidentals();
 bindBoardKeys();
 clearStaff();
 syncUI();

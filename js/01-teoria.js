@@ -6,7 +6,7 @@
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.4.2';
+const APP_VERSION = '0.5.3';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -75,11 +75,97 @@ function noteInfo(midi){
   };
 }
 /** Nombre en la nomenclatura activa. */
+/** Nombre de una nota del mástil: «Fa♯» o «Sol♭» según lo elegido para esa
+ *  tecla negra en Ajustes (comentario del 21/10); siempre igual para la misma. */
 function noteName(midi){
-  const i = noteInfo(midi);
-  return state.notation === 'latin' ? i.latin : i.anglo;
+  return nombreEscrito(escrituraPreferida(midi));
 }
 /** Nombre científico (C4, F#3...), el que usan los nombres de archivo de las muestras. */
 function sciName(midi){
   return ANGLO[((midi%12)+12)%12] + (Math.floor(midi/12)-1);
+}
+
+/* ============================================================
+   1b. NOTAS ESCRITAS Y ESCALAS (F5.1 y F5.2)
+   ============================================================ */
+
+/* Hasta aquí una nota era un sonido: el MIDI 70 se llama siempre «La#». Para
+   escribir escalas no basta. Si♭ y La♯ suenan igual, pero en Fa mayor la
+   cuarta nota es Si♭: cada escala mayor o menor usa las siete letras, una vez
+   cada una (Fa Sol La Si♭ Do Re Mi). Con La♯ habría dos «La» y ningún «Si».
+   Por eso una nota escrita es una LETRA (Do…Si) más una ALTERACIÓN (♭, ♯…),
+   y la letra la decide la escala, no el sonido. */
+
+const LETRAS_ANGLO = ['C','D','E','F','G','A','B'];
+const LETRAS_LATIN = ['Do','Re','Mi','Fa','Sol','La','Si'];
+const PC_LETRA = [0, 2, 4, 5, 7, 9, 11];          // semitonos de Do a cada letra
+const ALTERACION = { '-2':'𝄫', '-1':'♭', '0':'', '1':'♯', '2':'𝄪' };
+
+/** Clase de altura (0 = Do … 11 = Si) de una nota escrita { letra, alt }. */
+function pcEscrita(n){ return ((PC_LETRA[n.letra] + n.alt) % 12 + 12) % 12; }
+
+/** La nota escrita con esa letra que suena como la clase de altura pc. */
+function escribir(pc, letra){
+  let alt = ((pc - PC_LETRA[letra]) % 12 + 12) % 12;
+  if (alt > 6) alt -= 12;                          // −1 es ♭, no «+11»
+  return { letra, alt };
+}
+
+/** «Si♭» o «B♭», según la nomenclatura elegida. */
+function nombreEscrito(n){
+  return (state.notation === 'latin' ? LETRAS_LATIN : LETRAS_ANGLO)[n.letra] + ALTERACION[n.alt];
+}
+
+/* Las cinco teclas negras: Do♯/Re♭ (1), Re♯/Mi♭ (3), Fa♯/Sol♭ (6), Sol♯/La♭ (8)
+   y La♯/Si♭ (10). Fuera de las escalas, cada una se escribe siempre igual, con
+   ♯ o con ♭ según Ajustes; dentro de una escala manda la escala (Si♭ en Fa mayor). */
+const NEGRAS = [1, 3, 6, 8, 10];
+/** La nota escrita que la app usa para un sonido, según tus preferencias. */
+function escrituraPreferida(midi){
+  const pc = ((midi % 12) + 12) % 12;
+  if (!NEGRAS.includes(pc)) return escribir(pc, PC_LETRA.indexOf(pc));
+  const bemol = typeof state !== 'undefined' && state.accidentals && state.accidentals[pc] === 'flat';
+  return escribir(pc, bemol ? PC_LETRA.indexOf(pc + 1) : PC_LETRA.indexOf(pc - 1));
+}
+
+/** Octava de una nota escrita que suena en `midi`: Si♯3 es el MIDI 60, como Do4. */
+function octavaEscrita(n, midi){ return Math.floor((midi - n.alt - PC_LETRA[n.letra]) / 12) - 1; }
+
+/* Catálogo de escalas (E-01, decidido el 21/10). Cada una es un patrón de
+   semitonos desde la tónica y el salto de letra de cada grado: la mayor usa
+   las siete letras seguidas; las pentatónicas se saltan dos (la mayor no
+   tiene 4º ni 7º grado). */
+const ESCALAS = [
+  { id:'mayor',      modo:'mayor', semitonos:[0,2,4,5,7,9,11], letras:[0,1,2,3,4,5,6] },
+  { id:'menor',      modo:'menor', semitonos:[0,2,3,5,7,8,10], letras:[0,1,2,3,4,5,6] },
+  { id:'pentaMayor', modo:'mayor', semitonos:[0,2,4,7,9],      letras:[0,1,2,4,5] },
+  { id:'pentaMenor', modo:'menor', semitonos:[0,3,5,7,10],     letras:[0,2,3,4,6] }
+];
+
+/* Cómo se escribe cada tónica: la tonalidad con menos alteraciones (Re♭
+   mayor, 5 bemoles, y no Do♯ mayor, 7 sostenidos). En Fa♯ mayor y Re♯ menor
+   (6 sostenidos) empatan con Sol♭ mayor y Mi♭ menor (6 bemoles): se eligen
+   las de sostenidos, que son relativas entre sí. */
+const TONICAS = {
+  mayor: [[0,0],[1,-1],[1,0],[2,-1],[2,0],[3,0],[3,1],[4,0],[5,-1],[5,0],[6,-1],[6,0]],
+  menor: [[0,0],[0,1],[1,0],[1,1],[2,0],[3,0],[3,1],[4,0],[4,1],[5,0],[6,-1],[6,0]]
+};
+/** La tónica escrita de una escala que empieza en la clase de altura pc. */
+function tonicaEscrita(pc, modo){ const [letra, alt] = TONICAS[modo][pc]; return { letra, alt }; }
+
+/** Las notas escritas de una escala: tónica (clase de altura) y tipo. */
+function escribirEscala(pc, escala){
+  const tonica = tonicaEscrita(pc, escala.modo);
+  return escala.semitonos.map((s, i) => escribir((pc + s) % 12, (tonica.letra + escala.letras[i]) % 7));
+}
+
+/** Distancia de cada nota a la anterior: «T» (tono), «ST» (semitono) o, en
+ *  las pentatónicas, «T½» (tono y medio). La última vuelve a la tónica. */
+function intervalosEscala(escala){
+  const s = escala.semitonos, out = [];
+  for (let i = 0; i < s.length; i++){
+    const d = ((i + 1 < s.length ? s[i + 1] : 12) - s[i]);
+    out.push(d === 1 ? 'ST' : d === 2 ? 'T' : d === 3 ? 'T½' : d + 'st');
+  }
+  return out;
 }

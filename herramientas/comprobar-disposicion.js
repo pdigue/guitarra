@@ -45,6 +45,10 @@ const PANTALLAS = [
   // Pantallas bajas (AR-05 #1, AT-04 #1): la navegación no puede salirse.
   ['iphone-se-safari-vertical-adivinar', 375, 553, true,  'guess', true ],
   ['android-pequeno-vertical-libre',     360, 560, true,  'free',  true ],
+  // Escalas (F5): tarjeta con submodo, tónica y tipo, y el paso a paso bajo el mástil.
+  ['iphone-safari-vertical-escalas',    390, 664, true,  'scales', true ],
+  ['iphone-se-safari-vertical-escalas', 375, 553, true,  'scales', true ],
+  ['iphone-safari-horizontal-escalas',  750, 342, true,  'scales', false],
   // Ajustes abierto: sus controles también miden 40 px (AR-05 #3).
   ['iphone-safari-vertical-ajustes',     390, 664, true,  'free',  true,  true],
   ['iphone-safari-horizontal-ajustes',   750, 342, true,  'free',  false, true],
@@ -89,7 +93,7 @@ const PANTALLAS = [
                   Math.round(b.getBoundingClientRect().width) + '×' + Math.round(b.getBoundingClientRect().height));
       // Lo que se sale de la pantalla. El panel en horizontal puede desplazarse
       // por dentro (interfaz.md §7), así que lo que cuenta es el propio panel.
-      out.fuera = [...document.querySelectorAll('.header, .quickbar, .challenge, .display, .zoombar, .rotate-hint, .board-area, .tabbar, .tuner, .panel')]
+      out.fuera = [...document.querySelectorAll('.header, .quickbar, .challenge, .scales-card, .sc-nav, .display, .zoombar, .rotate-hint, .board-area, .tabbar, .tuner, .panel')]
         .filter(vis).filter(e => {
           if (e.closest('.panel') && getComputedStyle(document.getElementById('panel')).display !== 'contents') return false;
           const r = e.getBoundingClientRect();
