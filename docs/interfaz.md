@@ -1,7 +1,7 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 1.5 · **Fecha:** 20 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0). Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
-**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.3.3` · `requisitos.md` v1.15 · `roadmap.md` v3.13
+**Versión:** 1.6 · **Fecha:** 20 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0). Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
+**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.4.0` · `requisitos.md` v1.16 · `roadmap.md` v3.14
 **Revisión:** auditoría de requisitos AR-04 (`auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
 
@@ -98,6 +98,15 @@ Selector arriba: **De oído | Micrófono**. Debajo, en los dos modos, la **afina
 - **Micrófono** (F4, A-02…A-05): selector de cuerda **Auto | 6 … 1** (Auto detecta la cuerda según la afinación activa, A-04; elegir una manda sobre la detección, A-05); un indicador de aguja de −50 a +50 cents con la franja de afinado de ±5 en verde (A-03); la nota grande y los cents en número; la orden en texto y flecha, **«▲ Sube un poco» / «▼ Baja un poco» / «✓ Afinada»**; un aviso fijo, «El sonido se analiza solo en tu dispositivo» (G-11), y un botón para detener el micrófono.
 - **Flujo del permiso:** la primera vez, una frase explica para qué se usa el micrófono **antes** de que el navegador lo pida. Si lo deniegas, se dice cómo activarlo en ese navegador. El micrófono se apaga al salir del Afinador.
 - **Si no hay micrófono** (archivo abierto con doble clic, navegador sin permiso o sin la capacidad): el modo Micrófono se muestra desactivado con el motivo, y De oído sigue funcionando (PL-04).
+- **Así quedó en la 0.4.0** (diferencias con lo de arriba, revisadas en AR-08):
+  - **Órdenes:** cinco, no tres. «▲ Sube» o «▼ Baja» a más de 50 cents; «▲ Sube un poco» o «▼ Baja un poco» entre 6 y 50; «✓ Afinada» a ±5. Una vez afinada, hace falta pasar de ±7 para dejar de estarlo, para que el aviso no parpadee.
+  - **Sin micrófono posible**, el selector deja entrar en «Micrófono»; lo que se desactiva es el botón «Activar el micrófono», con el motivo en rojo encima.
+  - **La explicación** sale siempre que el micrófono está apagado, no solo la primera vez: el micrófono nunca se enciende sin que lo pidas, ni al volver a la app.
+  - Se apaga también **al ocultar la app** o bloquear el móvil, y si el sistema lo corta lo dice.
+  - El modo elegido (De oído o Micrófono) **se guarda**; elegir «Micrófono» no lo enciende.
+  - El aviso de privacidad, con la aguja, dice: «Afinada en la franja verde (±5 cents). El sonido se analiza solo en tu dispositivo.»
+  - El detalle bajo la nota añade la cuerda: «−11 cents · 5ª cuerda».
+  - **En horizontal**, «Afinación» y «Cuerda» van en filas a todo el ancho encima; debajo, la aguja a la izquierda y la lectura, la orden y «Detener» a la derecha.
 
 ### Escalas — bocetos A5 y A6 (F5)
 
@@ -220,7 +229,8 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.5** | 20/10/2026 | Sesión 1 (0.3.3): Adivinar empieza con ▶ y su lectura es la nota buscada; tiempos de la corrección; en Ajustes, estado del sonido, «Reactivar sonido» y «Borrar el récord de racha». |
+| **1.6** | 21/10/2026 | §6: cómo quedó el afinador por micrófono en la 0.4.0 (órdenes, sin micrófono, permiso, horizontal), tras AR-08. |
+| 1.5 | 20/10/2026 | Sesión 1 (0.3.3): Adivinar empieza con ▶ y su lectura es la nota buscada; tiempos de la corrección; en Ajustes, estado del sonido, «Reactivar sonido» y «Borrar el récord de racha». |
 | 1.4 | 20/10/2026 | §9: «+» enseña más trastes y «−» menos; con el dedo se pueden pedir trastes de hasta 28 px (tu comentario del 20/10). |
 | 1.3 | 20/10/2026 | §10: paleta decidida en F3.4 (7 naturales bien distintas y sostenidos derivados) y puntos secundarios con contorno. |
 | 1.2 | 20/10/2026 | Tras AR-05 y AT-04: en vertical, la navegación nunca se sale y los 40 px por cuerda se garantizan desde 660 px de alto (§7); en horizontal, de 10 a 12 trastes según el ancho; en el panel de Adivinar, Do Re Mi y 𝄞 arriba, como en Libre; el zoom guardado se conserva. El gesto de bajar para cerrar Ajustes pasa a F3.4. |

@@ -46,19 +46,27 @@ function micUnavailable(){
 }
 
 /** A-04 y A-05: la cuerda de referencia para una frecuencia. Con «Auto», la de
- *  nota más cercana en la afinación activa; si eliges una, siempre esa. */
+ *  nota más cercana en la afinación activa; si eliges una, siempre esa.
+ *  Devuelve { cuerda, hz }: hz puede ser la mitad de la detectada (abajo). */
 function micTarget(hz){
   const cuerdas = displayStrings();
   if (mic.string !== 'auto'){
     const s = cuerdas.find(c => c.number === +mic.string);
-    if (s) return s;
+    if (s) return { cuerda: s, hz };
   }
-  let mejor = cuerdas[0], dist = Infinity;
-  for (const c of cuerdas){
-    const d = Math.abs(centsEntre(hz, hzDeMidi(c.openMidi)));
-    if (d < dist){ dist = d; mejor = c; }
-  }
-  return mejor;
+  const cercana = f => {
+    let mejor = cuerdas[0], dist = Infinity;
+    for (const c of cuerdas){
+      const d = Math.abs(centsEntre(f, hzDeMidi(c.openMidi)));
+      if (d < dist){ dist = d; mejor = c; }
+    }
+    return { cuerda: mejor, hz: f, dist };
+  };
+  // Con un micrófono pequeño, la fundamental de una cuerda grave puede casi no
+  // oírse y el detector da su octava. Si la mitad cae justo en una cuerda y lo
+  // detectado no, era eso (AT-07 #2).
+  const tal = cercana(hz), mitad = cercana(hz / 2);
+  return (tal.dist > 100 && mitad.dist < 50) ? mitad : tal;
 }
 
 /** Cada lectura del detector. Se ignoran las sueltas (un golpe, un salto de
@@ -81,8 +89,8 @@ function onMicReading(r){
   showMicReading(ordenadas[ordenadas.length >> 1]);
 }
 
-function showMicReading(hz){
-  const s = micTarget(hz);
+function showMicReading(hzDetectada){
+  const { cuerda: s, hz } = micTarget(hzDetectada);
   let c = centsEntre(hz, hzDeMidi(s.openMidi));
   // Con una cuerda elegida a mano, un salto de octava del detector (oír el
   // segundo armónico) no debe decir «baja 12 semitonos»: una cuerda no se
@@ -94,11 +102,15 @@ function showMicReading(hz){
   const redondo = Math.round(c);
   document.getElementById('mic-detail').textContent =
     (redondo > 0 ? '+' : redondo < 0 ? '−' : '') + Math.abs(redondo) + ' cents · ' + s.number + 'ª cuerda';
-  let orden, clase;
-  if (Math.abs(c) <= MIC.AFINADA){ orden = '✓ Afinada'; clase = 'ok'; }
-  else if (c < 0){ orden = c < -50 ? '▲ Sube' : '▲ Sube un poco'; clase = 'ko'; }
-  else { orden = c > 50 ? '▼ Baja' : '▼ Baja un poco'; clase = 'ko'; }
-  setMicOrder(orden, clase);
+  // Se decide con el número que se ve (AT-07 #5). Ya afinada, hace falta
+  // pasar de ±7 para dejar de estarlo: así el aviso no parpadea en el borde
+  // y el lector de pantalla no lo repite sin parar (AT-07 #4).
+  const limite = mic.orden === 'afinada' ? MIC.AFINADA + 2 : MIC.AFINADA;
+  let orden, texto;
+  if (Math.abs(redondo) <= limite){ orden = 'afinada'; texto = ['✓', 'Afinada']; }
+  else if (redondo < 0){ orden = redondo < -50 ? 'sube' : 'sube-poco'; texto = ['▲', redondo < -50 ? 'Sube' : 'Sube un poco']; }
+  else { orden = redondo > 50 ? 'baja' : 'baja-poco'; texto = ['▼', redondo > 50 ? 'Baja' : 'Baja un poco']; }
+  setMicOrder(orden, texto);
   setNeedle(c, true);
 }
 
@@ -106,16 +118,25 @@ function showMicIdle(){
   mic.lecturas = [];
   document.getElementById('mic-note').textContent = '—';
   document.getElementById('mic-detail').textContent = 'Toca una cuerda';
-  setMicOrder('', '');
+  setMicOrder('', null);
   setNeedle(0, false);
 }
 
-function setMicOrder(texto, clase){
+/** La orden: el símbolo va aparte y oculto al lector de pantalla, que leería
+ *  «triángulo negro» (AT-07 #4). Solo se toca si cambia. */
+function setMicOrder(orden, texto){
+  if (mic.orden === orden) return;
+  mic.orden = orden;
   const el = document.getElementById('mic-order');
-  if (mic.orden === texto) return;            // el lector de pantalla solo oye los cambios
-  mic.orden = texto;
-  el.textContent = texto;
-  el.className = 'mic-order' + (clase ? ' ' + clase : '');
+  el.textContent = '';
+  if (texto){
+    const simbolo = document.createElement('span'), palabras = document.createElement('span');
+    simbolo.setAttribute('aria-hidden', 'true');
+    simbolo.textContent = texto[0];
+    palabras.textContent = ' ' + texto[1];
+    el.appendChild(simbolo); el.appendChild(palabras);
+  }
+  el.className = 'mic-order' + (orden ? (orden === 'afinada' ? ' ok' : ' ko') : '');
 }
 
 /** Aguja: −50 cents a la izquierda, +50 a la derecha; más allá se queda en el tope. */
@@ -180,18 +201,27 @@ async function startMic(){
   }
   mic.arrancando = false;
   if (screen !== 'tuner' || state.tunerMode !== 'mic' || document.hidden){ stopMic(); return; }   // te fuiste mientras pedía permiso
+  wakeAudio();                              // iOS puede pausar el audio al cambiar la sesión
+  // Si el sistema corta el micrófono (una llamada, otra app), se dice.
+  mic.stream.getTracks().forEach(t => { t.onended = () => { stopMic(); showMicPanel('El sistema ha cortado el micrófono. Vuelve a activarlo.'); }; });
   try {
     mic.src = audioCtx.createMediaStreamSource(mic.stream);
     mic.analyser = audioCtx.createAnalyser();
-    mic.analyser.fftSize = 2048;
+    // El trozo debe abarcar dos periodos del Do2 más grave: 2048 valores a 44,1
+    // o 48 kHz; el doble con tarjetas de 96 kHz (AT-07 #1).
+    let tam = 2048;
+    while (tam < 2.2 * audioCtx.sampleRate / TONO.MIN_HZ && tam < 32768) tam *= 2;
+    mic.analyser.fftSize = tam;
     mic.src.connect(mic.analyser);          // solo al analizador: no sale por el altavoz
   } catch(e){ console.error(e); stopMic(); showMicPanel('No se ha podido analizar el sonido del micrófono.'); return; }
   mic.det = crearDetector(onMicReading);
   mic.timer = setInterval(micTick, MIC.PERIODO_MS);
   mic.ultima = 0;
   showMicIdle();
+  const conFoco = document.activeElement && document.activeElement.id === 'mic-start';
   document.getElementById('mic-intro').hidden = true;
   document.getElementById('mic-live').hidden = false;
+  if (conFoco) document.getElementById('mic-stop').focus();   // el foco no se pierde al ocultar el botón
 }
 
 function micTick(){
@@ -203,6 +233,7 @@ function micTick(){
 
 /** Apaga el micrófono del todo (el indicador del navegador desaparece). */
 function stopMic(){
+  const conFoco = document.activeElement && document.activeElement.id === 'mic-stop';
   clearInterval(mic.timer); mic.timer = null;
   if (mic.det){ mic.det.cerrar(); mic.det = null; }
   if (mic.src){ try { mic.src.disconnect(); } catch(e){} mic.src = null; }
@@ -210,6 +241,7 @@ function stopMic(){
   if (mic.stream){ mic.stream.getTracks().forEach(t => t.stop()); mic.stream = null; restoreAudioSession(); }
   mic.lecturas = [];
   showMicPanel('');
+  if (conFoco) document.getElementById('mic-start').focus();
 }
 
 function restoreAudioSession(){

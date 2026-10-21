@@ -138,7 +138,10 @@ function boot(htmlPath, preset, extra){
     localStorage: { getItem: k => store.has(k) ? store.get(k) : null, setItem: (k, v) => store.set(k, String(v)) },
     getComputedStyle: el => ({ getPropertyValue: k => el.style.getPropertyValue(k) }),
     requestAnimationFrame: f => setTimeout(f, 0), cancelAnimationFrame: id => clearTimeout(id),
-    setTimeout, clearTimeout, setInterval, clearInterval, confirm: () => true, atob, btoa,
+    setTimeout, clearTimeout, clearInterval, confirm: () => true, atob, btoa,
+    // Un temporizador repetido (el del micrófono) no debe impedir que el banco
+    // termine si una prueba falla antes de apagarlo.
+    setInterval: (f, ms) => { const h = setInterval(f, ms); h.unref(); return h; },
     console: { log(){}, warn(){}, error: (...a) => errors.push(a.map(String).join(' ')) },
     // Los avisos de la ventana (resize, popstate…) se guardan para poder lanzarlos.
     winListeners: {},

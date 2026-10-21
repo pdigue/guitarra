@@ -236,6 +236,7 @@ function rebuildAudio(){
   const now = Date.now();
   if (now - lastRebuild < 1000) return;       // pulsaciones repetidas: una basta (AT-06 #6)
   lastRebuild = now;
+  if (typeof stopMic === 'function') stopMic();   // el micrófono va atado al audio viejo (AT-07 #6)
   needsRebuild = false; rebuildOnNextGesture = false;
   const old = audioCtx;
   silenceAll();

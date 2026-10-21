@@ -44,7 +44,10 @@ function detectarTono(x, sr, ajustes){
   if (rms < T.MIN_RMS) return null;
 
   const tauMin = Math.max(2, Math.floor(sr / T.MAX_HZ));
-  const tauMax = Math.min(Math.ceil(sr / T.MIN_HZ), Math.floor(n / 2));
+  const tauMax = Math.ceil(sr / T.MIN_HZ);
+  // El trozo debe abarcar dos periodos de la nota más grave; si no, se
+  // equivocaría con los graves en vez de callar (AT-07 #1).
+  if (tauMax > n / 2) return null;
   const w = n - tauMax;                       // muestras que se comparan para cada τ
   const d = new Float64Array(tauMax + 2);
 
@@ -77,7 +80,7 @@ function detectarTono(x, sr, ajustes){
   }
   // 4. Parábola por los tres puntos alrededor del mínimo.
   let fino = tau;
-  if (tau > 1 && tau < d.length - 1){
+  if (tau > 1 && tau < tauMax){                // d(τMax + 1) no se calcula (AT-07 #8)
     const a = d[tau - 1], b = d[tau], c = d[tau + 1];
     const den = a - 2 * b + c;
     if (den > 0) fino = tau + 0.5 * (a - c) / den;
@@ -116,10 +119,15 @@ function crearDetector(alResultado){
   const det = {
     hilo: true,
     ocupado: false,
+    desde: 0,
     analizar(x, sr){
       if (!det.hilo) return enPrincipal.analizar(x, sr);
-      if (det.ocupado) return;                // si va con retraso, se salta un trozo
-      det.ocupado = true;
+      if (det.ocupado){
+        // Si el hilo lleva más de 1 s sin contestar, se da por perdido (AT-07 #9).
+        if (Date.now() - det.desde > 1000){ det.hilo = false; det.ocupado = false; det.cerrar(); return enPrincipal.analizar(x, sr); }
+        return;                               // si va con retraso, se salta un trozo
+      }
+      det.ocupado = true; det.desde = Date.now();
       w.postMessage({ x, sr }, [x.buffer]);   // se pasa el trozo sin copiarlo
     },
     cerrar(){ try { w.terminate(); URL.revokeObjectURL(url); } catch(e){} }

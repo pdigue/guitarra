@@ -1,6 +1,6 @@
 # Trasteando — Modo acelerado con agentes
 
-**Versión:** 1.1 · **Fecha:** 14 de octubre de 2026
+**Versión:** 1.2 · **Fecha:** 21 de octubre de 2026
 **Relacionado con:** `roadmap.md` v3.1 (pista T activa) · `matriz-cumplimiento.md` v1.1 · `requisitos.md` v1.3
 **Gestiona:** chat de Desarrollo
 
@@ -54,7 +54,7 @@ flowchart LR
 | Tipo | Ejemplos | Qué hace el agente antes de parar |
 |---|---|---|
 | **Decisión de producto** | Audio S-07, interfaz C-06, paleta, récord J-11, catálogo de escalas, licencia, tiendas | Prepara una propuesta con su recomendación para que solo tengas que aprobar o corregir |
-| **Prueba física** | Móvil real (F2.5, F3.3, F7.2), guitarra real (F4.3), oído (F2.4) | Agrupa todas las pruebas pendientes en una única sesión con su lista |
+| **Prueba física** | Móvil real (F2.5, F3.3, F7.2), guitarra real (F4.3, comprobación corta de 10 minutos al terminar la etapa), oído (F2.4) | Agrupa todas las pruebas pendientes en una única sesión con su lista |
 | **Bloqueo técnico** | Banco en rojo tras tres intentos, hallazgo crítico tras dos rondas | Deja el diagnóstico y las opciones |
 | **Acción irreversible o con coste** | Publicar, enviar a tiendas, pagar cuotas, fusionar en `main`, borrar historial | Nunca la ejecuta sin tu aprobación explícita |
 | **Cambio de alcance** | Un requisito resulta inviable o contradice a otro | Propone el cambio en requisitos y espera |
@@ -252,7 +252,7 @@ y la lista de pruebas físicas pendientes.
 | **3** | Agente | F1 → F3 con el ciclo, parando solo en decisiones | ⏳ F1 y F2.1 hechas |
 | **4** | Tú | Sesión 1, con el iPhone y el ordenador: lista de F1.1, F2.5 y F3.3 juntas | ⬜ |
 | **5** | Agente | F4 → F6 con el ciclo | ⬜ |
-| **6** | Tú | Sesión 2, con la guitarra: F4.3 y F5.4; revisión de lo pendiente | ⬜ |
+| **6** | Tú | Sesión 2, con la guitarra: F5.4, y F4.3 si su comprobación corta dejó algo pendiente; revisión de lo pendiente | ⬜ |
 | **7** | Tú y el agente | F7: publicar y, si se decide, tiendas | ⬜ |
 
 ---
@@ -273,7 +273,8 @@ y la lista de pruebas físicas pendientes.
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.1** | 14/10/2026 | Modo acelerado activado, con las decisiones tomadas. El banco se ejecuta con `node --test`: con Node 22, `node --test tests/` falla porque intenta abrir la carpeta como un archivo. El `CLAUDE.md` del kit es ahora el del repositorio, con las decisiones vigentes. Estado del plan de arranque. |
+| **1.2** | 21/10/2026 | La comprobación con la guitarra de F4.3 se hace al terminar la etapa (10 minutos, en la web de pruebas o en `localhost`); la Sesión 2 solo la repite si quedó algo pendiente (AR-08). |
+| 1.1 | 14/10/2026 | Modo acelerado activado, con las decisiones tomadas. El banco se ejecuta con `node --test`: con Node 22, `node --test tests/` falla porque intenta abrir la carpeta como un archivo. El `CLAUDE.md` del kit es ahora el del repositorio, con las decisiones vigentes. Estado del plan de arranque. |
 | 1.0 | 14/10/2026 | Primera versión. |
 
 *Documento gestionado por el chat de Desarrollo.*

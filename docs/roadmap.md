@@ -1,7 +1,7 @@
 # Trasteando — Roadmap de ejecución
 
 **Versión:** 3.14 · **Fecha:** 21 de octubre de 2026
-**Válido para:** app `0.4.0` · `requisitos.md` v1.16 · `matriz-cumplimiento` v1.14 · `interfaz.md` v1.5 · `compatibilidad.md` v1.5 · `automatizacion.md` v1.1 · `CHANGELOG.md`
+**Válido para:** app `0.4.0` · `requisitos.md` v1.16 · `matriz-cumplimiento` v1.14 · `interfaz.md` v1.6 · `compatibilidad.md` v1.5 · `automatizacion.md` v1.1 · `CHANGELOG.md`
 **Gestiona:** chat de Desarrollo
 
 > ⚡ **Modo acelerado activo desde el 14/10** (detalle en `automatizacion.md`). El agente ejecuta las etapas por bloques —F1 a F3, luego F4 a F6— y solo para en las decisiones. Las pruebas que necesitan tus manos se agrupan en dos sesiones: **Sesión 1** con el iPhone y el ordenador al cerrar F3, y **Sesión 2** con la guitarra al cerrar F6.
@@ -12,7 +12,7 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** F4 hecha por mi parte: la app en módulos (F4.1), el detector de tono (F4.2) y el afinador por micrófono (F4.3), en la `0.4.0`. **Parada:** tu comprobación de 10 minutos con la guitarra y tu decisión sobre el récord (F4.4). Después, CP-4 y F5 (Escalas).
+📍 **Estás aquí:** F4 hecha por el agente: la app en módulos (F4.1), el detector de tono (F4.2) y el afinador por micrófono (F4.3), en la `0.4.0`. **Parada:** tu comprobación de 10 minutos con la guitarra y tu decisión sobre el récord (F4.4). Después, CP-4 y F5 (Escalas).
 
 | Fase | Objetivo | Versión | Dónde se usa | Etapas | Progreso |
 |------|----------|:---:|---|:---:|---|
@@ -181,7 +181,7 @@ Peso principal en el **auditor de requisitos** como experto en experiencia de us
 ## F4 — Afinador por micrófono · `0.4.x` · 💻
 
 **Objetivo:** cerrar el segundo gran objetivo del producto (O-04).
-**Restricción:** se desarrolla y usa en el ordenador con Live Server. En el móvil llega en F7.
+**Restricción:** el micrófono exige `https` o `localhost`: se prueba en el ordenador (Live Server) o en la web de pruebas, que también funciona en el iPhone. Para todos, llega con la publicación (F7).
 
 | Etapa | Qué se hace | Requisitos | Cómo se valida | Aprenderás | Estado |
 |---|---|---|---|---|:---:|
@@ -384,13 +384,13 @@ flowchart TB
 | Lista de comprobación manual | Recorrer casos concretos marcando cada uno | Sesión 1 (F1.1, F3.3) |
 | Banco de pruebas automático | Escenarios ejecutados por código, con resultado esperado; cada etapa añade los suyos | F1.3, F2.x, F4.1, F4.2 |
 | Medición objetiva | Medir una magnitud con una herramienta y compararla con el criterio: afinación de las muestras, peso del archivo | F2.1, F2.3, F2.4 |
-| Prueba en dispositivo real | Usar la app como usuario, con la guitarra delante | Sesión 1 (F2.5, F3.3) · Sesión 2 (F4.3, F5.4) · F7.2 |
+| Prueba en dispositivo real | Usar la app como usuario, con la guitarra delante | Sesión 1 (F2.5, F3.3) · comprobación corta tras F4.3 · Sesión 2 (F5.4, y F4.3 si la comprobación corta falló) · F7.2 |
 | Prueba de autonomía | Abrir el archivo sin conexión y sin servidor | F2.3, F2.5, F6.1 |
 | Auditoría con herramienta | Lighthouse, verificadores de contraste, simulador de daltonismo | F3.4, F6.3, F7.3 |
 | Contraste con referencia externa | Escalas y afinaciones frente a fuentes fiables | F5.2, F5.3 |
 | Checkpoint de auditoría | Informe de los auditores sobre el estado congelado | CP-1 a CP-6 |
 
-**Las dos sesiones contigo.** *Sesión 1*, al cerrar F3, con el iPhone y el ordenador: la lista de F1.1, el archivo autónomo en cada plataforma (F2.5) y quince minutos de uso real (F3.3). En el iPhone la app se sirve desde el ordenador por WiFi con Live Server, salvo que el archivo autónomo funcione. *Sesión 2*, al cerrar F6, con la guitarra: el afinador por micrófono (F4.3) y la práctica de escalas (F5.4), en el ordenador. **Añadido tras la Sesión 1:** en el iPhone, repetir C07, C08 y D03 (que el sonido no se quede mudo: S-01), A09, A14 y E06 con la 0.3.3 (J-01, J-08, J-10, S-02); afinar de oído (E05: A-01, A-06), y una lista corta para los requisitos de F1.1 que la Sesión 1 no cubría.
+**Las dos sesiones contigo.** *Sesión 1*, al cerrar F3, con el iPhone y el ordenador: la lista de F1.1, el archivo autónomo en cada plataforma (F2.5) y quince minutos de uso real (F3.3). En el iPhone la app se sirve desde el ordenador por WiFi con Live Server, salvo que el archivo autónomo funcione. *Sesión 2*, al cerrar F6, con la guitarra: la práctica de escalas (F5.4) y, si la comprobación corta de F4.3 dejó algo pendiente, el afinador por micrófono. **Añadido tras la Sesión 1:** en el iPhone, repetir C07, C08 y D03 (que el sonido no se quede mudo: S-01), A09, A14 y E06 con la 0.3.3 (J-01, J-08, J-10, S-02); afinar de oído (E05: A-01, A-06), y una lista corta para los requisitos de F1.1 que la Sesión 1 no cubría.
 
 **Despliegue de pruebas** (decisión del 15/10, **activo desde el 19/10**): `pdigue.github.io/guitarra`, servido desde la rama `pruebas` (`main` no se toca), que se actualiza con cada *pull request*. En el iPhone permite probar con `https` lo que el WiFi no deja: instalarla y, desde F4, el micrófono. Usarla sin conexión necesita el Service Worker (G-03), que se queda en F6.2 (decisión del 20/10): en la Sesión 1 el iPhone usa la web con conexión. La publicación oficial sigue siendo F7.1.
 
@@ -402,7 +402,7 @@ flowchart TB
 
 **Añadido a la Sesión 1 tras F3.2:** la app en horizontal en tu iPhone, en Safari y con la app instalada (que cada cuerda se toque cómoda y que nada quede tapado por la muesca); el aviso para girar, cerrarlo y que no vuelva; y el botón «atrás» con el ratón en Windows.
 
-**Dos comprobaciones cortas entre sesiones** (CP-1), para no esperar dos fases a oír un cambio de riesgo: 5 minutos en el iPhone tras F2.2, que sustituye todo el motor de audio, y 10 minutos con la guitarra en `localhost` tras F4.3.
+**Dos comprobaciones cortas entre sesiones** (CP-1), para no esperar dos fases a oír un cambio de riesgo: 5 minutos en el iPhone tras F2.2, que sustituye todo el motor de audio, y 10 minutos con la guitarra tras F4.3, en la web de pruebas (`https`, también en el iPhone) o en `localhost` (`verificaciones/V-09`).
 
 ---
 
@@ -430,7 +430,7 @@ flowchart TB
 | El archivo con el audio dentro pesa demasiado | F2.3 | Tarda en abrir en el móvil | Menos muestras o menor calidad; medir antes de decidir |
 | iPhone no ejecuta el archivo local | F2.5 | Vista previa sin JavaScript | Navegador de una app de terceros, o despliegue de pruebas |
 | El detector de tono no alcanza la precisión | F4.2 | El banco falla tras dos intentos | Entregar F4 sin micrófono: A-01 ya cubre el mínimo |
-| Los módulos rompen el modo archivo | F4.1 | Deja de funcionar con doble clic | Asumido: F6.1 reconstruye el archivo autónomo |
+| Los módulos rompen el modo archivo | F4.1 | Deja de funcionar con doble clic | **Resuelto en F4.1:** scripts clásicos, que abren con doble clic, y `ensamblar.js` para el archivo autónomo |
 | La especificación de interfaz se pospone | F3.1 | Se empieza F5 sin ella | Bloqueante declarado |
 | El alcance de Escalas se dispara | F5 | Aparecen digitaciones o arpegios | E-02b y E-05b fuera por escrito |
 | App Store rechaza la app | F7.4 | Rechazo por funcionalidad mínima | Empezar por Google Play y Microsoft Store |
@@ -453,7 +453,7 @@ flowchart TB
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **3.14** | 21/10/2026 | F4.1, F4.2 y F4.3 hechas con la `0.4.0`: la app en módulos, el detector de tono y el afinador por micrófono. La comprobación de F4.3 se puede hacer en la web de pruebas, también en el iPhone. Etiquetas `v0.2.3` y `v0.3.3` creadas. |
+| **3.14** | 21/10/2026 | F4.1, F4.2 y F4.3 hechas con la `0.4.0`: la app en módulos, el detector de tono y el afinador por micrófono. La comprobación de F4.3 se puede hacer en la web de pruebas, también en el iPhone. Etiquetas `v0.2.3` y `v0.3.3` creadas (con la `v0.1.5`, las tres fases cerradas tienen la suya). |
 | 3.13 | 20/10/2026 | Sesión 1 hecha (informe `V-08`): F1.1, F2.5 y F3.3 hechas, con pendientes anotados; la Sesión 2 recoge lo que hay que repetir. La `0.3.3` corrige lo que salió: sonido en el iPhone, icono, Adivinar empieza con ▶, más tiempo para la corrección y el récord se conserva al restablecer. Nuevos para después: C-08 (personalización) y S-09 (timbre). |
 | 3.12 | 20/10/2026 | `0.3.2`: «+» enseña más trastes y con el dedo se pueden pedir trastes de hasta 28 px. Se audita en CP-3, junto con lo que salga de la Sesión 1. |
 | 3.11 | 20/10/2026 | F3.4 hecha con la `0.3.1`, tras AR-06 y AT-05. Paleta decidida. F3 queda a falta de la Sesión 1 (F3.3). |

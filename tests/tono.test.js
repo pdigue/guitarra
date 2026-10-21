@@ -102,8 +102,10 @@ test('precisión trozo a trozo: lo que se gira la clavija se mide a ±2 cents en
   console.log('  peor error trozo a trozo: %s cents (%s)', peor.err.toFixed(2), peor.caso);
 });
 
-test('latencia: desde que suena la cuerda hasta que la aguja sale en su nota, menos de 300 ms (A-02-CA)', () => {
-  // «Sale en su nota»: dos lecturas seguidas a menos de 15 cents de la
+test('latencia: desde que suena la cuerda hasta que el detector da su nota, menos de 300 ms (A-02-CA)', () => {
+  // Es la latencia del detector y de la espera entre trozos; la del micrófono
+  // del aparato y la animación de la aguja (0,12 s) se suman aparte (AT-07 #10).
+  // «Da su nota»: dos lecturas seguidas a menos de 15 cents de la
   // referencia, sin saltos de octava. Que luego la cuerda baje unos cents
   // mientras se asienta es la cuerda, no el detector (prueba anterior).
   const HOP = Math.round(0.05 * SR);       // la app pide un trozo cada 50 ms
@@ -164,4 +166,16 @@ test('sin Worker, el detector trabaja en el hilo principal y da el mismo resulta
   det.analizar(trozo(x, Math.round(0.3 * SR)), SR);
   assert.equal(resultados.length, 1);
   assert.ok(Math.abs(cents(resultados[0].hz, 110.05)) <= 2);
+});
+
+test('con tarjetas de sonido de 96 kHz, un trozo de 4096 valores mide los graves; con uno corto calla en vez de equivocarse (AT-07 #1)', () => {
+  const sr = 96000;
+  const nota = (hz, n) => { const x = new Float32Array(n);
+    for (let k = 1; k <= 8; k++) for (let i = 0; i < n; i++) x[i] += 0.3 / k * Math.sin(2 * Math.PI * k * hz * i / sr + k);
+    return x; };
+  for (const hz of [73.42, 82.41, 110]){
+    const r = detectar(nota(hz, 4096), sr);
+    assert.ok(r && Math.abs(cents(r.hz, hz)) <= 1, `${hz} Hz a 96 kHz: ${r && cents(r.hz, hz).toFixed(2)}`);
+  }
+  assert.equal(detectar(nota(82.41, 2048), sr), null, 'con 2048 valores a 96 kHz no abarca dos periodos: no responde');
 });

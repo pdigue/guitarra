@@ -88,7 +88,8 @@ def paleta_propuesta():
 
 
 def paleta_app():
-    html = (pathlib.Path(__file__).resolve().parent.parent / 'index.html').read_text(encoding='utf-8')
+    # Desde la 0.4.0 la paleta vive en js/01-teoria.js (AT-07 #7).
+    html = (pathlib.Path(__file__).resolve().parent.parent / 'js' / '01-teoria.js').read_text(encoding='utf-8')
     bloque = re.search(r'const COLORS = \[(.*?)\];', html, re.S).group(1)
     return re.findall(r"'(#[0-9a-fA-F]{6})'", bloque)
 

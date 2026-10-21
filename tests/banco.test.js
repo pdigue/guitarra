@@ -697,7 +697,11 @@ test('en Adivinar ninguna casilla anuncia su nota a un lector de pantalla (J-12,
 test('la app vive en css/ y js/: index.html los carga todos, en orden, y el ensamblado no deja nada fuera (G-08, F4.1)', () => {
   const raiz = path.join(__dirname, '..');
   const html = fs.readFileSync(path.join(raiz, 'index.html'), 'utf8');
-  const cargados = [...html.matchAll(/<script src="(js\/[^"]+)"><\/script>/g)].map(m => m[1]);
+  const cargados = [...html.matchAll(/<script src="(js\/[^"?]+)\?v=([^"]+)"><\/script>/g)].map(m => m[1]);
+  // Cada archivo lleva la versión en su dirección, para que la caché del navegador
+  // no mezcle archivos de dos versiones (AT-07 #3).
+  const version = boot(APP).ev('APP_VERSION');
+  for (const m of html.matchAll(/(?:src|href)="((?:js|css)\/[^"]+)"/g)) assert.ok(m[1].endsWith('?v=' + version), m[1] + ' sin ?v=' + version);
   const enDisco = fs.readdirSync(path.join(raiz, 'js')).filter(f => f.endsWith('.js')).map(f => 'js/' + f).sort();
   assert.deepEqual([...cargados].sort(), enDisco, 'cada archivo de js/ se carga una vez, y ninguno sobra');
   assert.deepEqual(cargados, [...cargados].sort(), 'en el orden de su número');
@@ -760,7 +764,7 @@ test('afinador por micrófono: no escucha hasta que lo pides, y luego dice cuán
   await sleep(400);
   assert.deepEqual(lectura(A), { nota: 'Mi4', detalle: '+100 cents · 1ª cuerda', orden: '▼ Baja' });
   A.ev('__senal.hz = 0');
-  await sleep(1700);
+  await sleep(2000);
   assert.match(A.$('mic-detail').textContent, /Toca una cuerda/, 'en silencio la aguja vuelve a reposo');
   A.doc.querySelector('.tab[data-screen="free"]').click();
   assert.equal(A.ev('__mic.pista.parada'), true, 'al salir del Afinador se apaga el micrófono');
@@ -798,4 +802,37 @@ test('sin permiso se explica cómo darlo; sin micrófono posible, se dice por qu
   assert.equal(B.$('tuner-ear').hidden, false);
   assert.equal(B.doc.querySelectorAll('#strings-tuner .tstring').length || B.$('strings-tuner').children.length, 6, 'De oído sigue con sus 6 cuerdas');
   assert.equal(JSON.parse(B.store.get('trasteando.v1')).tunerMode, 'ear', 'el modo se guarda');
+});
+
+test('cuerda automática: cada cuerda, 90 cents baja o alta, se identifica bien; también en Drop D (A-04)', async () => {
+  const A = boot(APP, null, microFalso());
+  await abrirMicro(A);
+  A.$('mic-start').click(); await sleep(10);
+  const hz = m => 440 * 2 ** ((m - 69) / 12);
+  const comprobar = async (midi, cents, cuerda) => {
+    A.ev(`mic.lecturas = []; __senal.hz = ${hz(midi) * 2 ** (cents / 1200)}`);
+    await sleep(250);
+    assert.match(A.$('mic-detail').textContent, new RegExp(`cents · ${cuerda}ª cuerda$`), `${midi} a ${cents} cents → ${cuerda}ª`);
+  };
+  const estandar = [64, 59, 55, 50, 45, 40];          // 1ª … 6ª
+  for (const [i, midi] of estandar.entries())
+    for (const c of [-90, 90]) await comprobar(midi, c, i + 1);
+  const sel = A.$('tuning-select'); sel.value = 'dropd'; sel.dispatchEvent({ type: 'change', target: sel });
+  await comprobar(38, -40, 6);                          // Re2 en Drop D
+  assert.match(A.$('mic-note').textContent, /^Re2$/);
+  A.doc.querySelector('.tab[data-screen="free"]').click();   // apaga el micrófono (y su temporizador)
+});
+
+test('cuerda automática: si el micrófono apenas capta la fundamental de la 6ª y se oye su octava, sigue siendo la 6ª (A-04, AT-07 #2)', async () => {
+  const A = boot(APP, null, microFalso());
+  await abrirMicro(A);
+  A.ev(`__ctx.createAnalyser = () => ({ fftSize: 2048, getFloatTimeDomainData(x){
+    for (let i = 0; i < x.length; i++){ let v = 0;      // solo armónicos pares: suena a Mi3
+      for (const k of [2, 4, 6, 8]) v += 0.3 / k * Math.sin(2 * Math.PI * k * __senal.hz * i / 48000 + k);
+      x[i] = v; } } })`);
+  A.$('mic-start').click(); await sleep(10);
+  A.ev('__senal.hz = 82.41 * 2 ** (-20 / 1200)');
+  await sleep(300);
+  assert.deepEqual(lectura(A), { nota: 'Mi2', detalle: '−20 cents · 6ª cuerda', orden: '▲ Sube un poco' });
+  A.doc.querySelector('.tab[data-screen="free"]').click();
 });

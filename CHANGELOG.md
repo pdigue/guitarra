@@ -11,7 +11,7 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 | 0.3.2 | 20/10/2026 | F3 · tu comentario sobre el zoom | `main`, fusionada el 20/10 (PR #10) |
 | 0.3.1 | 20/10/2026 | F3.4 | `main`, fusionada el 20/10 (PR #9) |
 | 0.3.0 | 20/10/2026 | F3.2 | `main`, fusionada el 20/10 (PR #8) |
-| 0.2.3 | 19/10/2026 | F2 · auditoría CP-2 | `main`, fusionada el 20/10 |
+| 0.2.3 | 19/10/2026 | F2 · auditoría CP-2 | `main`, fusionada el 20/10; etiqueta `v0.2.3` |
 | 0.2.2 | 19/10/2026 | F2.4 | `main`, aprobada el 19/10 |
 | 0.2.1 | 19/10/2026 | F2.3 | `main`, aprobada el 19/10 |
 | 0.2.0 | 19/10/2026 | F2.2 | `main`, aprobada tras la escucha en el iPhone |
@@ -37,13 +37,14 @@ Nada todavía.
 ### Añadido
 - **A-02 · A-03 · A-04 · A-05** · *Afinador por micrófono.* El Afinador tiene dos modos, **De oído** y **Micrófono**. El micrófono no se enciende hasta que pulsas «Activar el micrófono», y se apaga al salir del Afinador o al bloquear el móvil. Muestra una aguja de −50 a +50 cents con la franja verde de ±5, la nota de la cuerda, los cents y la orden «▲ Sube», «▼ Baja» o «✓ Afinada». La cuerda se elige sola (Auto) o a mano (6 … 1). El sonido se analiza solo en tu dispositivo.
 - **A-02-CA** · *Detector de tono* (método YIN) en un hilo aparte, para que no frene la interfaz. Con las grabaciones de las seis cuerdas al aire, desafinadas a propósito, su peor error es de 1,86 cents y la aguja sale en su nota en 168 ms como mucho.
-- **PL-04** · Si no se puede usar el micrófono (la app abierta como archivo, sin `https` o sin permiso), lo explica y dice cómo arreglarlo; De oído sigue igual.
+- **PL-04** · Si no se puede usar el micrófono (la app abierta como archivo, sin `https` o sin permiso), lo explica y dice cómo arreglarlo; De oído sigue igual. En el iPhone, al encender el micrófono la sesión de audio pasa a «play-and-record» (sin ella no deja grabar) y vuelve a «playback» al apagarlo.
 
 ### Cambiado
 - **G-08** · *La app, repartida en archivos:* `index.html` con la estructura, `css/` con el estilo y `js/` con la lógica, un archivo por tema. `herramientas/ensamblar.js` los une para `dist/trasteando.html`, que sigue siendo un solo archivo.
 
 ### Verificado
-- Banco: 48 de 48 (`tests/banco.test.js` y el nuevo `tests/tono.test.js`). En Chromium, con una grabación real de la 5ª cuerda 12 cents baja como micrófono: «La2 · −11 cents · ▲ Sube un poco», en vertical y en horizontal (`herramientas/comprobar-afinador.js`). Disposición, accesibilidad, las 15 comprobaciones de F1.1 y el archivo autónomo, bien.
+- **Tras la auditoría AT-07:** el detector mide los graves también con tarjetas de sonido de 96 kHz; en «Auto», si el micrófono capta la octava de la 6ª cuerda, sigue siendo la 6ª; «Afinada» no parpadea en el borde de ±5; la orden y los errores se anuncian bien al lector de pantalla y el foco no se pierde; si el sistema corta el micrófono, se dice; los archivos de `css/` y `js/` llevan la versión en su dirección para que el navegador no mezcle dos versiones.
+- Banco: 51 de 51 (`tests/banco.test.js` y el nuevo `tests/tono.test.js`). En Chromium, con una grabación real de la 5ª cuerda 12 cents baja como micrófono: «La2 · −11 cents · ▲ Sube un poco», en vertical y en horizontal (`herramientas/comprobar-afinador.js`). Disposición, accesibilidad, las 15 comprobaciones de F1.1 y el archivo autónomo, bien.
 
 ---
 

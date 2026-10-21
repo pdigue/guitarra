@@ -13,8 +13,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const RE_CSS = /<link rel="stylesheet" href="(css\/[^"]+)">/g;
-const RE_JS = /<script src="(js\/[^"]+)"><\/script>/g;
+// El «?v=…» del final (la versión, para la caché del navegador) no es parte del nombre.
+const RE_CSS = /<link rel="stylesheet" href="(css\/[^"?]+)(?:\?[^"]*)?">/g;
+const RE_JS = /<script src="(js\/[^"?]+)(?:\?[^"]*)?"><\/script>/g;
 
 const leer = (base, rel) => fs.readFileSync(path.join(base, rel), 'utf8').replace(/\r\n/g, '\n');
 

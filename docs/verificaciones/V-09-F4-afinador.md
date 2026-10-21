@@ -21,15 +21,20 @@ Capturas: `capturas-afinador/afinador-micro-vertical.png`, `…-horizontal.png` 
 
 ## 2. Lo que falta: tu comprobación con la guitarra (10 minutos)
 
-En el iPhone, con Safari, en **https://pdigue.github.io/guitarra/**, o en el PC con Chrome o Edge. Ten a mano tu afinador de siempre para comparar.
+En el iPhone, con Safari, en **https://pdigue.github.io/guitarra/** (la web de pruebas ya tiene la 0.4.0: en Ajustes debe poner «Trasteando 0.4.0»), o en el PC con Chrome o Edge. Ten a mano tu afinador de siempre para comparar. Tras pulsar cada cuerda, **espera un segundo** antes de comparar: al principio toda cuerda suena unos cents alta y la aguja lo enseña.
 
-| # | Haz | Resultado esperado |
-|---|---|---|
-| M1 | Afinador → **Micrófono** → «Activar el micrófono» → Permitir | La aguja en reposo y «Toca una cuerda» |
-| M2 | Toca la 5ª cuerda al aire | «La2 · … · 5ª cuerda»; la orden coincide con tu afinador (a 3 cents o menos) |
-| M3 | Afina las 6 cuerdas con la app, en «Auto», hasta ver «✓ Afinada» en cada una | Tu afinador confirma cada cuerda a ±5 cents |
-| M4 | Afloja la 6ª cerca de un semitono, elige **6** a mano y vuelve a afinarla | «Mi2 · unos −100 cents · ▲ Sube», y te lleva hasta «✓ Afinada» |
-| M5 | Cambia la afinación a **Drop D** y afina la 6ª en «Auto» | «Re2 · 6ª cuerda» y «✓ Afinada» al llegar. Vuelve a Estándar al terminar |
-| M6 | Bloquea el móvil y desbloquéalo | El micrófono se ha apagado: vuelve el botón «Activar» y el indicador de micrófono del sistema desaparece |
-| M7 | Ve a **Libre** y toca unas notas | Suenan como siempre, por el altavoz |
-| M8 | Lo que te haya resultado incómodo | Si la aguja tiembla, tarda o se equivoca de cuerda |
+| # | Haz | Resultado esperado | Requisitos |
+|---|---|---|---|
+| M1 | Afinador → **Micrófono** → «Activar el micrófono» → Permitir | La aguja en reposo y «Toca una cuerda» | A-02 |
+| M2 | Toca la 5ª cuerda al aire | «La2 · … · 5ª cuerda»; la app y tu afinador coinciden a ±5 cents | A-02, A-03 |
+| M3 | Afina las 6 cuerdas con la app, en «Auto», hasta ver «✓ Afinada» en cada una | Tu afinador confirma cada cuerda a ±5 cents; la app no se equivoca de cuerda | A-02, A-03, A-04 |
+| M4 | Afloja la 6ª cerca de un semitono, elige **6** a mano y vuelve a afinarla | «Mi2 · unos −100 cents · ▲ Sube», y te lleva hasta «✓ Afinada» | A-05 |
+| M5 | Cambia la afinación a **Drop D** y afina la 6ª en «Auto» | «Re2 · 6ª cuerda» y «✓ Afinada» al llegar. Vuelve a Estándar al terminar | A-02 (afinación alternativa) |
+| M6 | Bloquea el móvil y desbloquéalo | El micrófono se ha apagado: vuelve el botón «Activar» y el indicador de micrófono del sistema desaparece | A-02, PL-04 |
+| M7 | Ve a **Libre** y toca unas notas | Suenan como siempre, por el altavoz | PL-04 (sesión de audio) |
+| M8 | *(Opcional)* Repite M1 y M2 en la app instalada en la pantalla de inicio | Igual que en Safari | PL-03 |
+| M9 | Lo que te haya resultado incómodo | Si la aguja tiembla, tarda o se equivoca de cuerda | — |
+
+## 3. Auditorías (CP-4, primera ronda)
+
+AR-08 (requisitos) y AT-07 (técnica), sin hallazgos críticos. Corregidos el alto de AR-08 (la web de pruebas no tenía aún la 0.4.0) y todos los medios de las dos; ver `auditorias/AR-08-requisitos.md` y `auditorias/AT-07-tecnica.md`. Banco: 51 de 51.
