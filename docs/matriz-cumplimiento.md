@@ -1,11 +1,13 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 1.14 · **Fecha:** 21 de octubre de 2026 · **Base:** `requisitos.md` v1.16 · app `0.4.0` · `roadmap.md` v3.14  
+**Versión:** 1.15 · **Fecha:** 21 de octubre de 2026 · **Base:** `requisitos.md` v1.17 · app `0.4.2` · `roadmap.md` v3.15  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
+
+**Cambios en la 1.15:** G-12 nuevo; J-11 verificado por el banco; J-06 con las pistas grandes.
 
 **Cambios en la 1.14:** evidencias del afinador por micrófono; A-02-CA, A-04 y G-10 verificados.
 
@@ -37,7 +39,7 @@
 
 | Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 95 | 71 | 8 | 12 | 4 | 41 | 10 |
+| 96 | 73 | 8 | 11 | 4 | 42 | 10 |
 
 | ID | Etapa | Método | Criterio de aceptación | Declaración | Evidencia | Verificación | Origen |
 |---|---|:---:|---|---|---|---|---|
@@ -52,6 +54,7 @@
 | **G-09** | F7.4 | I | Ficha enviada a revisión en al menos una tienda, o decisión documentada de no hacerlo. | No cumple | — | Pendiente | Cliente · 14/10 |
 | **G-10** | F1.3 | I | Ajustes muestra la versión; CHANGELOG.md tiene una entrada por versión; existe la etiqueta de Git de cada cierre de fase. | Cumple | Banco (node --test) · CHANGELOG.md · F1.1 #12 · etiquetas v0.1.5, v0.2.3 y v0.3.3 (21/10) | Verificado | Cliente · 14/10 |
 | **G-11** | F6.4 | I | La política de privacidad está publicada y la app no envía ninguna petición con datos del usuario (pestaña Red). | No cumple | — | Pendiente | Desarrollo · v1.2 |
+| **G-12** | F4.5 | D | En Ajustes, Español | English cambia todos los textos de la app; la elección se guarda; la primera vez sigue al navegador. | Cumple | Banco (node --test): mismas claves en las dos lenguas, cambio y vuelta, primera vez según el navegador · comprobar-disposicion.js con IDIOMA=en-US | Pendiente | Cliente · listado 14/09 |
 | **PL-01** | F2.5 · F7.2 | D | La lista de F1.1 se supera en Chrome, Edge y Firefox en Windows, y la app se instala como PWA desde Edge. | Cumple parcialmente | — | Pendiente | Cliente · 14/10 |
 | **PL-02** | F2.5 · F7.2 | D | La lista de comprobación se supera en Chrome para Android, en web y con la PWA instalada. | Cumple parcialmente | — | Pendiente | Cliente · 14/10 |
 | **PL-03** | F2.5 · F7.2 | D | La lista de comprobación se supera en Safari para iOS, en web y desde la pantalla de inicio. | Cumple parcialmente | — | Pendiente | Cliente · 14/10 |
@@ -89,12 +92,12 @@
 | **J-03** | F1.1 | D | Tras acertar se señalan las demás posiciones válidas. | Cumple | F1.1 #14 · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
 | **J-04** | F1.1 | D | La pista «Nombre» muestra el nombre y la octava de la nota que suena. | Cumple | F1.1 #14 · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
 | **J-05** | F1.1 | D | La pista «Cuerda» lista las cuerdas donde puede estar la nota. | Cumple | F1.1 #14 · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
-| **J-06** | F1.1 | D | Las dos pistas se activan con chips visibles en Adivinar, sin abrir Ajustes. | Cumple | F1.1 #14 · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
+| **J-06** | F1.1 | D | Las dos pistas se activan con chips visibles en Adivinar, sin abrir Ajustes; encendidas, enseñan su respuesta en grande (0.4.1). | Cumple | F1.1 #14 · Banco (node --test): pistas grandes, también antes de ▶ · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
 | **J-07** | F1.1 | T | La racha sube con cada acierto y vuelve a 0 con cada fallo. | Cumple | Banco (node --test): acierto y fallo · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
 | **J-08** | F1.1 | T | El récord persiste tras recargar y tras «Restablecer todos los ajustes»; solo «Borrar el récord de racha» lo pone a cero. | Cumple | Banco (node --test): récord guardado y restablecer · F1.1 #13 · Sesión 1: A15 | Verificado parcialmente | Cliente · listado 14/09 |
 | **J-09** | F1.1 | D | Acierto y fallo se distinguen al instante por color y destello. | Cumple | F1.1 #9 · Sesión 1: A09 y E04 | Verificado | Cliente · listado 14/09 |
 | **J-10** | F1.3 | T | Tras un fallo se marca la pulsada (relleno rojo y ✗); a los 1,2 s suena la nota buscada y se iluminan todas sus posiciones (relleno verde y ✓); 3 s después llega un reto nuevo limpio. | Cumple | Banco (node --test): 8 comprobaciones · F1.1 #9 · Sesión 1: A09 | Verificado parcialmente | Cliente · listado 14/09 |
-| **J-11** | F4.4 | I | La decisión queda anotada en requisitos.md. | No cumple | — | Pendiente | Desarrollo · v1.1 |
+| **J-11** | F4.4 | T | Cada afinación guarda su récord; el récord único de antes pasa a Estándar; cambiar de afinación empieza la racha. | Cumple | Banco (node --test): récord por afinación, migración y cambio de afinación | Verificado | Desarrollo · v1.1 |
 | **J-12** | F1.3 | T | Con «Ver todas las notas» activo, Adivinar no muestra los nombres. | Cumple | Banco (node --test) · F1.1 #10 · Sesión 1: A10 | Verificado | Revisión de código 0.1.2 |
 | **E-01** | F5.2 | D | Se puede elegir tónica y tipo de escala entre el catálogo aprobado. | No cumple | — | Pendiente | Cliente · listado 14/09 |
 | **E-02** | F5.2 | T | Para cada tónica y tipo, las posiciones generadas coinciden con una referencia externa en afinación estándar. | No cumple | — | Pendiente | Cliente · listado 14/09 |

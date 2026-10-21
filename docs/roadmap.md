@@ -1,7 +1,7 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 3.14 · **Fecha:** 21 de octubre de 2026
-**Válido para:** app `0.4.0` · `requisitos.md` v1.16 · `matriz-cumplimiento` v1.14 · `interfaz.md` v1.6 · `compatibilidad.md` v1.5 · `automatizacion.md` v1.1 · `CHANGELOG.md`
+**Versión:** 3.15 · **Fecha:** 21 de octubre de 2026
+**Válido para:** app `0.4.2` · `requisitos.md` v1.17 · `matriz-cumplimiento` v1.15 · `interfaz.md` v1.7 · `compatibilidad.md` v1.6 · `automatizacion.md` v1.1 · `CHANGELOG.md`
 **Gestiona:** chat de Desarrollo
 
 > ⚡ **Modo acelerado activo desde el 14/10** (detalle en `automatizacion.md`). El agente ejecuta las etapas por bloques —F1 a F3, luego F4 a F6— y solo para en las decisiones. Las pruebas que necesitan tus manos se agrupan en dos sesiones: **Sesión 1** con el iPhone y el ordenador al cerrar F3, y **Sesión 2** con la guitarra al cerrar F6.
@@ -12,14 +12,14 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** F4 hecha por el agente: la app en módulos (F4.1), el detector de tono (F4.2) y el afinador por micrófono (F4.3), en la `0.4.0`. **Parada:** tu comprobación de 10 minutos con la guitarra y tu decisión sobre el récord (F4.4). Después, CP-4 y F5 (Escalas).
+📍 **Estás aquí:** F4 hecha por el agente, con tus comentarios del 21/10: pistas grandes y un récord por afinación (`0.4.1`) y la app en español o inglés (`0.4.2`). **Pendiente, sin bloquear:** tu comprobación de 10 minutos con la guitarra (F4.3, `verificaciones/V-09`); con ella se cierra F4 con su etiqueta. Mientras, sigue F5 (Escalas).
 
 | Fase | Objetivo | Versión | Dónde se usa | Etapas | Progreso |
 |------|----------|:---:|---|:---:|---|
 | **F1** | Base local verificada | 0.1.x | 💻 Live Server | 4 | `▰▰▰▰▰▰▰▰` 4/4 |
 | **F2** | Sonido propio y archivo autónomo | 0.2.x | 📁 Archivo en cualquier dispositivo | 5 | `▰▰▰▰▰▰▰▰` 5/5 |
 | **F3** | Interfaz y adaptación | 0.3.x | 📁 Archivo | 4 | `▰▰▰▰▰▰▰▰` 4/4 |
-| **F4** | Afinador por micrófono | 0.4.x | 💻 Live Server | 4 | `▰▰▰▰▰▰▱▱` 3/4 |
+| **F4** | Afinador por micrófono | 0.4.x | 💻 Live Server | 5 | `▰▰▰▰▰▰▱▱` 4/5 |
 | **F5** | Escalas | 0.5.x | 📁 Archivo | 5 | `▱▱▱▱▱▱▱▱` 0/5 |
 | **F6** | Preparación para distribución | 0.6.x | 💻 Live Server | 4 | `▱▱▱▱▱▱▱▱` 0/4 |
 | **F7** | Publicación y lanzamiento | **1.0.0** | 🌐 Web y tiendas | 5 | `▱▱▱▱▱▱▱▱` 0/5 |
@@ -188,7 +188,8 @@ Peso principal en el **auditor de requisitos** como experto en experiencia de us
 | **F4.1** | Partir el archivo en módulos y ampliar las pruebas automáticas | G-08 | La app funciona igual; `node --test` pasa. El banco de `tests/` es la semilla | Módulos, estado de una aplicación, pruebas automáticas | ✅ `0.4.0`: `css/` y `js/` (12 archivos), `herramientas/ensamblar.js` |
 | **F4.2** | Detector de tono en un hilo aparte, con banco de pruebas | A-02-CA | ±2 cents y menos de 300 ms sobre muestras desafinadas a propósito | Frecuencia fundamental y armónicos; cents; hilos de trabajo | ✅ `0.4.0`: YIN en un `Worker`; peor error 1,86 cents, aguja en ≤ 168 ms (`tests/tono.test.js`) |
 | **F4.3** | Interfaz del afinador: aguja, detección y selección de cuerda, permiso de micrófono | A-02, A-03, A-04, A-05 | Afinar una guitarra real en estándar y en una alternativa; caso de cuerda muy desafinada. Comprobación corta con la guitarra en la web de pruebas (`https`, también en el iPhone) o en `localhost`, 10 minutos, al terminar la etapa | Permisos del navegador; suavizado para que la aguja no tiemble | 🔨 `0.4.0` hecha; en Chromium, con una grabación real, «La2 · −11 cents» (`comprobar-afinador.js`) · **validación: tus 10 minutos** |
-| **F4.4** | Cierre y decisión del récord | J-11 | Etiqueta `v0.4.x`; decisión anotada | — | ⬜ |
+| **F4.4** | Cierre y decisión del récord | J-11 | Etiqueta `v0.4.x`; decisión anotada | — | 🔨 `0.4.1`: un récord por afinación (tu decisión del 21/10). Falta la etiqueta, tras tu comprobación de F4.3 |
+| **F4.5** | Idioma: español o inglés (tu petición del 21/10). Con ella, también tus comentarios sobre las pistas de Adivinar | G-12, J-06 | Banco: mismas claves en las dos lenguas, cambio y vuelta; disposición en inglés | Separar los textos del código (internacionalización) | ✅ `0.4.2` |
 
 ### 🔍 CP-4 — Checkpoint del afinador
 **Técnico:** detector, banco de pruebas y arquitectura modular. **Requisitos:** comparación con afinadores comerciales frente a O-04.
@@ -453,7 +454,8 @@ flowchart TB
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **3.14** | 21/10/2026 | F4.1, F4.2 y F4.3 hechas con la `0.4.0`: la app en módulos, el detector de tono y el afinador por micrófono. La comprobación de F4.3 se puede hacer en la web de pruebas, también en el iPhone. Etiquetas `v0.2.3` y `v0.3.3` creadas (con la `v0.1.5`, las tres fases cerradas tienen la suya). |
+| **3.15** | 21/10/2026 | Tus comentarios del 21/10: F4.4 con un récord por afinación y pistas grandes (`0.4.1`); F4.5 nueva, idioma español o inglés (`0.4.2`). La comprobación de F4.3 no bloquea: se sigue con F5 y F4 se cierra cuando la hagas. |
+| 3.14 | 21/10/2026 | F4.1, F4.2 y F4.3 hechas con la `0.4.0`: la app en módulos, el detector de tono y el afinador por micrófono. La comprobación de F4.3 se puede hacer en la web de pruebas, también en el iPhone. Etiquetas `v0.2.3` y `v0.3.3` creadas (con la `v0.1.5`, las tres fases cerradas tienen la suya). |
 | 3.13 | 20/10/2026 | Sesión 1 hecha (informe `V-08`): F1.1, F2.5 y F3.3 hechas, con pendientes anotados; la Sesión 2 recoge lo que hay que repetir. La `0.3.3` corrige lo que salió: sonido en el iPhone, icono, Adivinar empieza con ▶, más tiempo para la corrección y el récord se conserva al restablecer. Nuevos para después: C-08 (personalización) y S-09 (timbre). |
 | 3.12 | 20/10/2026 | `0.3.2`: «+» enseña más trastes y con el dedo se pueden pedir trastes de hasta 28 px. Se audita en CP-3, junto con lo que salga de la Sesión 1. |
 | 3.11 | 20/10/2026 | F3.4 hecha con la `0.3.1`, tras AR-06 y AT-05. Paleta decidida. F3 queda a falta de la Sesión 1 (F3.3). |

@@ -1,6 +1,6 @@
 # Trasteando — Compatibilidad entre sistemas operativos
 
-**Versión:** 1.5 · **Fecha:** 21 de octubre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
+**Versión:** 1.6 · **Fecha:** 21 de octubre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
 
 La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este documento lista cada capacidad del navegador que usa o usará, cómo se comporta en cada sistema y qué hace la app donde falta. Se revisa en cada etapa que añada una capacidad nueva.
 
@@ -22,6 +22,7 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 | Leer las grabaciones del proyecto (`fetch`) | Cargar el audio | ✅ local y web | ✅ local y web | ✅ local y web | Con doble clic (`file://`) no se puede: por eso `dist/trasteando.html` lleva el audio dentro (0.2.1) |
 | Saber si la página está oculta (`visibilitychange`, `document.hidden`) | Callar y pausar el audio al bloquear o cambiar de app (0.3.3) | ✅ | ✅ | ✅ | Sin él, el sonido programado sonaría con la pantalla apagada, como en la 0.3.2 |
 | Pausar y cerrar el audio (`AudioContext.suspend()` y `close()`) | Pausar al ocultar y rehacer el audio si iOS lo deja atascado (0.3.3) | ✅ | ✅ | ✅ | Cada llamada va protegida: si falla, la app sigue con el audio que tenga |
+| Idioma del navegador (`navigator.language`) | Elegir español o inglés la primera vez (G-12, 0.4.2) | ✅ | ✅ | ✅ | Sin él, español; en Ajustes se cambia |
 | Eventos de puntero | Pulsar y arrastrar el mástil | ✅ | ✅ | ✅ | — |
 | `localStorage` | Guardar ajustes y récord | ✅ | ✅ | ✅ | Si falla, la app funciona sin guardar |
 | Vibración | Respuesta al fallar en Adivinar | — | ✅ | ❌ | Se omite; el color y el destello bastan (J-09) |
@@ -49,7 +50,8 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.5** | 21/10/2026 | Micrófono, sesión «play-and-record», `AnalyserNode` y `Worker` (F4, 0.4.0). |
+| **1.6** | 21/10/2026 | Idioma del navegador (G-12, 0.4.2). |
+| 1.5 | 21/10/2026 | Micrófono, sesión «play-and-record», `AnalyserNode` y `Worker` (F4, 0.4.0). |
 | 1.4 | 20/10/2026 | `visibilitychange`, `suspend()` y `close()` del audio, y lo visto en el iPhone en la Sesión 1 (0.3.3). |
 | 1.3 | 20/10/2026 | `:has()` y `scrollIntoView` con opciones (F3.4, 0.3.1). |
 | 1.2 | 20/10/2026 | Tipo de puntero, historial, `grid` y `display: contents`, y `position: sticky` (F3.2, 0.3.0). |

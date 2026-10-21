@@ -1,7 +1,7 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 1.6 · **Fecha:** 20 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0). Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
-**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.4.0` · `requisitos.md` v1.16 · `roadmap.md` v3.14
+**Versión:** 1.7 · **Fecha:** 20 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0). Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
+**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.4.2` · `requisitos.md` v1.17 · `roadmap.md` v3.15
 **Revisión:** auditoría de requisitos AR-04 (`auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
 
@@ -87,6 +87,7 @@ Igual que Libre, con la **tarjeta del reto** entre el acceso rápido y el másti
 
 - **Primera fila:** ▶ empezar y repetir el sonido · mensaje del reto («Escucha y busca la nota», «✓ Sol3», «✗ Era Sol3 · racha a 0») · racha y récord (J-07, J-08). **Desde la 0.3.3** (Sesión 1), al entrar no suena nada: ▶ aparece resaltado y el mensaje dice «Pulsa ▶ para oír la nota»; antes de ▶ el mástil suena pero no puntúa (J-01).
 - **Segunda fila (cambio):** las **pistas** (Nombre, Cuerda) y su resultado («3ª, 4ª, 5ª o 6ª»). Hoy están en la barra de acceso rápido, que en el iPhone no cabe por 4 px; dentro de la tarjeta quedan junto al reto al que ayudan (J-06).
+- **Desde la 0.4.1** (tu comentario del 21/10): encendida, cada pista enseña su respuesta **dentro de su botón, en grande**, con etiqueta pequeña y borde discontinuo de «pista»: «NOTA Sol#3», «CUERDAS 3ª 4ª». Con alguna encendida, sobra el rótulo «Pistas» y las dos caben en una fila. La **lectura grande** de debajo vuelve a ser la nota que tocas: lo que buscas está en las pistas, lo que tocas en la lectura, y no se confunden.
 - **Al fallar** (J-09, J-10): la posición pulsada se rellena en rojo con ✗ y, 1,2 s después, las correctas en verde con su nombre y ✓; el reto siguiente llega 3 s más tarde. **Al acertar**, todas las correctas en verde (J-03).
 - La lectura grande y el pentagrama son de la **nota buscada**: «?» hasta que respondes (o la nota, con la pista de nombre); nunca la última pulsada (0.3.3). El pentagrama no muestra la nota hasta que respondes, y «Ver todas las notas» no se aplica (J-12).
 
@@ -118,7 +119,7 @@ Fila superior: **Mostrar | Práctica**, tónica y tipo (E-01; el catálogo se de
 
 ### Ajustes — boceto A7
 
-Una hoja que sube desde abajo, con los grupos de hoy (Notación, Mástil, Sonido y afinación) y uno **nuevo, «Acerca de»**: Créditos y licencias (G-06, que exige que la app muestre los créditos), Privacidad (cuando exista la política, F6.4, G-11), Restablecer y el número de versión (G-10). **Desde la 0.3.3**, el grupo Sonido enseña el estado del sonido con un botón «Reactivar sonido», y bajo Restablecer (que conserva el récord) hay un botón «Borrar el récord de racha». En las filas con interruptor se toca la fila entera, que mide al menos 40 px de alto. Se cierra tocando fuera, con Escape o con «atrás»; el gesto de bajar llega en F3.4. Mientras está abierto, el resto de la página no responde (es un diálogo).
+Una hoja que sube desde abajo, con los grupos de hoy (Notación, Mástil, Sonido y afinación) y uno **nuevo, «Acerca de»**: Créditos y licencias (G-06, que exige que la app muestre los créditos), Privacidad (cuando exista la política, F6.4, G-11), Restablecer y el número de versión (G-10). **Desde la 0.4.2**, el primer grupo es «Idioma · Language» (Español | English, cada uno en su lengua; G-12). **Desde la 0.3.3**, el grupo Sonido enseña el estado del sonido con un botón «Reactivar sonido», y bajo Restablecer (que conserva el récord) hay un botón «Borrar el récord de racha». En las filas con interruptor se toca la fila entera, que mide al menos 40 px de alto. Se cierra tocando fuera, con Escape o con «atrás»; el gesto de bajar llega en F3.4. Mientras está abierto, el resto de la página no responde (es un diálogo).
 
 ## 7. Móvil en horizontal (F3.2) — bocetos B1 a B6
 
@@ -229,7 +230,8 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.6** | 21/10/2026 | §6: cómo quedó el afinador por micrófono en la 0.4.0 (órdenes, sin micrófono, permiso, horizontal), tras AR-08. |
+| **1.7** | 21/10/2026 | §6: pistas grandes dentro de sus botones y lectura grande con la nota tocada; Ajustes con el grupo de idioma (tus comentarios del 21/10). |
+| 1.6 | 21/10/2026 | §6: cómo quedó el afinador por micrófono en la 0.4.0 (órdenes, sin micrófono, permiso, horizontal), tras AR-08. |
 | 1.5 | 20/10/2026 | Sesión 1 (0.3.3): Adivinar empieza con ▶ y su lectura es la nota buscada; tiempos de la corrección; en Ajustes, estado del sonido, «Reactivar sonido» y «Borrar el récord de racha». |
 | 1.4 | 20/10/2026 | §9: «+» enseña más trastes y «−» menos; con el dedo se pueden pedir trastes de hasta 28 px (tu comentario del 20/10). |
 | 1.3 | 20/10/2026 | §10: paleta decidida en F3.4 (7 naturales bien distintas y sostenidos derivados) y puntos secundarios con contorno. |
