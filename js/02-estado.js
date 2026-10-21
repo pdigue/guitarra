@@ -31,7 +31,8 @@ const DEFAULTS = {
   scalePc:0,
   scaleMode:'show',       // 'show' Mostrar · 'practice' Práctica
   onMiss:'retry',         // Adivinar, al fallar: 'retry' seguir intentando (por defecto, 21/10) · 'reveal' ver la respuesta (J-13)
-  accidentals:{}          // tecla negra → 'sharp' o 'flat' (N-06); sin dato, sostenido
+  accidentals:{},         // tecla negra → 'sharp' o 'flat' (N-06); sin dato, sostenido
+  metro:{ bpm:80, sig:'4/4', sub:1, accent:true }   // metrónomo (MT-05): tempo, compás, golpes por pulso y acento en el primero
 };
 
 const storage = {
@@ -72,6 +73,15 @@ function sanitize(raw){
   if (s.accidentals && typeof s.accidentals === 'object')
     for (const pc of NEGRAS) if (['sharp','flat'].includes(s.accidentals[pc])) alt[pc] = s.accidentals[pc];
   s.accidentals = alt;
+  // Metrónomo (MT-05): cada campo se comprueba; uno roto vuelve al de fábrica.
+  const m = (s.metro && typeof s.metro === 'object') ? s.metro : {};
+  const compas = COMPASES.find(c => c.id === m.sig) || COMPASES.find(c => c.id === '4/4');
+  s.metro = {
+    bpm: Number.isInteger(m.bpm) && m.bpm >= METRO_MIN && m.bpm <= METRO_MAX ? m.bpm : DEFAULTS.metro.bpm,
+    sig: compas.id,
+    sub: [1,2,3,4].includes(m.sub) ? m.sub : DEFAULTS.metro.sub,
+    accent: typeof m.accent === 'boolean' ? m.accent : DEFAULTS.metro.accent
+  };
   // Quien estrena la app en inglés empieza con C D E; luego decide en Ajustes.
   if (!(raw && raw.notation) && s.lang === 'en') s.notation = 'anglo';
   ['showStaff','showAllNotes','showEquals','hintNote','hintString','rotateHintClosed']

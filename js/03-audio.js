@@ -273,6 +273,7 @@ function onVisibility(){
     clearTimeout(playTimer);
     if (screen === 'guess' && locked) clearTimeout(nextTimer);   // ni corrección ni reto con la pantalla apagada
     silenceAll();
+    if (typeof stopMetro === 'function') stopMetro('hidden');   // MT-04: con la app oculta no suena
     try { if (audioCtx && audioCtx.state === 'running') audioCtx.suspend().catch(() => {}); } catch(e){}
   } else {
     // resume() siempre, no wakeAudio(): si el suspend() de hace un instante aún

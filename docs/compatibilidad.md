@@ -1,6 +1,6 @@
 # Trasteando — Compatibilidad entre sistemas operativos
 
-**Versión:** 1.6 · **Fecha:** 21 de octubre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
+**Versión:** 1.7 · **Fecha:** 21 de octubre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
 
 La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este documento lista cada capacidad del navegador que usa o usará, cómo se comporta en cada sistema y qué hace la app donde falta. Se revisa en cada etapa que añada una capacidad nueva.
 
@@ -42,6 +42,10 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 | CSS `position: sticky` | Zoom siempre a la vista en el panel horizontal (0.3.0) | ✅ | ✅ | ✅ | Si faltara, el zoom se alcanza desplazando el panel |
 | CSS `:has()` | Cursor de mano en las filas de Ajustes con interruptor (0.3.1) | ✅ | ✅ | ✅ Safari 15.4+ | Sin él, la fila funciona igual; solo no cambia el cursor |
 | `scrollIntoView` con opciones | Que la casilla con el foco del teclado se vea (0.3.1) | ✅ | ✅ | ✅ | Sin opciones, el navegador desplaza igualmente al dar el foco |
+| Golpes programados en el reloj de audio (`OscillatorNode`, `currentTime`) | Metrónomo exacto (MT-04, 0.5.4) | ✅ | ✅ | ✅ | Parte de Web Audio. Si el audio se rehace (iOS), el metrónomo se para en vez de sonar a destiempo |
+| Ventana modal nativa (`<dialog>` y `showModal()`) | Ventana de compás del metrónomo: foco atrapado, Escape e inerte el resto (0.5.4) | ✅ | ✅ | ✅ Safari 15.4+ | Sin `showModal`, la ventana se enseña igual por encima; Escape y «atrás» la cierran desde la app |
+| Captura del puntero (`setPointerCapture`) | Arrastrar la barra del tempo aunque el dedo se salga (0.5.4) | ✅ | ✅ | ✅ | Protegida: sin ella, la barra responde mientras el dedo siga encima |
+| CSS `accent-color` y unidad `dvh` | Casilla del acento en ámbar; ventana que cabe con la barra del navegador (0.5.4) | ✅ | ✅ | ✅ Safari 15.4+ | Sin ellos, la casilla sale en el color del sistema y la ventana usa `vh` |
 | Pantalla completa | Ocultar las barras del navegador | ✅ | ✅ | ❌ en Safari | La app instalada ya abre a pantalla completa |
 
 ✅ funciona · ⚠️ con matices · ❌ no disponible · — no aplica
@@ -50,7 +54,8 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.6** | 21/10/2026 | Idioma del navegador (G-12, 0.4.2). |
+| **1.7** | 21/10/2026 | Metrónomo (F5.6, 0.5.4): reloj de audio con osciladores, `<dialog>`, captura del puntero, `accent-color` y `dvh`; `:has()` también para centrar un solo punto. |
+| 1.6 | 21/10/2026 | Idioma del navegador (G-12, 0.4.2). |
 | 1.5 | 21/10/2026 | Micrófono, sesión «play-and-record», `AnalyserNode` y `Worker` (F4, 0.4.0). |
 | 1.4 | 20/10/2026 | `visibilitychange`, `suspend()` y `close()` del audio, y lo visto en el iPhone en la Sesión 1 (0.3.3). |
 | 1.3 | 20/10/2026 | `:has()` y `scrollIntoView` con opciones (F3.4, 0.3.1). |

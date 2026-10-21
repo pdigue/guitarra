@@ -49,6 +49,15 @@ const PANTALLAS = [
   ['iphone-safari-vertical-escalas',    390, 664, true,  'scales', true ],
   ['iphone-se-safari-vertical-escalas', 375, 553, true,  'scales', true ],
   ['iphone-safari-horizontal-escalas',  750, 342, true,  'scales', false],
+  // Metrónomo (F5.6): área propia, sin aviso para girar; y su ventana de compás.
+  ['iphone-safari-vertical-metronomo',   390, 664, true,  'metro', false],
+  ['iphone-se-safari-vertical-metronomo',375, 553, true,  'metro', false],
+  ['iphone-safari-horizontal-metronomo', 750, 342, true,  'metro', false],
+  ['windows-1280-metronomo',            1280, 720, false, 'metro', false],
+  ['windows-tableta-metronomo',          768, 900, false, 'metro', false],
+  ['iphone-safari-vertical-metronomo-compas',   390, 664, true, 'metro', false],
+  ['iphone-se-safari-vertical-metronomo-compas',375, 553, true, 'metro', false],
+  ['iphone-safari-horizontal-metronomo-compas', 750, 342, true, 'metro', false],
   // Ajustes abierto: sus controles también miden 40 px (AR-05 #3).
   ['iphone-safari-vertical-ajustes',     390, 664, true,  'free',  true,  true],
   ['iphone-safari-horizontal-ajustes',   750, 342, true,  'free',  false, true],
@@ -68,6 +77,9 @@ const PANTALLAS = [
     // La puerta de audio no hace falta para medir la disposición.
     await pagina.evaluate(() => document.getElementById('gate').classList.add('hidden'));
     if (area !== 'free') await pagina.click(`.tab[data-screen="${area}"]`);
+    // En el metrónomo, el caso de más puntos (7/8) en las pantallas pequeñas, y su ventana de compás.
+    if (area === 'metro' && /se-|horizontal/.test(nombre)) await pagina.evaluate(() => setCompas('7/8'));
+    if (nombre.endsWith('-compas')) await pagina.click('#metro-sig');
     if (ajustes) await pagina.evaluate(() => [...document.querySelectorAll('#btn-settings, #btn-settings-rail')]
       .find(b => b.getClientRects().length).click());
     await pagina.waitForTimeout(400);
@@ -84,6 +96,8 @@ const PANTALLAS = [
         out.traste = celdas[1].getBoundingClientRect().width;
         out.etiquetaZoom = document.getElementById('zoom-label').textContent;
       }
+      const metro = document.getElementById('metro');
+      if (vis(metro)) out.metroDesplaza = metro.scrollHeight > metro.clientHeight + 1;
       out.aviso = !document.getElementById('rotate-hint').hidden && vis(document.getElementById('rotate-hint'));
       const disp = document.getElementById('display');
       if (vis(disp) && !disp.classList.contains('hidden')) out.pentagrama = disp.getBoundingClientRect().height;
@@ -93,7 +107,7 @@ const PANTALLAS = [
                   Math.round(b.getBoundingClientRect().width) + '×' + Math.round(b.getBoundingClientRect().height));
       // Lo que se sale de la pantalla. El panel en horizontal puede desplazarse
       // por dentro (interfaz.md §7), así que lo que cuenta es el propio panel.
-      out.fuera = [...document.querySelectorAll('.header, .quickbar, .challenge, .scales-card, .sc-nav, .display, .zoombar, .rotate-hint, .board-area, .tabbar, .tuner, .panel')]
+      out.fuera = [...document.querySelectorAll('.header, .quickbar, .challenge, .scales-card, .sc-nav, .display, .zoombar, .rotate-hint, .board-area, .tabbar, .tuner, .metro, .panel, .brand')]
         .filter(vis).filter(e => {
           if (e.closest('.panel') && getComputedStyle(document.getElementById('panel')).display !== 'contents') return false;
           const r = e.getBoundingClientRect();
@@ -114,6 +128,7 @@ const PANTALLAS = [
       partes.push(`pentagrama ${m.pentagrama.toFixed(0)} px`);
       if (m.pentagrama < 59.5) fallo(nombre, `pentagrama encendido de solo ${m.pentagrama.toFixed(0)} px`);
     }
+    if (m.metroDesplaza !== undefined) partes.push(m.metroDesplaza ? 'metrónomo: hay que desplazar' : 'metrónomo: cabe entero');
     if (dedo !== m.dedo) fallo(nombre, 'la emulación del puntero no coincide');
     if (dedo && m.pequenos.length) fallo(nombre, 'botones de menos de 40 px: ' + m.pequenos.join(', '));
     if (m.fuera.length) fallo(nombre, 'se sale de la pantalla: ' + m.fuera.join(', '));

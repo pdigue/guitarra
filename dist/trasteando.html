@@ -341,6 +341,87 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .mic-order.ok { color:var(--ok); } .mic-order.ko { color:var(--ko); }
 .mic-privacy { font-size:12px; color:var(--muted); text-align:center; margin:6px 0 8px; line-height:1.45; }
 
+/* ===== METRÓNOMO (F5.6, MT-01 a MT-05) =====
+   Área propia, sin mástil, como el Afinador: igual en vertical y en horizontal.
+   Arriba la barra del tempo; en medio el nombre, el número y un punto por pulso;
+   abajo el compás, «Marcar» y Empezar (la app que nos enseñaste el 21/10). */
+.metro { flex:1; min-height:0; overflow-y:auto; padding:12px 16px 8px; touch-action:pan-y;
+  display:flex; flex-direction:column; align-items:center; gap:12px; }
+.metro-slider { --p:.23; position:relative; flex:1 1 auto; min-height:120px; max-height:340px; width:60px;
+  cursor:pointer; touch-action:none; border-radius:12px; outline-offset:2px; }
+.ms-track { position:absolute; left:50%; top:14px; bottom:14px; width:8px; margin-left:-4px;
+  border-radius:4px; background:var(--surface2); border:1px solid var(--line2); overflow:hidden; }
+.ms-fill { position:absolute; left:0; right:0; bottom:0; height:calc(var(--p) * 100%); background:var(--amber); }
+.ms-thumb { position:absolute; left:50%; width:36px; height:36px; margin-left:-18px;
+  top:calc(14px + (1 - var(--p)) * (100% - 28px) - 18px); border-radius:50%;
+  background:var(--text); border:3px solid var(--amber); box-shadow:0 2px 8px rgba(0,0,0,.45); }
+.metro-center { display:flex; flex-direction:column; align-items:center; gap:6px; width:100%; }
+.metro-name { font-family:Georgia,serif; font-style:italic; font-size:22px; color:var(--muted); line-height:1.1; }
+.metro-tempo { display:flex; align-items:center; justify-content:space-between; width:100%; max-width:340px; }
+.metro-step { width:56px; height:56px; border-radius:50%; flex-shrink:0; cursor:pointer;
+  background:none; border:1.5px solid var(--line2); color:var(--text); font-size:28px; line-height:1; }
+.metro-step:disabled { opacity:.4; cursor:default; }
+.metro-bpm { font-size:68px; line-height:1; font-weight:300; color:var(--text); font-variant-numeric:tabular-nums; }
+.metro-dots { display:flex; justify-content:space-between; width:100%; max-width:300px; padding:6px 4px; min-height:30px; align-items:center; }
+.metro-dots:has(.md:only-child) { justify-content:center; }
+.metro-dots.many { max-width:340px; }
+.md { width:14px; height:14px; border-radius:50%; border:1.5px solid var(--muted); box-sizing:border-box; }
+/* El acento: un punto más grande. El que suena: relleno. Forma y color a la vez. */
+.md.acc { width:20px; height:20px; border-width:2px; border-color:var(--text); }
+.md.now { background:var(--amber); border-color:var(--amber); }
+.metro-controls { display:flex; flex-direction:column; gap:10px; width:100%; max-width:420px; }
+.metro-row { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.metro-sig, .mp-sig { display:inline-flex; flex-direction:column; align-items:center; justify-content:center;
+  font-family:Georgia,serif; font-weight:700; line-height:.86; cursor:pointer; }
+.metro-sig { min-width:52px; height:56px; padding:0 8px; font-size:26px; background:none; border:1px solid transparent;
+  border-radius:10px; color:var(--text); }
+.metro-sig:hover { border-color:var(--line2); }
+.metro-tap { min-height:48px; padding:0 20px; border-radius:24px; cursor:pointer; font:inherit; font-size:14px; font-weight:600;
+  background:none; border:1.5px dashed var(--line2); color:var(--text); touch-action:manipulation; }
+.metro-play { min-height:54px; border-radius:14px; cursor:pointer; font:inherit; font-size:16px; font-weight:700;
+  letter-spacing:.06em; text-transform:uppercase; background:var(--amber); border:1.5px solid var(--amber); color:#160f07; }
+.metro-play.on { background:none; color:var(--amber); }
+.metro-note { min-height:17px; margin:0; font-size:12.5px; color:var(--muted); text-align:center; line-height:1.4; }
+
+/* Ventana de compás, figura y acento. */
+.metro-picker { width:min(380px, calc(100vw - 24px)); max-height:calc(100vh - 24px); max-height:calc(100dvh - 24px); overflow-y:auto; padding:16px;
+  border:1px solid var(--line2); border-radius:16px; background:var(--surface); color:var(--text); }
+.metro-picker[hidden] { display:none; }
+.metro-picker:not([open]):not([hidden]) { display:block; position:fixed; inset:0; margin:auto; height:fit-content; z-index:40; }
+.metro-picker::backdrop { background:rgba(10,6,3,.62); }
+.mp-title { margin:0 0 10px; font-size:13px; font-weight:600; color:var(--muted); }
+.mp-sigs { display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; justify-items:center; }
+.mp-sig { width:62px; height:62px; border-radius:50%; font-size:22px; border:none;
+  background:var(--surface2); color:var(--muted); }
+.mp-sig.on { background:var(--amber); color:#1a1006; }
+.mp-label { display:block; margin:16px 0 8px; font-size:13px; font-weight:600; color:var(--muted); }
+.mp-subs { display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; }
+.mp-fig { height:58px; border-radius:12px; cursor:pointer; background:var(--surface2); border:1px solid var(--line2);
+  color:var(--faint); display:flex; align-items:center; justify-content:center; }
+.mp-fig svg { width:56px; height:36px; }
+.mp-fig.on { color:var(--text); border-color:var(--amber); box-shadow:inset 0 0 0 1px var(--amber); }
+.mp-accent { display:flex; align-items:center; gap:12px; min-height:48px; margin:12px 0 8px; font-size:14px; cursor:pointer; }
+.mp-accent input { width:24px; height:24px; margin:0; accent-color:var(--amber); flex-shrink:0; cursor:pointer; }
+.mp-ok { width:100%; min-height:50px; border-radius:12px; cursor:pointer; font:inherit; font-size:15px; font-weight:700;
+  background:var(--amber); border:none; color:#160f07; }
+
+/* Pantallas bajas en vertical (iPhone SE): todo más compacto, para que quepa. */
+@media (orientation:portrait) and (max-height:600px){
+  .metro { gap:8px; padding-top:8px; }
+  .metro-slider { min-height:96px; }
+  .metro-bpm { font-size:54px; }
+  .metro-step { width:48px; height:48px; }
+  .metro-name { font-size:19px; }
+  .metro-play { min-height:48px; }
+}
+
+/* Con el metrónomo sonando, su pestaña lleva un punto que se enciende con
+   cada pulso (MT-05). Cambia la luz, no se mueve: vale con movimiento reducido. */
+.tab { position:relative; }
+.tab.metro-on::after { content:''; position:absolute; top:5px; left:calc(50% + 9px); width:8px; height:8px;
+  border-radius:50%; background:var(--amber); opacity:.45; }
+.tab.metro-on.beat::after { opacity:1; box-shadow:0 0 6px 2px rgba(232,164,92,.7); }
+
 /* ===== NAVEGACIÓN INFERIOR ===== */
 .tabbar { flex-shrink:0; display:flex; border-top:1px solid var(--line);
   background:var(--surface); padding-bottom:env(safe-area-inset-bottom); }
@@ -365,7 +446,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
    las demás con order. En horizontal pasa a ser la columna de la derecha. */
 .panel { display:contents; }
 .header { order:1; } .quickbar { order:2; } .challenge { order:3; } .display { order:4; }
-.rotate-hint { order:5; } .board-area { order:6; } .sc-nav, .zoombar { order:7; } .tuner { order:8; }
+.rotate-hint { order:5; } .board-area { order:6; } .sc-nav, .zoombar { order:7; } .tuner, .metro { order:8; }
 .scales-card { order:3; }
 .tabbar { order:9; }
 
@@ -452,10 +533,25 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .header, .rotate-hint { display:none; }
   .tabbar { grid-column:1; grid-row:1; flex-direction:column; justify-content:flex-start;
             gap:2px; border-top:none; border-right:1px solid var(--line); padding:6px 0; }
-  .tab { flex:0 0 auto; min-height:48px; padding:6px 2px; }
+  /* Un destino por área y ⚙: con seis áreas, 7 × 44 px caben en los 342 px del iPhone (interfaz §7b). */
+  .tab { flex:0 0 auto; min-height:44px; padding:5px 1px; font-size:9.5px; }
   .tab-settings { display:flex; margin-top:auto; }
   #board-area { grid-column:2; grid-row:1; min-height:0; padding:6px 6px 2px; }
   #tuner { grid-column:2 / -1; grid-row:1; min-height:0; }
+  #metro { grid-column:2 / -1; grid-row:1; min-height:0; display:grid;
+           grid-template-columns:64px minmax(0,1fr) minmax(0,1fr); grid-template-rows:minmax(0,1fr);
+           align-items:center; gap:8px 20px; padding:8px 16px; }
+  .metro-slider { align-self:stretch; height:auto; max-height:none; min-height:0; }
+  .metro-bpm { font-size:56px; }
+  .metro-step { width:50px; height:50px; }
+  /* La ventana de compás, en dos columnas: en 342 px de alto no cabe apilada. */
+  .metro-picker { width:min(640px, calc(100vw - 24px)); }
+  .metro-picker[open], .metro-picker:not([open]):not([hidden]) { display:grid; grid-template-columns:auto minmax(0,1fr);
+    grid-template-areas:"t l" "g s" "g a" "g o"; column-gap:22px; align-content:start; }
+  .mp-title { grid-area:t; } .mp-sigs { grid-area:g; gap:6px; align-self:start; }
+  .mp-label { grid-area:l; margin:0 0 10px; } .mp-subs { grid-area:s; align-self:start; }
+  .mp-accent { grid-area:a; margin:6px 0; } .mp-ok { grid-area:o; align-self:end; }
+  .mp-sig { width:52px; height:52px; font-size:19px; }
   .panel { grid-column:3; grid-row:1; display:flex; flex-direction:column; gap:6px;
            min-height:0; overflow-y:auto; padding:8px 8px 0; border-left:1px solid var(--line); }
   .quickbar { padding:0; border:none; overflow:visible; flex-wrap:wrap; gap:6px; }
@@ -518,6 +614,13 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
          border:1px solid var(--line); font-size:13px; }
   .tab svg { display:none; }
   .tab.active { background:var(--amber); border-color:var(--amber); color:#1a1006; }
+  .tab.metro-on::after { top:-3px; left:auto; right:-2px; }
+  .metro { width:100%; max-width:460px; margin:0 auto; padding:20px 20px 12px; }
+  .metro-slider { max-height:300px; }
+}
+/* Entre 600 y 959 px, las pestañas se estrechan para no pisar el nombre. */
+@media (min-width:600px) and (max-width:959px) and (min-height:521px){
+  .tab { padding:0 10px; font-size:12.5px; }
 }
 
 /* Ajustes como panel lateral cuando hay anchura (interfaz.md §3). */
@@ -578,6 +681,10 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   <button class="tab" data-screen="scales">
     <svg viewBox="0 0 24 24"><path d="M4 18V6"/><path d="M4 8h5l3-3 3 3h5"/><path d="M9 18v-6"/><path d="M15 18v-8"/><path d="M20 18V8"/></svg>
     <span data-t="tab.scales">Escalas</span>
+  </button>
+  <button class="tab" data-screen="metro">
+    <svg viewBox="0 0 24 24"><path d="M9.5 3.5h5L18 20H6z"/><line x1="7" y1="16" x2="18" y2="16"/><line x1="12" y1="16" x2="16.5" y2="6"/></svg>
+    <span data-t="tab.metro">Metrónomo</span>
   </button>
   <button class="tab tab-settings" id="btn-settings-rail" aria-label="Ajustes" data-t-aria="settings">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>
@@ -730,12 +837,53 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
         <div class="mic-note" id="mic-note">—</div>
         <div class="mic-detail" id="mic-detail">Toca una cuerda</div>
         <div class="mic-order" id="mic-order" aria-live="polite"></div>
+        <p class="mic-why" id="mic-metro" role="status" hidden></p>
         <p class="mic-privacy" data-t="mic.privacy">Afinada en la franja verde (±5 cents). El sonido se analiza solo en tu dispositivo.</p>
         <button class="mic-btn" id="mic-stop" data-t="mic.stop">Detener el micrófono</button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- ============ METRÓNOMO (F5.6, MT-01 a MT-05) ============
+     Un área propia, sin mástil, como el Afinador. Sigue sonando si cambias de
+     área; se para aquí, al ocultar la app o al escuchar con el micrófono.
+     Inspirado en la app que nos enseñaste el 21/10: lo más directo, con
+     nuestra estética. -->
+<div class="metro" id="metro" hidden>
+  <div class="metro-slider" id="metro-slider" role="slider" tabindex="0" aria-orientation="vertical"
+       aria-valuemin="30" aria-valuemax="250" aria-valuenow="80" aria-label="Tempo" data-t-aria="metro.tempo">
+    <div class="ms-track"><div class="ms-fill"></div></div>
+    <div class="ms-thumb"></div>
+  </div>
+  <div class="metro-center">
+    <div class="metro-name" id="metro-name">Andante</div>
+    <div class="metro-tempo">
+      <button class="metro-step" id="metro-minus" aria-label="Más lento" data-t-aria="metro.slower">−</button>
+      <output class="metro-bpm" id="metro-bpm" aria-live="off">80</output>
+      <button class="metro-step" id="metro-plus" aria-label="Más rápido" data-t-aria="metro.faster">+</button>
+    </div>
+    <div class="metro-dots" id="metro-dots" aria-hidden="true"></div>
+  </div>
+  <div class="metro-controls">
+    <div class="metro-row">
+      <button class="metro-sig" id="metro-sig"><span class="sig-n">4</span><span class="sig-d">4</span></button>
+      <button class="metro-tap" id="metro-tap" aria-label="Marcar el tempo: toca a ritmo" data-t-aria="metro.tapAria"><span data-t="metro.tap">Marcar</span></button>
+    </div>
+    <button class="metro-play" id="metro-play" aria-pressed="false">Empezar</button>
+    <p class="metro-note" id="metro-note" role="status"></p>
+  </div>
+</div>
+
+<!-- Compás, figura y acento: se abre al tocar el compás (MT-02, MT-03). -->
+<dialog class="metro-picker" id="metro-picker" aria-labelledby="metro-picker-title" hidden>
+  <h3 class="mp-title" id="metro-picker-title" data-t="metro.sig">Compás</h3>
+  <div class="mp-sigs" id="metro-sigs" role="group" aria-labelledby="metro-picker-title"></div>
+  <span class="mp-label" id="metro-sub-label" data-t="metro.sub">Subdivisión</span>
+  <div class="mp-subs" id="metro-sub" role="group" aria-labelledby="metro-sub-label"></div>
+  <label class="mp-accent"><input type="checkbox" id="metro-accent"><span data-t="metro.accent">Acento en el primer tiempo</span></label>
+  <button class="mp-ok" id="metro-ok" data-t="metro.ok">Listo</button>
+</dialog>
 
 <!-- ============ AJUSTES ============ -->
 <div class="sheet-bg" id="sheet-bg"></div>
@@ -965,7 +1113,23 @@ const TEXTOS = {
     'audio.rebuild': ' · se rehace al tocar',
     'tun.standard': 'Estándar (E A D G B E)', 'tun.standard.s': 'Estándar',
     'tun.halfstep': 'Medio tono abajo', 'tun.halfstep.s': 'Medio tono abajo',
-    'tun.custom': 'Personalizada', 'tun.custom.s': 'Personalizada'
+    'tun.custom': 'Personalizada', 'tun.custom.s': 'Personalizada',
+    // Metrónomo (F5.6, MT-01 a MT-05)
+    'tab.metro': 'Metrónomo', 'metro.bpm': 'pulsos por minuto', 'metro.tempo': 'Tempo',
+    'metro.slower': 'Más lento', 'metro.faster': 'Más rápido', 'metro.tap': 'Marcar',
+    'metro.tapAria': 'Marcar el tempo: toca a ritmo', 'metro.tapHint': 'Sigue tocando a ritmo…',
+    'metro.sig': 'Compás', 'metro.sigAria': 'Compás {c}, {f}. Cambiar compás, figura y acento',
+    'metro.sigOne': 'Compás {c}', 'metro.accent': 'Acento en el primer tiempo', 'metro.ok': 'Listo',
+    'metro.withAccent': 'con acento', 'metro.noAccent': 'sin acento',
+    'metro.sub': 'Subdivisión', 'metro.sub.1': 'Solo el pulso', 'metro.sub.2': 'Dos por pulso (corcheas)',
+    'metro.sub.3': 'Tres por pulso (tresillos)', 'metro.sub.4': 'Cuatro por pulso (semicorcheas)',
+    'metro.sub.3c': 'Tres por pulso (corcheas)', 'metro.sub.2c': 'Dos por pulso', 'metro.sub.4c': 'Cuatro por pulso',
+    'metro.start': 'Empezar', 'metro.stop': 'Parar',
+    'metro.playing': 'Sonando. Puedes ir a otra área: sigue hasta que lo pares aquí.',
+    'metro.noAudio': 'El sonido aún no está listo. Vuelve a pulsar.',
+    'metro.stoppedMic': 'El metrónomo se ha parado: su clic confundiría al afinador.',
+    'metro.stoppedHidden': 'Se paró al salir de la app.',
+    'metro.running': 'Metrónomo en marcha'
   },
   en: {
     'gate.sub': 'Learn where every note lives on the fretboard. Tap to load the guitar sounds.',
@@ -1054,7 +1218,23 @@ const TEXTOS = {
     'audio.rebuild': ' · restarts on your next tap',
     'tun.standard': 'Standard (E A D G B E)', 'tun.standard.s': 'Standard',
     'tun.halfstep': 'Half step down', 'tun.halfstep.s': 'Half step down',
-    'tun.custom': 'Custom', 'tun.custom.s': 'Custom'
+    'tun.custom': 'Custom', 'tun.custom.s': 'Custom',
+    // Metronome (F5.6, MT-01 to MT-05)
+    'tab.metro': 'Metronome', 'metro.bpm': 'beats per minute', 'metro.tempo': 'Tempo',
+    'metro.slower': 'Slower', 'metro.faster': 'Faster', 'metro.tap': 'Tap',
+    'metro.tapAria': 'Tap the tempo: tap in time', 'metro.tapHint': 'Keep tapping in time…',
+    'metro.sig': 'Time signature', 'metro.sigAria': 'Time signature {c}, {f}. Change time signature, note value and accent',
+    'metro.sigOne': 'Time signature {c}', 'metro.accent': 'Accent on the first beat', 'metro.ok': 'Done',
+    'metro.withAccent': 'accented', 'metro.noAccent': 'no accent',
+    'metro.sub': 'Subdivision', 'metro.sub.1': 'Beat only', 'metro.sub.2': 'Two per beat (eighths)',
+    'metro.sub.3': 'Three per beat (triplets)', 'metro.sub.4': 'Four per beat (sixteenths)',
+    'metro.sub.3c': 'Three per beat (eighths)', 'metro.sub.2c': 'Two per beat', 'metro.sub.4c': 'Four per beat',
+    'metro.start': 'Start', 'metro.stop': 'Stop',
+    'metro.playing': 'Playing. You can go to another area: it keeps going until you stop it here.',
+    'metro.noAudio': 'Sound is not ready yet. Tap again.',
+    'metro.stoppedMic': 'The metronome stopped: its click would confuse the tuner.',
+    'metro.stoppedHidden': 'It stopped when you left the app.',
+    'metro.running': 'Metronome running'
   }
 };
 
@@ -1099,7 +1279,7 @@ function aplicarIdioma(){
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.5.3';
+const APP_VERSION = '0.5.4';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -1228,6 +1408,19 @@ function octavaEscrita(n, midi){ return Math.floor((midi - n.alt - PC_LETRA[n.le
    semitonos desde la tónica y el salto de letra de cada grado: la mayor usa
    las siete letras seguidas; las pentatónicas se saltan dos (la mayor no
    tiene 4º ni 7º grado). */
+/* Compases del metrónomo (MT-02). `pulsos` son los puntos que se ven y los
+   golpes principales que suenan. En los compases de 4, cada pulso es una negra.
+   En 6/8, 9/8 y 12/8 (compuestos) el pulso es la negra con puntillo, que vale
+   tres corcheas: 9/8 tiene tres pulsos, como en la app que nos enseñaste. En
+   3/8, 5/8 y 7/8 cada corchea es un pulso. El tempo cuenta pulsos. */
+const COMPASES = [
+  { id:'1/4', pulsos:1 }, { id:'2/4', pulsos:2 }, { id:'3/4', pulsos:3 }, { id:'4/4', pulsos:4 },
+  { id:'5/4', pulsos:5 }, { id:'6/4', pulsos:6 }, { id:'3/8', pulsos:3 }, { id:'5/8', pulsos:5 },
+  { id:'6/8', pulsos:2, compuesto:true }, { id:'7/8', pulsos:7 },
+  { id:'9/8', pulsos:3, compuesto:true }, { id:'12/8', pulsos:4, compuesto:true }
+];
+const METRO_MIN = 30, METRO_MAX = 250;         // tempo, en pulsos por minuto (MT-01)
+
 const ESCALAS = [
   { id:'mayor',      modo:'mayor', semitonos:[0,2,4,5,7,9,11], letras:[0,1,2,3,4,5,6] },
   { id:'menor',      modo:'menor', semitonos:[0,2,3,5,7,8,10], letras:[0,1,2,3,4,5,6] },
@@ -1297,7 +1490,8 @@ const DEFAULTS = {
   scalePc:0,
   scaleMode:'show',       // 'show' Mostrar · 'practice' Práctica
   onMiss:'retry',         // Adivinar, al fallar: 'retry' seguir intentando (por defecto, 21/10) · 'reveal' ver la respuesta (J-13)
-  accidentals:{}          // tecla negra → 'sharp' o 'flat' (N-06); sin dato, sostenido
+  accidentals:{},         // tecla negra → 'sharp' o 'flat' (N-06); sin dato, sostenido
+  metro:{ bpm:80, sig:'4/4', sub:1, accent:true }   // metrónomo (MT-05): tempo, compás, golpes por pulso y acento en el primero
 };
 
 const storage = {
@@ -1338,6 +1532,15 @@ function sanitize(raw){
   if (s.accidentals && typeof s.accidentals === 'object')
     for (const pc of NEGRAS) if (['sharp','flat'].includes(s.accidentals[pc])) alt[pc] = s.accidentals[pc];
   s.accidentals = alt;
+  // Metrónomo (MT-05): cada campo se comprueba; uno roto vuelve al de fábrica.
+  const m = (s.metro && typeof s.metro === 'object') ? s.metro : {};
+  const compas = COMPASES.find(c => c.id === m.sig) || COMPASES.find(c => c.id === '4/4');
+  s.metro = {
+    bpm: Number.isInteger(m.bpm) && m.bpm >= METRO_MIN && m.bpm <= METRO_MAX ? m.bpm : DEFAULTS.metro.bpm,
+    sig: compas.id,
+    sub: [1,2,3,4].includes(m.sub) ? m.sub : DEFAULTS.metro.sub,
+    accent: typeof m.accent === 'boolean' ? m.accent : DEFAULTS.metro.accent
+  };
   // Quien estrena la app en inglés empieza con C D E; luego decide en Ajustes.
   if (!(raw && raw.notation) && s.lang === 'en') s.notation = 'anglo';
   ['showStaff','showAllNotes','showEquals','hintNote','hintString','rotateHintClosed']
@@ -1664,6 +1867,7 @@ function onVisibility(){
     clearTimeout(playTimer);
     if (screen === 'guess' && locked) clearTimeout(nextTimer);   // ni corrección ni reto con la pantalla apagada
     silenceAll();
+    if (typeof stopMetro === 'function') stopMetro('hidden');   // MT-04: con la app oculta no suena
     try { if (audioCtx && audioCtx.state === 'running') audioCtx.suspend().catch(() => {}); } catch(e){}
   } else {
     // resume() siempre, no wakeAudio(): si el suspend() de hace un instante aún
@@ -2601,13 +2805,17 @@ function setScreen(next){
   const isTuner = next === 'tuner';
   const isGuess = next === 'guess';
   const isScales = next === 'scales';
+  const isMetro = next === 'metro';
+  const sinMastil = isTuner || isMetro;   // áreas sin mástil: Afinador y Metrónomo
 
-  document.getElementById('board-area').hidden = isTuner;
+  document.getElementById('board-area').hidden = sinMastil;
   document.getElementById('tuner').hidden = !isTuner;
+  document.getElementById('metro').hidden = !isMetro;
   if (!isTuner) stopMic();      // el micrófono se apaga al salir del Afinador (interfaz.md §6)
+  // El metrónomo, en cambio, sigue sonando en las demás áreas (MT-05).
   // El panel lleva atajos, reto, pentagrama y zoom: nada de eso es del
-  // Afinador. Las pistas van dentro del reto, así que solo salen al adivinar.
-  document.getElementById('panel').hidden = isTuner;
+  // Afinador ni del Metrónomo. Las pistas van dentro del reto, así que solo salen al adivinar.
+  document.getElementById('panel').hidden = sinMastil;
   document.getElementById('challenge').hidden = !isGuess;
   document.getElementById('scales-card').hidden = !isScales;
   document.getElementById('scale-nav').hidden = !isScales;
@@ -2630,7 +2838,7 @@ function setScreen(next){
   }
   if (isScales){ resetScalePractice(); sc.paso = 0; renderScales(); }
   else leaveScales();
-  if (!isTuner) requestAnimationFrame(applyZoom);
+  if (!sinMastil) requestAnimationFrame(applyZoom);
 }
 
 function syncUI(){
@@ -2705,7 +2913,7 @@ function openSheet(open){
    «atrás» cierra Ajustes o vuelve al área anterior. Desde la primera área no
    se bloquea nada: actúa el sistema. Es un estándar presente en todos los
    navegadores; si faltara, la app funciona igual sin ese paso. */
-const SCREEN_HASH = { free:'libre', guess:'adivinar', tuner:'afinador', scales:'escalas' };
+const SCREEN_HASH = { free:'libre', guess:'adivinar', tuner:'afinador', scales:'escalas', metro:'metronomo' };
 const canHistory = typeof history !== 'undefined' && typeof history.pushState === 'function';
 const sheetIsOpen = () => document.getElementById('sheet').classList.contains('open');
 
@@ -2731,6 +2939,8 @@ function hideSettings(){
 window.addEventListener('popstate', ev => {
   closingSheet = false;
   if (sheetIsOpen()){ openSheet(false); return; }
+  // La ventana de compás del metrónomo se cierra igual que Ajustes.
+  if (typeof pickerAbierto === 'function'){ cerrandoPicker = false; if (pickerAbierto()){ cerrarPicker(); return; } }
   const target = ev.state && ev.state.screen;
   if (target && target !== screen && SCREEN_HASH[target]) setScreen(target);
   // Un paso que deja la misma área no hace nada visible: pasa, por ejemplo,
@@ -2741,15 +2951,16 @@ window.addEventListener('popstate', ev => {
 
 document.addEventListener('keydown', ev => {
   if (ev.key === 'Escape' && sheetIsOpen()) hideSettings();
+  else if (ev.key === 'Escape' && typeof pickerAbierto === 'function' && pickerAbierto()) hidePicker();
 });
 
 /* --- Aviso para girar el móvil (V-01, interfaz.md §7) ---
    Solo con el dedo, en vertical y en pantallas de menos de 600 px; nunca en
-   el Afinador, que funciona igual en las dos orientaciones. Cerrado no vuelve:
+   el Afinador ni en el Metrónomo, que funcionan igual en las dos orientaciones. Cerrado no vuelve:
    se guarda con los ajustes, y «Restablecer» lo recupera. */
 function updateRotateHint(){
   const show = coarsePointer() && window.innerHeight > window.innerWidth &&
-               window.innerWidth < 600 && screen !== 'tuner' && !state.rotateHintClosed;
+               window.innerWidth < 600 && screen !== 'tuner' && screen !== 'metro' && !state.rotateHintClosed;
   document.getElementById('rotate-hint').hidden = !show;
 }
 
@@ -3124,6 +3335,11 @@ async function startMic(){
   if (motivo){ showMicPanel(motivo); return; }
   mic.arrancando = true;
   document.getElementById('mic-start').disabled = true;
+  // El clic del metrónomo entraría por el micrófono y confundiría al detector:
+  // se para, y se dice por qué (MT-05).
+  const aviso = document.getElementById('mic-metro');
+  aviso.hidden = !stopMetro('mic');
+  aviso.textContent = aviso.hidden ? '' : t('metro.stoppedMic');
   unlockAudio();
   wakeAudio();
   // En el iPhone, con la sesión de audio en «playback» no se puede grabar.
@@ -3468,6 +3684,408 @@ function bindScales(){
 <script>
 "use strict";
 
+// 14-metronomo.js · Metrónomo (F5.6, MT-01 a MT-05): tempo, compás, figura y
+// acento, con los golpes programados en el reloj de audio.
+// Se carga como <script> clásico, en el orden de index.html: lo declarado aquí
+// (const, let, function) lo ven los archivos que vienen después.
+
+/* ============================================================
+   14. METRÓNOMO
+   ============================================================ */
+
+/* Por qué el reloj de audio (MT-04). Un setInterval de JavaScript se retrasa
+   unos milisegundos cada vez que el navegador está ocupado, y esos retrasos se
+   oyen: el pulso «se arrastra». La tarjeta de sonido, en cambio, tiene su propio
+   reloj (audioCtx.currentTime), exacto. Así que un temporizador normal se
+   despierta cada 25 ms solo para *programar* los golpes de los próximos 100 ms
+   en ese reloj; aunque se despierte tarde, el golpe ya está apuntado para su
+   momento exacto. Cada golpe se calcula desde el inicio (inicio + n × intervalo),
+   no sumando intervalos, para que los redondeos no se acumulen. */
+
+const METRO_CADA = 0.025;       // s entre repasos del programador
+const METRO_ADELANTO = 0.1;     // s de golpes programados por adelantado
+
+const metro = {
+  sonando: false,
+  ctx: null,                    // el contexto de audio con el que arrancó
+  inicio: 0, n: 0,              // el golpe n suena en inicio + n × intervalo
+  paso: 0,                      // golpe dentro del compás (0 … pulsos × subdivisión − 1)
+  timer: null, frame: null,
+  cola: [],                     // pulsos programados que aún no se han visto: { t, pulso }
+  taps: [], tapPuntero: false,  // marcas de «Marcar» (ms); si el toque llegó con el dedo
+  aviso: ''                     // por qué se paró, si no lo paraste tú
+};
+
+const compasActual = () => COMPASES.find(c => c.id === state.metro.sig);
+/** Segundos entre dos golpes (pulsos o subdivisiones). */
+const metroIntervalo = () => 60 / state.metro.bpm / state.metro.sub;
+
+/** Nombre italiano del tempo, el que se escribe en las partituras (MT-01). */
+const TEMPOS = [[40, 'Grave'], [45, 'Largo'], [60, 'Lento'], [76, 'Adagio'], [108, 'Andante'],
+                [120, 'Moderato'], [156, 'Allegro'], [176, 'Vivace'], [200, 'Presto'], [Infinity, 'Prestissimo']];
+const nombreTempo = bpm => TEMPOS.find(([hasta]) => bpm < hasta)[1];
+
+/** Un golpe: un pitido muy corto. El acento, más agudo y fuerte; el pulso,
+ *  medio; la subdivisión, más grave y suave (MT-02, MT-03). */
+function metroClic(t, tipo){
+  const ctx = metro.ctx;
+  const f = { fuerte: 1760, normal: 1175, sub: 880 }[tipo];
+  const vol = { fuerte: 1, normal: 0.6, sub: 0.28 }[tipo];
+  const osc = ctx.createOscillator(), g = ctx.createGain();
+  osc.type = 'triangle';
+  osc.frequency.value = f;
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(vol, t + 0.002);     // entrada de 2 ms: sin chasquido
+  g.gain.setTargetAtTime(0, t + 0.002, 0.012);         // y se apaga en unos 50 ms
+  osc.connect(g); g.connect(audioOut || ctx.destination);
+  osc.start(t);
+  osc.stop(t + 0.08);
+}
+
+/** Qué suena en el golpe `paso` del compás. */
+function metroQueSuena(paso){
+  const sub = state.metro.sub, pulso = Math.floor(paso / sub);
+  if (paso % sub) return { pulso, tipo: 'sub' };
+  return { pulso, tipo: pulso === 0 && state.metro.accent ? 'fuerte' : 'normal' };
+}
+
+/** Programa los golpes que caen en los próximos 100 ms. */
+function metroProgramar(){
+  // Si el contexto de audio cambió (se rehízo tras una llamada en el iPhone) o
+  // se cerró, se para: los golpes irían a un reloj que ya no suena.
+  if (!audioCtx || audioCtx !== metro.ctx || audioCtx.state === 'closed'){ stopMetro(); return; }
+  const total = compasActual().pulsos * state.metro.sub;
+  const hasta = audioCtx.currentTime + METRO_ADELANTO;
+  for (let t = metro.inicio + metro.n * metroIntervalo(); t < hasta; t = metro.inicio + metro.n * metroIntervalo()){
+    const golpe = metroQueSuena(metro.paso % total);
+    metroClic(t, golpe.tipo);
+    if (golpe.tipo !== 'sub') metro.cola.push({ t, pulso: golpe.pulso });
+    metro.paso = (metro.paso + 1) % total;
+    metro.n++;
+  }
+}
+
+/** Ilumina el pulso que suena y hace latir la pestaña (MT-04, MT-05). */
+function metroDibujar(){
+  if (!metro.sonando) return;
+  const ahora = audioCtx ? audioCtx.currentTime : 0;
+  let visto = null;
+  while (metro.cola.length && metro.cola[0].t <= ahora) visto = metro.cola.shift();
+  if (visto){
+    document.querySelectorAll('#metro-dots .md').forEach((d, i) => d.classList.toggle('now', i === visto.pulso));
+    const tab = document.querySelector('.tab[data-screen="metro"]');
+    if (tab){
+      tab.classList.add('beat');
+      clearTimeout(metroDibujar.apaga);
+      metroDibujar.apaga = setTimeout(() => tab.classList.remove('beat'), 110);
+    }
+  }
+  metro.frame = requestAnimationFrame(metroDibujar);
+}
+
+function startMetro(){
+  if (metro.sonando) return;
+  unlockAudio();
+  wakeAudio();
+  if (!audioCtx){ metro.aviso = t('metro.noAudio'); renderMetro(); return; }
+  metro.ctx = audioCtx;
+  metro.sonando = true;
+  metro.aviso = '';
+  metro.inicio = audioCtx.currentTime + 0.06;   // un respiro para que el primer golpe no se corte
+  metro.n = 0; metro.paso = 0; metro.cola = [];
+  metroProgramar();
+  metro.timer = setInterval(metroProgramar, METRO_CADA * 1000);
+  metro.frame = requestAnimationFrame(metroDibujar);
+  renderMetro();
+}
+
+/** Para el metrónomo. `motivo` ('mic' u 'hidden') explica por qué, si no fuiste tú.
+ *  Devuelve si estaba sonando. */
+function stopMetro(motivo){
+  const estaba = metro.sonando;
+  metro.sonando = false;
+  clearInterval(metro.timer); metro.timer = null;
+  cancelAnimationFrame(metro.frame); metro.frame = null;
+  metro.cola = [];
+  if (estaba && motivo) metro.aviso = t(motivo === 'mic' ? 'metro.stoppedMic' : 'metro.stoppedHidden');
+  const tab = document.querySelector('.tab[data-screen="metro"]');
+  if (tab) tab.classList.remove('beat');
+  renderMetro();
+  return estaba;
+}
+
+function toggleMetro(){ if (metro.sonando) stopMetro(); else startMetro(); }
+
+/** Cambia el tempo, dentro de 30 a 250 (MT-01). Sonando, el siguiente golpe
+ *  sigue en su sitio y los demás se cuentan desde él con el ritmo nuevo. */
+function setTempo(bpm){
+  const antes = metroIntervalo();
+  const nuevo = Math.max(METRO_MIN, Math.min(METRO_MAX, Math.round(bpm)));
+  if (nuevo === state.metro.bpm) return;
+  if (metro.sonando){ metro.inicio += metro.n * antes; metro.n = 0; }
+  state.metro.bpm = nuevo;
+  save();
+  renderMetro();
+}
+
+/** «Marcar»: el tempo sale de la media de los últimos toques. Una pausa de más
+ *  de 2 s empieza a contar de nuevo. */
+function tapTempo(ahora){
+  const ts = metro.taps;
+  if (ts.length && ahora - ts[ts.length - 1] > 2000) ts.length = 0;
+  ts.push(ahora);
+  if (ts.length > 5) ts.shift();
+  if (ts.length < 2){ metro.aviso = t('metro.tapHint'); renderMetro(); return; }
+  const media = (ts[ts.length - 1] - ts[0]) / (ts.length - 1);
+  metro.aviso = '';
+  setTempo(60000 / media);
+  renderMetro();
+}
+
+function setCompas(id){
+  const c = COMPASES.find(x => x.id === id);
+  if (!c || c.id === state.metro.sig) return;
+  state.metro.sig = c.id;
+  save();
+  if (metro.sonando){ metro.paso = 0; metro.cola = []; }   // el compás nuevo empieza en su primer pulso
+  buildMetroDots();
+  renderMetro();
+}
+
+/** Golpes por pulso (MT-03). Sonando, la subdivisión nueva empieza en el
+ *  próximo pulso, en su sitio: el pulso no se mueve. */
+function setSubdivision(sub){
+  if (sub === state.metro.sub) return;
+  if (metro.sonando){
+    const viejo = state.metro.sub, intervalo = metroIntervalo();
+    const faltan = (viejo - metro.paso % viejo) % viejo;     // golpes hasta el próximo pulso
+    metro.inicio += (metro.n + faltan) * intervalo; metro.n = 0;
+    const pulso = ((metro.paso + faltan) % (compasActual().pulsos * viejo)) / viejo;
+    metro.paso = pulso * sub;
+  }
+  state.metro.sub = sub;
+  save();
+  renderMetro();
+}
+
+function setAccent(on){
+  state.metro.accent = !!on;
+  save();
+  renderMetro();
+}
+
+/* --- La barra vertical del tempo (MT-01) ---
+   Hecha a mano y no con <input type="range"> en vertical, que cada navegador
+   dibuja (o no) a su manera. Arriba, más rápido. Se arrastra con el dedo o el
+   ratón y se mueve con las flechas del teclado, como cualquier deslizador. */
+function sliderValor(clientY){
+  const pista = document.querySelector('#metro-slider .ms-track');
+  if (typeof pista.getBoundingClientRect !== 'function') return state.metro.bpm;
+  const r = pista.getBoundingClientRect();
+  if (!r.height) return state.metro.bpm;
+  const p = Math.max(0, Math.min(1, (r.bottom - clientY) / r.height));
+  return METRO_MIN + p * (METRO_MAX - METRO_MIN);
+}
+function bindSlider(){
+  const s = document.getElementById('metro-slider');
+  let arrastrando = false;
+  s.addEventListener('pointerdown', ev => {
+    arrastrando = true;
+    try { s.setPointerCapture(ev.pointerId); } catch(e){}
+    setTempo(sliderValor(ev.clientY));
+    s.focus();
+  });
+  s.addEventListener('pointermove', ev => { if (arrastrando) setTempo(sliderValor(ev.clientY)); });
+  const soltar = () => { arrastrando = false; };
+  s.addEventListener('pointerup', soltar);
+  s.addEventListener('pointercancel', soltar);
+  s.addEventListener('keydown', ev => {
+    const paso = { ArrowUp: 1, ArrowRight: 1, ArrowDown: -1, ArrowLeft: -1, PageUp: 10, PageDown: -10 }[ev.key];
+    if (paso) setTempo(state.metro.bpm + paso);
+    else if (ev.key === 'Home') setTempo(METRO_MIN);
+    else if (ev.key === 'End') setTempo(METRO_MAX);
+    else return;
+    ev.preventDefault();
+  });
+}
+
+/* --- Figuras de la subdivisión, dibujadas en SVG --- */
+function iconoFigura(k, compuesto){
+  const svg = el('svg', { viewBox: '0 0 64 40', 'aria-hidden': 'true' });
+  const xs = k === 1 ? [26] : k === 2 ? [18, 40] : k === 3 ? [10, 28, 46] : [6, 20, 34, 48];
+  xs.forEach(x => {
+    svg.appendChild(el('ellipse', { cx: x, cy: 33, rx: 6, ry: 4.4, transform: `rotate(-20 ${x} 33)`, fill: 'currentColor' }));
+    svg.appendChild(el('line', { x1: x + 5.4, y1: 32, x2: x + 5.4, y2: 6, stroke: 'currentColor', 'stroke-width': 2 }));
+  });
+  if (k > 1){
+    const a = xs[0] + 5.4, b = xs[xs.length - 1] + 5.4;
+    svg.appendChild(el('rect', { x: a - 1, y: 5, width: b - a + 2, height: 4, fill: 'currentColor' }));
+    if (k === 4) svg.appendChild(el('rect', { x: a - 1, y: 12, width: b - a + 2, height: 3.4, fill: 'currentColor' }));
+  }
+  if (k === 3 && !compuesto){
+    const tx = el('text', { x: (xs[0] + xs[2]) / 2 + 5.4, y: 3.5, 'text-anchor': 'middle', 'font-size': 9, fill: 'currentColor' });
+    tx.textContent = '3'; svg.appendChild(tx);
+  }
+  // En 6/8, 9/8 y 12/8 el pulso es una negra con puntillo.
+  if (k === 1 && compuesto) svg.appendChild(el('circle', { cx: 37, cy: 33, r: 2.2, fill: 'currentColor' }));
+  return svg;
+}
+
+/* --- Pantalla --- */
+
+function buildMetroDots(){
+  const box = document.getElementById('metro-dots');
+  box.innerHTML = '';
+  for (let i = 0; i < compasActual().pulsos; i++){
+    const d = document.createElement('span'); d.className = 'md'; box.appendChild(d);
+  }
+  box.classList.toggle('many', compasActual().pulsos > 5);
+}
+
+/** El compás escrito como en la partitura: un número sobre otro. */
+function pintarCompas(boton, id){
+  const [n, d] = id.split('/');
+  boton.textContent = '';
+  const a = document.createElement('span'); a.className = 'sig-n'; a.textContent = n;
+  const b = document.createElement('span'); b.className = 'sig-d'; b.textContent = d;
+  boton.appendChild(a); boton.appendChild(b);
+}
+
+function buildMetroPicker(){
+  const sigs = document.getElementById('metro-sigs');
+  sigs.innerHTML = '';
+  for (const c of COMPASES){
+    const b = document.createElement('button');
+    b.className = 'mp-sig'; b.dataset.v = c.id;
+    pintarCompas(b, c.id);
+    b.setAttribute('aria-label', t('metro.sigOne', { c: c.id }));
+    b.addEventListener('click', () => { setCompas(c.id); renderPicker(); });
+    sigs.appendChild(b);
+  }
+  renderPicker();
+}
+
+/** Las figuras dependen del compás (con puntillo en los compuestos). */
+function renderPicker(){
+  const m = state.metro, compuesto = !!compasActual().compuesto;
+  document.querySelectorAll('#metro-sigs .mp-sig').forEach(b => {
+    const on = b.dataset.v === m.sig;
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+  });
+  const subs = document.getElementById('metro-sub');
+  subs.innerHTML = '';
+  for (const k of [1, 2, 3, 4]){
+    const b = document.createElement('button');
+    b.className = 'mp-fig'; b.dataset.v = String(k);
+    b.appendChild(iconoFigura(k, compuesto));
+    b.setAttribute('aria-label', t('metro.sub.' + k + (compuesto && k > 1 ? 'c' : '')));
+    b.classList.toggle('on', k === m.sub); b.setAttribute('aria-pressed', String(k === m.sub));
+    b.addEventListener('click', () => { setSubdivision(k); renderPicker(); });
+    subs.appendChild(b);
+  }
+  document.getElementById('metro-accent').checked = m.accent;
+}
+
+function renderMetro(){
+  const m = state.metro;
+  document.getElementById('metro-bpm').textContent = String(m.bpm);
+  document.getElementById('metro-name').textContent = nombreTempo(m.bpm);
+  const s = document.getElementById('metro-slider');
+  s.style.setProperty('--p', String((m.bpm - METRO_MIN) / (METRO_MAX - METRO_MIN)));
+  s.setAttribute('aria-valuenow', String(m.bpm));
+  s.setAttribute('aria-valuetext', m.bpm + ' ' + t('metro.bpm') + ', ' + nombreTempo(m.bpm));
+  document.getElementById('metro-minus').disabled = m.bpm <= METRO_MIN;
+  document.getElementById('metro-plus').disabled = m.bpm >= METRO_MAX;
+  const sig = document.getElementById('metro-sig');
+  pintarCompas(sig, m.sig);
+  sig.setAttribute('aria-label', t('metro.sigAria', { c: m.sig, f: t(m.accent ? 'metro.withAccent' : 'metro.noAccent') }));
+  // El primer punto se marca si lleva acento: más grande, no solo de otro color.
+  const dots = document.querySelectorAll('#metro-dots .md');
+  dots.forEach((d, i) => {
+    d.classList.toggle('acc', i === 0 && m.accent);
+    if (!metro.sonando) d.classList.toggle('now', false);
+  });
+  const play = document.getElementById('metro-play');
+  play.textContent = metro.sonando ? t('metro.stop') : t('metro.start');
+  play.classList.toggle('on', metro.sonando);
+  play.setAttribute('aria-pressed', String(metro.sonando));
+  document.getElementById('metro-note').textContent = metro.aviso || (metro.sonando ? t('metro.playing') : '');
+  // Fuera de su área, la pestaña dice que está en marcha (también al lector de pantalla).
+  const tab = document.querySelector('.tab[data-screen="metro"]');
+  if (tab){
+    tab.classList.toggle('metro-on', metro.sonando);
+    tab.setAttribute('aria-label', metro.sonando ? t('tab.metro') + ' · ' + t('metro.running') : t('tab.metro'));
+  }
+}
+
+/* --- Ventana de compás, figura y acento ---
+   Un <dialog> del navegador: ya trae el foco atrapado dentro, Escape para
+   cerrar y el resto de la página inerte. Como Ajustes, apunta un paso en el
+   historial para que «atrás» la cierre (C-07). Donde no exista showModal,
+   se enseña igual, sin esas ayudas (PL-04). */
+let cerrandoPicker = false;
+const pickerAbierto = () => !document.getElementById('metro-picker').hidden;
+function openPicker(){
+  const d = document.getElementById('metro-picker');
+  renderPicker();
+  d.hidden = false;
+  if (typeof d.showModal === 'function' && !d.open){ try { d.showModal(); } catch(e){} }
+  if (canHistory) history.pushState({ screen, picker: true }, '', '#' + SCREEN_HASH[screen]);
+  d.querySelector('.mp-sig.on')?.focus();
+}
+function cerrarPicker(){
+  const d = document.getElementById('metro-picker');
+  if (d.hidden) return;
+  d.hidden = true;
+  if (d.open && typeof d.close === 'function'){ try { d.close(); } catch(e){} }
+  document.getElementById('metro-sig').focus();
+}
+function hidePicker(){
+  if (cerrandoPicker) return;
+  if (canHistory && history.state && history.state.picker){ cerrandoPicker = true; history.back(); }
+  else cerrarPicker();
+}
+
+function bindMetro(){
+  buildMetroDots();
+  buildMetroPicker();
+  bindSlider();
+  document.getElementById('metro-minus').addEventListener('click', () => setTempo(state.metro.bpm - 1));
+  document.getElementById('metro-plus').addEventListener('click', () => setTempo(state.metro.bpm + 1));
+  const tap = document.getElementById('metro-tap');
+  tap.addEventListener('pointerdown', ev => {
+    // Al bajar el dedo y no al soltarlo: así el toque cae a tiempo. El teclado
+    // (Intro o espacio) llega como click sin pointerdown.
+    metro.tapPuntero = true; tapTempo(ev.timeStamp || Date.now());
+  });
+  tap.addEventListener('click', ev => {
+    if (metro.tapPuntero){ metro.tapPuntero = false; return; }
+    tapTempo(ev.timeStamp || Date.now());
+  });
+  document.getElementById('metro-sig').addEventListener('click', openPicker);
+  document.getElementById('metro-accent').addEventListener('change', ev => setAccent(ev.target.checked));
+  document.getElementById('metro-ok').addEventListener('click', hidePicker);
+  const d = document.getElementById('metro-picker');
+  d.addEventListener('cancel', ev => { ev.preventDefault(); hidePicker(); });   // Escape
+  d.addEventListener('click', ev => {                                          // tocar fuera de la ventana
+    if (ev.target !== d || typeof d.getBoundingClientRect !== 'function') return;
+    const r = d.getBoundingClientRect();
+    if (ev.clientX < r.left || ev.clientX > r.right || ev.clientY < r.top || ev.clientY > r.bottom) hidePicker();
+  });
+  document.getElementById('metro-play').addEventListener('click', toggleMetro);
+  renderMetro();
+}
+
+/** «Restablecer» o un cambio de idioma: el metrónomo vuelve a pintarse entero. */
+function refreshMetro(){
+  buildMetroDots();
+  buildMetroPicker();
+  renderMetro();
+}
+</script>
+<script>
+"use strict";
+
 // 99-arranque.js · Arranque: conecta los eventos y pone la app en marcha. Va el último porque usa todo lo anterior.
 // Se carga como <script> clásico, en el orden de index.html: lo declarado aquí
 // (const, let, function) lo ven los archivos que vienen después.
@@ -3596,6 +4214,7 @@ function refreshLanguage(antes){
   updateScore();
   renderChallenge();
   buildScaleSelects(); renderScales();
+  refreshMetro();
   if (lastMidi === null) document.getElementById('note-name').innerHTML = '<span class="note-placeholder">' + t('reader.play') + '</span>';
   else refrescarLector();
   syncUI();
@@ -3685,6 +4304,7 @@ document.getElementById('set-reset').addEventListener('click', async () => {
   // Escalas, ♯/♭ y nomenclatura también vuelven a lo de fábrica: sin esto, los
   // selectores y los botones seguían diciendo lo de antes (AT-09 #1).
   resetScalePractice(); sc.paso = 0;
+  stopMetro(); refreshMetro();          // el metrónomo vuelve a 80, 4/4 (MT-05)
   refreshNoteText();
   hideSettings();
   // El reto anterior puede referirse a una nota que ya no existe en la
@@ -3706,7 +4326,7 @@ document.getElementById('set-reset').addEventListener('click', async () => {
 let resizeFrame = null;
 window.addEventListener('resize', () => {
   updateRotateHint();
-  if (screen === 'tuner') return;
+  if (screen === 'tuner' || screen === 'metro') return;
   if (resizeFrame) cancelAnimationFrame(resizeFrame);
   resizeFrame = requestAnimationFrame(applyZoom);
 });
@@ -3732,6 +4352,7 @@ buildBoard();
 bindBoardInput();
 bindMicTuner();
 bindScales();
+bindMetro();
 buildAccidentals();
 bindBoardKeys();
 clearStaff();

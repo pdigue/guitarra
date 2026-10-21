@@ -128,6 +128,7 @@ function refreshLanguage(antes){
   updateScore();
   renderChallenge();
   buildScaleSelects(); renderScales();
+  refreshMetro();
   if (lastMidi === null) document.getElementById('note-name').innerHTML = '<span class="note-placeholder">' + t('reader.play') + '</span>';
   else refrescarLector();
   syncUI();
@@ -217,6 +218,7 @@ document.getElementById('set-reset').addEventListener('click', async () => {
   // Escalas, ♯/♭ y nomenclatura también vuelven a lo de fábrica: sin esto, los
   // selectores y los botones seguían diciendo lo de antes (AT-09 #1).
   resetScalePractice(); sc.paso = 0;
+  stopMetro(); refreshMetro();          // el metrónomo vuelve a 80, 4/4 (MT-05)
   refreshNoteText();
   hideSettings();
   // El reto anterior puede referirse a una nota que ya no existe en la
@@ -238,7 +240,7 @@ document.getElementById('set-reset').addEventListener('click', async () => {
 let resizeFrame = null;
 window.addEventListener('resize', () => {
   updateRotateHint();
-  if (screen === 'tuner') return;
+  if (screen === 'tuner' || screen === 'metro') return;
   if (resizeFrame) cancelAnimationFrame(resizeFrame);
   resizeFrame = requestAnimationFrame(applyZoom);
 });
@@ -264,6 +266,7 @@ buildBoard();
 bindBoardInput();
 bindMicTuner();
 bindScales();
+bindMetro();
 buildAccidentals();
 bindBoardKeys();
 clearStaff();

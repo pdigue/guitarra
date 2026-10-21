@@ -1,11 +1,13 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 1.18 · **Fecha:** 21 de octubre de 2026 · **Base:** `requisitos.md` v1.20 · app `0.5.3` · `roadmap.md` v3.18  
+**Versión:** 1.19 · **Fecha:** 21 de octubre de 2026 · **Base:** `requisitos.md` v1.21 · app `0.5.4` · `roadmap.md` v3.19  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
+
+**Cambios en la 1.19:** el metrónomo (MT-01 a MT-05), hecho y verificado por el banco.
 
 **Cambios en la 1.18:** J-13 con «Reintentar» por defecto; el metrónomo, área propia (MT-05); criterios y evidencias al día tras AR-10 y AT-09.
 
@@ -43,7 +45,7 @@
 
 | Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 108 | 82 | 7 | 15 | 4 | 46 | 10 |
+| 108 | 87 | 7 | 10 | 4 | 51 | 10 |
 
 | ID | Etapa | Método | Criterio de aceptación | Declaración | Evidencia | Verificación | Origen |
 |---|---|:---:|---|---|---|---|---|
@@ -125,11 +127,11 @@
 | **A-09** | F1.1 | D | El pentagrama del afinador refleja la afinación seleccionada. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **A-10** | F1.1 | T | Al cambiar de afinación, el mástil y los retos se rehacen con las nuevas notas. | Cumple | Banco (node --test): Drop D | Verificado parcialmente | Cliente · listado 14/09 |
 | **A-11** | F1.1 | D | Tras recargar se mantiene la afinación, incluida la personalizada. | Cumple | F1.1 #13 | Pendiente | Cliente · listado 14/09 |
-| **MT-01** | F5.6 | D | Tempo de 30 a 250 con botones y marcando el tempo; arranca y para con un toque; se usa en vertical y en horizontal sin aviso de girar. | No cumple | — | Pendiente | Cliente · 21/10 |
-| **MT-02** | F5.6 | T | Cada compás del catálogo da su número de tiempos, con el primero fuerte por defecto; los acentos editados suenan como se marcan. | No cumple | — | Pendiente | Cliente · 21/10 |
-| **MT-03** | F5.6 | T | Cada subdivisión reparte el pulso en partes iguales, más suaves que el pulso. | No cumple | — | Pendiente | Cliente · 21/10 |
-| **MT-04** | F5.6 | T | Los golpes programados a 30, 120 y 250 ppm se separan exactamente 60/tempo s (±1 ms) y el indicador marca el tiempo en curso; al ocultar la app se para. | No cumple | — | Pendiente | Cliente · 21/10 |
-| **MT-05** | F5.6 | D | El metrónomo tiene su pestaña; en marcha, sigue sonando en Libre, Adivinar, Escalas y Acordes y su pestaña late con el pulso; al escuchar con el micrófono se para y lo dice; tempo, compás, acentos y subdivisión se recuerdan. | No cumple | — | Pendiente | Cliente · 21/10 |
+| **MT-01** | F5.6 | D | Tempo de 30 a 250 con la barra vertical (también con el teclado), con − y + y marcando a ritmo, con su nombre italiano; arranca y para con un toque; en vertical y en horizontal sin aviso de girar. | Cumple | Banco (node --test): barra con teclado, − y +, «Marcar» (media y reinicio tras 2 s), límites y nombre del tempo · comprobar-disposicion: cinco pantallas | Verificado | Cliente · 21/10 |
+| **MT-02** | F5.6 | T | Los doce compases dan su número de pulsos (6/8, 9/8 y 12/8: 2, 3 y 4) y un punto por pulso; con acento, el primer pulso suena más agudo y fuerte, y sin él todos iguales. | Cumple | Banco (node --test): puntos por compás, golpes con y sin acento, ventana que se abre y se cierra, datos guardados y validados | Verificado | Cliente · 21/10 |
+| **MT-03** | F5.6 | T | Cada figura reparte el pulso en 1, 2, 3 o 4 golpes iguales, más suaves que el pulso; cambiarla sonando empieza en el próximo pulso, sin mover el pulso. | Cumple | Banco (node --test): separación de las corcheas, volumen menor, cambio sonando | Verificado | Cliente · 21/10 |
+| **MT-04** | F5.6 | T | Los golpes programados a 30, 120 y 250 ppm se separan exactamente 60/tempo s (±1 ms), nunca se programan más de 100 ms por adelantado y el punto del pulso se ilumina; al ocultar la app se para. | Cumple | Banco (node --test): separación a 30, 120 y 250 ppm, cambio de tempo sonando sin adelantar ni repetir, parada al ocultar | Verificado | Cliente · 21/10 |
+| **MT-05** | F5.6 | D | El metrónomo tiene su pestaña; en marcha, sigue sonando en las demás áreas y su pestaña late con el pulso; al escuchar con el micrófono se para y lo dice; tempo, compás, figura y acento se recuerdan. | Cumple | Banco (node --test): sigue en Libre, pestaña que late, parada con el micrófono y aviso, datos guardados | Verificado | Cliente · 21/10 |
 | **AC-01** | F5.7 | T | El catálogo tiene mayores, menores, 7, maj7 y m7 abiertos y cejillas habituales; cada digitación produce exactamente las notas del acorde. | No cumple | — | Pendiente | Cliente · 21/10 |
 | **AC-02** | F5.7 | D | Cada dedo tiene su número y su color, iguales en todos los acordes y distintos de la paleta de notas; círculo ≥ 3:1 contra el mástil y número ≥ 4,5:1 contra el círculo; cuerdas al aire y apagadas marcadas; cejilla marcada. | No cumple | — | Pendiente | Cliente · 21/10 |
 | **AC-03** | F5.7 | D | El pentagrama escribe las notas del acorde apiladas y se oculta con su ajuste. | No cumple | — | Pendiente | Cliente · 21/10 |

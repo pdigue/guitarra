@@ -16,13 +16,17 @@ function setScreen(next){
   const isTuner = next === 'tuner';
   const isGuess = next === 'guess';
   const isScales = next === 'scales';
+  const isMetro = next === 'metro';
+  const sinMastil = isTuner || isMetro;   // áreas sin mástil: Afinador y Metrónomo
 
-  document.getElementById('board-area').hidden = isTuner;
+  document.getElementById('board-area').hidden = sinMastil;
   document.getElementById('tuner').hidden = !isTuner;
+  document.getElementById('metro').hidden = !isMetro;
   if (!isTuner) stopMic();      // el micrófono se apaga al salir del Afinador (interfaz.md §6)
+  // El metrónomo, en cambio, sigue sonando en las demás áreas (MT-05).
   // El panel lleva atajos, reto, pentagrama y zoom: nada de eso es del
-  // Afinador. Las pistas van dentro del reto, así que solo salen al adivinar.
-  document.getElementById('panel').hidden = isTuner;
+  // Afinador ni del Metrónomo. Las pistas van dentro del reto, así que solo salen al adivinar.
+  document.getElementById('panel').hidden = sinMastil;
   document.getElementById('challenge').hidden = !isGuess;
   document.getElementById('scales-card').hidden = !isScales;
   document.getElementById('scale-nav').hidden = !isScales;
@@ -45,7 +49,7 @@ function setScreen(next){
   }
   if (isScales){ resetScalePractice(); sc.paso = 0; renderScales(); }
   else leaveScales();
-  if (!isTuner) requestAnimationFrame(applyZoom);
+  if (!sinMastil) requestAnimationFrame(applyZoom);
 }
 
 function syncUI(){
@@ -120,7 +124,7 @@ function openSheet(open){
    «atrás» cierra Ajustes o vuelve al área anterior. Desde la primera área no
    se bloquea nada: actúa el sistema. Es un estándar presente en todos los
    navegadores; si faltara, la app funciona igual sin ese paso. */
-const SCREEN_HASH = { free:'libre', guess:'adivinar', tuner:'afinador', scales:'escalas' };
+const SCREEN_HASH = { free:'libre', guess:'adivinar', tuner:'afinador', scales:'escalas', metro:'metronomo' };
 const canHistory = typeof history !== 'undefined' && typeof history.pushState === 'function';
 const sheetIsOpen = () => document.getElementById('sheet').classList.contains('open');
 
@@ -146,6 +150,8 @@ function hideSettings(){
 window.addEventListener('popstate', ev => {
   closingSheet = false;
   if (sheetIsOpen()){ openSheet(false); return; }
+  // La ventana de compás del metrónomo se cierra igual que Ajustes.
+  if (typeof pickerAbierto === 'function'){ cerrandoPicker = false; if (pickerAbierto()){ cerrarPicker(); return; } }
   const target = ev.state && ev.state.screen;
   if (target && target !== screen && SCREEN_HASH[target]) setScreen(target);
   // Un paso que deja la misma área no hace nada visible: pasa, por ejemplo,
@@ -156,15 +162,16 @@ window.addEventListener('popstate', ev => {
 
 document.addEventListener('keydown', ev => {
   if (ev.key === 'Escape' && sheetIsOpen()) hideSettings();
+  else if (ev.key === 'Escape' && typeof pickerAbierto === 'function' && pickerAbierto()) hidePicker();
 });
 
 /* --- Aviso para girar el móvil (V-01, interfaz.md §7) ---
    Solo con el dedo, en vertical y en pantallas de menos de 600 px; nunca en
-   el Afinador, que funciona igual en las dos orientaciones. Cerrado no vuelve:
+   el Afinador ni en el Metrónomo, que funcionan igual en las dos orientaciones. Cerrado no vuelve:
    se guarda con los ajustes, y «Restablecer» lo recupera. */
 function updateRotateHint(){
   const show = coarsePointer() && window.innerHeight > window.innerWidth &&
-               window.innerWidth < 600 && screen !== 'tuner' && !state.rotateHintClosed;
+               window.innerWidth < 600 && screen !== 'tuner' && screen !== 'metro' && !state.rotateHintClosed;
   document.getElementById('rotate-hint').hidden = !show;
 }
 

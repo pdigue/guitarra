@@ -1,7 +1,7 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 1.10 · **Fecha:** 21 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0), salvo la sección 7b, que es una **propuesta pendiente de tu visto bueno** (seis áreas, con Metrónomo y Acordes). Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
-**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.5.3` · `requisitos.md` v1.20 · `roadmap.md` v3.18
+**Versión:** 1.11 · **Fecha:** 21 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0); la sección 7b (seis áreas, con Metrónomo y Acordes), aprobada el 21/10. Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
+**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.5.4` · `requisitos.md` v1.21 · `roadmap.md` v3.19
 **Revisión:** auditoría de requisitos AR-04 (`auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
 
@@ -159,18 +159,20 @@ La cuerda mide (alto útil − 28 px) / 6, así que **cumple los 40 px con un al
 
 **Aviso para girar** (V-01): solo en pantallas táctiles en vertical de menos de 600 px de ancho, en Libre, Adivinar y Escalas. Es una franja discreta sobre el mástil: «⟳ Gira el móvil para ver más trastes ✕». Desaparece al girar. Si la cierras con ✕, no vuelve: se guarda con los ajustes (C-05) y «Restablecer todos los ajustes» la recupera. Nunca sale en el Afinador, que funciona igual en las dos orientaciones (V-02), ni en una ventana estrecha de Windows. No se bloquea la orientación: el iPhone no lo permite.
 
-## 7b. Metrónomo y acordes (F5.6 y F5.7) — propuesta pendiente de tu visto bueno
+## 7b. Metrónomo y acordes (F5.6 y F5.7) — aprobada el 21/10
 
-Tu petición del 21/10 y tu decisión del mismo día: **el metrónomo es una función propia**, no un chip del acceso rápido. La propuesta, para que la veas antes de construirla:
+Tu petición del 21/10 y tu decisión del mismo día: **el metrónomo es una función propia**, no un chip del acceso rápido. El metrónomo sigue tu guía con la app que nos enseñaste: lo más directo.
 
 - **Seis áreas, en este orden:** Libre · Adivinar · Afinador · Escalas · Acordes · Metrónomo. Las cuatro de siempre no cambian de sitio (principio 3); las nuevas van al final.
 - **Barra inferior (vertical):** seis destinos de 65 px de ancho en el iPhone, cada uno con icono y una etiqueta corta de 11 px. **Raíl (horizontal):** seis destinos de 44 px de alto y ⚙ abajo; caben en los 342 px del iPhone apaisado. **Ordenador:** seis pestañas en la cabecera.
-- **Metrónomo** (MT-01 a MT-05): pantalla propia, sin mástil, como el Afinador; funciona igual en vertical y en horizontal y no pide girar el móvil. Arriba, el tempo grande con − y +, y «Marcar» (tocas a ritmo y lo calcula). Debajo, el compás (2/4 … 12/8), una fila de tiempos donde cada toque cambia el acento (fuerte, normal, silencio) y la subdivisión (pulso, corcheas, tresillos, semicorcheas). Un botón grande arranca y para; el tiempo en curso se ilumina.
-  - **Sigue sonando al cambiar de área**, para tocar encima en Libre, Escalas o Acordes. Mientras suena, su pestaña late con el pulso; para pararlo, vuelves a ella. Se para al ocultar la app y **al escuchar con el micrófono** en el Afinador, con un aviso: su clic confundiría al detector.
+- **Metrónomo** (MT-01 a MT-05, hecho en la 0.5.4): pantalla propia, sin mástil, como el Afinador; funciona igual en vertical y en horizontal y no pide girar el móvil.
+  - **Pantalla principal**, de arriba abajo: una **barra vertical** para el tempo (arriba, más rápido; también con las flechas del teclado); el **nombre del tempo** en italiano (Lento, Andante, Allegro…); **− 80 +**; **un punto por pulso**, el primero más grande si lleva acento y relleno el que suena; abajo, el **compás** escrito como en la partitura (4 sobre 4) y «Marcar» (tocas a ritmo y lo calcula), y el botón **Empezar**. En horizontal, la barra a la izquierda, el tempo en medio y los controles a la derecha.
+  - **Al tocar el compás** se abre una ventana: los doce compases en círculos (1/4, 2/4, 3/4, 4/4, 5/4, 6/4, 3/8, 5/8, 6/8, 7/8, 9/8, 12/8), las cuatro figuras (solo el pulso, dos, tres o cuatro golpes por pulso), la casilla **Acento en el primer tiempo** y «Listo». En 6/8, 9/8 y 12/8 el pulso es la negra con puntillo: dos, tres o cuatro puntos. «Atrás», Escape o tocar fuera también la cierran. En horizontal, en dos columnas.
+  - **Sigue sonando al cambiar de área**, para tocar encima en Libre, Escalas o Acordes. Mientras suena, su pestaña lleva un punto que se enciende con cada pulso; para pararlo, vuelves a ella. Se para al ocultar la app y **al escuchar con el micrófono** en el Afinador, con un aviso: su clic confundiría al detector.
 - **Acordes** (AC-01 a AC-05): tónica y tipo arriba, como en Escalas. En el mástil, cada nota del acorde es un círculo **del color de su dedo** —1 índice, 2 medio, 3 anular, 4 meñique— con el número dentro; ○ y ✕ junto a la cejuela para las cuerdas al aire y las que no suenan, y la cejilla como una barra. Debajo, el nombre de las notas y el pentagrama con las notas apiladas. Tocar el acorde lo hace sonar rasgueado; cada casilla suena suelta.
   - **Colores de dedo:** cuatro, fijos para todos los acordes, distintos de la paleta de notas (que va por nota) y distinguibles también con daltonismo; además llevan el número, así que el color nunca va solo (principio 5). Cada círculo contrasta al menos 3:1 con el mástil y su número al menos 4,5:1 con el círculo (G-05).
   - En vertical, como Libre y Escalas, sugiere girar el móvil.
-- **Si la apruebas, cambian:** G-02 y C-04 (seis destinos), el mapa de la sección 4 (con `#acordes` y `#metronomo` para el botón «atrás»), el raíl de la sección 7, las pestañas de la sección 8 y el diagrama del roadmap. Si no, la alternativa es la de abajo.
+- **Con la aprobación cambian:** G-02 y C-04 (seis destinos), el mapa de la sección 4 (con `#acordes` y `#metronomo` para el botón «atrás»), el raíl de la sección 7, las pestañas de la sección 8 y el diagrama del roadmap.
 - **Alternativa considerada:** Acordes como tercer modo de Escalas (Mostrar · Práctica · Acordes) y el metrónomo como chip; mantendría cuatro destinos, pero tú los pediste como funciones propias.
 
 ## 8. Ordenador — boceto C1
@@ -248,7 +250,8 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.10** | 21/10/2026 | Sección 7b rehecha con tu decisión del 21/10: el metrónomo es un área propia. Seis áreas, medidas de la barra y del raíl, el metrónomo sonando en otras áreas y parado con el micrófono, y los colores de dedo de Acordes. Pendiente de tu visto bueno. Mapa, raíl y alternativas al día (AR-10). |
+| **1.11** | 21/10/2026 | Sección 7b aprobada. El metrónomo, rehecho con tu guía (la app que nos enseñaste): barra vertical, nombre del tempo, un punto por pulso y una ventana con compás, figura y acento en el primer tiempo. |
+| 1.10 | 21/10/2026 | Sección 7b rehecha con tu decisión del 21/10: el metrónomo es un área propia. Seis áreas, medidas de la barra y del raíl, el metrónomo sonando en otras áreas y parado con el micrófono, y los colores de dedo de Acordes. Pendiente de tu visto bueno. Mapa, raíl y alternativas al día (AR-10). |
 | 1.9 | 21/10/2026 | Ajustes con «Notas alteradas» y «Al fallar»; propuesta de metrónomo (chip y panel) y de Acordes (quinta pestaña), tu petición del 21/10. |
 | 1.8 | 21/10/2026 | §6 Escalas: cómo quedó en la 0.5.0 (intervalos dentro del paso a paso, Práctica con «Otra vez»). |
 | 1.7 | 21/10/2026 | §6: pistas grandes dentro de sus botones y lectura grande con la nota tocada; Ajustes con el grupo de idioma (tus comentarios del 21/10). |

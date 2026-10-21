@@ -12,7 +12,7 @@
 <link rel="manifest" href='data:application/manifest+json,{"name":"Trasteando","short_name":"Trasteando","start_url":".","display":"standalone","background_color":"%23140e09","theme_color":"%23140e09","orientation":"any"}'>
 <link rel="icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" rx="40" fill="%23140e09"/><circle cx="90" cy="90" r="52" fill="none" stroke="%23e8a45c" stroke-width="5"/><circle cx="90" cy="90" r="40" fill="none" stroke="%236b4f30" stroke-width="3" stroke-dasharray="4 5"/><line x1="38" y1="74" x2="142" y2="74" stroke="%23e8dfd3" stroke-width="1.4"/><line x1="38" y1="82" x2="142" y2="82" stroke="%23e8dfd3" stroke-width="1.8"/><line x1="38" y1="90" x2="142" y2="90" stroke="%23e8dfd3" stroke-width="2.2"/><line x1="38" y1="98" x2="142" y2="98" stroke="%23e8dfd3" stroke-width="2.6"/><line x1="38" y1="106" x2="142" y2="106" stroke="%23e8dfd3" stroke-width="3"/></svg>'>  <!-- sin él, el navegador pide favicon.ico y da 404 (Sesión 1, A16) -->
 <link rel="apple-touch-icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" rx="40" fill="%23140e09"/><circle cx="90" cy="90" r="52" fill="none" stroke="%23e8a45c" stroke-width="5"/><circle cx="90" cy="90" r="40" fill="none" stroke="%236b4f30" stroke-width="3" stroke-dasharray="4 5"/><line x1="38" y1="74" x2="142" y2="74" stroke="%23e8dfd3" stroke-width="1.4"/><line x1="38" y1="82" x2="142" y2="82" stroke="%23e8dfd3" stroke-width="1.8"/><line x1="38" y1="90" x2="142" y2="90" stroke="%23e8dfd3" stroke-width="2.2"/><line x1="38" y1="98" x2="142" y2="98" stroke="%23e8dfd3" stroke-width="2.6"/><line x1="38" y1="106" x2="142" y2="106" stroke="%23e8dfd3" stroke-width="3"/></svg>'>
-<link rel="stylesheet" href="css/trasteando.css?v=0.5.3">
+<link rel="stylesheet" href="css/trasteando.css?v=0.5.4">
 </head>
 <body>
 
@@ -60,6 +60,10 @@
   <button class="tab" data-screen="scales">
     <svg viewBox="0 0 24 24"><path d="M4 18V6"/><path d="M4 8h5l3-3 3 3h5"/><path d="M9 18v-6"/><path d="M15 18v-8"/><path d="M20 18V8"/></svg>
     <span data-t="tab.scales">Escalas</span>
+  </button>
+  <button class="tab" data-screen="metro">
+    <svg viewBox="0 0 24 24"><path d="M9.5 3.5h5L18 20H6z"/><line x1="7" y1="16" x2="18" y2="16"/><line x1="12" y1="16" x2="16.5" y2="6"/></svg>
+    <span data-t="tab.metro">Metrónomo</span>
   </button>
   <button class="tab tab-settings" id="btn-settings-rail" aria-label="Ajustes" data-t-aria="settings">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>
@@ -212,12 +216,53 @@
         <div class="mic-note" id="mic-note">—</div>
         <div class="mic-detail" id="mic-detail">Toca una cuerda</div>
         <div class="mic-order" id="mic-order" aria-live="polite"></div>
+        <p class="mic-why" id="mic-metro" role="status" hidden></p>
         <p class="mic-privacy" data-t="mic.privacy">Afinada en la franja verde (±5 cents). El sonido se analiza solo en tu dispositivo.</p>
         <button class="mic-btn" id="mic-stop" data-t="mic.stop">Detener el micrófono</button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- ============ METRÓNOMO (F5.6, MT-01 a MT-05) ============
+     Un área propia, sin mástil, como el Afinador. Sigue sonando si cambias de
+     área; se para aquí, al ocultar la app o al escuchar con el micrófono.
+     Inspirado en la app que nos enseñaste el 21/10: lo más directo, con
+     nuestra estética. -->
+<div class="metro" id="metro" hidden>
+  <div class="metro-slider" id="metro-slider" role="slider" tabindex="0" aria-orientation="vertical"
+       aria-valuemin="30" aria-valuemax="250" aria-valuenow="80" aria-label="Tempo" data-t-aria="metro.tempo">
+    <div class="ms-track"><div class="ms-fill"></div></div>
+    <div class="ms-thumb"></div>
+  </div>
+  <div class="metro-center">
+    <div class="metro-name" id="metro-name">Andante</div>
+    <div class="metro-tempo">
+      <button class="metro-step" id="metro-minus" aria-label="Más lento" data-t-aria="metro.slower">−</button>
+      <output class="metro-bpm" id="metro-bpm" aria-live="off">80</output>
+      <button class="metro-step" id="metro-plus" aria-label="Más rápido" data-t-aria="metro.faster">+</button>
+    </div>
+    <div class="metro-dots" id="metro-dots" aria-hidden="true"></div>
+  </div>
+  <div class="metro-controls">
+    <div class="metro-row">
+      <button class="metro-sig" id="metro-sig"><span class="sig-n">4</span><span class="sig-d">4</span></button>
+      <button class="metro-tap" id="metro-tap" aria-label="Marcar el tempo: toca a ritmo" data-t-aria="metro.tapAria"><span data-t="metro.tap">Marcar</span></button>
+    </div>
+    <button class="metro-play" id="metro-play" aria-pressed="false">Empezar</button>
+    <p class="metro-note" id="metro-note" role="status"></p>
+  </div>
+</div>
+
+<!-- Compás, figura y acento: se abre al tocar el compás (MT-02, MT-03). -->
+<dialog class="metro-picker" id="metro-picker" aria-labelledby="metro-picker-title" hidden>
+  <h3 class="mp-title" id="metro-picker-title" data-t="metro.sig">Compás</h3>
+  <div class="mp-sigs" id="metro-sigs" role="group" aria-labelledby="metro-picker-title"></div>
+  <span class="mp-label" id="metro-sub-label" data-t="metro.sub">Subdivisión</span>
+  <div class="mp-subs" id="metro-sub" role="group" aria-labelledby="metro-sub-label"></div>
+  <label class="mp-accent"><input type="checkbox" id="metro-accent"><span data-t="metro.accent">Acento en el primer tiempo</span></label>
+  <button class="mp-ok" id="metro-ok" data-t="metro.ok">Listo</button>
+</dialog>
 
 <!-- ============ AJUSTES ============ -->
 <div class="sheet-bg" id="sheet-bg"></div>
@@ -323,19 +368,20 @@
      comparten lo que declaran. herramientas/ensamblar.js los une en un solo archivo
      para dist/trasteando.html (G-08). El «?v=» lleva la versión de la app: así el
      navegador no mezcla archivos de dos versiones guardados en su caché (AT-07 #3). -->
-<script src="js/00-idioma.js?v=0.5.3"></script>
-<script src="js/01-teoria.js?v=0.5.3"></script>
-<script src="js/02-estado.js?v=0.5.3"></script>
-<script src="js/03-audio.js?v=0.5.3"></script>
-<script src="js/04-pentagrama.js?v=0.5.3"></script>
-<script src="js/05-mastil.js?v=0.5.3"></script>
-<script src="js/06-zoom.js?v=0.5.3"></script>
-<script src="js/07-adivinar.js?v=0.5.3"></script>
-<script src="js/08-afinador-referencia.js?v=0.5.3"></script>
-<script src="js/09-navegacion.js?v=0.5.3"></script>
-<script src="js/10-tono.js?v=0.5.3"></script>
-<script src="js/11-afinador-micro.js?v=0.5.3"></script>
-<script src="js/13-escalas.js?v=0.5.3"></script>
-<script src="js/99-arranque.js?v=0.5.3"></script>
+<script src="js/00-idioma.js?v=0.5.4"></script>
+<script src="js/01-teoria.js?v=0.5.4"></script>
+<script src="js/02-estado.js?v=0.5.4"></script>
+<script src="js/03-audio.js?v=0.5.4"></script>
+<script src="js/04-pentagrama.js?v=0.5.4"></script>
+<script src="js/05-mastil.js?v=0.5.4"></script>
+<script src="js/06-zoom.js?v=0.5.4"></script>
+<script src="js/07-adivinar.js?v=0.5.4"></script>
+<script src="js/08-afinador-referencia.js?v=0.5.4"></script>
+<script src="js/09-navegacion.js?v=0.5.4"></script>
+<script src="js/10-tono.js?v=0.5.4"></script>
+<script src="js/11-afinador-micro.js?v=0.5.4"></script>
+<script src="js/13-escalas.js?v=0.5.4"></script>
+<script src="js/14-metronomo.js?v=0.5.4"></script>
+<script src="js/99-arranque.js?v=0.5.4"></script>
 </body>
 </html>

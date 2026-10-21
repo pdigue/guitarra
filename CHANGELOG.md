@@ -6,7 +6,8 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.5.3** | 21/10/2026 | F5.5 · reintentar por defecto y auditoría AT-09 | Rama `auto/F5.5-ajustes-visuales` |
+| **0.5.4** | 21/10/2026 | F5.6 · metrónomo | Rama `auto/F5.6-metronomo` |
+| 0.5.3 | 21/10/2026 | F5.5 · reintentar por defecto y auditoría AT-09 | Rama `auto/F5.5-ajustes-visuales` · PR #13, pendiente de fusionar |
 | 0.5.2 | 21/10/2026 | F5.5 · ♯ o ♭ por nota y ajustes visuales | Rama `auto/F5.5-ajustes-visuales` |
 | 0.5.1 | 21/10/2026 | F5.5 · reintentar en Adivinar | Rama `auto/F5.1-notas` |
 | 0.5.0 | 21/10/2026 | F5.1 a F5.4 · escalas | Rama `auto/F5.1-notas` |
@@ -35,6 +36,19 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.5.4] — 21/10/2026 · Metrónomo
+
+### Añadido
+- **MT-01 a MT-05** · Metrónomo, un área propia con su pestaña, al estilo de la app que nos enseñaste: barra vertical del tempo (30 a 250), su nombre (Lento, Andante, Allegro…), − y +, un punto por pulso, el compás y «Empezar». «Marcar» calcula el tempo tocando a ritmo.
+- **MT-02, MT-03** · Al tocar el compás se abre una ventana con doce compases (de 1/4 a 12/8), la figura (solo el pulso, dos, tres o cuatro golpes por pulso) y «Acento en el primer tiempo». En 6/8, 9/8 y 12/8 el pulso es la negra con puntillo: dos, tres o cuatro puntos.
+- **MT-04** · Cada golpe se programa en el reloj de audio: separación exacta (menos de 1 ms) a cualquier tempo.
+- **MT-05** · Sigue sonando en las demás áreas, con un punto que late en su pestaña; se para al ocultar la app y al escuchar con el micrófono, y lo dice.
+
+### Verificado
+- Banco: 73 de 73, con cinco pruebas nuevas. Disposición del metrónomo y de su ventana en cinco pantallas, contraste y movimiento reducido, las 15 comprobaciones de F1.1 y el archivo autónomo, bien.
 
 ---
 
