@@ -1,0 +1,90 @@
+{
+ "sr": 48000,
+ "origen": "samples/ (ver CREDITOS.md)",
+ "muestras": [
+  {
+   "archivo": "nylon-E2.wav",
+   "timbre": "nylon",
+   "nota": "E2",
+   "hz_medida": 82.27,
+   "ataque_s": 0.02
+  },
+  {
+   "archivo": "nylon-A2.wav",
+   "timbre": "nylon",
+   "nota": "A2",
+   "hz_medida": 110.05,
+   "ataque_s": 0.02
+  },
+  {
+   "archivo": "nylon-D3.wav",
+   "timbre": "nylon",
+   "nota": "D3",
+   "hz_medida": 146.63,
+   "ataque_s": 0.02
+  },
+  {
+   "archivo": "nylon-G3.wav",
+   "timbre": "nylon",
+   "nota": "G3",
+   "hz_medida": 196.3,
+   "ataque_s": 0.02
+  },
+  {
+   "archivo": "nylon-B3.wav",
+   "timbre": "nylon",
+   "nota": "B3",
+   "hz_medida": 246.85,
+   "ataque_s": 0.02
+  },
+  {
+   "archivo": "nylon-E4.wav",
+   "timbre": "nylon",
+   "nota": "E4",
+   "hz_medida": 329.24,
+   "ataque_s": 0.02
+  },
+  {
+   "archivo": "acoustic-E2.wav",
+   "timbre": "acoustic",
+   "nota": "E2",
+   "hz_medida": 82.32,
+   "ataque_s": 0.02
+  },
+  {
+   "archivo": "acoustic-A2.wav",
+   "timbre": "acoustic",
+   "nota": "A2",
+   "hz_medida": 110.06,
+   "ataque_s": 0.02
+  },
+  {
+   "archivo": "acoustic-D3.wav",
+   "timbre": "acoustic",
+   "nota": "D3",
+   "hz_medida": 146.62,
+   "ataque_s": 0.02
+  },
+  {
+   "archivo": "acoustic-G3.wav",
+   "timbre": "acoustic",
+   "nota": "G3",
+   "hz_medida": 195.52,
+   "ataque_s": 0.02
+  },
+  {
+   "archivo": "acoustic-B3.wav",
+   "timbre": "acoustic",
+   "nota": "B3",
+   "hz_medida": 246.87,
+   "ataque_s": 0.02
+  },
+  {
+   "archivo": "acoustic-E4.wav",
+   "timbre": "acoustic",
+   "nota": "E4",
+   "hz_medida": 330.48,
+   "ataque_s": 0.02
+  }
+ ]
+}

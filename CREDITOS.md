@@ -3,7 +3,7 @@
 Todo lo que Trasteando usa y no hemos creado nosotros, de dónde sale y con qué
 licencia. Lo exige el requisito **G-06** y, para el audio, **S-07**.
 
-**Última revisión:** 20/10/2026 (licencia del pack de nylon completa)
+**Última revisión:** 21/10/2026 (recortes para el banco del afinador)
 
 ---
 
@@ -75,6 +75,8 @@ distingue de oído.
 | `samples/acoustic/E4.mp3` | E4 | +4,5 | 107 KB | `3b02f5448695` | Univ. de Iowa (MIS) → Brosowsky | Sin restricciones → CC BY 3.0 |
 | `samples/acoustic/A4.mp3` | A4 | +2,8 | 95 KB | `1f8263f10e24` | Univ. de Iowa (MIS) → Brosowsky | Sin restricciones → CC BY 3.0 |
 | `samples/acoustic/D5.mp3` | D5 | +1,9 | 76 KB | `c9d74d19e672` | Univ. de Iowa (MIS) → Brosowsky | Sin restricciones → CC BY 3.0 |
+
+**Recortes para el banco de pruebas (0.4.0):** `tests/muestras-afinador/` tiene 0,9 s de las seis cuerdas al aire de cada timbre (E2, A2, D3, G3, B3 y E4), descodificados a WAV de 48 kHz por `herramientas/generar-muestras-afinador.py`. Son obras derivadas de las de arriba, con la misma atribución y licencia; solo los usa el banco, no van dentro de la app.
 
 **Total:** 17 archivos, 2,1 MB. El As5 de nylon (F2.4) se desvía -10,0 cents; la app lo corrige al reproducirlo.
 

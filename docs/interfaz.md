@@ -1,7 +1,7 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 1.5 · **Fecha:** 20 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0). Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
-**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.3.3` · `requisitos.md` v1.15 · `roadmap.md` v3.13
+**Versión:** 1.7 · **Fecha:** 21 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0). Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
+**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.4.2` · `requisitos.md` v1.17 · `roadmap.md` v3.15
 **Revisión:** auditoría de requisitos AR-04 (`auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
 
@@ -87,8 +87,9 @@ Igual que Libre, con la **tarjeta del reto** entre el acceso rápido y el másti
 
 - **Primera fila:** ▶ empezar y repetir el sonido · mensaje del reto («Escucha y busca la nota», «✓ Sol3», «✗ Era Sol3 · racha a 0») · racha y récord (J-07, J-08). **Desde la 0.3.3** (Sesión 1), al entrar no suena nada: ▶ aparece resaltado y el mensaje dice «Pulsa ▶ para oír la nota»; antes de ▶ el mástil suena pero no puntúa (J-01).
 - **Segunda fila (cambio):** las **pistas** (Nombre, Cuerda) y su resultado («3ª, 4ª, 5ª o 6ª»). Hoy están en la barra de acceso rápido, que en el iPhone no cabe por 4 px; dentro de la tarjeta quedan junto al reto al que ayudan (J-06).
+- **Desde la 0.4.1** (tu comentario del 21/10): encendida, cada pista enseña su respuesta **dentro de su botón, en grande**, con etiqueta pequeña y borde discontinuo de «pista»: «NOTA Sol#3», «CUERDAS 3ª 4ª». Con alguna encendida, sobra el rótulo «Pistas» y las dos caben en una fila. La **lectura grande** de debajo vuelve a ser la nota que tocas: lo que buscas está en las pistas, lo que tocas en la lectura, y no se confunden.
 - **Al fallar** (J-09, J-10): la posición pulsada se rellena en rojo con ✗ y, 1,2 s después, las correctas en verde con su nombre y ✓; el reto siguiente llega 3 s más tarde. **Al acertar**, todas las correctas en verde (J-03).
-- La lectura grande y el pentagrama son de la **nota buscada**: «?» hasta que respondes (o la nota, con la pista de nombre); nunca la última pulsada (0.3.3). El pentagrama no muestra la nota hasta que respondes, y «Ver todas las notas» no se aplica (J-12).
+- La lectura grande y el pentagrama muestran **la nota que tocas** (desde la 0.4.1; en la 0.3.3 mostraban la buscada y confundían). La buscada solo se ve con la pista de nombre, en su botón, o al responder. El pentagrama no muestra la nota hasta que respondes, y «Ver todas las notas» no se aplica (J-12).
 
 ### Afinador — bocetos A3 y A4
 
@@ -98,6 +99,15 @@ Selector arriba: **De oído | Micrófono**. Debajo, en los dos modos, la **afina
 - **Micrófono** (F4, A-02…A-05): selector de cuerda **Auto | 6 … 1** (Auto detecta la cuerda según la afinación activa, A-04; elegir una manda sobre la detección, A-05); un indicador de aguja de −50 a +50 cents con la franja de afinado de ±5 en verde (A-03); la nota grande y los cents en número; la orden en texto y flecha, **«▲ Sube un poco» / «▼ Baja un poco» / «✓ Afinada»**; un aviso fijo, «El sonido se analiza solo en tu dispositivo» (G-11), y un botón para detener el micrófono.
 - **Flujo del permiso:** la primera vez, una frase explica para qué se usa el micrófono **antes** de que el navegador lo pida. Si lo deniegas, se dice cómo activarlo en ese navegador. El micrófono se apaga al salir del Afinador.
 - **Si no hay micrófono** (archivo abierto con doble clic, navegador sin permiso o sin la capacidad): el modo Micrófono se muestra desactivado con el motivo, y De oído sigue funcionando (PL-04).
+- **Así quedó en la 0.4.0** (diferencias con lo de arriba, revisadas en AR-08):
+  - **Órdenes:** cinco, no tres. «▲ Sube» o «▼ Baja» a más de 50 cents; «▲ Sube un poco» o «▼ Baja un poco» entre 6 y 50; «✓ Afinada» a ±5. Una vez afinada, hace falta pasar de ±7 para dejar de estarlo, para que el aviso no parpadee.
+  - **Sin micrófono posible**, el selector deja entrar en «Micrófono»; lo que se desactiva es el botón «Activar el micrófono», con el motivo en rojo encima.
+  - **La explicación** sale siempre que el micrófono está apagado, no solo la primera vez: el micrófono nunca se enciende sin que lo pidas, ni al volver a la app.
+  - Se apaga también **al ocultar la app** o bloquear el móvil, y si el sistema lo corta lo dice.
+  - El modo elegido (De oído o Micrófono) **se guarda**; elegir «Micrófono» no lo enciende.
+  - El aviso de privacidad, con la aguja, dice: «Afinada en la franja verde (±5 cents). El sonido se analiza solo en tu dispositivo.»
+  - El detalle bajo la nota añade la cuerda: «−11 cents · 5ª cuerda».
+  - **En horizontal**, «Afinación» y «Cuerda» van en filas a todo el ancho encima; debajo, la aguja a la izquierda y la lectura, la orden y «Detener» a la derecha.
 
 ### Escalas — bocetos A5 y A6 (F5)
 
@@ -109,7 +119,7 @@ Fila superior: **Mostrar | Práctica**, tónica y tipo (E-01; el catálogo se de
 
 ### Ajustes — boceto A7
 
-Una hoja que sube desde abajo, con los grupos de hoy (Notación, Mástil, Sonido y afinación) y uno **nuevo, «Acerca de»**: Créditos y licencias (G-06, que exige que la app muestre los créditos), Privacidad (cuando exista la política, F6.4, G-11), Restablecer y el número de versión (G-10). **Desde la 0.3.3**, el grupo Sonido enseña el estado del sonido con un botón «Reactivar sonido», y bajo Restablecer (que conserva el récord) hay un botón «Borrar el récord de racha». En las filas con interruptor se toca la fila entera, que mide al menos 40 px de alto. Se cierra tocando fuera, con Escape o con «atrás»; el gesto de bajar llega en F3.4. Mientras está abierto, el resto de la página no responde (es un diálogo).
+Una hoja que sube desde abajo, con los grupos de hoy (Notación, Mástil, Sonido y afinación) y uno **nuevo, «Acerca de»**: Créditos y licencias (G-06, que exige que la app muestre los créditos), Privacidad (cuando exista la política, F6.4, G-11), Restablecer y el número de versión (G-10). **Desde la 0.4.2**, el primer grupo es «Idioma · Language» (Español | English, cada uno en su lengua; G-12). **Desde la 0.3.3**, el grupo Sonido enseña el estado del sonido con un botón «Reactivar sonido», y bajo Restablecer (que conserva el récord) hay un botón «Borrar los récords de racha» (uno por afinación desde la 0.4.1). En las filas con interruptor se toca la fila entera, que mide al menos 40 px de alto. Se cierra tocando fuera, con Escape o con «atrás»; el gesto de bajar llega en F3.4. Mientras está abierto, el resto de la página no responde (es un diálogo).
 
 ## 7. Móvil en horizontal (F3.2) — bocetos B1 a B6
 
@@ -220,7 +230,9 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.5** | 20/10/2026 | Sesión 1 (0.3.3): Adivinar empieza con ▶ y su lectura es la nota buscada; tiempos de la corrección; en Ajustes, estado del sonido, «Reactivar sonido» y «Borrar el récord de racha». |
+| **1.7** | 21/10/2026 | §6: pistas grandes dentro de sus botones y lectura grande con la nota tocada; Ajustes con el grupo de idioma (tus comentarios del 21/10). |
+| 1.6 | 21/10/2026 | §6: cómo quedó el afinador por micrófono en la 0.4.0 (órdenes, sin micrófono, permiso, horizontal), tras AR-08. |
+| 1.5 | 20/10/2026 | Sesión 1 (0.3.3): Adivinar empieza con ▶ y su lectura es la nota buscada; tiempos de la corrección; en Ajustes, estado del sonido, «Reactivar sonido» y «Borrar el récord de racha». |
 | 1.4 | 20/10/2026 | §9: «+» enseña más trastes y «−» menos; con el dedo se pueden pedir trastes de hasta 28 px (tu comentario del 20/10). |
 | 1.3 | 20/10/2026 | §10: paleta decidida en F3.4 (7 naturales bien distintas y sostenidos derivados) y puntos secundarios con contorno. |
 | 1.2 | 20/10/2026 | Tras AR-05 y AT-04: en vertical, la navegación nunca se sale y los 40 px por cuerda se garantizan desde 660 px de alto (§7); en horizontal, de 10 a 12 trastes según el ancho; en el panel de Adivinar, Do Re Mi y 𝄞 arriba, como en Libre; el zoom guardado se conserva. El gesto de bajar para cerrar Ajustes pasa a F3.4. |

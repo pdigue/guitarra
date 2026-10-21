@@ -3,7 +3,7 @@
 Uso, desde la carpeta del proyecto:
     python herramientas/generar-autonomo.py
 
-Necesita Python 3 con numpy, y ffmpeg. Es una herramienta de desarrollo: el
+Necesita Python 3 con numpy, ffmpeg y Node.js (para ensamblar la página). Es una herramienta de desarrollo: el
 resultado es un único archivo que funciona con doble clic y sin conexión.
 
 Qué hace:
@@ -13,8 +13,9 @@ Qué hace:
    apagado: no se pierde nada audible y el archivo pesa la mitad.
 3. Mide la afinación de cada grabación recortada y comprueba que no ha
    cambiado más de 0,5 cents (S-08).
-4. Mete cada una en la página en base64 (texto que representa bytes), entre
-   dos marcas, sin tocar nada más de index.html.
+4. Une index.html con su css/ y su js/ (herramientas/ensamblar.js, desde la
+   0.4.0) y mete cada grabación en la página en base64 (texto que representa
+   bytes), entre dos marcas, sin tocar nada más.
 5. Comprueba dos límites (F2.3, revisados en CP-2): el audio no pasa de
    1,45 MB, y bajar su calidad exige que el cliente lo escuche; el archivo
    entero no pasa de 2 MB, para dejar sitio al código de las fases siguientes.
@@ -56,7 +57,9 @@ def grabaciones(html):
 
 
 def main():
-    html = (RAIZ / 'index.html').read_text(encoding='utf-8')
+    # La misma página que ve el banco de pruebas: index.html con css/ y js/ dentro.
+    html = subprocess.run(['node', str(RAIZ / 'herramientas' / 'ensamblar.js'), str(RAIZ / 'index.html')],
+                          check=True, capture_output=True).stdout.decode('utf-8')
     version = re.search(r"APP_VERSION = '([^']+)'", html).group(1)
     medida = json.loads((RAIZ / 'samples' / 'afinacion.json').read_text(encoding='utf-8'))
     bloques, informe, fallos = [], [], []
@@ -80,7 +83,7 @@ def main():
                             'sha256_original': hashlib.sha256(origen.read_bytes()).hexdigest()})
             bloques.append(f'<script type="application/octet-stream" id="audio-{timbre}-{nota}">'
                            f'{base64.b64encode(datos).decode()}</script>')
-    marca = '<script>\n"use strict";'
+    marca = '<!-- CÓDIGO DE LA APP.'
     assert html.count(marca) == 1, 'no se encuentra el código de la app en index.html'
     pagina = html.replace(marca, INICIO + '\n' + '\n'.join(bloques) + '\n' + FIN + '\n' + marca)
     SALIDA.parent.mkdir(exist_ok=True)

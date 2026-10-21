@@ -1,11 +1,15 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 1.13 · **Fecha:** 20 de octubre de 2026 · **Base:** `requisitos.md` v1.15 · app `0.3.3` · `roadmap.md` v3.13  
+**Versión:** 1.15 · **Fecha:** 21 de octubre de 2026 · **Base:** `requisitos.md` v1.17 · app `0.4.2` · `roadmap.md` v3.15  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
+
+**Cambios en la 1.15:** G-12 nuevo; J-11 verificado por el banco; criterios de J-01, J-06, J-08 y C-02 con la 0.4.1 y la 0.4.2.
+
+**Cambios en la 1.14:** evidencias del afinador por micrófono; A-02-CA, A-04 y G-10 verificados.
 
 **Cambios en la 1.13:** 35 requisitos verificados en la Sesión 1 (informe `V-08`), con su prueba en la evidencia; criterios de J-01, J-08, J-10 y S-02 con la 0.3.3, pendientes de la Sesión 2; evidencia de S-01 y PL-04; C-08 y S-09 nuevos, fuera de alcance.
 
@@ -35,7 +39,7 @@
 
 | Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 95 | 66 | 8 | 17 | 4 | 38 | 11 |
+| 96 | 73 | 8 | 11 | 4 | 42 | 10 |
 
 | ID | Etapa | Método | Criterio de aceptación | Declaración | Evidencia | Verificación | Origen |
 |---|---|:---:|---|---|---|---|---|
@@ -46,14 +50,15 @@
 | **G-05** | F3.4 | I+T | Todo control es alcanzable con teclado y muestra el foco; contrastes ≥ 4,5:1 medidos; el movimiento se reduce con prefers-reduced-motion; en pantallas táctiles, todo control y toda casilla del mástil mide al menos 40 × 40 px en la vista por defecto, salvo las cuerdas en vertical con menos de 660 px de alto y los trastes que el usuario estreche con «+» (hasta 28 px). Paleta por nota: las 7 naturales a ≥ 7,5 (OKLab × 100) entre sí con visión normal y con protanopía, deuteranopía y tritanopía simuladas, y las 12 a ≥ 8 con visión normal; el nombre de la nota siempre escrito. | Cumple | V-07: comprobar-accesibilidad.js (teclado, contraste, movimiento) · paleta.py · V-06: 40 × 40 px · Banco (node --test): teclado, etiquetas, paleta, grises, fila y asa · Sesión 1: A18, C05 y C06 | Verificado | Cliente · 20/10 (interfaz.md v1.0) |
 | **G-06** | F2.1 · F6.4 | I | CREDITOS.md lista cada recurso de terceros con su origen y su licencia, y la app muestra el texto de atribución en Ajustes. | Cumple parcialmente | CREDITOS.md (F2.1). Falta mostrarlo en la app (F6.4) | Verificado parcialmente | Desarrollo · v1.1 |
 | **G-07** | F2.3 · F2.5 | T | En Windows (y Android cuando lo haya), con el ordenador en modo avión, dist/trasteando.html abre con doble clic en ≤ 3 s, suenan las grabaciones y funcionan Libre, Adivinar y el afinador por referencia. Audio ≤ 1,45 MB y archivo ≤ 2 MB. | Cumple | V-03 y V-04: desde disco y sin conexión en Chromium, abre en 0,3 s y suena a menos de 1 cent · Banco (node --test): autónomo al día, con su audio, huellas y límites · Sesión 1: B02, B03, B04 y C09 | Verificado | Cliente · 15/09 |
-| **G-08** | F4.1 · F6.1 | T | El archivo autónomo generado y la web publicada superan el mismo banco de pruebas. | Cumple parcialmente | — | Verificado parcialmente | Cliente · 15/09 |
+| **G-08** | F4.1 · F6.1 | T | El archivo autónomo generado y la web publicada superan el mismo banco de pruebas. | Cumple parcialmente | Banco (node --test): el autónomo es exactamente la app ensamblada (ensamblar.js) más su audio; la app en js/ se carga archivo a archivo | Verificado parcialmente | Cliente · 15/09 |
 | **G-09** | F7.4 | I | Ficha enviada a revisión en al menos una tienda, o decisión documentada de no hacerlo. | No cumple | — | Pendiente | Cliente · 14/10 |
-| **G-10** | F1.3 | I | Ajustes muestra la versión; CHANGELOG.md tiene una entrada por versión; existe la etiqueta de Git de cada cierre de fase. | Cumple | Banco (node --test) · CHANGELOG.md · F1.1 #12 | Verificado parcialmente | Cliente · 14/10 |
+| **G-10** | F1.3 | I | Ajustes muestra la versión; CHANGELOG.md tiene una entrada por versión; existe la etiqueta de Git de cada cierre de fase. | Cumple | Banco (node --test) · CHANGELOG.md · F1.1 #12 · etiquetas v0.1.5, v0.2.3 y v0.3.3 (21/10) | Verificado | Cliente · 14/10 |
 | **G-11** | F6.4 | I | La política de privacidad está publicada y la app no envía ninguna petición con datos del usuario (pestaña Red). | No cumple | — | Pendiente | Desarrollo · v1.2 |
+| **G-12** | F4.5 | D | En Ajustes, Español / English cambia todos los textos de la app; la elección se guarda; la primera vez sigue al navegador. | Cumple | Banco (node --test): mismas claves en las dos lenguas, cambio y vuelta, primera vez según el navegador · comprobar-disposicion.js con IDIOMA=en-US | Pendiente | Cliente · listado 14/09 |
 | **PL-01** | F2.5 · F7.2 | D | La lista de F1.1 se supera en Chrome, Edge y Firefox en Windows, y la app se instala como PWA desde Edge. | Cumple parcialmente | — | Pendiente | Cliente · 14/10 |
 | **PL-02** | F2.5 · F7.2 | D | La lista de comprobación se supera en Chrome para Android, en web y con la PWA instalada. | Cumple parcialmente | — | Pendiente | Cliente · 14/10 |
 | **PL-03** | F2.5 · F7.2 | D | La lista de comprobación se supera en Safari para iOS, en web y desde la pantalla de inicio. | Cumple parcialmente | — | Pendiente | Cliente · 14/10 |
-| **PL-04** | F2.2 · F3.2 · F7.2 | I+T | Cada capacidad del navegador que usa la app figura en docs/compatibilidad.md con su comportamiento en Windows, Android e iPhone y su alternativa; el banco arranca la app sin vibración ni audio y funciona. | Cumple parcialmente | docs/compatibilidad.md v1.4 · Banco (node --test): sin matchMedia ni history | Verificado parcialmente | Cliente · 14/10 |
+| **PL-04** | F2.2 · F3.2 · F7.2 | I+T | Cada capacidad del navegador que usa la app figura en docs/compatibilidad.md con su comportamiento en Windows, Android e iPhone y su alternativa; el banco arranca la app sin vibración ni audio y funciona. | Cumple parcialmente | docs/compatibilidad.md v1.5 · Banco (node --test): sin matchMedia ni history | Verificado parcialmente | Cliente · 14/10 |
 | **N-01** | F1.1 | D | El chip de nomenclatura alterna todos los nombres entre Do-Re-Mi y C-D-E. | Cumple | F1.1 #6 · Sesión 1: A06 | Verificado | Cliente · listado 14/09 |
 | **N-02** | F1.1 | D | El selector de Ajustes produce el mismo cambio que el chip. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **N-03** | F1.1 | D | El chip está visible en la barra de acceso rápido sin abrir ningún menú. | Cumple | F1.1 #14 · Sesión 1: A06 | Verificado | Cliente · listado 14/09 |
@@ -82,17 +87,17 @@
 | **L-01** | F1.1 | D | Al abrir la app se muestra el modo Libre. | Cumple | F1.1 #14 · Sesión 1: A01 | Verificado | Cliente · listado 14/09 |
 | **L-02** | F1.1 | D | Con «Ver todas las notas» se ven todos los nombres; sin él, solo el de la nota pulsada. | Cumple | Banco (node --test) · F1.1 #10 · Sesión 1: A10 | Verificado | Cliente · listado 14/09 |
 | **L-03** | F1.1 | D | Al pulsar una nota se señalan las demás posiciones con el mismo sonido exacto y ninguna de otra octava. | Cumple | F1.1 #14 · Sesión 1: E03 | Verificado | Cliente · listado 14/09 |
-| **J-01** | F1.1 | D | En Adivinar nada suena hasta pulsar ▶ (resaltado); antes de ▶ el mástil suena pero no puntúa; después cada reto suena solo y ▶ lo repite. La lectura grande muestra la nota buscada, no la pulsada. | Cumple | F1.1 #14 · Banco (node --test): ▶ y lectura de la nota buscada · Sesión 1: C07 y E04 | Pendiente | Cliente · listado 14/09 |
+| **J-01** | F1.1 | D | En Adivinar nada suena hasta pulsar ▶ (resaltado); antes de ▶ el mástil suena pero no puntúa; después cada reto suena solo y ▶ lo repite. La lectura grande y el pentagrama muestran la nota que tocas (0.4.1); la buscada, solo con la pista de nombre o al responder. | Cumple | F1.1 #14 · Banco (node --test): ▶, y lectura de la nota tocada con las pistas aparte · Sesión 1: C07 y E04 | Pendiente | Cliente · listado 14/09 |
 | **J-02** | F1.1 | T | Cualquier posición con el mismo sonido cuenta como acierto. | Cumple | Banco (node --test): acierto · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
 | **J-03** | F1.1 | D | Tras acertar se señalan las demás posiciones válidas. | Cumple | F1.1 #14 · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
 | **J-04** | F1.1 | D | La pista «Nombre» muestra el nombre y la octava de la nota que suena. | Cumple | F1.1 #14 · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
 | **J-05** | F1.1 | D | La pista «Cuerda» lista las cuerdas donde puede estar la nota. | Cumple | F1.1 #14 · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
-| **J-06** | F1.1 | D | Las dos pistas se activan con chips visibles en Adivinar, sin abrir Ajustes. | Cumple | F1.1 #14 · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
+| **J-06** | F1.1 | D | Las dos pistas se activan con chips visibles en Adivinar, sin abrir Ajustes; encendidas, enseñan su respuesta en grande (0.4.1). | Cumple | F1.1 #14 · Banco (node --test): pistas grandes, también antes de ▶ · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
 | **J-07** | F1.1 | T | La racha sube con cada acierto y vuelve a 0 con cada fallo. | Cumple | Banco (node --test): acierto y fallo · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
-| **J-08** | F1.1 | T | El récord persiste tras recargar y tras «Restablecer todos los ajustes»; solo «Borrar el récord de racha» lo pone a cero. | Cumple | Banco (node --test): récord guardado y restablecer · F1.1 #13 · Sesión 1: A15 | Verificado parcialmente | Cliente · listado 14/09 |
+| **J-08** | F1.1 | T | El récord de cada afinación persiste tras recargar y tras «Restablecer todos los ajustes»; solo «Borrar los récords de racha» los pone a cero. | Cumple | Banco (node --test): récords por afinación guardados y restablecer · F1.1 #13 · Sesión 1: A15 | Verificado parcialmente | Cliente · listado 14/09 |
 | **J-09** | F1.1 | D | Acierto y fallo se distinguen al instante por color y destello. | Cumple | F1.1 #9 · Sesión 1: A09 y E04 | Verificado | Cliente · listado 14/09 |
 | **J-10** | F1.3 | T | Tras un fallo se marca la pulsada (relleno rojo y ✗); a los 1,2 s suena la nota buscada y se iluminan todas sus posiciones (relleno verde y ✓); 3 s después llega un reto nuevo limpio. | Cumple | Banco (node --test): 8 comprobaciones · F1.1 #9 · Sesión 1: A09 | Verificado parcialmente | Cliente · listado 14/09 |
-| **J-11** | F4.4 | I | La decisión queda anotada en requisitos.md. | No cumple | — | Pendiente | Desarrollo · v1.1 |
+| **J-11** | F4.4 | T | Cada afinación guarda su récord; el récord único de antes pasa a Estándar; cambiar de afinación empieza la racha. | Cumple | Banco (node --test): récord por afinación, migración y cambio de afinación | Verificado | Desarrollo · v1.1 |
 | **J-12** | F1.3 | T | Con «Ver todas las notas» activo, Adivinar no muestra los nombres. | Cumple | Banco (node --test) · F1.1 #10 · Sesión 1: A10 | Verificado | Revisión de código 0.1.2 |
 | **E-01** | F5.2 | D | Se puede elegir tónica y tipo de escala entre el catálogo aprobado. | No cumple | — | Pendiente | Cliente · listado 14/09 |
 | **E-02** | F5.2 | T | Para cada tónica y tipo, las posiciones generadas coinciden con una referencia externa en afinación estándar. | No cumple | — | Pendiente | Cliente · listado 14/09 |
@@ -103,11 +108,11 @@
 | **E-05b** | Posterior | N/A | Fuera del alcance actual. | No aplica | — | No aplica | AR-01 |
 | **E-06** | F5.3 | D | El guiado avanza nota a nota por la escala. | No cumple | — | Pendiente | Cliente · listado 14/09 |
 | **A-01** | F1.1 | D | Pulsar cada cuerda en el afinador reproduce su nota de referencia. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
-| **A-02** | F4.3 | D | Con una guitarra real, el afinador indica subir o bajar hasta dejarla afinada, en estándar y en una alternativa. | No cumple | — | Pendiente | Cliente · listado 14/09 |
-| **A-02-CA** | F4.2 | T | Banco de pruebas: error ≤ ±2 cents y latencia < 300 ms sobre muestras desafinadas una cantidad conocida, tomando como referencia su frecuencia medida en samples/afinacion.json. | No cumple | — | Pendiente | AR-01 |
-| **A-03** | F4.3 | D | La aguja indica la desviación en cents y marca «afinado» dentro de ±5 cents. | No cumple | — | Pendiente | Cliente · listado 14/09 |
-| **A-04** | F4.3 | T | Con la cuerda a menos de un semitono de su nota, el afinador identifica la cuerda correcta. | No cumple | — | Pendiente | Cliente · listado 14/09 |
-| **A-05** | F4.3 | D | Con una cuerda fijada a mano, el afinador la usa como referencia aunque esté muy desafinada. | No cumple | — | Pendiente | Cliente · listado 14/09 |
+| **A-02** | F4.3 | D | Con una guitarra real, el afinador indica subir o bajar hasta dejarla afinada, en estándar y en una alternativa. | Cumple | comprobar-afinador.js (Chromium, grabación real 12 cents baja → «La2 · −11 cents · Sube un poco»; hilo aparte; se apaga al salir) · Banco (node --test): flujo del permiso | Pendiente | Cliente · listado 14/09 |
+| **A-02-CA** | F4.2 | T | Banco de pruebas: error ≤ ±2 cents y latencia < 300 ms sobre muestras desafinadas una cantidad conocida, tomando como referencia su frecuencia medida en samples/afinacion.json. | Cumple | tests/tono.test.js: 12 grabaciones reales de −45 a +40 cents; peor error 1,86 cents frente a su medida y 1,01 trozo a trozo; aguja en su nota en ≤ 168 ms + 3 ms de cálculo | Verificado | AR-01 |
+| **A-03** | F4.3 | D | La aguja indica la desviación en cents y marca «afinado» dentro de ±5 cents. | Cumple | Banco (node --test): «Sube un poco» a −12, «Afinada» a +3 · comprobar-afinador.js | Pendiente | Cliente · listado 14/09 |
+| **A-04** | F4.3 | T | Con la cuerda a menos de un semitono de su nota, el afinador identifica la cuerda correcta. | Cumple | Banco (node --test): las 6 cuerdas a −90 y +90 cents, y la 6ª en Drop D | Verificado | Cliente · listado 14/09 |
+| **A-05** | F4.3 | D | Con una cuerda fijada a mano, el afinador la usa como referencia aunque esté muy desafinada. | Cumple | Banco (node --test): 6ª elegida con un La2 sonando → +500 cents, y sin confundir la octava | Pendiente | Cliente · listado 14/09 |
 | **A-06** | F1.1 | I | La afinación estándar es E2 A2 D3 G3 B3 E4. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **A-07** | F1.1 | I | Existen Drop D, medio tono abajo, Open G, Open D y DADGAD con sus notas correctas. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **A-08** | F1.1 | D | Los botones +/− mueven la cuerda un semitono y pasan a Personalizada sin alterar los presets. | Cumple | F1.1 #4 · Sesión 1: A13 | Verificado | Cliente · listado 14/09 |
@@ -124,7 +129,7 @@
 | **V-08** | F1.1 | D | El zoom se mantiene tras recargar y tras girar el móvil. | Cumple | F1.1 #13 | Pendiente | Cliente · listado 14/09 |
 | **V-09** | F1.3 | T | El modo Guía mantiene visibles solo los números de los trastes con marca. | Cumple | Banco (node --test) · F1.1 #11 · Sesión 1: A11 | Verificado | AR-01 |
 | **C-01** | F1.1 | D | El botón de Ajustes abre el panel desde cualquier pantalla y Escape lo cierra. | Cumple | F1.1 #14 · Sesión 1: A19 y C05 | Verificado | Cliente · listado 14/09 |
-| **C-02** | F1.1 | I | El panel contiene todos los ajustes listados y la versión de la app. | Cumple | F1.1 #12 | Pendiente | Cliente · listado 14/09 |
+| **C-02** | F1.1 | I | El panel contiene todos los ajustes listados, el idioma (0.4.2) y la versión de la app. | Cumple | F1.1 #12 · Banco (node --test): grupo Idioma | Pendiente | Cliente · listado 14/09 |
 | **C-03** | F1.1 | D | Nomenclatura, pentagrama y pistas tienen chips de acceso rápido. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **C-04** | F1.1 | D | La navegación (barra inferior, raíl o pestañas en la cabecera, según la disposición) lleva a cada área con un toque. | Cumple | F1.1 #14 · Sesión 1: A19 | Verificado | Cliente · 20/10 (interfaz.md v1.0) |
 | **C-05** | F1.1 | T | Todos los ajustes persisten tras recargar, y unos ajustes corruptos o antiguos no rompen la app. | Cumple | Banco (node --test): migración · F1.1 #13 · Sesión 1: A14 y A15 | Verificado | Cliente · listado 14/09 |

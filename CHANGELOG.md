@@ -6,11 +6,14 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.3.3** | 20/10/2026 | F3.3 · correcciones de la Sesión 1 | Rama `auto/F3.3-sesion1` |
-| 0.3.2 | 20/10/2026 | F3 · tu comentario sobre el zoom | Rama `auto/F3.2-zoom` |
+| **0.4.2** | 21/10/2026 | F4.5 · idioma español o inglés | Rama `auto/F4.5-idioma` |
+| 0.4.1 | 21/10/2026 | F4.4 · pistas grandes y récord por afinación | Rama `auto/F4.4-pistas-record` |
+| 0.4.0 | 21/10/2026 | F4.1 a F4.3 · afinador por micrófono | Rama `auto/F4.1-modulos` (PR #12) |
+| 0.3.3 | 20/10/2026 | F3.3 · correcciones de la Sesión 1 | `main`, fusionada el 20/10 (PR #11); etiqueta `v0.3.3` |
+| 0.3.2 | 20/10/2026 | F3 · tu comentario sobre el zoom | `main`, fusionada el 20/10 (PR #10) |
 | 0.3.1 | 20/10/2026 | F3.4 | `main`, fusionada el 20/10 (PR #9) |
 | 0.3.0 | 20/10/2026 | F3.2 | `main`, fusionada el 20/10 (PR #8) |
-| 0.2.3 | 19/10/2026 | F2 · auditoría CP-2 | `main`, fusionada el 20/10 |
+| 0.2.3 | 19/10/2026 | F2 · auditoría CP-2 | `main`, fusionada el 20/10; etiqueta `v0.2.3` |
 | 0.2.2 | 19/10/2026 | F2.4 | `main`, aprobada el 19/10 |
 | 0.2.1 | 19/10/2026 | F2.3 | `main`, aprobada el 19/10 |
 | 0.2.0 | 19/10/2026 | F2.2 | `main`, aprobada tras la escucha en el iPhone |
@@ -28,6 +31,43 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.4.2] — 21/10/2026 · La app en español o en inglés
+
+### Añadido
+- **G-12** · *Idioma:* Ajustes › «Idioma · Language» cambia toda la app entre español e inglés. La primera vez sigue el idioma del navegador; quien la estrena en inglés empieza con los nombres C D E (se cambian aparte, como siempre). La elección se guarda, y Restablecer no la cambia.
+
+### Verificado
+- Banco: 55 de 55, con 3 pruebas nuevas (las dos lenguas tienen los mismos textos; cambio y vuelta; primera vez según el navegador). `comprobar-disposicion.js` en español y en inglés, `comprobar-accesibilidad.js`, el afinador, las 15 comprobaciones de F1.1 y el archivo autónomo, bien. Las herramientas fijan ahora el idioma del navegador.
+
+---
+
+## [0.4.1] — 21/10/2026 · Pistas grandes y un récord por afinación
+
+### Cambiado
+- **J-01 · J-06** · *Adivinar* (tu comentario del 21/10): la lectura grande vuelve a ser la nota que tocas. Cada pista encendida enseña su respuesta dentro de su botón, en grande y con borde de «pista»: «NOTA Sol#3», «CUERDAS 3ª 4ª». Se ve también antes de pulsar ▶; antes no salía hasta empezar.
+- **J-08 · J-11** · *Un récord por afinación* (tu decisión del 21/10): «Récord 7 · Estándar». El récord que tenías pasa a Estándar; cambiar de afinación empieza la racha de nuevo; «Borrar los récords de racha» los borra todos.
+
+### Verificado
+- Banco: 52 de 52 (pruebas nuevas de las pistas y del récord por afinación). Disposición comprobada con las dos pistas encendidas en vertical, en el iPhone SE y en horizontal.
+
+---
+
+## [0.4.0] — 21/10/2026 · Afinador por micrófono (F4.1 a F4.3)
+
+### Añadido
+- **A-02 · A-03 · A-04 · A-05** · *Afinador por micrófono.* El Afinador tiene dos modos, **De oído** y **Micrófono**. El micrófono no se enciende hasta que pulsas «Activar el micrófono», y se apaga al salir del Afinador o al bloquear el móvil. Muestra una aguja de −50 a +50 cents con la franja verde de ±5, la nota de la cuerda, los cents y la orden «▲ Sube», «▼ Baja» o «✓ Afinada». La cuerda se elige sola (Auto) o a mano (6 … 1). El sonido se analiza solo en tu dispositivo.
+- **A-02-CA** · *Detector de tono* (método YIN) en un hilo aparte, para que no frene la interfaz. Con las grabaciones de las seis cuerdas al aire, desafinadas a propósito, su peor error es de 1,86 cents y la aguja sale en su nota en 168 ms como mucho.
+- **PL-04** · Si no se puede usar el micrófono (la app abierta como archivo, sin `https` o sin permiso), lo explica y dice cómo arreglarlo; De oído sigue igual. En el iPhone, al encender el micrófono la sesión de audio pasa a «play-and-record» (sin ella no deja grabar) y vuelve a «playback» al apagarlo.
+
+### Cambiado
+- **G-08** · *La app, repartida en archivos:* `index.html` con la estructura, `css/` con el estilo y `js/` con la lógica, un archivo por tema. `herramientas/ensamblar.js` los une para `dist/trasteando.html`, que sigue siendo un solo archivo.
+
+### Verificado
+- **Tras la auditoría AT-07:** el detector mide los graves también con tarjetas de sonido de 96 kHz; en «Auto», si el micrófono capta la octava de la 6ª cuerda, sigue siendo la 6ª; «Afinada» no parpadea en el borde de ±5; la orden y los errores se anuncian bien al lector de pantalla y el foco no se pierde; si el sistema corta el micrófono, se dice; los archivos de `css/` y `js/` llevan la versión en su dirección para que el navegador no mezcle dos versiones.
+- Banco: 51 de 51 (`tests/banco.test.js` y el nuevo `tests/tono.test.js`). En Chromium, con una grabación real de la 5ª cuerda 12 cents baja como micrófono: «La2 · −11 cents · ▲ Sube un poco», en vertical y en horizontal (`herramientas/comprobar-afinador.js`). Disposición, accesibilidad, las 15 comprobaciones de F1.1 y el archivo autónomo, bien.
 
 ---
 

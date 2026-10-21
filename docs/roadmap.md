@@ -1,7 +1,7 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 3.13 · **Fecha:** 20 de octubre de 2026
-**Válido para:** app `0.3.3` · `requisitos.md` v1.15 · `matriz-cumplimiento` v1.13 · `interfaz.md` v1.5 · `compatibilidad.md` v1.4 · `automatizacion.md` v1.1 · `CHANGELOG.md`
+**Versión:** 3.15 · **Fecha:** 21 de octubre de 2026
+**Válido para:** app `0.4.2` · `requisitos.md` v1.17 · `matriz-cumplimiento` v1.15 · `interfaz.md` v1.7 · `compatibilidad.md` v1.6 · `automatizacion.md` v1.1 · `CHANGELOG.md`
 **Gestiona:** chat de Desarrollo
 
 > ⚡ **Modo acelerado activo desde el 14/10** (detalle en `automatizacion.md`). El agente ejecuta las etapas por bloques —F1 a F3, luego F4 a F6— y solo para en las decisiones. Las pruebas que necesitan tus manos se agrupan en dos sesiones: **Sesión 1** con el iPhone y el ordenador al cerrar F3, y **Sesión 2** con la guitarra al cerrar F6.
@@ -12,14 +12,14 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** **Sesión 1 hecha** el 20/10 (informe `verificaciones/V-08`): 37 de 41 pruebas cumplen y 35 requisitos quedan validados. Lo que salió se corrige en la `0.3.3`. Siguiente: CP-3 y F4 (afinador por micrófono). En la Sesión 2 se confirma que el sonido del iPhone ya no se queda mudo.
+📍 **Estás aquí:** F4 hecha por el agente, con tus comentarios del 21/10: pistas grandes y un récord por afinación (`0.4.1`) y la app en español o inglés (`0.4.2`). **Pendiente, sin bloquear:** tu comprobación de 10 minutos con la guitarra (F4.3, `verificaciones/V-09`), con la que se cierra F4 con su etiqueta, y que eches un vistazo a la app en inglés (G-12). Mientras, sigue F5 (Escalas).
 
 | Fase | Objetivo | Versión | Dónde se usa | Etapas | Progreso |
 |------|----------|:---:|---|:---:|---|
 | **F1** | Base local verificada | 0.1.x | 💻 Live Server | 4 | `▰▰▰▰▰▰▰▰` 4/4 |
 | **F2** | Sonido propio y archivo autónomo | 0.2.x | 📁 Archivo en cualquier dispositivo | 5 | `▰▰▰▰▰▰▰▰` 5/5 |
 | **F3** | Interfaz y adaptación | 0.3.x | 📁 Archivo | 4 | `▰▰▰▰▰▰▰▰` 4/4 |
-| **F4** | Afinador por micrófono | 0.4.x | 💻 Live Server | 4 | `▱▱▱▱▱▱▱▱` 0/4 |
+| **F4** | Afinador por micrófono | 0.4.x | 💻 Live Server | 5 | `▰▰▰▰▰▰▰▰` 5/5 · F4.3 y F4.4 con pendientes |
 | **F5** | Escalas | 0.5.x | 📁 Archivo | 5 | `▱▱▱▱▱▱▱▱` 0/5 |
 | **F6** | Preparación para distribución | 0.6.x | 💻 Live Server | 4 | `▱▱▱▱▱▱▱▱` 0/4 |
 | **F7** | Publicación y lanzamiento | **1.0.0** | 🌐 Web y tiendas | 5 | `▱▱▱▱▱▱▱▱` 0/5 |
@@ -36,8 +36,8 @@ flowchart LR
   F1["F1 · Base local<br/>0.1.x · 💻"]:::done --> CP1{{CP-1}}
   CP1 --> F2["F2 · Sonido propio<br/>0.2.x · 📁"]
   F2 --> CP2{{CP-2}} --> F3["F3 · Interfaz<br/>0.3.x · 📁"]
-  F3 --> S1(["🧪 Sesión 1<br/>iPhone y ordenador"]):::done --> CP3{{CP-3}}:::now --> F4["F4 · Micrófono<br/>0.4.x · 💻"]
-  F4 --> CP4{{CP-4}} --> F5["F5 · Escalas<br/>0.5.x · 📁"]
+  F3 --> S1(["🧪 Sesión 1<br/>iPhone y ordenador"]):::done --> CP3{{CP-3}}:::done --> F4["F4 · Micrófono<br/>0.4.x · 💻"]:::now
+  F4 -.->|F4.3 pendiente: no bloquea| CP4{{CP-4}} --> F5["F5 · Escalas<br/>0.5.x · 📁"]
   F5 --> CP5{{CP-5}} --> F6["F6 · Preparación<br/>0.6.x · 💻"]
   F6 --> S2(["🎸 Sesión 2<br/>con la guitarra"]):::you --> CP6{{"CP-6<br/>¿lanzamos?"}} --> F7["F7 · Publicación<br/>1.0.0 · 🌐"]
   subgraph T["Pista T · modo acelerado, activo desde el 14/10"]
@@ -67,7 +67,7 @@ Esta distinción gobierna el orden del roadmap: decide qué funcionalidad es pos
 **Tres consecuencias:**
 
 1. Para que la app funcione **de verdad sin conexión abriendo el archivo**, el audio tiene que ir dentro del HTML. Se resuelve en F2.
-2. El **micrófono** exige contexto seguro: `localhost` o `https`. Un móvil que entra por WiFi al Live Server del ordenador (`http://192.168…`) **no** es contexto seguro, así que ahí tampoco funciona. El afinador por micrófono se usa en el ordenador durante F4 y llega al móvil en F7.
+2. El **micrófono** exige contexto seguro: `localhost` o `https`. Un móvil que entra por WiFi al Live Server del ordenador (`http://192.168…`) **no** es contexto seguro, así que ahí tampoco funciona. Por eso el afinador por micrófono se prueba en el ordenador o en la web de pruebas, que es `https` y sí funciona en el iPhone; para todos, llega con la publicación (F7).
 3. En **iPhone**, abrir un HTML desde la app Archivos muestra una vista previa que no ejecuta JavaScript. El modo archivo probablemente no sirva en iOS; se confirma en F2.5.
 
 **Respaldar no es publicar.** Tener el código en GitHub es un respaldo privado de hecho: nadie lo encuentra ni lo usa como app. La app solo se vuelve pública al activar GitHub Pages, en F7.1.
@@ -181,14 +181,15 @@ Peso principal en el **auditor de requisitos** como experto en experiencia de us
 ## F4 — Afinador por micrófono · `0.4.x` · 💻
 
 **Objetivo:** cerrar el segundo gran objetivo del producto (O-04).
-**Restricción:** se desarrolla y usa en el ordenador con Live Server. En el móvil llega en F7.
+**Restricción:** el micrófono exige `https` o `localhost`: se prueba en el ordenador (Live Server) o en la web de pruebas, que también funciona en el iPhone. Para todos, llega con la publicación (F7).
 
 | Etapa | Qué se hace | Requisitos | Cómo se valida | Aprenderás | Estado |
 |---|---|---|---|---|:---:|
-| **F4.1** | Partir el archivo en módulos y ampliar las pruebas automáticas | G-08 | La app funciona igual; `node --test` pasa. El banco de `tests/` es la semilla | Módulos, estado de una aplicación, pruebas automáticas | ⬜ |
-| **F4.2** | Detector de tono en un hilo aparte, con banco de pruebas | A-02-CA | ±2 cents y menos de 300 ms sobre muestras desafinadas a propósito | Frecuencia fundamental y armónicos; cents; hilos de trabajo | ⬜ |
-| **F4.3** | Interfaz del afinador: aguja, detección y selección de cuerda, permiso de micrófono | A-02, A-03, A-04, A-05 | Afinar una guitarra real en estándar y en una alternativa; caso de cuerda muy desafinada. Comprobación corta con la guitarra en `localhost`, 10 minutos, al terminar la etapa | Permisos del navegador; suavizado para que la aguja no tiemble | ⬜ · validación 📅 Sesión 2 |
-| **F4.4** | Cierre y decisión del récord | J-11 | Etiqueta `v0.4.x`; decisión anotada | — | ⬜ |
+| **F4.1** | Partir el archivo en módulos y ampliar las pruebas automáticas | G-08 | La app funciona igual; `node --test` pasa. El banco de `tests/` es la semilla | Módulos, estado de una aplicación, pruebas automáticas | ✅ `0.4.0`: `css/` y `js/` (12 archivos), `herramientas/ensamblar.js` |
+| **F4.2** | Detector de tono en un hilo aparte, con banco de pruebas | A-02-CA | ±2 cents y menos de 300 ms sobre muestras desafinadas a propósito | Frecuencia fundamental y armónicos; cents; hilos de trabajo | ✅ `0.4.0`: YIN en un `Worker`; peor error 1,86 cents, aguja en ≤ 168 ms (`tests/tono.test.js`) |
+| **F4.3** | Interfaz del afinador: aguja, detección y selección de cuerda, permiso de micrófono | A-02, A-03, A-04, A-05 | Afinar una guitarra real en estándar y en una alternativa; caso de cuerda muy desafinada. Comprobación corta con la guitarra en la web de pruebas (`https`, también en el iPhone) o en `localhost`, 10 minutos, al terminar la etapa | Permisos del navegador; suavizado para que la aguja no tiemble | 🔨 `0.4.0` hecha; en Chromium, con una grabación real, «La2 · −11 cents» (`comprobar-afinador.js`) · **validación: tus 10 minutos** |
+| **F4.4** | Cierre y decisión del récord; con ella, tus comentarios sobre las pistas de Adivinar | J-11, J-06, J-01 | Etiqueta `v0.4.x`; decisión anotada | — | 🔨 `0.4.1`: un récord por afinación (tu decisión del 21/10). Falta la etiqueta, tras tu comprobación de F4.3 |
+| **F4.5** | Idioma: español o inglés (tu petición del 21/10) | G-12 | Banco: mismas claves en las dos lenguas, cambio y vuelta; disposición en inglés | Separar los textos del código (internacionalización) | ✅ `0.4.2` |
 
 ### 🔍 CP-4 — Checkpoint del afinador
 **Técnico:** detector, banco de pruebas y arquitectura modular. **Requisitos:** comparación con afinadores comerciales frente a O-04.
@@ -384,13 +385,13 @@ flowchart TB
 | Lista de comprobación manual | Recorrer casos concretos marcando cada uno | Sesión 1 (F1.1, F3.3) |
 | Banco de pruebas automático | Escenarios ejecutados por código, con resultado esperado; cada etapa añade los suyos | F1.3, F2.x, F4.1, F4.2 |
 | Medición objetiva | Medir una magnitud con una herramienta y compararla con el criterio: afinación de las muestras, peso del archivo | F2.1, F2.3, F2.4 |
-| Prueba en dispositivo real | Usar la app como usuario, con la guitarra delante | Sesión 1 (F2.5, F3.3) · Sesión 2 (F4.3, F5.4) · F7.2 |
+| Prueba en dispositivo real | Usar la app como usuario, con la guitarra delante | Sesión 1 (F2.5, F3.3) · comprobación corta tras F4.3 · Sesión 2 (F5.4, y F4.3 si la comprobación corta falló) · F7.2 |
 | Prueba de autonomía | Abrir el archivo sin conexión y sin servidor | F2.3, F2.5, F6.1 |
 | Auditoría con herramienta | Lighthouse, verificadores de contraste, simulador de daltonismo | F3.4, F6.3, F7.3 |
 | Contraste con referencia externa | Escalas y afinaciones frente a fuentes fiables | F5.2, F5.3 |
 | Checkpoint de auditoría | Informe de los auditores sobre el estado congelado | CP-1 a CP-6 |
 
-**Las dos sesiones contigo.** *Sesión 1*, al cerrar F3, con el iPhone y el ordenador: la lista de F1.1, el archivo autónomo en cada plataforma (F2.5) y quince minutos de uso real (F3.3). En el iPhone la app se sirve desde el ordenador por WiFi con Live Server, salvo que el archivo autónomo funcione. *Sesión 2*, al cerrar F6, con la guitarra: el afinador por micrófono (F4.3) y la práctica de escalas (F5.4), en el ordenador. **Añadido tras la Sesión 1:** en el iPhone, repetir C07, C08 y D03 (que el sonido no se quede mudo: S-01), A09, A14 y E06 con la 0.3.3 (J-01, J-08, J-10, S-02); afinar de oído (E05: A-01, A-06), y una lista corta para los requisitos de F1.1 que la Sesión 1 no cubría.
+**Las dos sesiones contigo.** *Sesión 1*, al cerrar F3, con el iPhone y el ordenador: la lista de F1.1, el archivo autónomo en cada plataforma (F2.5) y quince minutos de uso real (F3.3). En el iPhone la app se sirve desde el ordenador por WiFi con Live Server, salvo que el archivo autónomo funcione. *Sesión 2*, al cerrar F6, con la guitarra: la práctica de escalas (F5.4) y, si la comprobación corta de F4.3 dejó algo pendiente, el afinador por micrófono. **Añadido tras la Sesión 1:** en el iPhone, repetir C07, C08 y D03 (que el sonido no se quede mudo: S-01), A09, A14 y E06 con la 0.3.3 (J-01, J-08, J-10, S-02); afinar de oído (E05: A-01, A-06), y una lista corta para los requisitos de F1.1 que la Sesión 1 no cubría.
 
 **Despliegue de pruebas** (decisión del 15/10, **activo desde el 19/10**): `pdigue.github.io/guitarra`, servido desde la rama `pruebas` (`main` no se toca), que se actualiza con cada *pull request*. En el iPhone permite probar con `https` lo que el WiFi no deja: instalarla y, desde F4, el micrófono. Usarla sin conexión necesita el Service Worker (G-03), que se queda en F6.2 (decisión del 20/10): en la Sesión 1 el iPhone usa la web con conexión. La publicación oficial sigue siendo F7.1.
 
@@ -402,7 +403,7 @@ flowchart TB
 
 **Añadido a la Sesión 1 tras F3.2:** la app en horizontal en tu iPhone, en Safari y con la app instalada (que cada cuerda se toque cómoda y que nada quede tapado por la muesca); el aviso para girar, cerrarlo y que no vuelva; y el botón «atrás» con el ratón en Windows.
 
-**Dos comprobaciones cortas entre sesiones** (CP-1), para no esperar dos fases a oír un cambio de riesgo: 5 minutos en el iPhone tras F2.2, que sustituye todo el motor de audio, y 10 minutos con la guitarra en `localhost` tras F4.3.
+**Dos comprobaciones cortas entre sesiones** (CP-1), para no esperar dos fases a oír un cambio de riesgo: 5 minutos en el iPhone tras F2.2, que sustituye todo el motor de audio, y 10 minutos con la guitarra tras F4.3, en la web de pruebas (`https`, también en el iPhone) o en `localhost` (`verificaciones/V-09`).
 
 ---
 
@@ -410,10 +411,11 @@ flowchart TB
 
 | Decisión | Bloquea | Plazo |
 |---|---|---|
-| Récord único o por afinación | F4.4 | Antes de F4.4 |
 | Catálogo de escalas | F5.2 | Antes de F5.2 |
 | Licencia del código | F6.4 | Antes de F6.4 |
 | Tiendas y orden | F7.4 | Antes de F7.4 |
+
+**Cerradas el 21/10:** récord → uno por afinación (J-11) · idioma → español e inglés, elegible en Ajustes (G-12).
 
 **Cerradas el 20/10:** Service Worker → en F6.2, sin adelantarlo a la Sesión 1 · agudo de la acústica → aceptado como limitación conocida · especificación de interfaz → aprobada (`interfaz.md` v1.0) · paleta por nota → la elige el agente con tu criterio (naturales bien distintas y sostenidos derivados), hecha en F3.4.
 
@@ -430,7 +432,7 @@ flowchart TB
 | El archivo con el audio dentro pesa demasiado | F2.3 | Tarda en abrir en el móvil | Menos muestras o menor calidad; medir antes de decidir |
 | iPhone no ejecuta el archivo local | F2.5 | Vista previa sin JavaScript | Navegador de una app de terceros, o despliegue de pruebas |
 | El detector de tono no alcanza la precisión | F4.2 | El banco falla tras dos intentos | Entregar F4 sin micrófono: A-01 ya cubre el mínimo |
-| Los módulos rompen el modo archivo | F4.1 | Deja de funcionar con doble clic | Asumido: F6.1 reconstruye el archivo autónomo |
+| Los módulos rompen el modo archivo | F4.1 | Deja de funcionar con doble clic | **Resuelto en F4.1:** scripts clásicos, que abren con doble clic, y `ensamblar.js` para el archivo autónomo |
 | La especificación de interfaz se pospone | F3.1 | Se empieza F5 sin ella | Bloqueante declarado |
 | El alcance de Escalas se dispara | F5 | Aparecen digitaciones o arpegios | E-02b y E-05b fuera por escrito |
 | App Store rechaza la app | F7.4 | Rechazo por funcionalidad mínima | Empezar por Google Play y Microsoft Store |
@@ -453,7 +455,9 @@ flowchart TB
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **3.13** | 20/10/2026 | Sesión 1 hecha (informe `V-08`): F1.1, F2.5 y F3.3 hechas, con pendientes anotados; la Sesión 2 recoge lo que hay que repetir. La `0.3.3` corrige lo que salió: sonido en el iPhone, icono, Adivinar empieza con ▶, más tiempo para la corrección y el récord se conserva al restablecer. Nuevos para después: C-08 (personalización) y S-09 (timbre). |
+| **3.15** | 21/10/2026 | Tus comentarios del 21/10: F4.4 con un récord por afinación y pistas grandes (`0.4.1`); F4.5 nueva, idioma español o inglés (`0.4.2`). La comprobación de F4.3 no bloquea: se sigue con F5 y F4 se cierra cuando la hagas. |
+| 3.14 | 21/10/2026 | F4.1, F4.2 y F4.3 hechas con la `0.4.0`: la app en módulos, el detector de tono y el afinador por micrófono. La comprobación de F4.3 se puede hacer en la web de pruebas, también en el iPhone. Etiquetas `v0.2.3` y `v0.3.3` creadas (con la `v0.1.5`, las tres fases cerradas tienen la suya). |
+| 3.13 | 20/10/2026 | Sesión 1 hecha (informe `V-08`): F1.1, F2.5 y F3.3 hechas, con pendientes anotados; la Sesión 2 recoge lo que hay que repetir. La `0.3.3` corrige lo que salió: sonido en el iPhone, icono, Adivinar empieza con ▶, más tiempo para la corrección y el récord se conserva al restablecer. Nuevos para después: C-08 (personalización) y S-09 (timbre). |
 | 3.12 | 20/10/2026 | `0.3.2`: «+» enseña más trastes y con el dedo se pueden pedir trastes de hasta 28 px. Se audita en CP-3, junto con lo que salga de la Sesión 1. |
 | 3.11 | 20/10/2026 | F3.4 hecha con la `0.3.1`, tras AR-06 y AT-05. Paleta decidida. F3 queda a falta de la Sesión 1 (F3.3). |
 | 3.10 | 20/10/2026 | F3.2 hecha con la `0.3.0`, tras AR-05 y AT-04. F3.4 recoge lo que quedó de F3.2. Comprobaciones nuevas para la Sesión 1. |

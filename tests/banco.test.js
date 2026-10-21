@@ -7,7 +7,7 @@ const assert = require('node:assert/strict');
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
-const { boot, sleep } = require('./dom-minimo');
+const { boot, sleep, fuente } = require('./dom-minimo');
 
 // APP_HTML permite pasar el banco a otra versión, por ejemplo para comprobar que una
 // prueba nueva falla con la versión anterior a la corrección.
@@ -29,19 +29,22 @@ test('arranque: mástil, numeración, versión y panel (D-01, G-10)', () => {
 });
 
 test('migración de ajustes de la 0.1.1 (C-05, D-04)', () => {
-  const B = boot(APP, { showFretNums: false, record: 7 });
+  const B = boot(APP, { showFretNums: false, record: 7, records: { standard: 4, dropd: 2 } });
   assert.equal(B.ev('state.fretNums'), 'none');
   assert.ok(B.$('fret-nums').classList.contains('hidden'));
-  assert.equal(B.ev('state.record'), 7);
+  assert.equal(B.ev('state.records.standard'), 7, 'el récord único de antes pasa a la afinación estándar si es mayor (J-11)');
+  assert.equal(B.ev('state.records.dropd'), 2);
+  assert.equal(B.ev('"record" in state'), false);
   assert.equal(B.ev('"showFretNums" in state'), false);
 });
 
 test('ajustes corruptos no rompen la app (C-05)', () => {
-  const B = boot(APP, { tuningId: 'no-existe', customTuning: [1, 2], notation: 'x', visibleFrets: 999, record: -3 });
+  const B = boot(APP, { tuningId: 'no-existe', customTuning: [1, 2], notation: 'x', visibleFrets: 999, record: -3,
+    records: { standard: -1, dropd: 'x', inventada: 4, dadgad: 5 } });
   assert.equal(B.ev('state.tuningId'), 'standard');
   assert.equal(B.ev('state.customTuning.length'), 6);
   assert.equal(B.ev('state.notation'), 'latin');
-  assert.equal(B.ev('state.record'), 0);
+  assert.equal(B.ev('JSON.stringify(state.records)'), '{"dadgad":5}', 'solo récords válidos de afinaciones que existen');
 });
 
 test('numeración en tres modos (D-04, V-09)', () => {
@@ -96,7 +99,26 @@ test('Adivinar: acierto en cualquier posición y récord guardado (J-02, J-07, J
   const cells = A.doc.querySelectorAll('.fret-cell').filter(c => +c.dataset.midi === midi);
   A.press(cells[cells.length - 1]);
   assert.equal(A.ev('streak'), 1);
-  assert.ok(JSON.parse(A.store.get('trasteando.v1')).record >= 1);
+  assert.equal(JSON.parse(A.store.get('trasteando.v1')).records.standard, 1);
+  assert.equal(A.$('st-record').textContent, 'Récord 1 · Estándar');
+});
+
+test('un récord por afinación: cambiar de afinación empieza la racha y enseña el récord de esa (J-11, decisión del 21/10)', async () => {
+  const A = boot(APP, { records: { standard: 9, dropd: 2 } });
+  jugar(A);
+  assert.equal(A.$('st-record').textContent, 'Récord 9 · Estándar');
+  A.ev('streak = 4');
+  const sel = A.$('set-tuning'); sel.value = 'dropd'; sel.dispatchEvent({ type: 'change', target: sel });
+  assert.equal(A.ev('streak'), 0, 'la racha no pasa de una afinación a otra');
+  assert.equal(A.$('st-record').textContent, 'Récord 2 · Drop D');
+  await sleep(400);
+  for (let i = 0; i < 3; i++){
+    const m = A.ev('challenge.midi');
+    A.press(A.doc.querySelectorAll('.fret-cell').find(c => +c.dataset.midi === m));
+    await sleep(1600);
+  }
+  const guardado = JSON.parse(A.store.get('trasteando.v1')).records;
+  assert.deepEqual(guardado, { standard: 9, dropd: 3 }, 'sube solo el de Drop D');
 });
 
 test('arrastrar el mástil no cuenta como pulsación en Adivinar (AUD-02)', async () => {
@@ -125,16 +147,16 @@ test('cambiar de afinación durante una revelación no revela el reto nuevo (A-1
 
 test('restablecer vuelve a los valores por defecto y conserva el récord; el récord se borra aparte (C-05, Sesión 1 A14)', async () => {
   const A = boot(APP);
-  A.ev('state.record = 7; save()');
+  A.ev('state.records = { standard: 7, dadgad: 2 }; save()');
   A.doc.querySelector('#set-fretnums [data-v="none"]').click();
   A.$('set-reset').click();
   await sleep(50);
   assert.equal(A.ev('state.tuningId'), 'standard');
   assert.equal(A.ev('state.fretNums'), 'all');
-  assert.equal(JSON.parse(A.store.get('trasteando.v1')).record, 7, 'el récord no es un ajuste');
+  assert.deepEqual(JSON.parse(A.store.get('trasteando.v1')).records, { standard: 7, dadgad: 2 }, 'los récords no son ajustes');
   A.$('set-clear-record').click();
-  assert.equal(JSON.parse(A.store.get('trasteando.v1')).record, 0);
-  assert.equal(A.$('st-record').textContent, 'Récord 0');
+  assert.deepEqual(JSON.parse(A.store.get('trasteando.v1')).records, {});
+  assert.equal(A.$('st-record').textContent, 'Récord 0 · Estándar');
 });
 
 test('pentagrama: ninguna nota del rango posible se sale del dibujo (P-01)', () => {
@@ -174,7 +196,7 @@ test('cada grabación es la nota a la que se asigna y su desviación está medid
 });
 
 test('la app no descarga nada de otros servidores (S-07, F2.2)', () => {
-  const src = fs.readFileSync(APP, 'utf8');
+  const src = fuente(APP);                   // la página con todo su CSS y JS
   const urls = [...new Set(src.match(/https?:\/\/[^\s"'`)<>]+/g) || [])];
   // Tampoco direcciones sin protocolo («//cdn…»), que el navegador completa con https.
   assert.deepEqual(src.match(/["'(=]\s*\/\/[a-z0-9]/gi) || [], []);
@@ -250,7 +272,7 @@ test('con el audio dentro de la página no descarga nada (G-07, F2.3)', async ()
   assert.equal(A.ev('__descargas'), 0);
 });
 
-test('el archivo autónomo está al día con index.html, con su audio y dentro de sus límites (G-07, G-08, F2.3)', () => {
+test('el archivo autónomo está al día con la app, con su audio y dentro de sus límites (G-07, G-08, F2.3)', () => {
   const carpeta = path.join(__dirname, '..', 'dist');
   const pagina = fs.readFileSync(path.join(carpeta, 'trasteando.html'), 'utf8');
   const informe = JSON.parse(fs.readFileSync(path.join(carpeta, 'autonomo.json'), 'utf8'));
@@ -261,9 +283,10 @@ test('el archivo autónomo está al día con index.html, con su audio y dentro d
   const bloques = [...tramo[0].matchAll(/<script type="application\/octet-stream" id="audio-(\w+)-(\w+)">([^<]*)<\/script>/g)];
   const audio = bloques.reduce((n, m) => n + m[0].length, 0);
   assert.ok(audio <= 1_450_000, `el audio ocupa ${audio} bytes`);
-  // Quitado el audio, es exactamente index.html (los \r de Windows no cuentan).
+  // Quitado el audio, es exactamente index.html con su css/ y su js/ dentro
+  // (los \r de Windows no cuentan).
   const sinAudio = pagina.replace(tramo[0], '').replace(/\r\n/g, '\n');
-  assert.equal(sinAudio, fs.readFileSync(APP, 'utf8').replace(/\r\n/g, '\n'), 'dist/trasteando.html no se ha regenerado tras cambiar index.html');
+  assert.equal(sinAudio, fuente(APP), 'dist/trasteando.html no se ha regenerado tras cambiar la app');
   const A = boot(APP);
   assert.equal(informe.version, A.ev('APP_VERSION'));
   const mapas = JSON.parse(A.ev('JSON.stringify(SAMPLE_MAPS)'));
@@ -426,20 +449,31 @@ test('en Adivinar nada suena ni puntúa hasta pulsar ▶, y luego cada reto suen
   assert.equal(A.ev('__plays'), 4, 'cada visita vuelve a esperar a ▶');
 });
 
-test('en Adivinar la lectura grande es la nota buscada: «?» hasta acertar o fallar (Sesión 1, E06)', async () => {
+test('en Adivinar la lectura grande es la nota que tocas; cada pista encendida enseña su respuesta en grande, también antes de ▶ (J-06, comentario del 21/10)', async () => {
   const A = boot(APP);
-  jugar(A);
-  const midi = A.ev('challenge.midi'), nombre = A.ev('noteName(challenge.midi)');
+  A.doc.querySelector('.tab[data-screen="guess"]').click();
+  const nota = A.$('qb-hint-note'), cuerda = A.$('qb-hint-string');
+  assert.equal(nota.textContent, 'Nombre');
+  cuerda.click();
+  assert.ok(cuerda.classList.contains('clue'), 'antes de ▶ ya se ve la pista');
+  assert.equal(cuerda.getAttribute('aria-pressed'), 'true');
+  const pos = A.ev('positionsFor(challenge.midi).map(p => p.string.number + "ª").join(" ")');
+  assert.equal(cuerda.querySelector('.clue-v').textContent, pos);
+  assert.equal(nota.textContent, 'Nombre', 'la otra sigue apagada');
+  nota.click();
+  assert.equal(nota.querySelector('.clue-v').textContent, A.ev('noteName(challenge.midi) + noteInfo(challenge.midi).octave'));
+  assert.doesNotMatch(A.$('challenge-text').innerHTML, /Cuerda|Es /, 'las pistas ya no van en el texto del reto');
+  A.$('btn-repeat').click();
+  const midi = A.ev('challenge.midi');
   const otra = A.doc.querySelectorAll('.fret-cell').find(c => +c.dataset.midi !== midi);
-  assert.match(A.$('note-name').innerHTML, /\?/);
-  A.ev('state.hintNote = true'); A.ev('renderChallenge()');
-  assert.equal(A.$('note-name').textContent, nombre, 'con la pista de nota se ve la buscada');
-  A.ev('state.hintNote = false'); A.ev('renderChallenge()');
   A.press(otra);
-  assert.equal(A.$('note-name').textContent, nombre, 'tras fallar, la buscada; no la pulsada');
-  assert.match(A.$('note-oct').textContent, /buscada/);
+  assert.equal(A.$('note-name').textContent, A.ev('noteName(' + otra.dataset.midi + ')'), 'la lectura grande es la tocada');
+  assert.ok(nota.classList.contains('clue'), 'tras fallar, las pistas siguen');
+  nota.click();
+  assert.equal(nota.textContent, 'Nombre');
+  assert.equal(nota.getAttribute('aria-pressed'), 'false');
   A.doc.querySelector('.tab[data-screen="free"]').click();
-  assert.match(A.$('note-name').innerHTML, /toca/, 'en Libre vuelve a ser la nota que tocas');
+  assert.equal(cuerda.textContent, 'Cuerda', 'fuera de Adivinar, sin respuesta');
 });
 
 test('cambiar de guitarra no hace sonar ninguna nota (Sesión 1, A14)', async () => {
@@ -612,7 +646,7 @@ test('paleta: cada nota se lee con 4,5:1 y cada sostenido es un tono más claro 
 });
 
 test('los grises de texto cumplen 4,5:1 sobre todos los fondos (G-05, F3.4)', () => {
-  const css = fs.readFileSync(APP, 'utf8');
+  const css = fuente(APP);
   const v = n => css.match(new RegExp('--' + n + ':(#[0-9a-f]{6})'))[1];
   for (const texto of ['text', 'muted', 'faint', 'amber', 'ok', 'ko'])
     for (const fondo of ['bg', 'surface', 'surface2'])
@@ -689,4 +723,218 @@ test('en Adivinar ninguna casilla anuncia su nota a un lector de pantalla (J-12,
   assert.ok(A.doc.querySelectorAll('.dot').every(d => d.getAttribute('aria-hidden') === 'true'), 'el texto del punto no se lee');
   A.doc.querySelector('.tab[data-screen="free"]').click();
   assert.match(A.doc.querySelector('.fret-cell[data-row="0"][data-fret="0"]').getAttribute('aria-label'), /^Mi4, 1ª cuerda, al aire$/, 'en Libre sí');
+});
+
+// --- F4.1: la app repartida en archivos ---
+
+test('la app vive en css/ y js/: index.html los carga todos, en orden, y el ensamblado no deja nada fuera (G-08, F4.1)', () => {
+  const raiz = path.join(__dirname, '..');
+  const html = fs.readFileSync(path.join(raiz, 'index.html'), 'utf8');
+  const cargados = [...html.matchAll(/<script src="(js\/[^"?]+)\?v=([^"]+)"><\/script>/g)].map(m => m[1]);
+  // Cada archivo lleva la versión en su dirección, para que la caché del navegador
+  // no mezcle archivos de dos versiones (AT-07 #3).
+  const version = boot(APP).ev('APP_VERSION');
+  for (const m of html.matchAll(/(?:src|href)="((?:js|css)\/[^"]+)"/g)) assert.ok(m[1].endsWith('?v=' + version), m[1] + ' sin ?v=' + version);
+  const enDisco = fs.readdirSync(path.join(raiz, 'js')).filter(f => f.endsWith('.js')).map(f => 'js/' + f).sort();
+  assert.deepEqual([...cargados].sort(), enDisco, 'cada archivo de js/ se carga una vez, y ninguno sobra');
+  assert.deepEqual(cargados, [...cargados].sort(), 'en el orden de su número');
+  assert.match(cargados.at(-1), /-arranque\.js$/, 'el arranque va el último: usa todo lo anterior');
+  for (const f of cargados) assert.match(fs.readFileSync(path.join(raiz, f), 'utf8'), /^"use strict";\n/, f + ' empieza en modo estricto');
+  const pagina = fuente(APP);
+  assert.doesNotMatch(pagina, /<script src=|<link rel="stylesheet"/, 'el ensamblado lleva todo dentro');
+  assert.equal((pagina.match(/<script>\n/g) || []).length, cargados.length);
+});
+
+// --- F4.3: afinador por micrófono ---
+
+/** Micrófono simulado: getUserMedia da una pista y el analizador entrega una
+ *  nota sintética de __senal.hz (0 = silencio). */
+const microFalso = (permiso = true) => {
+  const __mic = { pedido: 0, pista: null };          // la app lo ve como __mic
+  return { __mic, isSecureContext: true, location: { protocol: 'https:' },
+    navigator: { mediaDevices: { getUserMedia: async () => {
+      __mic.pedido++;
+      if (!permiso) { const e = new Error('no'); e.name = 'NotAllowedError'; throw e; }
+      __mic.pista = { parada: false, stop(){ this.parada = true; } };
+      return { getTracks: () => [__mic.pista] };
+    } } } };
+};
+const analizadorFalso = `${audioFalso}
+  globalThis.__senal = { hz: 0 };
+  __ctx.sampleRate = 48000;
+  __ctx.createMediaStreamSource = () => ({ connect(){}, disconnect(){} });
+  __ctx.createAnalyser = () => ({ fftSize: 2048, getFloatTimeDomainData(x){
+    for (let i = 0; i < x.length; i++){ let v = 0;
+      if (__senal.hz) for (let k = 1; k <= 8; k++) v += 0.3 / k * Math.sin(2 * Math.PI * k * __senal.hz * i / 48000 + k);
+      x[i] = v; } } });`;
+const lectura = A => ({ nota: A.$('mic-note').textContent, detalle: A.$('mic-detail').textContent, orden: A.$('mic-order').textContent });
+
+async function abrirMicro(A){
+  A.ev(analizadorFalso);
+  A.doc.querySelector('.tab[data-screen="tuner"]').click();
+  A.doc.querySelector('#tuner-mode [data-v="mic"]').click();
+}
+
+test('afinador por micrófono: no escucha hasta que lo pides, y luego dice cuánto subir o bajar (A-02, A-03, A-04)', async () => {
+  const A = boot(APP, null, microFalso());
+  await abrirMicro(A);
+  assert.equal(A.ev('__mic.pedido'), 0, 'elegir «Micrófono» no lo enciende');
+  assert.equal(A.$('mic-intro').hidden, false);
+  assert.match(A.$('mic-intro').textContent, /solo en tu dispositivo/);
+  A.$('mic-start').click(); await sleep(10);
+  assert.equal(A.$('mic-live').hidden, false);
+  assert.match(A.$('mic-detail').textContent, /Toca una cuerda/);
+  A.ev('__senal.hz = 110 * 2 ** (-12 / 1200)');            // La2, 12 cents baja
+  await sleep(300);
+  assert.deepEqual(lectura(A), { nota: 'La2', detalle: '−12 cents · 5ª cuerda', orden: '▲ Sube un poco' });
+  A.ev('__senal.hz = 110 * 2 ** (3 / 1200)');
+  await sleep(400);
+  assert.equal(lectura(A).orden, '✓ Afinada', 'dentro de ±5 cents');
+  A.ev('__senal.hz = 246.94 * 2 ** (-80 / 1200)');          // Si3 muy baja: sigue siendo la 2ª (A-04)
+  await sleep(400);
+  assert.deepEqual(lectura(A), { nota: 'Si3', detalle: '−80 cents · 2ª cuerda', orden: '▲ Sube' });
+  A.ev('__senal.hz = 349.23');                               // Fa4: 1 semitono sobre la 1ª
+  await sleep(400);
+  assert.deepEqual(lectura(A), { nota: 'Mi4', detalle: '+100 cents · 1ª cuerda', orden: '▼ Baja' });
+  A.ev('__senal.hz = 0');
+  await sleep(2000);
+  assert.match(A.$('mic-detail').textContent, /Toca una cuerda/, 'en silencio la aguja vuelve a reposo');
+  A.doc.querySelector('.tab[data-screen="free"]').click();
+  assert.equal(A.ev('__mic.pista.parada'), true, 'al salir del Afinador se apaga el micrófono');
+});
+
+test('con una cuerda elegida a mano, el afinador la usa aunque suene otra; y se apaga al ocultar la app (A-05)', async () => {
+  const A = boot(APP, null, microFalso());
+  await abrirMicro(A);
+  A.$('mic-start').click(); await sleep(10);
+  A.doc.querySelector('#mic-string [data-v="6"]').click();
+  A.ev('__senal.hz = 110');                                  // suena un La2, pero la elegida es la 6ª (Mi2)
+  await sleep(300);
+  assert.deepEqual(lectura(A), { nota: 'Mi2', detalle: '+500 cents · 6ª cuerda', orden: '▼ Baja' });
+  A.ev('__senal.hz = 2 * 82.41 * 2 ** (-7 / 1200)');        // el detector oye la octava: no dice «baja 12 semitonos»
+  await sleep(400);
+  assert.deepEqual(lectura(A), { nota: 'Mi2', detalle: '−7 cents · 6ª cuerda', orden: '▲ Sube un poco' });
+  A.doc.hidden = true; (A.doc.listeners.visibilitychange || []).forEach(f => f({ type: 'visibilitychange' }));
+  assert.equal(A.ev('__mic.pista.parada'), true, 'al bloquear el móvil se apaga');
+  assert.equal(A.$('mic-live').hidden, true);
+});
+
+test('sin permiso se explica cómo darlo; sin micrófono posible, se dice por qué y De oído sigue (A-02, PL-04)', async () => {
+  const A = boot(APP, null, microFalso(false));
+  await abrirMicro(A);
+  A.$('mic-start').click(); await sleep(10);
+  assert.match(A.$('mic-why').textContent, /permiso/);
+  assert.equal(A.$('mic-start').disabled, false, 'se puede volver a intentar');
+
+  const B = boot(APP, null, { location: { protocol: 'file:' } });
+  B.doc.querySelector('.tab[data-screen="tuner"]').click();
+  B.doc.querySelector('#tuner-mode [data-v="mic"]').click();
+  assert.match(B.$('mic-why').textContent, /archivo/);
+  assert.equal(B.$('mic-start').disabled, true);
+  B.doc.querySelector('#tuner-mode [data-v="ear"]').click();
+  assert.equal(B.$('tuner-ear').hidden, false);
+  assert.equal(B.doc.querySelectorAll('#strings-tuner .tstring').length || B.$('strings-tuner').children.length, 6, 'De oído sigue con sus 6 cuerdas');
+  assert.equal(JSON.parse(B.store.get('trasteando.v1')).tunerMode, 'ear', 'el modo se guarda');
+});
+
+test('cuerda automática: cada cuerda, 90 cents baja o alta, se identifica bien; también en Drop D (A-04)', async () => {
+  const A = boot(APP, null, microFalso());
+  await abrirMicro(A);
+  A.$('mic-start').click(); await sleep(10);
+  const hz = m => 440 * 2 ** ((m - 69) / 12);
+  const comprobar = async (midi, cents, cuerda) => {
+    A.ev(`mic.lecturas = []; __senal.hz = ${hz(midi) * 2 ** (cents / 1200)}`);
+    await sleep(250);
+    assert.match(A.$('mic-detail').textContent, new RegExp(`cents · ${cuerda}ª cuerda$`), `${midi} a ${cents} cents → ${cuerda}ª`);
+  };
+  const estandar = [64, 59, 55, 50, 45, 40];          // 1ª … 6ª
+  for (const [i, midi] of estandar.entries())
+    for (const c of [-90, 90]) await comprobar(midi, c, i + 1);
+  const sel = A.$('tuning-select'); sel.value = 'dropd'; sel.dispatchEvent({ type: 'change', target: sel });
+  await comprobar(38, -40, 6);                          // Re2 en Drop D
+  assert.match(A.$('mic-note').textContent, /^Re2$/);
+  A.doc.querySelector('.tab[data-screen="free"]').click();   // apaga el micrófono (y su temporizador)
+});
+
+test('cuerda automática: si el micrófono apenas capta la fundamental de la 6ª y se oye su octava, sigue siendo la 6ª (A-04, AT-07 #2)', async () => {
+  const A = boot(APP, null, microFalso());
+  await abrirMicro(A);
+  A.ev(`__ctx.createAnalyser = () => ({ fftSize: 2048, getFloatTimeDomainData(x){
+    for (let i = 0; i < x.length; i++){ let v = 0;      // solo armónicos pares: suena a Mi3
+      for (const k of [2, 4, 6, 8]) v += 0.3 / k * Math.sin(2 * Math.PI * k * __senal.hz * i / 48000 + k);
+      x[i] = v; } } })`);
+  A.$('mic-start').click(); await sleep(10);
+  A.ev('__senal.hz = 82.41 * 2 ** (-20 / 1200)');
+  await sleep(300);
+  assert.deepEqual(lectura(A), { nota: 'Mi2', detalle: '−20 cents · 6ª cuerda', orden: '▲ Sube un poco' });
+  A.doc.querySelector('.tab[data-screen="free"]').click();
+});
+
+// --- F4.5: idioma (G-12) ---
+
+test('idioma: cada texto existe en español y en inglés, y cada clave de la página tiene texto (G-12)', () => {
+  const A = boot(APP);
+  const es = JSON.parse(A.ev('JSON.stringify(Object.keys(TEXTOS.es).sort())'));
+  const en = JSON.parse(A.ev('JSON.stringify(Object.keys(TEXTOS.en).sort())'));
+  assert.deepEqual(en, es, 'las dos lenguas tienen las mismas claves');
+  const html = fs.readFileSync(APP, 'utf8');
+  const usadas = [...html.matchAll(/data-t(?:-aria|-title)?="([^"]+)"/g)].map(m => m[1]);
+  assert.ok(usadas.length > 40);
+  for (const k of usadas) assert.ok(es.includes(k), 'falta el texto de ' + k);
+  // Y las claves que usa el código: t('…') con una clave literal.
+  for (const f of fs.readdirSync(path.join(__dirname, '..', 'js')).filter(f => f !== '00-idioma.js')){   // su comentario usa t('clave') de ejemplo
+    const src = fs.readFileSync(path.join(__dirname, '..', 'js', f), 'utf8');
+    for (const m of src.matchAll(/\bt\('([\w.]+)'/g)) assert.ok(es.includes(m[1]) || m[1].startsWith('audio.'), `${f}: falta el texto de ${m[1]}`);
+  }
+});
+
+test('idioma: en Ajustes se cambia a inglés y vuelve al español; se guarda y no toca la racha (G-12)', async () => {
+  const A = boot(APP);
+  jugar(A);
+  A.ev('streak = 3; updateScore()');
+  A.doc.querySelector('#set-lang [data-v="en"]').click();
+  assert.equal(A.ev('state.lang'), 'en');
+  assert.equal(JSON.parse(A.store.get('trasteando.v1')).lang, 'en');
+  assert.equal(A.doc.documentElement.lang, 'en');
+  const pestañas = A.doc.querySelectorAll('.tab [data-t]').map(e => e.textContent).join(' ');
+  assert.equal(pestañas, 'Free Guess Tuner Scales Settings');
+  assert.equal(A.$('sheet-title').textContent, 'Settings');
+  assert.equal(A.$('st-streak').textContent, 'Streak 3', 'la racha sigue');
+  assert.equal(A.$('st-record').textContent, 'Best 0 · Standard');
+  assert.match(A.$('challenge-text').innerHTML, /Listen and find the note/);
+  assert.match(A.$('zoom-label').textContent, /frets in view|Whole neck/);
+  assert.equal(A.$('tuning-select').children[0].textContent, 'Standard (E A D G B E)');
+  assert.match(A.doc.querySelector('.fret-cell[data-row="0"][data-fret="0"]').getAttribute('aria-label'), /^1st string, open$/);
+  A.$('qb-hint-string').click();
+  assert.match(A.$('qb-hint-string').textContent, /^Strings? \d/);
+  assert.match(A.$('strings-tuner').textContent, /6th/, 'el afinador de oído numera en inglés');
+  // Nada de español en lo que se ve del Afinador.
+  A.doc.querySelector('.tab[data-screen="tuner"]').click();
+  A.doc.querySelector('#tuner-mode [data-v="mic"]').click();
+  const visto = ['tuner-mode', 'mic-string-label', 'mic-intro'].map(id => A.$(id).textContent).join(' ');
+  assert.doesNotMatch(visto, /Afinación|Cuerda|micrófono|dispositivo|De oído/);
+  A.doc.querySelector('#set-lang [data-v="es"]').click();
+  assert.equal(A.$('sheet-title').textContent, 'Ajustes');
+  assert.match(A.$('mic-intro').textContent, /escuchar con el micrófono/);
+});
+
+test('idioma: la primera vez sigue al navegador (inglés → C D E); restablecer no cambia el idioma (G-12)', async () => {
+  const E = boot(APP, null, { navigator: { language: 'en-GB' } });
+  assert.equal(E.ev('state.lang'), 'en');
+  assert.equal(E.ev('state.notation'), 'anglo', 'en inglés, de entrada, C D E');
+  assert.equal(E.$('gate-btn').textContent, 'Start');
+  assert.equal(E.$('timbre-note').textContent, 'Nylon-string classical or steel-string acoustic', 'también los textos fijos de Ajustes');
+  const C = boot(APP, null, { navigator: { languages: ['ca-ES', 'en'] } });
+  assert.equal(C.ev('state.lang'), 'es', 'con catalán, español');
+  const S = boot(APP, null, { navigator: { language: 'es-ES' } });
+  assert.equal(S.ev('state.lang'), 'es');
+  assert.equal(S.ev('state.notation'), 'latin');
+  const G = boot(APP, { lang: 'en', notation: 'latin' }, { navigator: { language: 'es-ES' } });
+  assert.equal(G.ev('state.lang'), 'en', 'lo elegido manda sobre el navegador');
+  assert.equal(G.ev('state.notation'), 'latin', 'y la nomenclatura elegida se respeta');
+  G.$('set-reset').click(); await sleep(20);
+  assert.equal(G.ev('state.lang'), 'en');
+  const H = boot(APP, { lang: 'es' }, { navigator: { language: 'en-US' } });
+  H.$('set-reset').click(); await sleep(20);
+  assert.equal(H.ev('state.notation'), 'latin', 'en español, restablecer deja Do Re Mi aunque el navegador esté en inglés');
 });

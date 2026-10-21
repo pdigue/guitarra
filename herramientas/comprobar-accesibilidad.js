@@ -20,6 +20,9 @@
 'use strict';
 const path = require('path');
 const { chromium } = require('playwright');
+// La app sigue el idioma del navegador (G-12): por defecto se comprueba en español;
+// con IDIOMA=en-US, en inglés.
+const LOCALE = process.env.IDIOMA || 'es-ES';
 
 const APP = 'file://' + path.resolve(path.resolve(__dirname, '..'), process.env.APP_HTML || 'index.html');
 let fallos = 0;
@@ -71,7 +74,7 @@ function medirContraste(){
 
 (async () => {
   const navegador = await chromium.launch();
-  const pagina = await navegador.newPage({ viewport: { width: 1280, height: 720 } });
+  const pagina = await navegador.newPage({ locale: LOCALE, viewport: { width: 1280, height: 720 } });
   await pagina.addInitScript(() => localStorage.setItem('trasteando.v1',
     JSON.stringify({ showAllNotes: true, showEquals: true })));
   await pagina.goto(APP);
@@ -150,7 +153,7 @@ function medirContraste(){
   }
 
   // ---------- 3. Movimiento reducido ----------
-  const quieta = await navegador.newPage({ viewport: { width: 1280, height: 720 }, reducedMotion: 'reduce' });
+  const quieta = await navegador.newPage({ locale: LOCALE, viewport: { width: 1280, height: 720 }, reducedMotion: 'reduce' });
   await quieta.goto(APP);
   const mov = await quieta.evaluate(() => [...document.querySelectorAll('.dot, .sheet, .display, .chip')].slice(0, 40)
     .filter(e => getComputedStyle(e).transitionDuration.split(',').some(d => parseFloat(d) > 0) ||
