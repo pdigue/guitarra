@@ -68,7 +68,7 @@ flowchart LR
 | **F1** | Subir la app, pasar el banco a `node --test`, `docs/`, etiqueta | — | F1.1, salvo que conectes la app de escritorio y lo haga yo en tu navegador |
 | **F2** | Reproductor propio, audio dentro del archivo, muestras intermedias | Opción de audio | Calidad del sonido y prueba en cada plataforma |
 | **F3** | Diseño apaisado, accesibilidad técnica, propuesta de interfaz | Aprobar la interfaz y la paleta | Quince minutos de uso en el móvil |
-| **F4** | Módulos, pruebas, detector de tono con banco de señales conocidas, interfaz del afinador | Récord único o por afinación | Afinar una guitarra real |
+| **F4** | Módulos, pruebas, detector de tono con banco de señales conocidas, interfaz del afinador | Récord único o por afinación (decidido el 21/10: por afinación) | Afinar una guitarra real |
 | **F5** | Modelo de notas, catálogo, Mostrar y Práctica, con propuesta de catálogo | Aprobar el catálogo | Una sesión de práctica |
 | **F6** | Archivo autónomo, Service Worker, manifiesto, iconos, documentación legal con propuesta de licencia | Licencia del código | — |
 | **F7** | Preparar fichas, textos y paquetes | Publicar, tiendas, pagos | Instalar en Android, iPhone y Windows |

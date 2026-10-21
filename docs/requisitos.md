@@ -274,7 +274,7 @@ Con esto hay 42 requisitos validados.
 | **G-09** | La app podrá distribuirse por **tiendas oficiales** —Google Play, Microsoft Store y, si compensa, App Store— empaquetando la PWA publicada. | Media | F7.4 | ⬜ | ⬜ | — | Decisión de producto en F7.4. Exige S-07 con licencia limpia, G-11 y la web publicada (X-02). Cuentas, costes y archivos necesarios: roadmap, *Inventario de lanzamiento*. |
 | **G-10** | **Control de versiones de la app:** cada versión tiene número propio con la pauta `0.‹fase›.‹corrección›` —`1.0.0` en el lanzamiento—, se registra en `CHANGELOG.md` y se muestra en Ajustes. | Alta | F1.3 | ✅ | ✅ | 0.1.2 | Vincula cada versión con su fase del roadmap. Cada fase cerrada se marca además con una etiqueta de Git (F1.4). **Validado el 21/10:** la Sesión 1 (A02) vio la versión en Ajustes, CHANGELOG tiene cada versión y existen las etiquetas `v0.1.5`, `v0.2.3` y `v0.3.3` de los cierres de F1, F2 y F3 (las creaste tú en GitHub). |
 | **G-11** | **Privacidad:** la app no recoge ni envía datos personales; el sonido del micrófono se analiza solo en el dispositivo. Una política de privacidad pública lo declara. | Alta | F6.4 | ⬜ | ⬜ | — | Las tiendas exigen política de privacidad, y el micrófono la hace necesaria también por transparencia. Hoy la app ya no envía nada: solo guarda ajustes en el propio navegador. |
-| **G-12** 🆕 | **Idioma de la interfaz:** la app está en español y en inglés, y se cambia en Ajustes. La primera vez sigue el idioma del navegador; la elección se guarda. | Media | F4.5 | ✅ | ⬜ | 0.4.2 | Tu petición del 21/10. **Hecho en la 0.4.2:** Ajustes › «Idioma · Language» (Español | English), cada idioma nombrado en su lengua. Todos los textos tienen clave y versión en las dos lenguas (el banco lo comprueba); los nombres de las notas siguen su propio ajuste (Do Re Mi o C D E), aunque quien estrena la app en inglés empieza con C D E. Restablecer no cambia el idioma. Falta que veas la app en inglés y digas si algo suena raro. |
+| **G-12** 🆕 | **Idioma de la interfaz:** la app está en español y en inglés, y se cambia en Ajustes. La primera vez sigue el idioma del navegador; la elección se guarda. | Media | F4.5 | ✅ | ⬜ | 0.4.2 | Tu petición del 21/10. **Hecho en la 0.4.2:** Ajustes › «Idioma · Language» (Español / English), cada idioma nombrado en su lengua. Todos los textos tienen clave y versión en las dos lenguas (el banco lo comprueba); los nombres de las notas siguen su propio ajuste (Do Re Mi o C D E), aunque quien estrena la app en inglés empieza con C D E. Restablecer no cambia el idioma. Falta que veas la app en inglés y digas si algo suena raro. |
 
 ---
 
@@ -371,7 +371,7 @@ Con esto hay 42 requisitos validados.
 
 | ID | Requisito | Prior. | Etapa | Impl. | Valid. | Desde | Notas |
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
-| **J-01** ✏️ | Suena una nota aleatoria y el usuario busca su posición en el mástil. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Con botón para repetir el sonido. Desde 0.1.1 los retos se limitan a los 12 primeros trastes por defecto, y desplazar el mástil ya no cuenta como pulsación. **Desde la 0.3.3** (Sesión 1, E06), al entrar en Adivinar no suena nada hasta pulsar ▶, que aparece resaltado; antes de ▶ se puede tocar el mástil sin que puntúe. Después cada reto suena solo, y ▶ lo repite. **Desde la 0.4.1** (tu comentario del 21/10), la lectura grande vuelve a ser la nota que tocas, y la respuesta de las pistas sale aparte, grande, en sus botones (J-06). **Sesión 1** (20/10, informe `V-08`): lo esencial cumplió en C07 y E04; el cambio de la 0.3.3 lo pediste tú y se confirma en la Sesión 2. |
+| **J-01** ✏️ | Suena una nota aleatoria y el usuario busca su posición en el mástil. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Con botón para repetir el sonido. Desde 0.1.1 los retos se limitan a los 12 primeros trastes por defecto, y desplazar el mástil ya no cuenta como pulsación. **Desde la 0.3.3** (Sesión 1, E06), al entrar en Adivinar no suena nada hasta pulsar ▶, que aparece resaltado; antes de ▶ se puede tocar el mástil sin que puntúe. Después cada reto suena solo, y ▶ lo repite. **Desde la 0.4.1** (tu comentario del 21/10), la lectura grande y el pentagrama vuelven a mostrar la nota que tocas; la buscada solo se ve con la pista de nombre, que sale aparte y grande en su botón (J-06), o al responder. **Sesión 1** (20/10, informe `V-08`): lo esencial cumplió en C07 y E04; el cambio de la 0.3.3 lo pediste tú y se confirma en la Sesión 2. |
 | **J-02** | Se acepta como acierto cualquier posición que produzca esa nota exacta. | Alta | F1.1 | ✅ | ✅ | 0.1.0 **Validado en la Sesión 1** (20/10, informe `V-08`): E04. | — |
 | **J-03** | Tras acertar se señalan las demás posiciones válidas. | Media | F1.1 | ✅ | ✅ | 0.1.0 | Reutiliza la lógica de L-03. **Validado en la Sesión 1** (20/10, informe `V-08`): E04. |
 | **J-04** | Pista opcional: nombre de la nota que suena. | Alta | F1.1 | ✅ | ✅ | 0.1.0 **Validado en la Sesión 1** (20/10, informe `V-08`): E04. | — |
@@ -530,11 +530,11 @@ Qué requisitos cierra o valida cada etapa del roadmap. Es la misma información
 
 | # | Decisión | Afecta a | Plazo |
 |---|---|---|---|
-| 1 | J-11: récord único o por afinación | J-11 | Antes de F4.4 |
-| 2 | E-01: catálogo inicial de escalas | E-01, E-02 | Antes de F5.2 |
-| 3 | Licencia del código (MIT u otra) | G-06 | Antes de F6.4 |
-| 4 | Tiendas: cuáles y en qué orden | G-09 | Antes de F7.4 |
+| 1 | E-01: catálogo inicial de escalas | E-01, E-02 | Antes de F5.2 |
+| 2 | Licencia del código (MIT u otra) | G-06 | Antes de F6.4 |
+| 3 | Tiendas: cuáles y en qué orden | G-09 | Antes de F7.4 |
 
+**Cerradas el 21/10:** récord → uno por afinación (J-11) · idioma → español e inglés, elegible en Ajustes (G-12).
 **Cerradas el 20/10:** Service Worker → en F6.2, sin adelantarlo a la Sesión 1 · agudo de la acústica → aceptado como limitación conocida · C-06, especificación de interfaz → aprobada (`interfaz.md` v1.0) · paleta por nota → la elige el agente con tu criterio: naturales bien distintas y sostenidos derivados (F3.4).
 
 **Cerradas el 15/10:** despliegue de pruebas en `https`, sin anunciar → sí, antes de la Sesión 1 · Android de pruebas → ninguno por ahora; diseño pensado para todos los sistemas (PL-04).
