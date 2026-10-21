@@ -6,9 +6,17 @@ Cliente: Pablo Díaz Guerra. Está aprendiendo a programar: explica, no solo hag
 Idioma: español en todo (código comentado, commits, informes y respuestas).
 
 ## Al empezar cada conversación
-Lee **docs/ESTADO.md**: dice dónde estamos, qué está pendiente y cómo se trabaja.
-Con este archivo y ESTADO.md basta para seguir; los demás documentos se leen
-solo cuando la tarea los necesita, y por partes (con grep o por secciones).
+1. Lee **docs/ESTADO.md** del repositorio (en la rama que diga el propio ESTADO o
+   el mensaje de Pablo): dice dónde estamos, qué está pendiente y cómo se trabaja.
+2. Compáralo con su copia en el proyecto de claude.ai, **claude/ESTADO.md**.
+   Deben ser idénticas. Si difieren, díselo a Pablo antes de seguir: manda la
+   del repositorio, salvo que él diga otra cosa.
+3. Con este archivo y ESTADO.md basta para seguir; los demás documentos se leen
+   solo cuando la tarea los necesita, y por partes (con grep o por secciones).
+
+## Al cerrar cada etapa o conversación
+Actualiza docs/ESTADO.md, haz commit y push, y sube la misma versión al proyecto
+como claude/ESTADO.md (también CLAUDE.md, como claude/CLAUDE.md, si cambió).
 
 ## Documentos que mandan
 - docs/ESTADO.md — memoria entre conversaciones: estado, pendientes y comandos.

@@ -4,6 +4,8 @@
 
 Este documento es la **memoria entre conversaciones**. Una conversación nueva empieza leyendo `CLAUDE.md` (las reglas) y este archivo (dónde estamos). Con eso basta para seguir; el resto de documentos se leen solo cuando la tarea los necesita, y por partes.
 
+El original vive en el repositorio (`docs/ESTADO.md`) y hay una copia idéntica en el proyecto de claude.ai (`claude/ESTADO.md`). Se actualizan juntos al cerrar cada etapa o conversación; al empezar, la conversación nueva compara las dos y avisa si difieren.
+
 ## 1. Dónde estamos
 
 - **App:** `0.5.6`, en la rama `auto/F5.7-acordes`. `main` tiene la `0.5.3`.
