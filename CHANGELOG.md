@@ -6,7 +6,9 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.5.0** | 21/10/2026 | F5.1 a F5.4 · escalas | Rama `auto/F5.1-notas` |
+| **0.5.2** | 21/10/2026 | F5.5 · ♯ o ♭ por nota y ajustes visuales | Rama `auto/F5.5-ajustes-visuales` |
+| 0.5.1 | 21/10/2026 | F5.5 · reintentar en Adivinar | Rama `auto/F5.1-notas` |
+| 0.5.0 | 21/10/2026 | F5.1 a F5.4 · escalas | Rama `auto/F5.1-notas` |
 | 0.4.2 | 21/10/2026 | F4.5 · idioma español o inglés | `main`, fusionada el 21/10 (PR #12) |
 | 0.4.1 | 21/10/2026 | F4.4 · pistas grandes y récord por afinación | `main`, fusionada el 21/10 (PR #12) |
 | 0.4.0 | 21/10/2026 | F4.1 a F4.3 · afinador por micrófono | `main`, fusionada el 21/10 (PR #12) |
@@ -32,6 +34,28 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.5.2] — 21/10/2026 · ♯ o ♭ por nota y ajustes visuales
+
+### Añadido
+- **N-06** · Ajustes › Notación › *Notas alteradas*: cada tecla negra se escribe con ♯ o con ♭, como prefieras, igual en toda la app (mástil, lectura, pentagrama, afinador). Dentro de una escala manda la escala: en Sol mayor, Fa♯ aunque prefieras Sol♭. Los nombres usan ya los signos ♯ y ♭.
+
+### Corregido
+- **P-01** · La lectura grande tiene alto fijo: el mástil ya no se mueve unos píxeles según la nota.
+- **P-01** · El pentagrama de una nota es más corto y se dibuja más grande: el doble en horizontal.
+- **G-01** · El título, más nítido; en horizontal, donde no hay cabecera, va arriba del panel.
+
+### Verificado
+- Banco: 66 de 66. Disposición en español y en inglés, accesibilidad, afinador, las 15 comprobaciones de F1.1 y el archivo autónomo, bien.
+
+---
+
+## [0.5.1] — 21/10/2026 · Al fallar, seguir intentando
+
+### Añadido
+- **J-13** · Ajustes › Adivinar › *Al fallar*: Ver respuesta (como siempre) o Reintentar. Reintentando, el reto sigue, el fallo se marca un momento y rompe la racha; «Ver la respuesta» te la enseña cuando quieras; acertar tras fallar pasa al siguiente sin sumar a la racha.
 
 ---
 

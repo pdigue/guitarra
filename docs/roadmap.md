@@ -1,7 +1,7 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 3.16 · **Fecha:** 21 de octubre de 2026
-**Válido para:** app `0.5.0` · `requisitos.md` v1.18 · `matriz-cumplimiento` v1.16 · `interfaz.md` v1.8 · `compatibilidad.md` v1.6 · `automatizacion.md` v1.1 · `CHANGELOG.md`
+**Versión:** 3.17 · **Fecha:** 21 de octubre de 2026
+**Válido para:** app `0.5.2` · `requisitos.md` v1.19 · `matriz-cumplimiento` v1.17 · `interfaz.md` v1.9 · `compatibilidad.md` v1.6 · `automatizacion.md` v1.1 · `CHANGELOG.md`
 **Gestiona:** chat de Desarrollo
 
 > ⚡ **Modo acelerado activo desde el 14/10** (detalle en `automatizacion.md`). El agente ejecuta las etapas por bloques —F1 a F3, luego F4 a F6— y solo para en las decisiones. Las pruebas que necesitan tus manos se agrupan en dos sesiones: **Sesión 1** con el iPhone y el ordenador al cerrar F3, y **Sesión 2** con la guitarra al cerrar F6.
@@ -12,7 +12,7 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** F5 hecha por el agente (`0.5.0`): escalas con notas bien escritas, Mostrar con paso a paso y Práctica. Siguen pendientes, sin bloquear: tu comprobación de 10 minutos con la guitarra (F4.3) y echar un vistazo a la app en inglés y a Escalas. Siguiente: CP-5 y F6 (preparación para distribución).
+📍 **Estás aquí:** F5 en marcha: escalas (`0.5.0`) y tus comentarios del 21/10 (`0.5.1` y `0.5.2`: reintentar en Adivinar, ♯ o ♭ por nota y ajustes visuales). Siguiente: el **metrónomo** (F5.6) y la **librería de acordes** (F5.7), que pediste el 21/10; luego CP-5 y F6. Pendientes tuyos, sin bloquear: los 10 minutos con la guitarra (F4.3) y echar un vistazo a la app en inglés, a Escalas y a lo nuevo.
 
 | Fase | Objetivo | Versión | Dónde se usa | Etapas | Progreso |
 |------|----------|:---:|---|:---:|---|
@@ -20,7 +20,7 @@
 | **F2** | Sonido propio y archivo autónomo | 0.2.x | 📁 Archivo en cualquier dispositivo | 5 | `▰▰▰▰▰▰▰▰` 5/5 |
 | **F3** | Interfaz y adaptación | 0.3.x | 📁 Archivo | 4 | `▰▰▰▰▰▰▰▰` 4/4 |
 | **F4** | Afinador por micrófono | 0.4.x | 💻 Live Server | 5 | `▰▰▰▰▰▰▰▰` 5/5 · F4.3 y F4.4 con pendientes |
-| **F5** | Escalas | 0.5.x | 📁 Archivo | 5 | `▰▰▰▰▰▰▱▱` 4/5 · F5.4 se valida con la guitarra |
+| **F5** | Escalas, metrónomo y acordes | 0.5.x | 📁 Archivo | 8 | `▰▰▰▰▰▱▱▱` 5/8 · F5.4 se valida con la guitarra |
 | **F6** | Preparación para distribución | 0.6.x | 💻 Live Server | 4 | `▱▱▱▱▱▱▱▱` 0/4 |
 | **F7** | Publicación y lanzamiento | **1.0.0** | 🌐 Web y tiendas | 5 | `▱▱▱▱▱▱▱▱` 0/5 |
 | **T** | Automatización con agentes *(activa)* | — | 🤖 Repositorio | 5 | `▰▰▰▰▰▱▱▱` 3/5 |
@@ -37,7 +37,7 @@ flowchart LR
   CP1 --> F2["F2 · Sonido propio<br/>0.2.x · 📁"]
   F2 --> CP2{{CP-2}} --> F3["F3 · Interfaz<br/>0.3.x · 📁"]
   F3 --> S1(["🧪 Sesión 1<br/>iPhone y ordenador"]):::done --> CP3{{CP-3}}:::done --> F4["F4 · Micrófono<br/>0.4.x · 💻"]:::done
-  F4 -.->|F4.3 pendiente: no bloquea| CP4{{CP-4}} --> F5["F5 · Escalas<br/>0.5.x · 📁"]:::now
+  F4 -.->|F4.3 pendiente: no bloquea| CP4{{CP-4}} --> F5["F5 · Escalas, metrónomo<br/>y acordes · 0.5.x · 📁"]:::now
   F5 --> CP5{{CP-5}} --> F6["F6 · Preparación<br/>0.6.x · 💻"]
   F6 --> S2(["🎸 Sesión 2<br/>con la guitarra"]):::you --> CP6{{"CP-6<br/>¿lanzamos?"}} --> F7["F7 · Publicación<br/>1.0.0 · 🌐"]
   subgraph T["Pista T · modo acelerado, activo desde el 14/10"]
@@ -196,7 +196,7 @@ Peso principal en el **auditor de requisitos** como experto en experiencia de us
 
 ---
 
-## F5 — Escalas · `0.5.x` · 📁
+## F5 — Escalas, metrónomo y acordes · `0.5.x` · 📁
 
 **Objetivo:** cerrar O-03 con alcance acotado. Fuera: validar el orden (E-05b) y otras afinaciones (E-02b).
 **Decisión previa:** catálogo inicial de escalas. **Cerrada el 21/10:** mayor, menor natural y pentatónicas mayor y menor.
@@ -207,7 +207,10 @@ Peso principal en el **auditor de requisitos** como experto en experiencia de us
 | **F5.2** | Catálogo y generador de escalas | E-01, E-02 | Contraste con una referencia externa; pruebas de intervalos | Una escala como patrón de intervalos | ✅ `0.5.0`: las 48 escalas frente al círculo de quintas |
 | **F5.3** | Submodo Mostrar, con intervalos y guiado | P-03, E-03, E-04, E-06 | Comparación con diagramas de referencia | Tono y semitono | ✅ `0.5.0` · falta que lo veas |
 | **F5.4** | Submodo Práctica | E-05 | Sesión real con la guitarra | — | 🔨 `0.5.0`, validado por el banco · con la guitarra 📅 Sesión 2 |
-| **F5.5** | Cierre | — | Etiqueta `v0.5.x` | — | ⬜ |
+| **F5.5** | Tus comentarios del 21/10: reintentar en Adivinar, ♯ o ♭ por nota, lectura sin saltos, pentagrama más grande, nombre en horizontal | J-13, N-06, G-01, P-01 | Banco y disposición en tres pantallas | Preferencias que cambian la escritura sin cambiar el sonido | ✅ `0.5.1` y `0.5.2` |
+| **F5.6** | Metrónomo: tempo, compás, acentos y subdivisión, usable desde cualquier área (tu petición del 21/10) | MT-01 a MT-05 | Banco: separación exacta de los golpes a 30, 120 y 250 ppm, acentos y subdivisiones; tú, con la guitarra | Programar sonido con el reloj de audio | ⬜ |
+| **F5.7** | Librería de acordes con dedos numerados y de color, pentagrama y rasgueo (tu petición del 21/10) | AC-01 a AC-05 | Banco: cada digitación da exactamente las notas del acorde; tú, comparando con tu guitarra | Cómo se construye un acorde; digitación | ⬜ |
+| **F5.8** | Cierre | — | Etiqueta `v0.5.x` | — | ⬜ |
 
 ### 🔍 CP-5 — Checkpoint de escalas
 Ambos auditores, con atención a la corrección musical: es donde un error pasa desapercibido más tiempo.
@@ -454,7 +457,8 @@ flowchart TB
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **3.16** | 21/10/2026 | F5.1 a F5.4 hechas con la `0.5.0`: escalas con notas escritas (catálogo decidido el 21/10), Mostrar con intervalos y paso a paso, y Práctica. F4.3 sigue pendiente sin bloquear. |
+| **3.17** | 21/10/2026 | Tus comentarios del 21/10: F5.5 hecha (`0.5.1` y `0.5.2`); metrónomo (F5.6) y librería de acordes (F5.7) añadidos al plan, con sus requisitos; el cierre pasa a F5.8. |
+| 3.16 | 21/10/2026 | F5.1 a F5.4 hechas con la `0.5.0`: escalas con notas escritas (catálogo decidido el 21/10), Mostrar con intervalos y paso a paso, y Práctica. F4.3 sigue pendiente sin bloquear. |
 | 3.15 | 21/10/2026 | Tus comentarios del 21/10: F4.4 con un récord por afinación y pistas grandes (`0.4.1`); F4.5 nueva, idioma español o inglés (`0.4.2`). La comprobación de F4.3 no bloquea: se sigue con F5 y F4 se cierra cuando la hagas. |
 | 3.14 | 21/10/2026 | F4.1, F4.2 y F4.3 hechas con la `0.4.0`: la app en módulos, el detector de tono y el afinador por micrófono. La comprobación de F4.3 se puede hacer en la web de pruebas, también en el iPhone. Etiquetas `v0.2.3` y `v0.3.3` creadas (con la `v0.1.5`, las tres fases cerradas tienen la suya). |
 | 3.13 | 20/10/2026 | Sesión 1 hecha (informe `V-08`): F1.1, F2.5 y F3.3 hechas, con pendientes anotados; la Sesión 2 recoge lo que hay que repetir. La `0.3.3` corrige lo que salió: sonido en el iPhone, icono, Adivinar empieza con ▶, más tiempo para la corrección y el récord se conserva al restablecer. Nuevos para después: C-08 (personalización) y S-09 (timbre). |

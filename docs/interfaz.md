@@ -1,7 +1,7 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 1.8 · **Fecha:** 21 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0). Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
-**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.5.0` · `requisitos.md` v1.18 · `roadmap.md` v3.16
+**Versión:** 1.9 · **Fecha:** 21 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0). Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
+**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.5.2` · `requisitos.md` v1.19 · `roadmap.md` v3.17
 **Revisión:** auditoría de requisitos AR-04 (`auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
 
@@ -120,7 +120,7 @@ Fila superior: **Mostrar | Práctica**, tónica y tipo (E-01; el catálogo se de
 
 ### Ajustes — boceto A7
 
-Una hoja que sube desde abajo, con los grupos de hoy (Notación, Mástil, Sonido y afinación) y uno **nuevo, «Acerca de»**: Créditos y licencias (G-06, que exige que la app muestre los créditos), Privacidad (cuando exista la política, F6.4, G-11), Restablecer y el número de versión (G-10). **Desde la 0.4.2**, el primer grupo es «Idioma · Language» (Español | English, cada uno en su lengua; G-12). **Desde la 0.3.3**, el grupo Sonido enseña el estado del sonido con un botón «Reactivar sonido», y bajo Restablecer (que conserva el récord) hay un botón «Borrar los récords de racha» (uno por afinación desde la 0.4.1). En las filas con interruptor se toca la fila entera, que mide al menos 40 px de alto. Se cierra tocando fuera, con Escape o con «atrás»; el gesto de bajar llega en F3.4. Mientras está abierto, el resto de la página no responde (es un diálogo).
+Una hoja que sube desde abajo, con los grupos de hoy (Notación, Mástil, Sonido y afinación) y uno **nuevo, «Acerca de»**: Créditos y licencias (G-06, que exige que la app muestre los créditos), Privacidad (cuando exista la política, F6.4, G-11), Restablecer y el número de versión (G-10). **Desde la 0.5.2**, Notación incluye «Notas alteradas»: cinco selectores, uno por tecla negra (Do♯ | Re♭…), y hay un grupo «Adivinar» con «Al fallar: Ver respuesta | Reintentar» (0.5.1). **Desde la 0.4.2**, el primer grupo es «Idioma · Language» (Español | English, cada uno en su lengua; G-12). **Desde la 0.3.3**, el grupo Sonido enseña el estado del sonido con un botón «Reactivar sonido», y bajo Restablecer (que conserva el récord) hay un botón «Borrar los récords de racha» (uno por afinación desde la 0.4.1). En las filas con interruptor se toca la fila entera, que mide al menos 40 px de alto. Se cierra tocando fuera, con Escape o con «atrás»; el gesto de bajar llega en F3.4. Mientras está abierto, el resto de la página no responde (es un diálogo).
 
 ## 7. Móvil en horizontal (F3.2) — bocetos B1 a B6
 
@@ -156,6 +156,14 @@ En horizontal, el botón de pentagrama del panel es el símbolo 𝄞, con su nom
 La cuerda mide (alto útil − 28 px) / 6, así que **cumple los 40 px con un alto útil de 268 px o más**. Por debajo, la cuerda baja de 40 px; ese caso se anota y se recomienda instalar la app, que gana el alto de la barra del navegador. Los 280 px de Android son una estimación: se confirman con el simulador de Chrome en F3.2 y en un Android real cuando lo haya.
 
 **Aviso para girar** (V-01): solo en pantallas táctiles en vertical de menos de 600 px de ancho, en Libre, Adivinar y Escalas. Es una franja discreta sobre el mástil: «⟳ Gira el móvil para ver más trastes ✕». Desaparece al girar. Si la cierras con ✕, no vuelve: se guarda con los ajustes (C-05) y «Restablecer todos los ajustes» la recupera. Nunca sale en el Afinador, que funciona igual en las dos orientaciones (V-02), ni en una ventana estrecha de Windows. No se bloquea la orientación: el iPhone no lo permite.
+
+## 7b. Metrónomo y acordes (F5.6 y F5.7) — propuesta
+
+Tu petición del 21/10. Propuesta, para que la veas antes de construirla:
+
+- **Metrónomo:** no es un área, es una herramienta para usar mientras practicas. Un chip más en el acceso rápido, «♩ 80», abre un panel pequeño (como Ajustes, pero sin tapar el mástil en horizontal): tempo con − y + y «Marcar» (tocas a ritmo y lo calcula), compás (2/4 … 12/8), una fila de tiempos donde cada toque cambia el acento (fuerte, normal, silencio) y la subdivisión (pulso, corcheas, tresillos, semicorcheas). Mientras suena, el chip late con el pulso y el tiempo en curso se ilumina. Se para al ocultar la app.
+- **Acordes:** una quinta pestaña, «Acordes», con tónica y tipo arriba (como Escalas). En el mástil, cada nota del acorde es un círculo **del color de su dedo** —1 índice, 2 medio, 3 anular, 4 meñique, siempre los mismos cuatro colores— con el número dentro; ○ y ✕ junto a la cejuela para las cuerdas al aire y las que no suenan, y la cejilla como una barra. Debajo, el nombre de las notas del acorde y el pentagrama con las notas apiladas. Tocar el acorde lo hace sonar rasgueado; cada casilla suena suelta.
+- Con cinco pestañas, la barra inferior sigue cabiendo en el iPhone (78 px cada una) y el raíl en horizontal también.
 
 ## 8. Ordenador — boceto C1
 
@@ -231,7 +239,8 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.8** | 21/10/2026 | §6 Escalas: cómo quedó en la 0.5.0 (intervalos dentro del paso a paso, Práctica con «Otra vez»). |
+| **1.9** | 21/10/2026 | Ajustes con «Notas alteradas» y «Al fallar»; propuesta de metrónomo (chip y panel) y de Acordes (quinta pestaña), tu petición del 21/10. |
+| 1.8 | 21/10/2026 | §6 Escalas: cómo quedó en la 0.5.0 (intervalos dentro del paso a paso, Práctica con «Otra vez»). |
 | 1.7 | 21/10/2026 | §6: pistas grandes dentro de sus botones y lectura grande con la nota tocada; Ajustes con el grupo de idioma (tus comentarios del 21/10). |
 | 1.6 | 21/10/2026 | §6: cómo quedó el afinador por micrófono en la 0.4.0 (órdenes, sin micrófono, permiso, horizontal), tras AR-08. |
 | 1.5 | 20/10/2026 | Sesión 1 (0.3.3): Adivinar empieza con ▶ y su lectura es la nota buscada; tiempos de la corrección; en Ajustes, estado del sonido, «Reactivar sonido» y «Borrar el récord de racha». |
