@@ -111,9 +111,9 @@ function parseBody(src){
   return body;
 }
 
-function appScript(src){
-  return src.split('<script>\n', 2)[1].split('</script>')[0];
-}
+// Desde la 0.4.0 el código está repartido en js/; ensamblar.js sabe leer las dos
+// formas (varios archivos, o uno solo en las versiones anteriores).
+const { ensamblar, scripts } = require('../herramientas/ensamblar');
 
 /** Arranca la app en un contexto aislado. `preset` simula ajustes ya guardados;
  *  `extra` añade o sustituye capacidades del navegador (matchMedia, history…)
@@ -147,7 +147,9 @@ function boot(htmlPath, preset, extra){
   Object.assign(ctx, extra || {});
   ctx.window = ctx;
   vm.createContext(ctx);
-  vm.runInContext(appScript(src), ctx, { filename: 'index.html' });
+  // Cada archivo se ejecuta por separado, como hace el navegador con cada
+  // <script>: si uno usara al cargarse algo de un archivo posterior, fallaría aquí.
+  for (const { nombre, codigo } of scripts(htmlPath)) vm.runInContext(codigo, ctx, { filename: nombre });
   const $ = id => doc.getElementById(id);
   const ev = js => vm.runInContext(js, ctx);
   const press = (cell, drag) => {
@@ -161,4 +163,4 @@ function boot(htmlPath, preset, extra){
 }
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-module.exports = { boot, sleep, El };
+module.exports = { boot, sleep, El, fuente: ensamblar };

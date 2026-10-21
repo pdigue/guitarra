@@ -20,7 +20,8 @@ fs.mkdirSync(OUT, { recursive: true });
 const server = http.createServer((req, res) => {
   const f = path.join(REPO, decodeURIComponent(req.url.split('?')[0]));
   if (!f.startsWith(REPO) || !fs.existsSync(f) || fs.statSync(f).isDirectory()){ res.writeHead(404); return res.end(); }
-  res.writeHead(200, { 'Content-Type': f.endsWith('.html') ? 'text/html; charset=utf-8' : 'application/octet-stream' });
+  const tipos = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8' };
+  res.writeHead(200, { 'Content-Type': tipos[path.extname(f)] || 'application/octet-stream' });
   fs.createReadStream(f).pipe(res);
 });
 

@@ -7,7 +7,7 @@ const assert = require('node:assert/strict');
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
-const { boot, sleep } = require('./dom-minimo');
+const { boot, sleep, fuente } = require('./dom-minimo');
 
 // APP_HTML permite pasar el banco a otra versión, por ejemplo para comprobar que una
 // prueba nueva falla con la versión anterior a la corrección.
@@ -174,7 +174,7 @@ test('cada grabación es la nota a la que se asigna y su desviación está medid
 });
 
 test('la app no descarga nada de otros servidores (S-07, F2.2)', () => {
-  const src = fs.readFileSync(APP, 'utf8');
+  const src = fuente(APP);                   // la página con todo su CSS y JS
   const urls = [...new Set(src.match(/https?:\/\/[^\s"'`)<>]+/g) || [])];
   // Tampoco direcciones sin protocolo («//cdn…»), que el navegador completa con https.
   assert.deepEqual(src.match(/["'(=]\s*\/\/[a-z0-9]/gi) || [], []);
@@ -250,7 +250,7 @@ test('con el audio dentro de la página no descarga nada (G-07, F2.3)', async ()
   assert.equal(A.ev('__descargas'), 0);
 });
 
-test('el archivo autónomo está al día con index.html, con su audio y dentro de sus límites (G-07, G-08, F2.3)', () => {
+test('el archivo autónomo está al día con la app, con su audio y dentro de sus límites (G-07, G-08, F2.3)', () => {
   const carpeta = path.join(__dirname, '..', 'dist');
   const pagina = fs.readFileSync(path.join(carpeta, 'trasteando.html'), 'utf8');
   const informe = JSON.parse(fs.readFileSync(path.join(carpeta, 'autonomo.json'), 'utf8'));
@@ -261,9 +261,10 @@ test('el archivo autónomo está al día con index.html, con su audio y dentro d
   const bloques = [...tramo[0].matchAll(/<script type="application\/octet-stream" id="audio-(\w+)-(\w+)">([^<]*)<\/script>/g)];
   const audio = bloques.reduce((n, m) => n + m[0].length, 0);
   assert.ok(audio <= 1_450_000, `el audio ocupa ${audio} bytes`);
-  // Quitado el audio, es exactamente index.html (los \r de Windows no cuentan).
+  // Quitado el audio, es exactamente index.html con su css/ y su js/ dentro
+  // (los \r de Windows no cuentan).
   const sinAudio = pagina.replace(tramo[0], '').replace(/\r\n/g, '\n');
-  assert.equal(sinAudio, fs.readFileSync(APP, 'utf8').replace(/\r\n/g, '\n'), 'dist/trasteando.html no se ha regenerado tras cambiar index.html');
+  assert.equal(sinAudio, fuente(APP), 'dist/trasteando.html no se ha regenerado tras cambiar la app');
   const A = boot(APP);
   assert.equal(informe.version, A.ev('APP_VERSION'));
   const mapas = JSON.parse(A.ev('JSON.stringify(SAMPLE_MAPS)'));
@@ -612,7 +613,7 @@ test('paleta: cada nota se lee con 4,5:1 y cada sostenido es un tono más claro 
 });
 
 test('los grises de texto cumplen 4,5:1 sobre todos los fondos (G-05, F3.4)', () => {
-  const css = fs.readFileSync(APP, 'utf8');
+  const css = fuente(APP);
   const v = n => css.match(new RegExp('--' + n + ':(#[0-9a-f]{6})'))[1];
   for (const texto of ['text', 'muted', 'faint', 'amber', 'ok', 'ko'])
     for (const fondo of ['bg', 'surface', 'surface2'])
@@ -689,4 +690,20 @@ test('en Adivinar ninguna casilla anuncia su nota a un lector de pantalla (J-12,
   assert.ok(A.doc.querySelectorAll('.dot').every(d => d.getAttribute('aria-hidden') === 'true'), 'el texto del punto no se lee');
   A.doc.querySelector('.tab[data-screen="free"]').click();
   assert.match(A.doc.querySelector('.fret-cell[data-row="0"][data-fret="0"]').getAttribute('aria-label'), /^Mi4, 1ª cuerda, al aire$/, 'en Libre sí');
+});
+
+// --- F4.1: la app repartida en archivos ---
+
+test('la app vive en css/ y js/: index.html los carga todos, en orden, y el ensamblado no deja nada fuera (G-08, F4.1)', () => {
+  const raiz = path.join(__dirname, '..');
+  const html = fs.readFileSync(path.join(raiz, 'index.html'), 'utf8');
+  const cargados = [...html.matchAll(/<script src="(js\/[^"]+)"><\/script>/g)].map(m => m[1]);
+  const enDisco = fs.readdirSync(path.join(raiz, 'js')).filter(f => f.endsWith('.js')).map(f => 'js/' + f).sort();
+  assert.deepEqual([...cargados].sort(), enDisco, 'cada archivo de js/ se carga una vez, y ninguno sobra');
+  assert.deepEqual(cargados, [...cargados].sort(), 'en el orden de su número');
+  assert.equal(cargados.at(-1), 'js/10-arranque.js', 'el arranque va el último: usa todo lo anterior');
+  for (const f of cargados) assert.match(fs.readFileSync(path.join(raiz, f), 'utf8'), /^"use strict";\n/, f + ' empieza en modo estricto');
+  const pagina = fuente(APP);
+  assert.doesNotMatch(pagina, /<script src=|<link rel="stylesheet"/, 'el ensamblado lleva todo dentro');
+  assert.equal((pagina.match(/<script>\n/g) || []).length, cargados.length);
 });
