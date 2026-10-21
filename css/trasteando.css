@@ -260,9 +260,29 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .tuner-staff { background:var(--surface); border:1px solid var(--line); border-radius:11px;
   padding:6px; margin-bottom:14px; }
 .tuner-staff svg { width:100%; height:132px; display:block; }
-.soon { border:1px dashed var(--line2); border-radius:11px; padding:12px 13px;
-  font-size:12.5px; color:var(--muted); line-height:1.5; margin-bottom:10px; }
-.soon b { color:var(--text); font-weight:600; }
+.tuner .tuner-mode { display:inline-flex; margin-bottom:12px; }
+.row-label { font-size:12px; color:var(--muted); flex-shrink:0; }
+/* Afinador por micrófono (F4.3) */
+.mic-string { flex:1; min-width:0; }
+.mic-string button { flex:1; min-width:40px; padding:0 4px; }
+.mic-panel { background:var(--surface); border:1px solid var(--line); border-radius:11px; padding:14px; }
+.mic-panel p { font-size:13.5px; line-height:1.5; margin:0 0 12px; color:var(--text); }
+.mic-why:empty { display:none; }
+.mic-why { color:var(--ko) !important; }
+.mic-btn { width:100%; min-height:44px; border-radius:10px; cursor:pointer; font:inherit; font-size:14px; font-weight:600;
+  background:var(--surface2); border:1px solid var(--line2); color:var(--text); }
+.mic-btn.primary { background:var(--amber); border-color:var(--amber); color:#160f07; }
+.mic-btn:disabled { opacity:.5; cursor:not-allowed; }
+.mic-live { display:flex; flex-direction:column; align-items:center; gap:4px; }
+.mic-gauge { width:100%; max-width:300px; height:auto; display:block; }
+.mic-gauge .needle { transform-origin:120px 120px; transform-box:view-box; transition:transform .12s linear; }
+.mic-gauge.idle .needle { opacity:.25; }
+.mic-read { width:100%; display:flex; flex-direction:column; align-items:center; gap:4px; }
+.mic-note { font-size:44px; font-weight:800; line-height:1; color:var(--text); }
+.mic-detail { font-size:13px; color:var(--muted); }
+.mic-order { font-size:18px; font-weight:700; min-height:26px; }
+.mic-order.ok { color:var(--ok); } .mic-order.ko { color:var(--ko); }
+.mic-privacy { font-size:12px; color:var(--muted); text-align:center; margin:6px 0 8px; line-height:1.45; }
 
 /* ===== NAVEGACIÓN INFERIOR ===== */
 .tabbar { flex-shrink:0; display:flex; border-top:1px solid var(--line);
@@ -401,6 +421,14 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .tuner h2 { margin-bottom:8px; }
   .tuning-row { margin-bottom:10px; }
   .tuner-staff svg { height:100px; }
+  .tuner .tuner-mode { margin-bottom:8px; }
+  #tuner-mic .tuning-row { margin-bottom:6px; }
+  .mic-live { flex-direction:row; align-items:center; gap:14px; }
+  .mic-gauge { max-width:230px; flex:1; }
+  .mic-read { flex:1; gap:2px; }
+  .mic-note { font-size:34px; }
+  .mic-privacy { font-size:11.5px; margin:2px 0 6px; }
+  .mic-btn { min-height:40px; }
 }
 
 /* ===== PANTALLAS AMPLIAS (ordenador, tableta; interfaz.md §8) =====

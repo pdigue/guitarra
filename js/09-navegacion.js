@@ -18,6 +18,7 @@ function setScreen(next){
 
   document.getElementById('board-area').hidden = isTuner;
   document.getElementById('tuner').hidden = !isTuner;
+  if (!isTuner) stopMic();      // el micrófono se apaga al salir del Afinador (interfaz.md §6)
   // El panel lleva atajos, reto, pentagrama y zoom: nada de eso es del
   // Afinador. Las pistas van dentro del reto, así que solo salen al adivinar.
   document.getElementById('panel').hidden = isTuner;

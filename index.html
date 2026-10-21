@@ -137,22 +137,50 @@
 
 <!-- ============ AFINADOR ============ -->
 <div class="tuner" id="tuner" hidden>
-  <h2>Afinador por referencia</h2>
-  <p class="lead">Pulsa una cuerda para oír cómo debería sonar y ajústala hasta que coincida.</p>
+  <div class="seg tuner-mode" id="tuner-mode" role="group" aria-label="Modo del afinador">
+    <button data-v="ear">De oído</button>
+    <button data-v="mic">Micrófono</button>
+  </div>
 
   <div class="tuning-row">
     <label for="tuning-select">Afinación</label>
     <select id="tuning-select"></select>
   </div>
 
-  <div class="strings-tuner" id="strings-tuner"></div>
-
-  <div class="tuner-staff">
-    <svg id="tuner-staff-svg" viewBox="0 0 340 132" preserveAspectRatio="xMidYMid meet"></svg>
+  <!-- De oído (A-01): la app hace sonar cada cuerda al aire. -->
+  <div id="tuner-ear">
+    <p class="lead">Pulsa una cuerda para oír cómo debería sonar y ajústala hasta que coincida.</p>
+    <div class="strings-tuner" id="strings-tuner"></div>
+    <div class="tuner-staff">
+      <svg id="tuner-staff-svg" viewBox="0 0 340 132" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
   </div>
 
-  <div class="soon">
-    <b>Afinado por micrófono</b> — llegará en la próxima versión. Escuchará la cuerda y te dirá cuánto subir o bajar.
+  <!-- Micrófono (F4.3, A-02 a A-05): la app escucha la cuerda y dice cuánto subir o bajar. -->
+  <div id="tuner-mic" hidden>
+    <div class="tuning-row">
+      <span class="row-label" id="mic-string-label">Cuerda</span>
+      <div class="seg mic-string" id="mic-string" role="group" aria-labelledby="mic-string-label">
+        <button data-v="auto">Auto</button><button data-v="6">6</button><button data-v="5">5</button><button data-v="4">4</button><button data-v="3">3</button><button data-v="2">2</button><button data-v="1">1</button>
+      </div>
+    </div>
+
+    <div class="mic-panel" id="mic-intro">
+      <p>Toca una cuerda y la app te dirá si está afinada o cuánto subirla o bajarla. Para eso necesita <b>escuchar con el micrófono</b>. El sonido se analiza solo en tu dispositivo: no se graba ni se envía a ningún sitio.</p>
+      <p class="mic-why" id="mic-why"></p>
+      <button class="mic-btn primary" id="mic-start">Activar el micrófono</button>
+    </div>
+
+    <div class="mic-live" id="mic-live" hidden>
+      <svg class="mic-gauge" id="mic-gauge" viewBox="0 0 240 140" aria-hidden="true"></svg>
+      <div class="mic-read">
+        <div class="mic-note" id="mic-note">—</div>
+        <div class="mic-detail" id="mic-detail">Toca una cuerda</div>
+        <div class="mic-order" id="mic-order" aria-live="polite"></div>
+        <p class="mic-privacy">Afinada en la franja verde (±5 cents). El sonido se analiza solo en tu dispositivo.</p>
+        <button class="mic-btn" id="mic-stop">Detener el micrófono</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -242,6 +270,7 @@
 <script src="js/08-afinador-referencia.js"></script>
 <script src="js/09-navegacion.js"></script>
 <script src="js/10-tono.js"></script>
+<script src="js/11-afinador-micro.js"></script>
 <script src="js/12-arranque.js"></script>
 </body>
 </html>

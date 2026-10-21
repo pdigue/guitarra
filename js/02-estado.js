@@ -24,7 +24,8 @@ const DEFAULTS = {
   visibleFrets:null,      // se calcula en el primer arranque según la pantalla
   maxChallengeFret:12,    // hasta dónde llegan los retos del modo Adivinar
   record:0,
-  rotateHintClosed:false  // el aviso para girar, una vez cerrado, no vuelve (V-01)
+  rotateHintClosed:false, // el aviso para girar, una vez cerrado, no vuelve (V-01)
+  tunerMode:'ear'         // afinador: 'ear' de oído · 'mic' por micrófono (F4.3)
 };
 
 const storage = {
@@ -55,6 +56,7 @@ function sanitize(raw){
   }
   if (!['latin','anglo'].includes(s.notation)) s.notation = DEFAULTS.notation;
   if (!['nylon','acoustic'].includes(s.timbre)) s.timbre = DEFAULTS.timbre;
+  if (!['ear','mic'].includes(s.tunerMode)) s.tunerMode = DEFAULTS.tunerMode;
   ['showStaff','showAllNotes','showEquals','hintNote','hintString','rotateHintClosed']
     .forEach(k => { s[k] = !!s[k]; });
   // fretNums sustituye al interruptor showFretNums de la 0.1.1. Quien lo tuviera

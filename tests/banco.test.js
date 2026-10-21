@@ -707,3 +707,95 @@ test('la app vive en css/ y js/: index.html los carga todos, en orden, y el ensa
   assert.doesNotMatch(pagina, /<script src=|<link rel="stylesheet"/, 'el ensamblado lleva todo dentro');
   assert.equal((pagina.match(/<script>\n/g) || []).length, cargados.length);
 });
+
+// --- F4.3: afinador por micrófono ---
+
+/** Micrófono simulado: getUserMedia da una pista y el analizador entrega una
+ *  nota sintética de __senal.hz (0 = silencio). */
+const microFalso = (permiso = true) => {
+  const __mic = { pedido: 0, pista: null };          // la app lo ve como __mic
+  return { __mic, isSecureContext: true, location: { protocol: 'https:' },
+    navigator: { mediaDevices: { getUserMedia: async () => {
+      __mic.pedido++;
+      if (!permiso) { const e = new Error('no'); e.name = 'NotAllowedError'; throw e; }
+      __mic.pista = { parada: false, stop(){ this.parada = true; } };
+      return { getTracks: () => [__mic.pista] };
+    } } } };
+};
+const analizadorFalso = `${audioFalso}
+  globalThis.__senal = { hz: 0 };
+  __ctx.sampleRate = 48000;
+  __ctx.createMediaStreamSource = () => ({ connect(){}, disconnect(){} });
+  __ctx.createAnalyser = () => ({ fftSize: 2048, getFloatTimeDomainData(x){
+    for (let i = 0; i < x.length; i++){ let v = 0;
+      if (__senal.hz) for (let k = 1; k <= 8; k++) v += 0.3 / k * Math.sin(2 * Math.PI * k * __senal.hz * i / 48000 + k);
+      x[i] = v; } } });`;
+const lectura = A => ({ nota: A.$('mic-note').textContent, detalle: A.$('mic-detail').textContent, orden: A.$('mic-order').textContent });
+
+async function abrirMicro(A){
+  A.ev(analizadorFalso);
+  A.doc.querySelector('.tab[data-screen="tuner"]').click();
+  A.doc.querySelector('#tuner-mode [data-v="mic"]').click();
+}
+
+test('afinador por micrófono: no escucha hasta que lo pides, y luego dice cuánto subir o bajar (A-02, A-03, A-04)', async () => {
+  const A = boot(APP, null, microFalso());
+  await abrirMicro(A);
+  assert.equal(A.ev('__mic.pedido'), 0, 'elegir «Micrófono» no lo enciende');
+  assert.equal(A.$('mic-intro').hidden, false);
+  assert.match(A.$('mic-intro').textContent, /solo en tu dispositivo/);
+  A.$('mic-start').click(); await sleep(10);
+  assert.equal(A.$('mic-live').hidden, false);
+  assert.match(A.$('mic-detail').textContent, /Toca una cuerda/);
+  A.ev('__senal.hz = 110 * 2 ** (-12 / 1200)');            // La2, 12 cents baja
+  await sleep(300);
+  assert.deepEqual(lectura(A), { nota: 'La2', detalle: '−12 cents · 5ª cuerda', orden: '▲ Sube un poco' });
+  A.ev('__senal.hz = 110 * 2 ** (3 / 1200)');
+  await sleep(400);
+  assert.equal(lectura(A).orden, '✓ Afinada', 'dentro de ±5 cents');
+  A.ev('__senal.hz = 246.94 * 2 ** (-80 / 1200)');          // Si3 muy baja: sigue siendo la 2ª (A-04)
+  await sleep(400);
+  assert.deepEqual(lectura(A), { nota: 'Si3', detalle: '−80 cents · 2ª cuerda', orden: '▲ Sube' });
+  A.ev('__senal.hz = 349.23');                               // Fa4: 1 semitono sobre la 1ª
+  await sleep(400);
+  assert.deepEqual(lectura(A), { nota: 'Mi4', detalle: '+100 cents · 1ª cuerda', orden: '▼ Baja' });
+  A.ev('__senal.hz = 0');
+  await sleep(1700);
+  assert.match(A.$('mic-detail').textContent, /Toca una cuerda/, 'en silencio la aguja vuelve a reposo');
+  A.doc.querySelector('.tab[data-screen="free"]').click();
+  assert.equal(A.ev('__mic.pista.parada'), true, 'al salir del Afinador se apaga el micrófono');
+});
+
+test('con una cuerda elegida a mano, el afinador la usa aunque suene otra; y se apaga al ocultar la app (A-05)', async () => {
+  const A = boot(APP, null, microFalso());
+  await abrirMicro(A);
+  A.$('mic-start').click(); await sleep(10);
+  A.doc.querySelector('#mic-string [data-v="6"]').click();
+  A.ev('__senal.hz = 110');                                  // suena un La2, pero la elegida es la 6ª (Mi2)
+  await sleep(300);
+  assert.deepEqual(lectura(A), { nota: 'Mi2', detalle: '+500 cents · 6ª cuerda', orden: '▼ Baja' });
+  A.ev('__senal.hz = 2 * 82.41 * 2 ** (-7 / 1200)');        // el detector oye la octava: no dice «baja 12 semitonos»
+  await sleep(400);
+  assert.deepEqual(lectura(A), { nota: 'Mi2', detalle: '−7 cents · 6ª cuerda', orden: '▲ Sube un poco' });
+  A.doc.hidden = true; (A.doc.listeners.visibilitychange || []).forEach(f => f({ type: 'visibilitychange' }));
+  assert.equal(A.ev('__mic.pista.parada'), true, 'al bloquear el móvil se apaga');
+  assert.equal(A.$('mic-live').hidden, true);
+});
+
+test('sin permiso se explica cómo darlo; sin micrófono posible, se dice por qué y De oído sigue (A-02, PL-04)', async () => {
+  const A = boot(APP, null, microFalso(false));
+  await abrirMicro(A);
+  A.$('mic-start').click(); await sleep(10);
+  assert.match(A.$('mic-why').textContent, /permiso/);
+  assert.equal(A.$('mic-start').disabled, false, 'se puede volver a intentar');
+
+  const B = boot(APP, null, { location: { protocol: 'file:' } });
+  B.doc.querySelector('.tab[data-screen="tuner"]').click();
+  B.doc.querySelector('#tuner-mode [data-v="mic"]').click();
+  assert.match(B.$('mic-why').textContent, /archivo/);
+  assert.equal(B.$('mic-start').disabled, true);
+  B.doc.querySelector('#tuner-mode [data-v="ear"]').click();
+  assert.equal(B.$('tuner-ear').hidden, false);
+  assert.equal(B.doc.querySelectorAll('#strings-tuner .tstring').length || B.$('strings-tuner').children.length, 6, 'De oído sigue con sus 6 cuerdas');
+  assert.equal(JSON.parse(B.store.get('trasteando.v1')).tunerMode, 'ear', 'el modo se guarda');
+});

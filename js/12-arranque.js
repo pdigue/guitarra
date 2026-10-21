@@ -146,6 +146,7 @@ document.getElementById('set-reset').addEventListener('click', async () => {
   syncUI();
   applyZoom();
   updateRotateHint();          // «Restablecer» recupera el aviso para girar
+  setTunerMode(state.tunerMode);   // el afinador vuelve a «De oído»
   hideSettings();
   // El reto anterior puede referirse a una nota que ya no existe en la
   // afinación restablecida, y dejaría al usuario fallando indefinidamente.
@@ -189,6 +190,7 @@ if (canHistory) history.replaceState({ screen:'free' }, '', '#libre');
 buildTuner();
 buildBoard();
 bindBoardInput();
+bindMicTuner();
 bindBoardKeys();
 clearStaff();
 syncUI();
