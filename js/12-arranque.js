@@ -1,11 +1,11 @@
 "use strict";
 
-// 10-arranque.js · Arranque: conecta los eventos y pone la app en marcha. Va el último porque usa todo lo anterior.
+// 12-arranque.js · Arranque: conecta los eventos y pone la app en marcha. Va el último porque usa todo lo anterior.
 // Se carga como <script> clásico, en el orden de index.html: lo declarado aquí
 // (const, let, function) lo ven los archivos que vienen después.
 
 /* ============================================================
-   10. ARRANQUE Y EVENTOS
+   12. ARRANQUE Y EVENTOS
    ============================================================ */
 
 document.getElementById('gate-btn').addEventListener('click', async () => {

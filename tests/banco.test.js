@@ -701,7 +701,7 @@ test('la app vive en css/ y js/: index.html los carga todos, en orden, y el ensa
   const enDisco = fs.readdirSync(path.join(raiz, 'js')).filter(f => f.endsWith('.js')).map(f => 'js/' + f).sort();
   assert.deepEqual([...cargados].sort(), enDisco, 'cada archivo de js/ se carga una vez, y ninguno sobra');
   assert.deepEqual(cargados, [...cargados].sort(), 'en el orden de su número');
-  assert.equal(cargados.at(-1), 'js/10-arranque.js', 'el arranque va el último: usa todo lo anterior');
+  assert.match(cargados.at(-1), /-arranque\.js$/, 'el arranque va el último: usa todo lo anterior');
   for (const f of cargados) assert.match(fs.readFileSync(path.join(raiz, f), 'utf8'), /^"use strict";\n/, f + ' empieza en modo estricto');
   const pagina = fuente(APP);
   assert.doesNotMatch(pagina, /<script src=|<link rel="stylesheet"/, 'el ensamblado lleva todo dentro');
