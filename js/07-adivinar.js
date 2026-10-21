@@ -113,6 +113,9 @@ function renderChallenge(){
   btn.classList.toggle('ready', !guessStarted);
   btn.setAttribute('aria-label', guessStarted ? t('guess.repeat') : t('guess.startAria'));
   renderClues();
+  // «Ver la respuesta»: solo en el modo de seguir intentando, tras fallar (J-13).
+  const rendirse = document.getElementById('qb-giveup');
+  rendirse.hidden = !(challenge && challenge.misses && !challenge.revealed && !challenge.solved);
   if (!challenge){ box.textContent = ''; return; }
 
   if (!guessStarted){
@@ -128,6 +131,11 @@ function renderChallenge(){
     return;
   }
 
+  if (challenge.misses && !challenge.solved){
+    box.innerHTML = '<b class="ko">' + t('guess.miss') + '</b> <span class="dim">' + t('guess.tryAgain') + '</span>';
+    return;
+  }
+
   box.innerHTML = '<span class="dim">' + t('guess.listen') + '</span>';
 }
 
@@ -140,8 +148,12 @@ function evaluate(cell, midi, rowIdx){
 
   if (hit){
     locked = true;
-    streak++;
+    // La racha cuenta aciertos a la primera: tras un fallo (modo «seguir
+    // intentando», J-13) se pasa al siguiente reto, pero no suma.
+    if (!challenge.misses) streak++;
     if (streak > currentRecord()){ state.records[state.tuningId] = streak; save(); }
+    challenge.solved = true;
+    renderChallenge();
     cell.classList.add('correct');
     box.classList.add('flash-ok');
     buzz(18);
@@ -154,27 +166,47 @@ function evaluate(cell, midi, rowIdx){
     clearTimeout(nextTimer);
     nextTimer = setTimeout(newChallenge, NEXT_AFTER_HIT);
   } else {
-    // J-10: el fallo rompe la racha y enseña dónde estaba la nota.
-    locked = true;
+    // J-10: el fallo rompe la racha siempre.
     streak = 0;
     cell.classList.add('wrong');
     box.classList.add('flash-ko');
     buzz([12,60,12]);
     updateScore();
-    challenge.revealed = true;
-    renderChallenge();
-    // Primero suena la nota que pulsaste; un instante después, la que se
-    // buscaba, mientras se iluminan sus posiciones. Oír las dos seguidas es lo
-    // que educa el oído: la diferencia se aprende por contraste.
-    const target = challenge;
-    nextTimer = setTimeout(() => {
-      if (screen !== 'guess' || challenge !== target) return;
-      positionsFor(target.midi).forEach(p => {
-        const c = document.querySelector('.fret-cell[data-row="'+p.rowIdx+'"][data-fret="'+p.fret+'"]');
-        if (c) c.classList.add('reveal');
-      });
-      playMidi(target.midi);
-      nextTimer = setTimeout(newChallenge, NEXT_AFTER_REVEAL);
-    }, REVEAL_DELAY);
+    if (state.onMiss === 'retry'){
+      // J-13 (tu petición del 21/10): sigues buscándola. La casilla fallada
+      // se marca un momento; ▶ repite el sonido y «Ver la respuesta» se rinde.
+      challenge.misses = (challenge.misses || 0) + 1;
+      renderChallenge();
+      clearTimeout(missTimer);
+      missTimer = setTimeout(() => cell.classList.remove('wrong'), 900);
+      return;
+    }
+    revealAnswer(REVEAL_DELAY);
   }
+}
+
+let missTimer = null;
+
+/** Enseña dónde estaba la nota y pasa al reto siguiente (J-10). `espera`:
+ *  cuánto esperar antes de que suene y se ilumine (tras un fallo, el tiempo de
+ *  oír la nota que pulsaste; si te rindes, nada). */
+function revealAnswer(espera){
+  if (!challenge || challenge.revealed) return;
+  locked = true;
+  challenge.revealed = true;
+  renderChallenge();
+  // Primero suena la nota que pulsaste; un instante después, la que se
+  // buscaba, mientras se iluminan sus posiciones. Oír las dos seguidas es lo
+  // que educa el oído: la diferencia se aprende por contraste.
+  const target = challenge;
+  clearTimeout(nextTimer);
+  nextTimer = setTimeout(() => {
+    if (screen !== 'guess' || challenge !== target) return;
+    positionsFor(target.midi).forEach(p => {
+      const c = document.querySelector('.fret-cell[data-row="'+p.rowIdx+'"][data-fret="'+p.fret+'"]');
+      if (c) c.classList.add('reveal');
+    });
+    playMidi(target.midi);
+    nextTimer = setTimeout(newChallenge, NEXT_AFTER_REVEAL);
+  }, espera);
 }

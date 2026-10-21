@@ -63,7 +63,7 @@ function syncUI(){
   // Ajustes. Los selectores segmentados anuncian su opción activa también a
   // los lectores de pantalla (aria-pressed), no solo con el color.
   const segs = { 'set-notation': state.notation, 'set-timbre': state.timbre,
-                 'set-fretnums': state.fretNums, 'set-lang': state.lang };
+                 'set-fretnums': state.fretNums, 'set-lang': state.lang, 'set-onmiss': state.onMiss };
   for (const id in segs){
     document.querySelectorAll('#'+id+' button').forEach(b => {
       const on = b.dataset.v === segs[id];

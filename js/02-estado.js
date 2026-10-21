@@ -29,7 +29,8 @@ const DEFAULTS = {
   lang:null,              // 'es' o 'en' (G-12); sin elegir, el del navegador
   scaleId:'mayor',        // Escalas (F5): tipo, tónica (clase de altura) y submodo
   scalePc:0,
-  scaleMode:'show'        // 'show' Mostrar · 'practice' Práctica
+  scaleMode:'show',       // 'show' Mostrar · 'practice' Práctica
+  onMiss:'reveal'         // Adivinar, al fallar: 'reveal' ver la respuesta · 'retry' seguir intentando (J-13)
 };
 
 const storage = {
@@ -65,6 +66,7 @@ function sanitize(raw){
   if (!ESCALAS.some(e => e.id === s.scaleId)) s.scaleId = DEFAULTS.scaleId;
   if (!Number.isInteger(s.scalePc) || s.scalePc < 0 || s.scalePc > 11) s.scalePc = DEFAULTS.scalePc;
   if (!['show','practice'].includes(s.scaleMode)) s.scaleMode = DEFAULTS.scaleMode;
+  if (!['reveal','retry'].includes(s.onMiss)) s.onMiss = DEFAULTS.onMiss;
   // Quien estrena la app en inglés empieza con C D E; luego decide en Ajustes.
   if (!(raw && raw.notation) && s.lang === 'en') s.notation = 'anglo';
   ['showStaff','showAllNotes','showEquals','hintNote','hintString','rotateHintClosed']

@@ -6,7 +6,7 @@
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.5.0';
+const APP_VERSION = '0.5.1';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base

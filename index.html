@@ -12,7 +12,7 @@
 <link rel="manifest" href='data:application/manifest+json,{"name":"Trasteando","short_name":"Trasteando","start_url":".","display":"standalone","background_color":"%23140e09","theme_color":"%23140e09","orientation":"any"}'>
 <link rel="icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" rx="40" fill="%23140e09"/><circle cx="90" cy="90" r="52" fill="none" stroke="%23e8a45c" stroke-width="5"/><circle cx="90" cy="90" r="40" fill="none" stroke="%236b4f30" stroke-width="3" stroke-dasharray="4 5"/><line x1="38" y1="74" x2="142" y2="74" stroke="%23e8dfd3" stroke-width="1.4"/><line x1="38" y1="82" x2="142" y2="82" stroke="%23e8dfd3" stroke-width="1.8"/><line x1="38" y1="90" x2="142" y2="90" stroke="%23e8dfd3" stroke-width="2.2"/><line x1="38" y1="98" x2="142" y2="98" stroke="%23e8dfd3" stroke-width="2.6"/><line x1="38" y1="106" x2="142" y2="106" stroke="%23e8dfd3" stroke-width="3"/></svg>'>  <!-- sin él, el navegador pide favicon.ico y da 404 (Sesión 1, A16) -->
 <link rel="apple-touch-icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" rx="40" fill="%23140e09"/><circle cx="90" cy="90" r="52" fill="none" stroke="%23e8a45c" stroke-width="5"/><circle cx="90" cy="90" r="40" fill="none" stroke="%236b4f30" stroke-width="3" stroke-dasharray="4 5"/><line x1="38" y1="74" x2="142" y2="74" stroke="%23e8dfd3" stroke-width="1.4"/><line x1="38" y1="82" x2="142" y2="82" stroke="%23e8dfd3" stroke-width="1.8"/><line x1="38" y1="90" x2="142" y2="90" stroke="%23e8dfd3" stroke-width="2.2"/><line x1="38" y1="98" x2="142" y2="98" stroke="%23e8dfd3" stroke-width="2.6"/><line x1="38" y1="106" x2="142" y2="106" stroke="%23e8dfd3" stroke-width="3"/></svg>'>
-<link rel="stylesheet" href="css/trasteando.css?v=0.5.0">
+<link rel="stylesheet" href="css/trasteando.css?v=0.5.1">
 </head>
 <body>
 
@@ -94,6 +94,8 @@
     <!-- Encendida, cada pista enseña su respuesta dentro, en grande (comentario del 21/10) -->
     <button class="chip" id="qb-hint-note" aria-pressed="false">Nombre</button>
     <button class="chip" id="qb-hint-string" aria-pressed="false">Cuerda</button>
+    <!-- Solo con «Al fallar: seguir intentando», tras un fallo (J-13) -->
+    <button class="chip giveup" id="qb-giveup" hidden data-t="guess.giveup">Ver la respuesta</button>
   </div>
 </div>
 
@@ -271,6 +273,17 @@
   </div>
 
   <div class="set-group">
+    <span data-t="tab.guess">Adivinar</span>
+    <div class="set-row">
+      <div class="txt"><span data-t="set.onMiss">Al fallar</span><small data-t="set.onMiss.sub">Ver dónde estaba la nota o seguir buscándola</small></div>
+      <div class="seg" id="set-onmiss">
+        <button data-v="reveal" data-t="set.reveal">Ver respuesta</button>
+        <button data-v="retry" data-t="set.retry">Reintentar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="set-group">
     <span data-t="set.sound">Sonido</span>
     <div class="set-row">
       <div class="txt"><span data-t="set.guitar">Guitarra</span><small id="timbre-note" data-t="set.guitar.sub">Clásica de nylon o acústica de acero</small></div>
@@ -304,19 +317,19 @@
      comparten lo que declaran. herramientas/ensamblar.js los une en un solo archivo
      para dist/trasteando.html (G-08). El «?v=» lleva la versión de la app: así el
      navegador no mezcla archivos de dos versiones guardados en su caché (AT-07 #3). -->
-<script src="js/00-idioma.js?v=0.5.0"></script>
-<script src="js/01-teoria.js?v=0.5.0"></script>
-<script src="js/02-estado.js?v=0.5.0"></script>
-<script src="js/03-audio.js?v=0.5.0"></script>
-<script src="js/04-pentagrama.js?v=0.5.0"></script>
-<script src="js/05-mastil.js?v=0.5.0"></script>
-<script src="js/06-zoom.js?v=0.5.0"></script>
-<script src="js/07-adivinar.js?v=0.5.0"></script>
-<script src="js/08-afinador-referencia.js?v=0.5.0"></script>
-<script src="js/09-navegacion.js?v=0.5.0"></script>
-<script src="js/10-tono.js?v=0.5.0"></script>
-<script src="js/11-afinador-micro.js?v=0.5.0"></script>
-<script src="js/13-escalas.js?v=0.5.0"></script>
-<script src="js/99-arranque.js?v=0.5.0"></script>
+<script src="js/00-idioma.js?v=0.5.1"></script>
+<script src="js/01-teoria.js?v=0.5.1"></script>
+<script src="js/02-estado.js?v=0.5.1"></script>
+<script src="js/03-audio.js?v=0.5.1"></script>
+<script src="js/04-pentagrama.js?v=0.5.1"></script>
+<script src="js/05-mastil.js?v=0.5.1"></script>
+<script src="js/06-zoom.js?v=0.5.1"></script>
+<script src="js/07-adivinar.js?v=0.5.1"></script>
+<script src="js/08-afinador-referencia.js?v=0.5.1"></script>
+<script src="js/09-navegacion.js?v=0.5.1"></script>
+<script src="js/10-tono.js?v=0.5.1"></script>
+<script src="js/11-afinador-micro.js?v=0.5.1"></script>
+<script src="js/13-escalas.js?v=0.5.1"></script>
+<script src="js/99-arranque.js?v=0.5.1"></script>
 </body>
 </html>

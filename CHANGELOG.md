@@ -6,9 +6,10 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.4.2** | 21/10/2026 | F4.5 · idioma español o inglés | Rama `auto/F4.5-idioma` |
-| 0.4.1 | 21/10/2026 | F4.4 · pistas grandes y récord por afinación | Rama `auto/F4.4-pistas-record` |
-| 0.4.0 | 21/10/2026 | F4.1 a F4.3 · afinador por micrófono | Rama `auto/F4.1-modulos` (PR #12) |
+| **0.5.0** | 21/10/2026 | F5.1 a F5.4 · escalas | Rama `auto/F5.1-notas` |
+| 0.4.2 | 21/10/2026 | F4.5 · idioma español o inglés | `main`, fusionada el 21/10 (PR #12) |
+| 0.4.1 | 21/10/2026 | F4.4 · pistas grandes y récord por afinación | `main`, fusionada el 21/10 (PR #12) |
+| 0.4.0 | 21/10/2026 | F4.1 a F4.3 · afinador por micrófono | `main`, fusionada el 21/10 (PR #12) |
 | 0.3.3 | 20/10/2026 | F3.3 · correcciones de la Sesión 1 | `main`, fusionada el 20/10 (PR #11); etiqueta `v0.3.3` |
 | 0.3.2 | 20/10/2026 | F3 · tu comentario sobre el zoom | `main`, fusionada el 20/10 (PR #10) |
 | 0.3.1 | 20/10/2026 | F3.4 | `main`, fusionada el 20/10 (PR #9) |
@@ -31,6 +32,18 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.5.0] — 21/10/2026 · Escalas (F5)
+
+### Añadido
+- **E-01 · E-02** · *Escalas*, con el catálogo que elegiste: mayor, menor natural, pentatónica mayor y pentatónica menor, en las 12 tónicas. Cada escala se escribe como en un libro de solfeo: en Fa mayor sale **Si♭**, no La#; cada mayor y menor usa las siete letras una vez.
+- **E-03 · E-04 · E-06 · P-03** · *Mostrar:* el mástil enseña solo las notas de la escala, con su nombre escrito y la tónica con anillo. Debajo, las notas con sus intervalos («Do T Re T Mi ST Fa…») y el paso a paso: ◀ ▶ recorre la escala desde la tónica más grave, cada paso suena y se resalta («Paso 3 de 8 · Mi, un tono sobre Re»). El pentagrama escribe la escala con sus alteraciones.
+- **E-05** · *Práctica:* tocas notas y la app te dice si están en la escala y cuántas distintas llevas («3 de 7»). Una ajena se marca en rojo y se enseñan un momento las buenas. «Otra vez» empieza de nuevo.
+
+### Verificado
+- Banco: 63 de 63, con `tests/escalas.test.js` (las 48 escalas frente al círculo de quintas, siete letras, intervalos) y 3 pruebas de la pantalla. `comprobar-disposicion.js` con 3 pantallas nuevas de Escalas, en español y en inglés; accesibilidad, afinador, las 15 comprobaciones de F1.1 y el archivo autónomo, bien.
 
 ---
 

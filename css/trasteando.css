@@ -137,6 +137,9 @@ button { font-family:inherit; color:inherit; }
 .challenge[hidden] { display:none; }
 .challenge-text { flex:1; font-size:14px; line-height:1.35; min-width:0; }
 .challenge-text .dim { color:var(--muted); }
+.challenge-text .ko { color:var(--ko); }
+/* «Ver la respuesta» (J-13): un chip discreto, con borde rojo de «fallo». */
+.chip.giveup { border-color:var(--ko); color:var(--text); }
 .btn-repeat { flex-shrink:0; background:var(--surface2); border:1px solid var(--line2);
   color:var(--amber); width:40px; height:40px; border-radius:10px; font-size:15px; cursor:pointer; }
 .btn-repeat:active { background:var(--line); }

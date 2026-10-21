@@ -1,7 +1,7 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 1.7 · **Fecha:** 21 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0). Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
-**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.4.2` · `requisitos.md` v1.17 · `roadmap.md` v3.15
+**Versión:** 1.8 · **Fecha:** 21 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0). Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
+**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.5.0` · `requisitos.md` v1.18 · `roadmap.md` v3.16
 **Revisión:** auditoría de requisitos AR-04 (`auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
 
@@ -116,6 +116,7 @@ Fila superior: **Mostrar | Práctica**, tónica y tipo (E-01; el catálogo se de
 - **Mostrar** (E-03, E-04, E-06): el mástil ilumina todas las notas de la escala; la tónica lleva un anillo, para que no dependa del color. El pentagrama escribe la escala y, debajo, los intervalos entre notas con las etiquetas de E-04 (T = tono, ST = semitono). Bajo el mástil, el **paso a paso**: ◀ «Paso 3 de 8 · Mi, un tono sobre Re» ▶, que resalta la nota del paso en el mástil y en el pentagrama; y debajo, el zoom de siempre.
 - **Práctica** (E-05): tocas notas y la tarjeta cuenta las notas distintas encontradas («5 de 7»). Las que vas encontrando quedan en verde. Una nota ajena sale en rojo con ✗, la tarjeta dice cuál era («✗ Fa♯ no está en Do mayor») y se iluminan las posiciones correctas a la vista.
 - El pentagrama está disponible aquí también (P-03). Las escalas usan la afinación estándar en la primera entrega (E-02).
+- **Así quedó en la 0.5.0:** arriba, en una fila, Mostrar | Práctica, la tónica y el tipo (en horizontal, cada selector en su fila). En Mostrar, la línea de notas e intervalos va **dentro del paso a paso**, encima de «Paso 3 de 8 · Mi, un tono sobre Re», para que todo quepa en el iPhone en vertical; el paso resaltado lleva un anillo ámbar en el mástil y un fondo ámbar en el pentagrama. El guiado sube una octava desde la tónica más grave del mástil. En Práctica, la tarjeta dice el resultado de cada nota y la cuenta («3 de 7»), con un botón «Otra vez»; el pentagrama escribe solo las notas ya encontradas. Las casillas salen de la clase de altura, así que Escalas funciona también en las demás afinaciones.
 
 ### Ajustes — boceto A7
 
@@ -230,7 +231,8 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.7** | 21/10/2026 | §6: pistas grandes dentro de sus botones y lectura grande con la nota tocada; Ajustes con el grupo de idioma (tus comentarios del 21/10). |
+| **1.8** | 21/10/2026 | §6 Escalas: cómo quedó en la 0.5.0 (intervalos dentro del paso a paso, Práctica con «Otra vez»). |
+| 1.7 | 21/10/2026 | §6: pistas grandes dentro de sus botones y lectura grande con la nota tocada; Ajustes con el grupo de idioma (tus comentarios del 21/10). |
 | 1.6 | 21/10/2026 | §6: cómo quedó el afinador por micrófono en la 0.4.0 (órdenes, sin micrófono, permiso, horizontal), tras AR-08. |
 | 1.5 | 20/10/2026 | Sesión 1 (0.3.3): Adivinar empieza con ▶ y su lectura es la nota buscada; tiempos de la corrección; en Ajustes, estado del sonido, «Reactivar sonido» y «Borrar el récord de racha». |
 | 1.4 | 20/10/2026 | §9: «+» enseña más trastes y «−» menos; con el dedo se pueden pedir trastes de hasta 28 px (tu comentario del 20/10). |

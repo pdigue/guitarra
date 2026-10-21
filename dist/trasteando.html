@@ -152,6 +152,9 @@ button { font-family:inherit; color:inherit; }
 .challenge[hidden] { display:none; }
 .challenge-text { flex:1; font-size:14px; line-height:1.35; min-width:0; }
 .challenge-text .dim { color:var(--muted); }
+.challenge-text .ko { color:var(--ko); }
+/* «Ver la respuesta» (J-13): un chip discreto, con borde rojo de «fallo». */
+.chip.giveup { border-color:var(--ko); color:var(--text); }
 .btn-repeat { flex-shrink:0; background:var(--surface2); border:1px solid var(--line2);
   color:var(--amber); width:40px; height:40px; border-radius:10px; font-size:15px; cursor:pointer; }
 .btn-repeat:active { background:var(--line); }
@@ -598,6 +601,8 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
     <!-- Encendida, cada pista enseña su respuesta dentro, en grande (comentario del 21/10) -->
     <button class="chip" id="qb-hint-note" aria-pressed="false">Nombre</button>
     <button class="chip" id="qb-hint-string" aria-pressed="false">Cuerda</button>
+    <!-- Solo con «Al fallar: seguir intentando», tras un fallo (J-13) -->
+    <button class="chip giveup" id="qb-giveup" hidden data-t="guess.giveup">Ver la respuesta</button>
   </div>
 </div>
 
@@ -775,6 +780,17 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   </div>
 
   <div class="set-group">
+    <span data-t="tab.guess">Adivinar</span>
+    <div class="set-row">
+      <div class="txt"><span data-t="set.onMiss">Al fallar</span><small data-t="set.onMiss.sub">Ver dónde estaba la nota o seguir buscándola</small></div>
+      <div class="seg" id="set-onmiss">
+        <button data-v="reveal" data-t="set.reveal">Ver respuesta</button>
+        <button data-v="retry" data-t="set.retry">Reintentar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="set-group">
     <span data-t="set.sound">Sonido</span>
     <div class="set-row">
       <div class="txt"><span data-t="set.guitar">Guitarra</span><small id="timbre-note" data-t="set.guitar.sub">Clásica de nylon o acústica de acero</small></div>
@@ -860,6 +876,9 @@ const TEXTOS = {
     'guess.press3': 'y búscala en el mástil',
     'guess.was': 'Era', 'guess.wasEnd': '(octava {n}). Mira dónde estaba.',
     'guess.listen': 'Escucha y busca la nota',
+    'guess.miss': '✗ No es esa.', 'guess.tryAgain': 'Prueba otra vez; ▶ la repite.', 'guess.giveup': 'Ver la respuesta',
+    'set.onMiss': 'Al fallar', 'set.onMiss.sub': 'Ver dónde estaba la nota o seguir buscándola',
+    'set.reveal': 'Ver respuesta', 'set.retry': 'Reintentar',
     'streak': 'Racha {n}', 'record': 'Récord {n} · {afin}',
     'record.title': 'Récord de racha en la afinación {afin} (cada afinación tiene el suyo)',
     'hints': 'Pistas', 'hint.name': 'Nombre', 'hint.note': 'Nota', 'hint.string': 'Cuerda', 'hint.strings': 'Cuerdas',
@@ -945,6 +964,9 @@ const TEXTOS = {
     'guess.press3': 'and find it on the fretboard',
     'guess.was': 'It was', 'guess.wasEnd': '(octave {n}). See where it was.',
     'guess.listen': 'Listen and find the note',
+    'guess.miss': '✗ Not that one.', 'guess.tryAgain': 'Try again; ▶ plays it again.', 'guess.giveup': 'Show the answer',
+    'set.onMiss': 'When you miss', 'set.onMiss.sub': 'See where the note was or keep looking for it',
+    'set.reveal': 'Show answer', 'set.retry': 'Try again',
     'streak': 'Streak {n}', 'record': 'Best {n} · {afin}',
     'record.title': 'Best streak in {afin} tuning (each tuning keeps its own)',
     'hints': 'Hints', 'hint.name': 'Name', 'hint.note': 'Note', 'hint.string': 'String', 'hint.strings': 'Strings',
@@ -1058,7 +1080,7 @@ function aplicarIdioma(){
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.5.0';
+const APP_VERSION = '0.5.1';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -1241,7 +1263,8 @@ const DEFAULTS = {
   lang:null,              // 'es' o 'en' (G-12); sin elegir, el del navegador
   scaleId:'mayor',        // Escalas (F5): tipo, tónica (clase de altura) y submodo
   scalePc:0,
-  scaleMode:'show'        // 'show' Mostrar · 'practice' Práctica
+  scaleMode:'show',       // 'show' Mostrar · 'practice' Práctica
+  onMiss:'reveal'         // Adivinar, al fallar: 'reveal' ver la respuesta · 'retry' seguir intentando (J-13)
 };
 
 const storage = {
@@ -1277,6 +1300,7 @@ function sanitize(raw){
   if (!ESCALAS.some(e => e.id === s.scaleId)) s.scaleId = DEFAULTS.scaleId;
   if (!Number.isInteger(s.scalePc) || s.scalePc < 0 || s.scalePc > 11) s.scalePc = DEFAULTS.scalePc;
   if (!['show','practice'].includes(s.scaleMode)) s.scaleMode = DEFAULTS.scaleMode;
+  if (!['reveal','retry'].includes(s.onMiss)) s.onMiss = DEFAULTS.onMiss;
   // Quien estrena la app en inglés empieza con C D E; luego decide en Ajustes.
   if (!(raw && raw.notation) && s.lang === 'en') s.notation = 'anglo';
   ['showStaff','showAllNotes','showEquals','hintNote','hintString','rotateHintClosed']
@@ -2280,6 +2304,9 @@ function renderChallenge(){
   btn.classList.toggle('ready', !guessStarted);
   btn.setAttribute('aria-label', guessStarted ? t('guess.repeat') : t('guess.startAria'));
   renderClues();
+  // «Ver la respuesta»: solo en el modo de seguir intentando, tras fallar (J-13).
+  const rendirse = document.getElementById('qb-giveup');
+  rendirse.hidden = !(challenge && challenge.misses && !challenge.revealed && !challenge.solved);
   if (!challenge){ box.textContent = ''; return; }
 
   if (!guessStarted){
@@ -2295,6 +2322,11 @@ function renderChallenge(){
     return;
   }
 
+  if (challenge.misses && !challenge.solved){
+    box.innerHTML = '<b class="ko">' + t('guess.miss') + '</b> <span class="dim">' + t('guess.tryAgain') + '</span>';
+    return;
+  }
+
   box.innerHTML = '<span class="dim">' + t('guess.listen') + '</span>';
 }
 
@@ -2307,8 +2339,12 @@ function evaluate(cell, midi, rowIdx){
 
   if (hit){
     locked = true;
-    streak++;
+    // La racha cuenta aciertos a la primera: tras un fallo (modo «seguir
+    // intentando», J-13) se pasa al siguiente reto, pero no suma.
+    if (!challenge.misses) streak++;
     if (streak > currentRecord()){ state.records[state.tuningId] = streak; save(); }
+    challenge.solved = true;
+    renderChallenge();
     cell.classList.add('correct');
     box.classList.add('flash-ok');
     buzz(18);
@@ -2321,29 +2357,49 @@ function evaluate(cell, midi, rowIdx){
     clearTimeout(nextTimer);
     nextTimer = setTimeout(newChallenge, NEXT_AFTER_HIT);
   } else {
-    // J-10: el fallo rompe la racha y enseña dónde estaba la nota.
-    locked = true;
+    // J-10: el fallo rompe la racha siempre.
     streak = 0;
     cell.classList.add('wrong');
     box.classList.add('flash-ko');
     buzz([12,60,12]);
     updateScore();
-    challenge.revealed = true;
-    renderChallenge();
-    // Primero suena la nota que pulsaste; un instante después, la que se
-    // buscaba, mientras se iluminan sus posiciones. Oír las dos seguidas es lo
-    // que educa el oído: la diferencia se aprende por contraste.
-    const target = challenge;
-    nextTimer = setTimeout(() => {
-      if (screen !== 'guess' || challenge !== target) return;
-      positionsFor(target.midi).forEach(p => {
-        const c = document.querySelector('.fret-cell[data-row="'+p.rowIdx+'"][data-fret="'+p.fret+'"]');
-        if (c) c.classList.add('reveal');
-      });
-      playMidi(target.midi);
-      nextTimer = setTimeout(newChallenge, NEXT_AFTER_REVEAL);
-    }, REVEAL_DELAY);
+    if (state.onMiss === 'retry'){
+      // J-13 (tu petición del 21/10): sigues buscándola. La casilla fallada
+      // se marca un momento; ▶ repite el sonido y «Ver la respuesta» se rinde.
+      challenge.misses = (challenge.misses || 0) + 1;
+      renderChallenge();
+      clearTimeout(missTimer);
+      missTimer = setTimeout(() => cell.classList.remove('wrong'), 900);
+      return;
+    }
+    revealAnswer(REVEAL_DELAY);
   }
+}
+
+let missTimer = null;
+
+/** Enseña dónde estaba la nota y pasa al reto siguiente (J-10). `espera`:
+ *  cuánto esperar antes de que suene y se ilumine (tras un fallo, el tiempo de
+ *  oír la nota que pulsaste; si te rindes, nada). */
+function revealAnswer(espera){
+  if (!challenge || challenge.revealed) return;
+  locked = true;
+  challenge.revealed = true;
+  renderChallenge();
+  // Primero suena la nota que pulsaste; un instante después, la que se
+  // buscaba, mientras se iluminan sus posiciones. Oír las dos seguidas es lo
+  // que educa el oído: la diferencia se aprende por contraste.
+  const target = challenge;
+  clearTimeout(nextTimer);
+  nextTimer = setTimeout(() => {
+    if (screen !== 'guess' || challenge !== target) return;
+    positionsFor(target.midi).forEach(p => {
+      const c = document.querySelector('.fret-cell[data-row="'+p.rowIdx+'"][data-fret="'+p.fret+'"]');
+      if (c) c.classList.add('reveal');
+    });
+    playMidi(target.midi);
+    nextTimer = setTimeout(newChallenge, NEXT_AFTER_REVEAL);
+  }, espera);
 }
 </script>
 <script>
@@ -2525,7 +2581,7 @@ function syncUI(){
   // Ajustes. Los selectores segmentados anuncian su opción activa también a
   // los lectores de pantalla (aria-pressed), no solo con el color.
   const segs = { 'set-notation': state.notation, 'set-timbre': state.timbre,
-                 'set-fretnums': state.fretNums, 'set-lang': state.lang };
+                 'set-fretnums': state.fretNums, 'set-lang': state.lang, 'set-onmiss': state.onMiss };
   for (const id in segs){
     document.querySelectorAll('#'+id+' button').forEach(b => {
       const on = b.dataset.v === segs[id];
@@ -3450,6 +3506,10 @@ function refreshLanguage(antes){
   syncUI();
   applyZoom();
 }
+document.querySelectorAll('#set-onmiss button').forEach(b => {
+  b.addEventListener('click', () => { state.onMiss = b.dataset.v; save(); syncUI(); });
+});
+document.getElementById('qb-giveup').addEventListener('click', () => revealAnswer(0));
 document.querySelectorAll('#set-lang button').forEach(b => {
   b.addEventListener('click', () => setLang(b.dataset.v));
 });

@@ -133,6 +133,10 @@ function refreshLanguage(antes){
   syncUI();
   applyZoom();
 }
+document.querySelectorAll('#set-onmiss button').forEach(b => {
+  b.addEventListener('click', () => { state.onMiss = b.dataset.v; save(); syncUI(); });
+});
+document.getElementById('qb-giveup').addEventListener('click', () => revealAnswer(0));
 document.querySelectorAll('#set-lang button').forEach(b => {
   b.addEventListener('click', () => setLang(b.dataset.v));
 });

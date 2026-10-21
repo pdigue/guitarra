@@ -1008,3 +1008,45 @@ test('Escalas › Práctica: las notas de la escala cuentan una vez cada una; un
   assert.equal(A.doc.querySelectorAll('.fret-cell.correct').length, 0);
   await sleep(10);
 });
+
+// --- Adivinar: al fallar, ver la respuesta o seguir intentando (J-13, tu petición del 21/10) ---
+
+test('Adivinar con «Al fallar: Reintentar»: el reto sigue, la racha se rompe, y «Ver la respuesta» se rinde (J-13, J-10)', async () => {
+  const A = boot(APP, { onMiss: 'retry' });
+  A.ev('globalThis.__plays = []; playMidi = m => __plays.push(m);');
+  jugar(A);
+  A.ev('streak = 4');
+  const reto = A.ev('challenge'), midi = A.ev('challenge.midi');
+  const otra = A.doc.querySelectorAll('.fret-cell').find(c => +c.dataset.midi !== midi);
+  A.press(otra);
+  assert.equal(A.ev('streak'), 0, 'el fallo rompe la racha');
+  assert.equal(A.ev('locked'), false, 'puedes seguir probando');
+  assert.equal(A.ev('challenge'), reto, 'el mismo reto');
+  assert.match(A.$('challenge-text').innerHTML, /No es esa/);
+  assert.equal(A.$('qb-giveup').hidden, false, 'aparece «Ver la respuesta»');
+  await sleep(1300);
+  assert.equal(A.doc.querySelectorAll('.fret-cell.reveal').length, 0, 'no se revela sola');
+  // Acertar tras fallar pasa al siguiente, pero no suma a la racha.
+  A.press(A.doc.querySelectorAll('.fret-cell').find(c => +c.dataset.midi === midi));
+  assert.equal(A.ev('streak'), 0);
+  await sleep(1700);
+  assert.notEqual(A.ev('challenge'), reto, 'reto nuevo');
+  assert.equal(A.$('qb-giveup').hidden, true);
+  // Rendirse: se ve y suena la respuesta en el acto.
+  const m2 = A.ev('challenge.midi');
+  A.press(A.doc.querySelectorAll('.fret-cell').find(c => +c.dataset.midi !== m2));
+  A.$('qb-giveup').click();
+  await sleep(20);
+  assert.ok(A.doc.querySelectorAll('.fret-cell.reveal').length > 0);
+  assert.equal(A.ev('__plays.at(-1)'), m2);
+  assert.match(A.$('challenge-text').innerHTML, /Era/);
+});
+
+test('el ajuste «Al fallar» se guarda y por defecto enseña la respuesta (J-13)', () => {
+  const A = boot(APP);
+  assert.equal(A.ev('state.onMiss'), 'reveal');
+  A.doc.querySelector('#set-onmiss [data-v="retry"]').click();
+  assert.equal(JSON.parse(A.store.get('trasteando.v1')).onMiss, 'retry');
+  assert.equal(A.doc.querySelector('#set-onmiss [data-v="retry"]').getAttribute('aria-pressed'), 'true');
+  assert.equal(boot(APP, { onMiss: 'x' }).ev('state.onMiss'), 'reveal');
+});
