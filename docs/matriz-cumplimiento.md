@@ -1,11 +1,13 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 1.13 · **Fecha:** 20 de octubre de 2026 · **Base:** `requisitos.md` v1.15 · app `0.3.3` · `roadmap.md` v3.13  
+**Versión:** 1.14 · **Fecha:** 21 de octubre de 2026 · **Base:** `requisitos.md` v1.16 · app `0.4.0` · `roadmap.md` v3.14  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
+
+**Cambios en la 1.14:** evidencias del afinador por micrófono; A-02-CA, A-04 y G-10 verificados.
 
 **Cambios en la 1.13:** 35 requisitos verificados en la Sesión 1 (informe `V-08`), con su prueba en la evidencia; criterios de J-01, J-08, J-10 y S-02 con la 0.3.3, pendientes de la Sesión 2; evidencia de S-01 y PL-04; C-08 y S-09 nuevos, fuera de alcance.
 
@@ -35,7 +37,7 @@
 
 | Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 95 | 66 | 8 | 17 | 4 | 38 | 11 |
+| 95 | 71 | 8 | 12 | 4 | 41 | 10 |
 
 | ID | Etapa | Método | Criterio de aceptación | Declaración | Evidencia | Verificación | Origen |
 |---|---|:---:|---|---|---|---|---|
@@ -48,7 +50,7 @@
 | **G-07** | F2.3 · F2.5 | T | En Windows (y Android cuando lo haya), con el ordenador en modo avión, dist/trasteando.html abre con doble clic en ≤ 3 s, suenan las grabaciones y funcionan Libre, Adivinar y el afinador por referencia. Audio ≤ 1,45 MB y archivo ≤ 2 MB. | Cumple | V-03 y V-04: desde disco y sin conexión en Chromium, abre en 0,3 s y suena a menos de 1 cent · Banco (node --test): autónomo al día, con su audio, huellas y límites · Sesión 1: B02, B03, B04 y C09 | Verificado | Cliente · 15/09 |
 | **G-08** | F4.1 · F6.1 | T | El archivo autónomo generado y la web publicada superan el mismo banco de pruebas. | Cumple parcialmente | — | Verificado parcialmente | Cliente · 15/09 |
 | **G-09** | F7.4 | I | Ficha enviada a revisión en al menos una tienda, o decisión documentada de no hacerlo. | No cumple | — | Pendiente | Cliente · 14/10 |
-| **G-10** | F1.3 | I | Ajustes muestra la versión; CHANGELOG.md tiene una entrada por versión; existe la etiqueta de Git de cada cierre de fase. | Cumple | Banco (node --test) · CHANGELOG.md · F1.1 #12 | Verificado parcialmente | Cliente · 14/10 |
+| **G-10** | F1.3 | I | Ajustes muestra la versión; CHANGELOG.md tiene una entrada por versión; existe la etiqueta de Git de cada cierre de fase. | Cumple | Banco (node --test) · CHANGELOG.md · F1.1 #12 | Verificado | Cliente · 14/10 |
 | **G-11** | F6.4 | I | La política de privacidad está publicada y la app no envía ninguna petición con datos del usuario (pestaña Red). | No cumple | — | Pendiente | Desarrollo · v1.2 |
 | **PL-01** | F2.5 · F7.2 | D | La lista de F1.1 se supera en Chrome, Edge y Firefox en Windows, y la app se instala como PWA desde Edge. | Cumple parcialmente | — | Pendiente | Cliente · 14/10 |
 | **PL-02** | F2.5 · F7.2 | D | La lista de comprobación se supera en Chrome para Android, en web y con la PWA instalada. | Cumple parcialmente | — | Pendiente | Cliente · 14/10 |
@@ -103,11 +105,11 @@
 | **E-05b** | Posterior | N/A | Fuera del alcance actual. | No aplica | — | No aplica | AR-01 |
 | **E-06** | F5.3 | D | El guiado avanza nota a nota por la escala. | No cumple | — | Pendiente | Cliente · listado 14/09 |
 | **A-01** | F1.1 | D | Pulsar cada cuerda en el afinador reproduce su nota de referencia. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
-| **A-02** | F4.3 | D | Con una guitarra real, el afinador indica subir o bajar hasta dejarla afinada, en estándar y en una alternativa. | No cumple | — | Pendiente | Cliente · listado 14/09 |
-| **A-02-CA** | F4.2 | T | Banco de pruebas: error ≤ ±2 cents y latencia < 300 ms sobre muestras desafinadas una cantidad conocida, tomando como referencia su frecuencia medida en samples/afinacion.json. | No cumple | — | Pendiente | AR-01 |
-| **A-03** | F4.3 | D | La aguja indica la desviación en cents y marca «afinado» dentro de ±5 cents. | No cumple | — | Pendiente | Cliente · listado 14/09 |
-| **A-04** | F4.3 | T | Con la cuerda a menos de un semitono de su nota, el afinador identifica la cuerda correcta. | No cumple | — | Pendiente | Cliente · listado 14/09 |
-| **A-05** | F4.3 | D | Con una cuerda fijada a mano, el afinador la usa como referencia aunque esté muy desafinada. | No cumple | — | Pendiente | Cliente · listado 14/09 |
+| **A-02** | F4.3 | D | Con una guitarra real, el afinador indica subir o bajar hasta dejarla afinada, en estándar y en una alternativa. | Cumple | comprobar-afinador.js (Chromium, grabación real 12 cents baja → «La2 · −11 cents · Sube un poco»; hilo aparte; se apaga al salir) · Banco (node --test): flujo del permiso | Pendiente | Cliente · listado 14/09 |
+| **A-02-CA** | F4.2 | T | Banco de pruebas: error ≤ ±2 cents y latencia < 300 ms sobre muestras desafinadas una cantidad conocida, tomando como referencia su frecuencia medida en samples/afinacion.json. | Cumple | tests/tono.test.js: 12 grabaciones reales de −45 a +40 cents; peor error 1,86 cents frente a su medida y 1,01 trozo a trozo; aguja en su nota en ≤ 168 ms + 3 ms de cálculo | Verificado | AR-01 |
+| **A-03** | F4.3 | D | La aguja indica la desviación en cents y marca «afinado» dentro de ±5 cents. | Cumple | Banco (node --test): «Sube un poco» a −12, «Afinada» a +3 · comprobar-afinador.js | Pendiente | Cliente · listado 14/09 |
+| **A-04** | F4.3 | T | Con la cuerda a menos de un semitono de su nota, el afinador identifica la cuerda correcta. | Cumple | Banco (node --test): Si3 −80 cents → 2ª; Fa4 → 1ª | Verificado | Cliente · listado 14/09 |
+| **A-05** | F4.3 | D | Con una cuerda fijada a mano, el afinador la usa como referencia aunque esté muy desafinada. | Cumple | Banco (node --test): 6ª elegida con un La2 sonando → +500 cents, y sin confundir la octava | Pendiente | Cliente · listado 14/09 |
 | **A-06** | F1.1 | I | La afinación estándar es E2 A2 D3 G3 B3 E4. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **A-07** | F1.1 | I | Existen Drop D, medio tono abajo, Open G, Open D y DADGAD con sus notas correctas. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **A-08** | F1.1 | D | Los botones +/− mueven la cuerda un semitono y pasan a Personalizada sin alterar los presets. | Cumple | F1.1 #4 · Sesión 1: A13 | Verificado | Cliente · listado 14/09 |
