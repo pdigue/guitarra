@@ -82,7 +82,7 @@ function fitOctave(midi){
 }
 
 /** Dibuja una nota con sus líneas adicionales, su plica y su marca de octava. */
-function drawNote(svg, realMidi, x, color, withStem, esc){
+function drawNote(svg, realMidi, x, color, withStem, esc, accX){
   const { drawMidi, mark } = fitOctave(realMidi);
   const midi = drawMidi;
   // Con nota escrita (escalas), su letra y su alteración; si no, la de siempre.
@@ -101,7 +101,7 @@ function drawNote(svg, realMidi, x, color, withStem, esc){
     svg.appendChild(el('line',{x1:x-10,x2:x+10,y1:ly,y2:ly,class:'ledger-line'}));
   const alt = esc ? ALTERACION[esc.alt] : (isSharp(midi) ? '\u266F' : '');
   if (alt){
-    const s = el('text',{x:x-14,y:y+3,fill:color,'font-size':16,'font-family':'Georgia, serif','text-anchor':'middle'});
+    const s = el('text',{x:x-(accX || 14),y:y+3,fill:color,'font-size':16,'font-family':'Georgia, serif','text-anchor':'middle'});
     s.textContent = alt;
     svg.appendChild(s);
   }

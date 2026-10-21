@@ -40,7 +40,7 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 | Historial (`history.pushState` y `popstate`) | Botón o gesto «atrás» dentro de la app (C-07, 0.3.0) | ✅ | ✅ | ✅ (la app instalada no tiene botón atrás) | Sin él, «atrás» hace lo de siempre: salir de la app |
 | CSS `grid` y `display: contents` | Disposición en vertical, en horizontal y amplia (F3.2) | ✅ | ✅ | ✅ Safari 11.1+ | Todos los navegadores de referencia lo tienen |
 | CSS `position: sticky` | Zoom siempre a la vista en el panel horizontal (0.3.0) | ✅ | ✅ | ✅ | Si faltara, el zoom se alcanza desplazando el panel |
-| CSS `:has()` | Cursor de mano en las filas de Ajustes con interruptor (0.3.1) | ✅ | ✅ | ✅ Safari 15.4+ | Sin él, la fila funciona igual; solo no cambia el cursor |
+| CSS `:has()` | Cursor de mano en las filas de Ajustes con interruptor (0.3.1); centrar el punto único del metrónomo en 1/4 (0.5.4) | ✅ | ✅ | ✅ Safari 15.4+ | Sin él, la fila funciona igual; solo no cambia el cursor |
 | `scrollIntoView` con opciones | Que la casilla con el foco del teclado se vea (0.3.1) | ✅ | ✅ | ✅ | Sin opciones, el navegador desplaza igualmente al dar el foco |
 | Golpes programados en el reloj de audio (`OscillatorNode`, `currentTime`) | Metrónomo exacto (MT-04, 0.5.4) | ✅ | ✅ | ✅ | Parte de Web Audio. Si el audio se rehace (iOS), el metrónomo se para en vez de sonar a destiempo |
 | Ventana modal nativa (`<dialog>` y `showModal()`) | Ventana de compás del metrónomo: foco atrapado, Escape e inerte el resto (0.5.4) | ✅ | ✅ | ✅ Safari 15.4+ | Sin `showModal`, la ventana se enseña igual por encima; Escape y «atrás» la cierran desde la app |

@@ -248,11 +248,17 @@ function drawChordStaff(a){
   svg.setAttribute('viewBox', STAFF_CORTO);
   drawStaffBase(svg, 38, 166);
   const notas = cuerdasAcorde(a).filter(c => c.midi !== null).map(c => ({ midi: c.midi, esc: escrituraEnAcorde(a, c.midi) }));
-  let anteriorY = null, desplazada = false;
+  let anteriorY = null, desplazada = false, altY = null, columna = 0;
   notas.forEach(n => {
     const y = staffYEscrita(n.esc, n.midi);
     desplazada = anteriorY !== null && Math.abs(anteriorY - y) < GAP * 0.75 && !desplazada;
-    drawNote(svg, n.midi, desplazada ? 124 : 108, 'var(--text)', false, n.esc);
+    // Dos alteraciones a menos de una sexta se pisarían: la segunda, más a la izquierda (AT-10 #8).
+    if (n.esc.alt){
+      columna = altY !== null && Math.abs(altY - y) < GAP * 2.5 ? (columna + 1) % 2 : 0;
+      altY = y;
+    }
+    const x = desplazada ? 124 : 108;
+    drawNote(svg, n.midi, x, 'var(--text)', false, n.esc, (x - 108) + 14 + columna * 12);
     anteriorY = y;
   });
 }

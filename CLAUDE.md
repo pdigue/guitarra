@@ -1,12 +1,20 @@
 # Trasteando — reglas del proyecto
 
-PWA para aprender el mástil de la guitarra, practicar escalas y afinar.
+PWA para aprender el mástil de la guitarra, practicar escalas y acordes, afinar y
+tocar con metrónomo.
 Cliente: Pablo Díaz Guerra. Está aprendiendo a programar: explica, no solo hagas.
 Idioma: español en todo (código comentado, commits, informes y respuestas).
 
+## Al empezar cada conversación
+Lee **docs/ESTADO.md**: dice dónde estamos, qué está pendiente y cómo se trabaja.
+Con este archivo y ESTADO.md basta para seguir; los demás documentos se leen
+solo cuando la tarea los necesita, y por partes (con grep o por secciones).
+
 ## Documentos que mandan
+- docs/ESTADO.md — memoria entre conversaciones: estado, pendientes y comandos.
 - docs/compatibilidad.md — qué capacidades usa la app y qué hace donde faltan.
 - docs/requisitos.md — qué debe hacer el producto. Fuente de verdad del alcance.
+  Se genera con herramientas/documentos/ (junto con la matriz): no se edita a mano.
 - docs/interfaz.md — qué hay en cada pantalla y cómo se navega (C-06, aprobada).
 - docs/roadmap.md — en qué orden se construye y cómo se valida cada etapa.
 - docs/matriz-cumplimiento.md — criterio de aceptación de cada requisito. Es el contrato.
@@ -51,3 +59,22 @@ Idioma: español en todo (código comentado, commits, informes y respuestas).
 10. Diseña para Windows, Android e iPhone a la vez (PL-04): solo estándares web,
     detecta capacidades y no sistemas, y anota cada capacidad nueva con su
     alternativa en docs/compatibilidad.md. El iPhone marca el mínimo.
+11. Aprobación de fusiones: Pablo la da con palabras explícitas («fusiona el #N»).
+    Un «ok» o «sigue» no basta para fusionar en main.
+
+## Continuidad y ahorro de uso
+Pablo tiene un límite de uso. Cada mensaje de una conversación larga vuelve a
+procesar todo lo anterior, así que lo caro es la longitud de la conversación,
+no los documentos en sí.
+- Una conversación por etapa o por un par de días. Al cerrarla, actualiza
+  docs/ESTADO.md (y súbelo al proyecto de claude.ai) para que la siguiente
+  empiece desde ahí.
+- Lee por partes. No vuelques diffs, registros ni documentos enteros al
+  contexto si basta con un grep o con las líneas que fallan.
+- Auditorías: ligeras y solo en los puntos de control (CP-n) o tras cambios de
+  riesgo (audio, datos guardados, música). Cada auditor cuesta tanto como una
+  conversación entera.
+- Capturas de pantalla solo cuando cambie algo visual, y combinadas en una imagen.
+- Los documentos del proyecto de claude.ai se suben al cerrar la etapa, no en
+  cada versión.
+

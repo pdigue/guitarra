@@ -1,7 +1,7 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 1.12 · **Fecha:** 21 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0); la sección 7b (seis áreas, con Metrónomo y Acordes), aprobada el 21/10. Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
-**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.5.5` · `requisitos.md` v1.22 · `roadmap.md` v3.20
+**Versión:** 1.13 · **Fecha:** 21 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0); la sección 7b (seis áreas, con Metrónomo y Acordes), aprobada el 21/10. Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
+**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.5.6` · `requisitos.md` v1.23 · `roadmap.md` v3.21
 **Revisión:** auditoría de requisitos AR-04 (`auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
 
@@ -57,7 +57,7 @@ flowchart LR
 ```
 
 - **Puerta.** Se queda: en el iPhone el sonido solo puede arrancar con un toque, y es donde aparece el nombre (G-01).
-- **Cuatro áreas** (G-02), siempre a un toque; **seis** cuando lleguen Acordes y Metrónomo (sección 7b, propuesta). Al abrir la app se entra siempre en Libre (L-01).
+- **Seis áreas** (G-02), siempre a un toque: Libre, Adivinar, Afinador, Escalas, Acordes y Metrónomo (sección 7b). Al abrir la app se entra siempre en Libre (L-01).
 - **Afinador y Escalas tienen dos modos dentro**, con un selector arriba. No son pestañas nuevas: cada destino es una idea distinta.
 - **Ajustes** se abre desde todas las áreas (C-01) y no cambia de área al cerrarse.
 
@@ -132,7 +132,7 @@ La propuesta saca todo eso del alto del mástil: **raíl | mástil | panel**.
 
 | Zona | Medida | Contenido |
 |---|---|---|
-| Raíl izquierdo | 64 px de ancho | Un destino por área (cuatro hoy, seis en F5) y ⚙ abajo; con seis, cada destino mide 44 px de alto |
+| Raíl izquierdo | 64 px de ancho | Las seis áreas, de 44 px de alto cada una, y ⚙ abajo |
 | Mástil | Todo el alto: números de traste (18 px) y seis cuerdas | — |
 | Panel derecho | 176 px de ancho | Los controles del área, de arriba abajo (tabla siguiente), y el zoom abajo |
 
@@ -157,7 +157,7 @@ En horizontal, el botón de pentagrama del panel es el símbolo 𝄞, con su nom
 
 La cuerda mide (alto útil − 28 px) / 6, así que **cumple los 40 px con un alto útil de 268 px o más**. Por debajo, la cuerda baja de 40 px; ese caso se anota y se recomienda instalar la app, que gana el alto de la barra del navegador. Los 280 px de Android son una estimación: se confirman con el simulador de Chrome en F3.2 y en un Android real cuando lo haya.
 
-**Aviso para girar** (V-01): solo en pantallas táctiles en vertical de menos de 600 px de ancho, en Libre, Adivinar y Escalas. Es una franja discreta sobre el mástil: «⟳ Gira el móvil para ver más trastes ✕». Desaparece al girar. Si la cierras con ✕, no vuelve: se guarda con los ajustes (C-05) y «Restablecer todos los ajustes» la recupera. Nunca sale en el Afinador, que funciona igual en las dos orientaciones (V-02), ni en una ventana estrecha de Windows. No se bloquea la orientación: el iPhone no lo permite.
+**Aviso para girar** (V-01): solo en pantallas táctiles en vertical de menos de 600 px de ancho, en Libre, Adivinar, Escalas y Acordes; nunca en el Afinador ni en el Metrónomo, que funcionan igual en las dos orientaciones. Es una franja discreta sobre el mástil: «⟳ Gira el móvil para ver más trastes ✕». Desaparece al girar. Si la cierras con ✕, no vuelve: se guarda con los ajustes (C-05) y «Restablecer todos los ajustes» la recupera. Nunca sale en el Afinador, que funciona igual en las dos orientaciones (V-02), ni en una ventana estrecha de Windows. No se bloquea la orientación: el iPhone no lo permite.
 
 ## 7b. Metrónomo y acordes (F5.6 y F5.7) — aprobada el 21/10
 
@@ -180,7 +180,7 @@ Tu petición del 21/10 y tu decisión del mismo día: **el metrónomo es una fun
 
 ## 8. Ordenador — boceto C1
 
-Las áreas pasan a la cabecera como pestañas, y desaparece la barra inferior. El mástil usa todo el ancho (V-03): 16 trastes a la vista en 1280 px, con cuerdas de 46 px. Ajustes se abre como panel lateral. Se maneja entero con teclado (sección 9).
+Las seis áreas pasan a la cabecera como pestañas (entre 600 y 959 px de ancho, más estrechas y alineadas a la derecha, para no pisar el nombre), y desaparece la barra inferior. El mástil usa todo el ancho (V-03): 16 trastes a la vista en 1280 px, con cuerdas de 46 px. Ajustes se abre como panel lateral. Se maneja entero con teclado (sección 9).
 
 ## 9. Accesibilidad (F3.4, G-05)
 
@@ -231,7 +231,7 @@ Decisión del cliente: «elige tú los colores, para que las notas se distingan 
 | Requisito | Cambio |
 |---|---|
 | **C-06** | Pasa a implementado, con este documento en su versión 1.0. |
-| **V-01** | Criterio concreto del aviso: solo en pantallas táctiles en vertical (`pointer: coarse`, ancho < 600 px), en Libre, Adivinar y Escalas; nunca en el Afinador; cerrado, se guarda con los ajustes y «Restablecer» lo recupera. |
+| **V-01** | Criterio concreto del aviso: solo en pantallas táctiles en vertical (`pointer: coarse`, ancho < 600 px), en Libre, Adivinar, Escalas y Acordes; nunca en el Afinador ni en el Metrónomo; cerrado, se guarda con los ajustes y «Restablecer» lo recupera. |
 | **V-04** | Añadido: con `pointer: coarse` un traste mide al menos 40 px, y el zoom guardado se ajusta a ese límite. Nota corregida: hoy, de 3 a 24 trastes; en el iPhone en vertical quedarán como mucho 7. |
 | **G-05** | Añadido al criterio de la matriz: en pantallas táctiles, todo control y toda casilla del mástil mide al menos 40 × 40 px. |
 | **C-07** (nuevo, F3.2, prioridad media) | «Mientras haya un paso anterior en la sesión, el botón o gesto “atrás” del sistema cierra Ajustes o vuelve al área anterior; desde la primera área actúa el sistema. Al abrir se entra en Libre.» Se verifica a mano en Windows y en el simulador de Android de Chrome. |
@@ -253,7 +253,8 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.12** | 21/10/2026 | Acordes, como lo describiste: listado con buscador, populares y los 30 acordes a un lado; el acorde en el mástil al otro. Disposición en vertical, horizontal y amplia. |
+| **1.13** | 21/10/2026 | Auditoría AR-11: seis áreas en el mapa, el raíl y el ordenador; el aviso para girar, también en Acordes y nunca en el Metrónomo. |
+| 1.12 | 21/10/2026 | Acordes, como lo describiste: listado con buscador, populares y los 30 acordes a un lado; el acorde en el mástil al otro. Disposición en vertical, horizontal y amplia. |
 | 1.11 | 21/10/2026 | Sección 7b aprobada. El metrónomo, rehecho con tu guía (la app que nos enseñaste): barra vertical, nombre del tempo, un punto por pulso y una ventana con compás, figura y acento en el primer tiempo. |
 | 1.10 | 21/10/2026 | Sección 7b rehecha con tu decisión del 21/10: el metrónomo es un área propia. Seis áreas, medidas de la barra y del raíl, el metrónomo sonando en otras áreas y parado con el micrófono, y los colores de dedo de Acordes. Pendiente de tu visto bueno. Mapa, raíl y alternativas al día (AR-10). |
 | 1.9 | 21/10/2026 | Ajustes con «Notas alteradas» y «Al fallar»; propuesta de metrónomo (chip y panel) y de Acordes (quinta pestaña), tu petición del 21/10. |

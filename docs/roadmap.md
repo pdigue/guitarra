@@ -1,7 +1,7 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 3.20 · **Fecha:** 21 de octubre de 2026
-**Válido para:** app `0.5.5` · `requisitos.md` v1.22 · `matriz-cumplimiento` v1.20 · `interfaz.md` v1.12 · `compatibilidad.md` v1.7 · `automatizacion.md` v1.2 · `CHANGELOG.md`
+**Versión:** 3.21 · **Fecha:** 21 de octubre de 2026
+**Válido para:** app `0.5.6` · `requisitos.md` v1.23 · `matriz-cumplimiento` v1.21 · `interfaz.md` v1.13 · `compatibilidad.md` v1.7 · `automatizacion.md` v1.2 · `CHANGELOG.md`
 **Gestiona:** chat de Desarrollo
 
 > ⚡ **Modo acelerado activo desde el 14/10** (detalle en `automatizacion.md`). El agente ejecuta las etapas por bloques —F1 a F3, luego F4 a F6— y solo para en las decisiones. Las pruebas que necesitan tus manos se agrupan en dos sesiones: **Sesión 1** con el iPhone y el ordenador al cerrar F3, y **Sesión 2** con la guitarra al cerrar F6.
@@ -123,7 +123,7 @@ Cada pieza del proyecto lleva su propio número, y todas se citan entre sí.
 | 11 | 🆕 Numeración en «Guía»: solo 3, 5, 7, 9, 12… | D-04, V-09 |
 | 12 | Ajustes muestra «Trasteando» y la versión que estás probando | G-10 |
 | 13 | El récord y los ajustes sobreviven a recargar la página | J-08, C-05 |
-| 14 | Recorrido completo por las cuatro pestañas y Ajustes sin errores en la consola | General |
+| 14 | Recorrido completo por todas las áreas y Ajustes sin errores en la consola | General |
 | 15 | 🆕 Guitarra clásica, 1ª cuerda, trastes 7, 8 y 12: suenan Si, Do y Mi igual que en tu guitarra afinada, sin saltar medio tono en el 8 | S-01, S-08 |
 
 ### 🔍 CP-1 — Checkpoint ligero tras F1
@@ -389,7 +389,7 @@ flowchart TB
 | Lista de comprobación manual | Recorrer casos concretos marcando cada uno | Sesión 1 (F1.1, F3.3) |
 | Banco de pruebas automático | Escenarios ejecutados por código, con resultado esperado; cada etapa añade los suyos | F1.3, F2.x, F4.1, F4.2 |
 | Medición objetiva | Medir una magnitud con una herramienta y compararla con el criterio: afinación de las muestras, peso del archivo | F2.1, F2.3, F2.4 |
-| Prueba en dispositivo real | Usar la app como usuario, con la guitarra delante | Sesión 1 (F2.5, F3.3) · comprobación corta tras F4.3 · Sesión 2 (F5.4, y F4.3 si la comprobación corta falló) · F7.2 |
+| Prueba en dispositivo real | Usar la app como usuario, con la guitarra delante | Sesión 1 (F2.5, F3.3) · comprobación corta tras F4.3 · Sesión 2 (F5.4, F5.6, F5.7, y F4.3 si la comprobación corta falló) · F7.2 |
 | Prueba de autonomía | Abrir el archivo sin conexión y sin servidor | F2.3, F2.5, F6.1 |
 | Auditoría con herramienta | Lighthouse, verificadores de contraste, simulador de daltonismo | F3.4, F6.3, F7.3 |
 | Contraste con referencia externa | Escalas y afinaciones frente a fuentes fiables | F5.2, F5.3 |
@@ -461,7 +461,8 @@ flowchart TB
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **3.20** | 21/10/2026 | F5.7 hecha (`0.5.5`): la librería de acordes, con tu guía (listado con populares y 30 acordes, buscador). PR #13 fusionado. |
+| **3.21** | 21/10/2026 | `0.5.6`: correcciones de las auditorías AR-11 y AT-10. Continuidad entre conversaciones: `docs/ESTADO.md` y los generadores de documentos en el repositorio. |
+| 3.20 | 21/10/2026 | F5.7 hecha (`0.5.5`): la librería de acordes, con tu guía (listado con populares y 30 acordes, buscador). PR #13 fusionado. |
 | 3.19 | 21/10/2026 | F5.6 hecha (`0.5.4`): el metrónomo, con tu guía de la app de referencia. F5.8 nueva: saneamiento con tus comentarios de uso de la web (Adivinar y Escalas); el cierre pasa a F5.9. Seis pestañas aprobadas. |
 | 3.18 | 21/10/2026 | Tus decisiones del 21/10: el metrónomo, área propia (F5.6), y reintentar por defecto (`0.5.3`, con las correcciones de AT-09). Objetivo de F5, CP-5, Sesión 2 y riesgos al día con el metrónomo y los acordes; F4 ya no sale como terminada en el mapa (AR-10). |
 | 3.17 | 21/10/2026 | Tus comentarios del 21/10: F5.5 hecha (`0.5.1` y `0.5.2`); metrónomo (F5.6) y librería de acordes (F5.7) añadidos al plan, con sus requisitos; el cierre pasa a F5.8. |

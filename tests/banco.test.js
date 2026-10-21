@@ -1409,3 +1409,38 @@ test('acordes: los cuatro colores de dedo contrastan con el mástil (3:1) y su n
     assert.ok(contraste(f, numero) >= 4.5, 'número sobre ' + f + ': ' + contraste(f, numero).toFixed(2));
   }
 });
+
+test('AT-10: cambiar de compás sonando no mueve el pulso; tras un bloqueo no se amontonan golpes; las figuras no se rehacen; avisos traducidos; Restablecer limpia el buscador', t => {
+  const A = boot(APP, { metro: { bpm: 60, sig: '4/4', sub: 2, accent: true } });
+  A.ev(metroFalso);
+  A.ev('startMetro()');
+  t.after(() => A.ev('stopMetro()'));
+  A.ev('__avanza(11.08)');                    // pulso a 11,06; ya programada su corchea de 11,56
+  A.ev("setCompas('3/4')");
+  A.ev('__avanza(12.2)');
+  const pulsos = JSON.parse(A.ev('JSON.stringify(__golpes().filter(g => g[1] !== 880).map(g => Math.round(g[0] * 1000) / 1000))'));
+  assert.deepEqual(pulsos.slice(-2), [11.06, 12.06], 'el acento del 3/4 cae en el pulso, no en la corchea');
+  assert.equal(JSON.parse(A.ev('JSON.stringify(__golpes().find(g => Math.abs(g[0] - 12.06) < 1e-6))'))[1], 1760);
+  A.ev('__ctx.currentTime += 1.5; metroProgramar()');   // el navegador estuvo 1,5 s ocupado
+  const atrasados = A.ev('__golpes().filter(g => g[0] < __ctx.currentTime - 0.01).length');
+  assert.equal(atrasados, JSON.parse(A.ev('JSON.stringify(__golpes().filter(g => g[0] < 12.3).length)')), 'ninguno en el pasado');
+  // Ventana: elegir figura no rehace los botones (el foco no se pierde) y en 5/8 dos por pulso son semicorcheas.
+  A.doc.querySelector('.tab[data-screen="metro"]').click();
+  A.$('metro-sig').click();
+  const fig = A.doc.querySelector('#metro-sub [data-v="3"]');
+  fig.click();
+  assert.equal(A.doc.querySelector('#metro-sub [data-v="3"]'), fig, 'el mismo botón');
+  A.doc.querySelector('#metro-sigs [data-v="5/8"]').click();
+  assert.equal(A.doc.querySelector('#metro-sub [data-v="2"]').getAttribute('aria-label'), 'Dos por pulso (semicorcheas)');
+  A.$('metro-ok').click();
+  // El aviso se traduce al cambiar de idioma.
+  A.ev("stopMetro(); startMetro(); stopMetro('hidden'); setLang('en')");
+  assert.equal(A.$('metro-note').textContent, 'It stopped when you left the app.');
+  A.ev("setLang('es')");
+  // Restablecer limpia el buscador de acordes.
+  A.doc.querySelector('.tab[data-screen="chords"]').click();
+  const s = A.$('chord-search'); s.value = 'Sol'; s.dispatchEvent({ type: 'input', target: s });
+  A.$('set-reset').click();
+  assert.equal(A.$('chord-search').value, '');
+  assert.equal(A.doc.querySelectorAll('#chord-list .cl-head').length, 2, 'populares y todos otra vez');
+});
