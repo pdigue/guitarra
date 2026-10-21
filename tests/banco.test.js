@@ -68,8 +68,8 @@ test('«ver todas las notas» no se aplica en Adivinar (L-02, J-12)', () => {
   assert.ok(A.$('board').classList.contains('show-all'));
 });
 
-test('Adivinar: fallo, revelación y reto nuevo (J-07, J-10)', async () => {
-  const A = boot(APP);
+test('Adivinar con «Al fallar: Ver respuesta»: fallo, revelación y reto nuevo (J-07, J-10)', async () => {
+  const A = boot(APP, { onMiss: 'reveal' });
   jugar(A);
   await sleep(400);
   const target = A.ev('challenge');
@@ -1042,13 +1042,70 @@ test('Adivinar con «Al fallar: Reintentar»: el reto sigue, la racha se rompe, 
   assert.match(A.$('challenge-text').innerHTML, /Era/);
 });
 
-test('el ajuste «Al fallar» se guarda y por defecto enseña la respuesta (J-13)', () => {
+test('el ajuste «Al fallar» se guarda; por defecto se sigue intentando (J-13, tu decisión del 21/10)', () => {
   const A = boot(APP);
-  assert.equal(A.ev('state.onMiss'), 'reveal');
-  A.doc.querySelector('#set-onmiss [data-v="retry"]').click();
-  assert.equal(JSON.parse(A.store.get('trasteando.v1')).onMiss, 'retry');
-  assert.equal(A.doc.querySelector('#set-onmiss [data-v="retry"]').getAttribute('aria-pressed'), 'true');
-  assert.equal(boot(APP, { onMiss: 'x' }).ev('state.onMiss'), 'reveal');
+  assert.equal(A.ev('state.onMiss'), 'retry');
+  A.doc.querySelector('#set-onmiss [data-v="reveal"]').click();
+  assert.equal(JSON.parse(A.store.get('trasteando.v1')).onMiss, 'reveal');
+  assert.equal(A.doc.querySelector('#set-onmiss [data-v="reveal"]').getAttribute('aria-pressed'), 'true');
+  assert.equal(boot(APP, { onMiss: 'x' }).ev('state.onMiss'), 'retry');
+});
+
+// --- 0.5.3: lo que encontró la auditoría técnica AT-09 ---
+
+test('Escalas queda coherente: lector y lector de pantalla con la escritura de la escala, salir, cambiar de afinación, Restablecer y dos fallos seguidos (AT-09)', async () => {
+  const A = escalasA({ scaleId: 'mayor', scalePc: 5 });          // Fa mayor
+  const celda = m => A.doc.querySelector('.fret-cell[data-midi="' + m + '"]');
+  // #5: en Fa mayor, la tecla de La♯/Si♭ se lee Si♭ en todas partes.
+  A.press(celda(58));
+  assert.equal(A.$('note-name').textContent, 'Si♭');
+  assert.match(celda(58).getAttribute('aria-label'), /^Si♭3, /);
+  // Pentagrama: el Si♭ va en la línea del Si, no en el hueco del La (F5.1).
+  const cy = svg => +svg.querySelectorAll('ellipse')[0].getAttribute('cy');
+  const fa = A.$('staff');
+  assert.equal(A.ev("staffYEscrita({letra:6,alt:-1},58)"), A.ev("staffYEscrita({letra:6,alt:0},59)"));
+  // #2: al salir, el pentagrama vuelve a ser de una nota, con tu escritura.
+  A.doc.querySelector('.tab[data-screen="free"]').click();
+  assert.equal(fa.getAttribute('viewBox'), '0 0 176 132', 'el pentagrama ya no enseña la escala');
+  assert.equal(fa.querySelectorAll('ellipse').length, 1);
+  assert.equal(A.$('note-name').textContent, 'La♯', 'fuera de la escala, tu preferencia');
+  assert.ok(cy(fa) > 0);
+  // #3: cambiar de afinación reinicia la práctica (las casillas suenan a otra nota).
+  A.doc.querySelector('.tab[data-screen="scales"]').click();
+  A.doc.querySelector('#scale-mode [data-v="practice"]').click();
+  A.press(celda(53));
+  assert.equal(A.$('scale-count').textContent, '1 de 7');
+  elegir(A, 'tuning-select', 'dropd');
+  assert.equal(A.$('scale-count').textContent, '0 de 7');
+  assert.equal(A.doc.querySelectorAll('.fret-cell.correct').length, 0);
+  // #4: dos fallos seguidos; ninguna casilla se queda roja.
+  A.press(celda(54)); await sleep(300); A.press(celda(56));
+  await sleep(1700);
+  assert.equal(A.doc.querySelectorAll('.fret-cell.wrong').length, 0, 'ninguna casilla roja pegada');
+  // #1: Restablecer devuelve selectores y botones a lo de fábrica.
+  A.$('qb-notation').click();                                    // C D E
+  elegir(A, 'scale-type', 'menor'); elegir(A, 'scale-tonic', '9');
+  A.$('set-reset').click();
+  await sleep(10);
+  assert.equal(A.$('scale-type').value, 'mayor');
+  assert.equal(A.$('scale-tonic').value, '0');
+  assert.equal(A.doc.querySelector('#set-accidentals [data-pc="6"][data-v="flat"]').textContent, 'Sol♭');
+  assert.ok(A.doc.querySelectorAll('.fret-cell.scale').length > 0, 'el mástil enseña Do mayor');
+  await sleep(10);
+});
+
+test('Adivinar en «Reintentar»: dos fallos seguidos no dejan casillas rojas; pausado al ocultar la app, «Ver la respuesta» no se ofrece (AT-09)', async () => {
+  const A = boot(APP);
+  A.ev('playMidi = () => {}');
+  jugar(A);
+  const midi = A.ev('challenge.midi');
+  const otras = A.doc.querySelectorAll('.fret-cell').filter(c => +c.dataset.midi !== midi && (+c.dataset.midi % 12) !== (midi % 12));
+  A.press(otras[0]); await sleep(300); A.press(otras[5]);
+  await sleep(1100);
+  assert.equal(A.doc.querySelectorAll('.fret-cell.wrong').length, 0);
+  assert.equal(A.$('qb-giveup').hidden, false);
+  A.ev('guessStarted = false; renderChallenge()');
+  assert.equal(A.$('qb-giveup').hidden, true, 'primero ▶');
 });
 
 // --- 0.5.2: ♯ o ♭ por cada tecla negra (N-06, tu comentario del 21/10) ---

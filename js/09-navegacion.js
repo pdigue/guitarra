@@ -179,14 +179,13 @@ function refreshNoteText(){
   refreshNoteNames();
   if (typeof buildAccidentals === 'function' && document.getElementById('set-accidentals').children.length) buildAccidentals();
   renderTunerStrings();
+  renderTunerStaff();
   if (challenge) renderChallenge();
   buildScaleSelects(); renderScales();     // los nombres escritos siguen la nomenclatura
   // El lector de nota se refresca desde lastMidi: la clase .active se limpia
   // a los 2,2 s, así que consultar el DOM fallaba pasado ese tiempo.
-  if (lastMidi !== null){
-    document.getElementById('note-name').textContent = noteName(lastMidi);
-    if (screen !== 'scales') showOnStaff(lastMidi, noteInfo(lastMidi).color);
-  }
+  refrescarLector();
+  if (lastMidi !== null && screen !== 'scales') showOnStaff(lastMidi, noteInfo(lastMidi).color);
   syncUI();
 }
 

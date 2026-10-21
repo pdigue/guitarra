@@ -30,7 +30,7 @@ const DEFAULTS = {
   scaleId:'mayor',        // Escalas (F5): tipo, tónica (clase de altura) y submodo
   scalePc:0,
   scaleMode:'show',       // 'show' Mostrar · 'practice' Práctica
-  onMiss:'reveal',        // Adivinar, al fallar: 'reveal' ver la respuesta · 'retry' seguir intentando (J-13)
+  onMiss:'retry',         // Adivinar, al fallar: 'retry' seguir intentando (por defecto, 21/10) · 'reveal' ver la respuesta (J-13)
   accidentals:{}          // tecla negra → 'sharp' o 'flat' (N-06); sin dato, sostenido
 };
 

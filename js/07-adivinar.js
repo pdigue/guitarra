@@ -113,9 +113,10 @@ function renderChallenge(){
   btn.classList.toggle('ready', !guessStarted);
   btn.setAttribute('aria-label', guessStarted ? t('guess.repeat') : t('guess.startAria'));
   renderClues();
-  // «Ver la respuesta»: solo en el modo de seguir intentando, tras fallar (J-13).
+  // «Ver la respuesta»: solo en el modo de seguir intentando, tras fallar (J-13),
+  // y mientras el reto está en marcha: si se pausó al ocultar la app, primero ▶ (AT-09 #9).
   const rendirse = document.getElementById('qb-giveup');
-  rendirse.hidden = !(challenge && challenge.misses && !challenge.revealed && !challenge.solved);
+  rendirse.hidden = !(guessStarted && challenge && challenge.misses && !challenge.revealed && !challenge.solved);
   if (!challenge){ box.textContent = ''; return; }
 
   if (!guessStarted){
@@ -177,15 +178,13 @@ function evaluate(cell, midi, rowIdx){
       // se marca un momento; ▶ repite el sonido y «Ver la respuesta» se rinde.
       challenge.misses = (challenge.misses || 0) + 1;
       renderChallenge();
-      clearTimeout(missTimer);
-      missTimer = setTimeout(() => cell.classList.remove('wrong'), 900);
+      marcarUnMomento(cell, 'wrong', 900);   // cada casilla, su temporizador (AT-09 #4)
       return;
     }
     revealAnswer(REVEAL_DELAY);
   }
 }
 
-let missTimer = null;
 
 /** Enseña dónde estaba la nota y pasa al reto siguiente (J-10). `espera`:
  *  cuánto esperar antes de que suene y se ilumine (tras un fallo, el tiempo de

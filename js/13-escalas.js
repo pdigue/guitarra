@@ -19,12 +19,23 @@ const sc = {
   encontradas: new Set(),   // clases de altura encontradas en Práctica
   celdas: new Set(),        // casillas acertadas en Práctica ('fila-traste')
   aviso: null,              // { clave, vars } del último aviso de Práctica
-  revelar: null, fallo: null
+  revelar: null             // temporizador del «enseñar las buenas» tras un fallo
 };
 
 function escalaActual(){ return ESCALAS.find(e => e.id === state.scaleId) || ESCALAS[0]; }
 function pcsEscala(){ return escalaActual().semitonos.map(s => (state.scalePc + s) % 12); }
 function notasEscala(){ return escribirEscala(state.scalePc, escalaActual()); }
+
+/** Cómo se escribe una nota en la pantalla actual. En Escalas, si es de la
+ *  escala, como la escribe la escala (Si♭ en Fa mayor, aunque prefieras La♯);
+ *  si no, según tu elección de ♯ o ♭ (N-06, AT-09 #5). */
+function escrituraEnPantalla(midi){
+  if (screen === 'scales'){
+    const i = pcsEscala().indexOf(((midi % 12) + 12) % 12);
+    if (i >= 0) return notasEscala()[i];
+  }
+  return escrituraPreferida(midi);
+}
 
 /** «Do mayor», «la pentatónica menor de La»… */
 function nombreEscala(){
@@ -112,6 +123,8 @@ function renderScales(){
   document.querySelectorAll('.fret-cell').forEach(c => c.classList.toggle('correct', practica && sc.celdas.has(c.dataset.row + '-' + c.dataset.fret)));
 
   drawScaleStaff(pasos, practica);
+  labelCells();                  // el lector de pantalla también nombra como la escala
+  refrescarLector();
 }
 
 /** El pentagrama escribe la escala (P-03). En Práctica, solo las notas que ya
@@ -145,38 +158,41 @@ function onScalePress(cell, midi){
   if (i >= 0){
     sc.encontradas.add(pc);
     sc.celdas.add(cell.dataset.row + '-' + cell.dataset.fret);
-    const nota = nombreEscrito(notasEscala()[i]);
+    // El nombre se calcula al pintar el aviso, no ahora: si cambias Do Re Mi
+    // por C D E, el aviso también cambia (AT-09 #6).
     sc.aviso = sc.encontradas.size === pcsEscala().length
       ? { clave: 'scale.allFound', vars: () => ({ e: nombreEscala() }) }
-      : { clave: 'scale.yes', vars: () => ({ n: nota, e: nombreEscala() }) };
+      : { clave: 'scale.yes', vars: () => ({ n: nombreEscrito(notasEscala()[i]), e: nombreEscala() }) };
   } else {
     // Se marca en rojo y, un momento, se enseñan las casillas que sí son.
-    cell.classList.add('wrong');
-    const nota = noteName(midi);
-    sc.aviso = { clave: 'scale.no', vars: () => ({ n: nota, e: nombreEscala() }) };
+    marcarUnMomento(cell, 'wrong', 1500);
+    sc.aviso = { clave: 'scale.no', vars: () => ({ n: noteName(midi), e: nombreEscala() }) };
     buzz([12, 60, 12]);
     const board = document.getElementById('board');
     board.classList.add('reveal-scale');
-    clearTimeout(sc.revelar); clearTimeout(sc.fallo);
+    clearTimeout(sc.revelar);
     sc.revelar = setTimeout(() => board.classList.remove('reveal-scale'), 2000);
-    sc.fallo = setTimeout(() => cell.classList.remove('wrong'), 1500);
   }
   renderScales();
 }
 
 function resetScalePractice(){
   sc.encontradas.clear(); sc.celdas.clear(); sc.aviso = null;
-  clearTimeout(sc.revelar); clearTimeout(sc.fallo);
+  clearTimeout(sc.revelar);
   document.getElementById('board').classList.remove('reveal-scale');
   clearMarks(['wrong']);
 }
 
-/** Al salir de Escalas, el mástil vuelve a ser el de siempre. */
+/** Al salir de Escalas, el mástil, el lector y el pentagrama vuelven a ser los
+ *  de siempre: el pentagrama ya no enseña la escala (AT-09 #2). */
 function leaveScales(){
   const board = document.getElementById('board');
   board.classList.remove('scales', 'practice', 'reveal-scale');
   clearMarks(['scale', 'scale-tonic', 'scale-step', 'correct', 'wrong']);
   refreshNoteNames();
+  refrescarLector();
+  if (lastMidi !== null) showOnStaff(lastMidi, noteInfo(lastMidi).color);
+  else clearStaff();
 }
 
 function bindScales(){

@@ -86,7 +86,7 @@ function renderTunerStaff(){
   drawStaffBase(svg, 38, 330);
   // De grave a aguda, repartidas a lo largo del pentagrama.
   activeTuning().forEach((midi, i) => {
-    drawNote(svg, midi, 70 + i*46, noteInfo(midi).color, false);
+    drawNote(svg, midi, 70 + i*46, noteInfo(midi).color, false, escrituraPreferida(midi));   // con tu ♯ o ♭ (AT-09 #7)
   });
 }
 
@@ -100,6 +100,9 @@ function onTuningChanged(){
   // Cada afinación tiene su récord (J-11): una racha no pasa de una a otra.
   if (screen === 'guess'){ streak = 0; newChallenge(); }
   updateScore();
+  // La práctica guarda casillas, y con otra afinación cada casilla suena a otra
+  // nota: el progreso empieza de nuevo (AT-09 #3).
+  if (screen === 'scales') resetScalePractice();
   renderScales();              // otra afinación: otras casillas para la misma escala
 }
 

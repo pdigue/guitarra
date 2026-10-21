@@ -1099,7 +1099,7 @@ function aplicarIdioma(){
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.5.2';
+const APP_VERSION = '0.5.3';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -1296,7 +1296,7 @@ const DEFAULTS = {
   scaleId:'mayor',        // Escalas (F5): tipo, tónica (clase de altura) y submodo
   scalePc:0,
   scaleMode:'show',       // 'show' Mostrar · 'practice' Práctica
-  onMiss:'reveal',        // Adivinar, al fallar: 'reveal' ver la respuesta · 'retry' seguir intentando (J-13)
+  onMiss:'retry',         // Adivinar, al fallar: 'retry' seguir intentando (por defecto, 21/10) · 'reveal' ver la respuesta (J-13)
   accidentals:{}          // tecla negra → 'sharp' o 'flat' (N-06); sin dato, sostenido
 };
 
@@ -2003,7 +2003,9 @@ function cellLabel(cell){
   const str = displayStrings()[row];
   const where = fret === 0 ? t('cell.open', { o: ord(str.number) }) : t('cell.fret', { o: ord(str.number), f: fret });
   const midi = +cell.dataset.midi;
-  return screen === 'guess' ? where : noteName(midi) + (Math.floor(midi / 12) - 1) + ', ' + where;
+  if (screen === 'guess') return where;
+  const e = escrituraEnPantalla(midi);   // en Escalas, como la escribe la escala (AT-09 #5)
+  return nombreEscrito(e) + octavaEscrita(e, midi) + ', ' + where;
 }
 function setRoving(row, fret){
   const old = cellAt(kbPos.row, kbPos.fret);
@@ -2128,6 +2130,26 @@ function firePress(cell){
 let activeTimer = null;
 let lastMidi = null;        // última nota tocada, para refrescar al cambiar notación
 
+/** Escribe en el lector grande la última nota tocada, como se escribe en la
+ *  pantalla actual: en Escalas, como la escribe la escala (AT-09 #5). Se
+ *  llama al tocar, al cambiar de nomenclatura o de ♯/♭ y al salir de Escalas. */
+function refrescarLector(){
+  if (lastMidi === null) return;
+  const e = escrituraEnPantalla(lastMidi);
+  document.getElementById('note-name').textContent = nombreEscrito(e);
+  document.getElementById('note-oct').textContent = t('octave', { n: octavaEscrita(e, lastMidi) });
+}
+
+/** Marca una casilla con una clase durante `ms`. Cada casilla lleva su propio
+ *  temporizador: con uno compartido, dos fallos seguidos dejaban la primera
+ *  casilla en rojo para siempre (AT-09 #4). */
+const marcasTemporales = new WeakMap();
+function marcarUnMomento(cell, clase, ms){
+  cell.classList.add(clase);
+  clearTimeout(marcasTemporales.get(cell));
+  marcasTemporales.set(cell, setTimeout(() => cell.classList.remove(clase), ms));
+}
+
 function pressFret(cell, midi, rowIdx){
   clearMarks(['active','equal']);
   cell.classList.add('active');
@@ -2138,10 +2160,9 @@ function pressFret(cell, midi, rowIdx){
   // pistas van aparte, en la tarjeta del reto (comentario del 21/10).
   lastMidi = midi;
   const nameEl = document.getElementById('note-name');
-  nameEl.textContent = noteName(midi);
   nameEl.style.setProperty('--note-color', info.color);
   nameEl.style.setProperty('--note-glow', info.color);
-  document.getElementById('note-oct').textContent = t('octave', { n: info.octave });
+  refrescarLector();
   if (screen !== 'scales') showOnStaff(midi, info.color);   // en Escalas, el pentagrama escribe la escala
 
   // Señal secundaria: dónde más suena exactamente esta misma nota.
@@ -2348,9 +2369,10 @@ function renderChallenge(){
   btn.classList.toggle('ready', !guessStarted);
   btn.setAttribute('aria-label', guessStarted ? t('guess.repeat') : t('guess.startAria'));
   renderClues();
-  // «Ver la respuesta»: solo en el modo de seguir intentando, tras fallar (J-13).
+  // «Ver la respuesta»: solo en el modo de seguir intentando, tras fallar (J-13),
+  // y mientras el reto está en marcha: si se pausó al ocultar la app, primero ▶ (AT-09 #9).
   const rendirse = document.getElementById('qb-giveup');
-  rendirse.hidden = !(challenge && challenge.misses && !challenge.revealed && !challenge.solved);
+  rendirse.hidden = !(guessStarted && challenge && challenge.misses && !challenge.revealed && !challenge.solved);
   if (!challenge){ box.textContent = ''; return; }
 
   if (!guessStarted){
@@ -2412,15 +2434,13 @@ function evaluate(cell, midi, rowIdx){
       // se marca un momento; ▶ repite el sonido y «Ver la respuesta» se rinde.
       challenge.misses = (challenge.misses || 0) + 1;
       renderChallenge();
-      clearTimeout(missTimer);
-      missTimer = setTimeout(() => cell.classList.remove('wrong'), 900);
+      marcarUnMomento(cell, 'wrong', 900);   // cada casilla, su temporizador (AT-09 #4)
       return;
     }
     revealAnswer(REVEAL_DELAY);
   }
 }
 
-let missTimer = null;
 
 /** Enseña dónde estaba la nota y pasa al reto siguiente (J-10). `espera`:
  *  cuánto esperar antes de que suene y se ilumine (tras un fallo, el tiempo de
@@ -2535,7 +2555,7 @@ function renderTunerStaff(){
   drawStaffBase(svg, 38, 330);
   // De grave a aguda, repartidas a lo largo del pentagrama.
   activeTuning().forEach((midi, i) => {
-    drawNote(svg, midi, 70 + i*46, noteInfo(midi).color, false);
+    drawNote(svg, midi, 70 + i*46, noteInfo(midi).color, false, escrituraPreferida(midi));   // con tu ♯ o ♭ (AT-09 #7)
   });
 }
 
@@ -2549,6 +2569,9 @@ function onTuningChanged(){
   // Cada afinación tiene su récord (J-11): una racha no pasa de una a otra.
   if (screen === 'guess'){ streak = 0; newChallenge(); }
   updateScore();
+  // La práctica guarda casillas, y con otra afinación cada casilla suena a otra
+  // nota: el progreso empieza de nuevo (AT-09 #3).
+  if (screen === 'scales') resetScalePractice();
   renderScales();              // otra afinación: otras casillas para la misma escala
 }
 
@@ -2741,14 +2764,13 @@ function refreshNoteText(){
   refreshNoteNames();
   if (typeof buildAccidentals === 'function' && document.getElementById('set-accidentals').children.length) buildAccidentals();
   renderTunerStrings();
+  renderTunerStaff();
   if (challenge) renderChallenge();
   buildScaleSelects(); renderScales();     // los nombres escritos siguen la nomenclatura
   // El lector de nota se refresca desde lastMidi: la clase .active se limpia
   // a los 2,2 s, así que consultar el DOM fallaba pasado ese tiempo.
-  if (lastMidi !== null){
-    document.getElementById('note-name').textContent = noteName(lastMidi);
-    if (screen !== 'scales') showOnStaff(lastMidi, noteInfo(lastMidi).color);
-  }
+  refrescarLector();
+  if (lastMidi !== null && screen !== 'scales') showOnStaff(lastMidi, noteInfo(lastMidi).color);
   syncUI();
 }
 
@@ -3246,12 +3268,23 @@ const sc = {
   encontradas: new Set(),   // clases de altura encontradas en Práctica
   celdas: new Set(),        // casillas acertadas en Práctica ('fila-traste')
   aviso: null,              // { clave, vars } del último aviso de Práctica
-  revelar: null, fallo: null
+  revelar: null             // temporizador del «enseñar las buenas» tras un fallo
 };
 
 function escalaActual(){ return ESCALAS.find(e => e.id === state.scaleId) || ESCALAS[0]; }
 function pcsEscala(){ return escalaActual().semitonos.map(s => (state.scalePc + s) % 12); }
 function notasEscala(){ return escribirEscala(state.scalePc, escalaActual()); }
+
+/** Cómo se escribe una nota en la pantalla actual. En Escalas, si es de la
+ *  escala, como la escribe la escala (Si♭ en Fa mayor, aunque prefieras La♯);
+ *  si no, según tu elección de ♯ o ♭ (N-06, AT-09 #5). */
+function escrituraEnPantalla(midi){
+  if (screen === 'scales'){
+    const i = pcsEscala().indexOf(((midi % 12) + 12) % 12);
+    if (i >= 0) return notasEscala()[i];
+  }
+  return escrituraPreferida(midi);
+}
 
 /** «Do mayor», «la pentatónica menor de La»… */
 function nombreEscala(){
@@ -3339,6 +3372,8 @@ function renderScales(){
   document.querySelectorAll('.fret-cell').forEach(c => c.classList.toggle('correct', practica && sc.celdas.has(c.dataset.row + '-' + c.dataset.fret)));
 
   drawScaleStaff(pasos, practica);
+  labelCells();                  // el lector de pantalla también nombra como la escala
+  refrescarLector();
 }
 
 /** El pentagrama escribe la escala (P-03). En Práctica, solo las notas que ya
@@ -3372,38 +3407,41 @@ function onScalePress(cell, midi){
   if (i >= 0){
     sc.encontradas.add(pc);
     sc.celdas.add(cell.dataset.row + '-' + cell.dataset.fret);
-    const nota = nombreEscrito(notasEscala()[i]);
+    // El nombre se calcula al pintar el aviso, no ahora: si cambias Do Re Mi
+    // por C D E, el aviso también cambia (AT-09 #6).
     sc.aviso = sc.encontradas.size === pcsEscala().length
       ? { clave: 'scale.allFound', vars: () => ({ e: nombreEscala() }) }
-      : { clave: 'scale.yes', vars: () => ({ n: nota, e: nombreEscala() }) };
+      : { clave: 'scale.yes', vars: () => ({ n: nombreEscrito(notasEscala()[i]), e: nombreEscala() }) };
   } else {
     // Se marca en rojo y, un momento, se enseñan las casillas que sí son.
-    cell.classList.add('wrong');
-    const nota = noteName(midi);
-    sc.aviso = { clave: 'scale.no', vars: () => ({ n: nota, e: nombreEscala() }) };
+    marcarUnMomento(cell, 'wrong', 1500);
+    sc.aviso = { clave: 'scale.no', vars: () => ({ n: noteName(midi), e: nombreEscala() }) };
     buzz([12, 60, 12]);
     const board = document.getElementById('board');
     board.classList.add('reveal-scale');
-    clearTimeout(sc.revelar); clearTimeout(sc.fallo);
+    clearTimeout(sc.revelar);
     sc.revelar = setTimeout(() => board.classList.remove('reveal-scale'), 2000);
-    sc.fallo = setTimeout(() => cell.classList.remove('wrong'), 1500);
   }
   renderScales();
 }
 
 function resetScalePractice(){
   sc.encontradas.clear(); sc.celdas.clear(); sc.aviso = null;
-  clearTimeout(sc.revelar); clearTimeout(sc.fallo);
+  clearTimeout(sc.revelar);
   document.getElementById('board').classList.remove('reveal-scale');
   clearMarks(['wrong']);
 }
 
-/** Al salir de Escalas, el mástil vuelve a ser el de siempre. */
+/** Al salir de Escalas, el mástil, el lector y el pentagrama vuelven a ser los
+ *  de siempre: el pentagrama ya no enseña la escala (AT-09 #2). */
 function leaveScales(){
   const board = document.getElementById('board');
   board.classList.remove('scales', 'practice', 'reveal-scale');
   clearMarks(['scale', 'scale-tonic', 'scale-step', 'correct', 'wrong']);
   refreshNoteNames();
+  refrescarLector();
+  if (lastMidi !== null) showOnStaff(lastMidi, noteInfo(lastMidi).color);
+  else clearStaff();
 }
 
 function bindScales(){
@@ -3559,21 +3597,27 @@ function refreshLanguage(antes){
   renderChallenge();
   buildScaleSelects(); renderScales();
   if (lastMidi === null) document.getElementById('note-name').innerHTML = '<span class="note-placeholder">' + t('reader.play') + '</span>';
-  else document.getElementById('note-oct').textContent = t('octave', { n: noteInfo(lastMidi).octave });
+  else refrescarLector();
   syncUI();
   applyZoom();
 }
 // ♯ o ♭ para cada tecla negra (N-06): los botones se crean con sus nombres.
 function buildAccidentals(){
   const box = document.getElementById('set-accidentals');
-  box.innerHTML = '';
+  const nombre = (pc, v) => nombreEscrito(escribir(pc, PC_LETRA.indexOf(v === 'sharp' ? pc - 1 : pc + 1)));
+  // Si ya existen, solo cambian sus nombres (nomenclatura o idioma): rehacerlos
+  // borraba el botón que acababas de pulsar y el teclado perdía el foco (AT-09 #8).
+  if (box.children.length){
+    box.querySelectorAll('button').forEach(b => { b.textContent = nombre(+b.dataset.pc, b.dataset.v); });
+    syncUI();
+    return;
+  }
   for (const pc of NEGRAS){
     const seg = document.createElement('div'); seg.className = 'seg';
     for (const v of ['sharp', 'flat']){
       const b = document.createElement('button');
       b.dataset.pc = String(pc); b.dataset.v = v;
-      const n = escribir(pc, PC_LETRA.indexOf(v === 'sharp' ? pc - 1 : pc + 1));
-      b.textContent = nombreEscrito(n);
+      b.textContent = nombre(pc, v);
       b.addEventListener('click', () => {
         state.accidentals[pc] = v; save();
         refreshNoteText();
@@ -3638,6 +3682,10 @@ document.getElementById('set-reset').addEventListener('click', async () => {
   applyZoom();
   updateRotateHint();          // «Restablecer» recupera el aviso para girar
   setTunerMode(state.tunerMode);   // el afinador vuelve a «De oído»
+  // Escalas, ♯/♭ y nomenclatura también vuelven a lo de fábrica: sin esto, los
+  // selectores y los botones seguían diciendo lo de antes (AT-09 #1).
+  resetScalePractice(); sc.paso = 0;
+  refreshNoteText();
   hideSettings();
   // El reto anterior puede referirse a una nota que ya no existe en la
   // afinación restablecida, y dejaría al usuario fallando indefinidamente.

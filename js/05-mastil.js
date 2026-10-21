@@ -99,7 +99,9 @@ function cellLabel(cell){
   const str = displayStrings()[row];
   const where = fret === 0 ? t('cell.open', { o: ord(str.number) }) : t('cell.fret', { o: ord(str.number), f: fret });
   const midi = +cell.dataset.midi;
-  return screen === 'guess' ? where : noteName(midi) + (Math.floor(midi / 12) - 1) + ', ' + where;
+  if (screen === 'guess') return where;
+  const e = escrituraEnPantalla(midi);   // en Escalas, como la escribe la escala (AT-09 #5)
+  return nombreEscrito(e) + octavaEscrita(e, midi) + ', ' + where;
 }
 function setRoving(row, fret){
   const old = cellAt(kbPos.row, kbPos.fret);
@@ -224,6 +226,26 @@ function firePress(cell){
 let activeTimer = null;
 let lastMidi = null;        // última nota tocada, para refrescar al cambiar notación
 
+/** Escribe en el lector grande la última nota tocada, como se escribe en la
+ *  pantalla actual: en Escalas, como la escribe la escala (AT-09 #5). Se
+ *  llama al tocar, al cambiar de nomenclatura o de ♯/♭ y al salir de Escalas. */
+function refrescarLector(){
+  if (lastMidi === null) return;
+  const e = escrituraEnPantalla(lastMidi);
+  document.getElementById('note-name').textContent = nombreEscrito(e);
+  document.getElementById('note-oct').textContent = t('octave', { n: octavaEscrita(e, lastMidi) });
+}
+
+/** Marca una casilla con una clase durante `ms`. Cada casilla lleva su propio
+ *  temporizador: con uno compartido, dos fallos seguidos dejaban la primera
+ *  casilla en rojo para siempre (AT-09 #4). */
+const marcasTemporales = new WeakMap();
+function marcarUnMomento(cell, clase, ms){
+  cell.classList.add(clase);
+  clearTimeout(marcasTemporales.get(cell));
+  marcasTemporales.set(cell, setTimeout(() => cell.classList.remove(clase), ms));
+}
+
 function pressFret(cell, midi, rowIdx){
   clearMarks(['active','equal']);
   cell.classList.add('active');
@@ -234,10 +256,9 @@ function pressFret(cell, midi, rowIdx){
   // pistas van aparte, en la tarjeta del reto (comentario del 21/10).
   lastMidi = midi;
   const nameEl = document.getElementById('note-name');
-  nameEl.textContent = noteName(midi);
   nameEl.style.setProperty('--note-color', info.color);
   nameEl.style.setProperty('--note-glow', info.color);
-  document.getElementById('note-oct').textContent = t('octave', { n: info.octave });
+  refrescarLector();
   if (screen !== 'scales') showOnStaff(midi, info.color);   // en Escalas, el pentagrama escribe la escala
 
   // Señal secundaria: dónde más suena exactamente esta misma nota.

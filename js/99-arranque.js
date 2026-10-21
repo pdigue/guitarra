@@ -129,21 +129,27 @@ function refreshLanguage(antes){
   renderChallenge();
   buildScaleSelects(); renderScales();
   if (lastMidi === null) document.getElementById('note-name').innerHTML = '<span class="note-placeholder">' + t('reader.play') + '</span>';
-  else document.getElementById('note-oct').textContent = t('octave', { n: noteInfo(lastMidi).octave });
+  else refrescarLector();
   syncUI();
   applyZoom();
 }
 // ♯ o ♭ para cada tecla negra (N-06): los botones se crean con sus nombres.
 function buildAccidentals(){
   const box = document.getElementById('set-accidentals');
-  box.innerHTML = '';
+  const nombre = (pc, v) => nombreEscrito(escribir(pc, PC_LETRA.indexOf(v === 'sharp' ? pc - 1 : pc + 1)));
+  // Si ya existen, solo cambian sus nombres (nomenclatura o idioma): rehacerlos
+  // borraba el botón que acababas de pulsar y el teclado perdía el foco (AT-09 #8).
+  if (box.children.length){
+    box.querySelectorAll('button').forEach(b => { b.textContent = nombre(+b.dataset.pc, b.dataset.v); });
+    syncUI();
+    return;
+  }
   for (const pc of NEGRAS){
     const seg = document.createElement('div'); seg.className = 'seg';
     for (const v of ['sharp', 'flat']){
       const b = document.createElement('button');
       b.dataset.pc = String(pc); b.dataset.v = v;
-      const n = escribir(pc, PC_LETRA.indexOf(v === 'sharp' ? pc - 1 : pc + 1));
-      b.textContent = nombreEscrito(n);
+      b.textContent = nombre(pc, v);
       b.addEventListener('click', () => {
         state.accidentals[pc] = v; save();
         refreshNoteText();
@@ -208,6 +214,10 @@ document.getElementById('set-reset').addEventListener('click', async () => {
   applyZoom();
   updateRotateHint();          // «Restablecer» recupera el aviso para girar
   setTunerMode(state.tunerMode);   // el afinador vuelve a «De oído»
+  // Escalas, ♯/♭ y nomenclatura también vuelven a lo de fábrica: sin esto, los
+  // selectores y los botones seguían diciendo lo de antes (AT-09 #1).
+  resetScalePractice(); sc.paso = 0;
+  refreshNoteText();
   hideSettings();
   // El reto anterior puede referirse a una nota que ya no existe en la
   // afinación restablecida, y dejaría al usuario fallando indefinidamente.

@@ -6,7 +6,8 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.5.2** | 21/10/2026 | F5.5 · ♯ o ♭ por nota y ajustes visuales | Rama `auto/F5.5-ajustes-visuales` |
+| **0.5.3** | 21/10/2026 | F5.5 · reintentar por defecto y auditoría AT-09 | Rama `auto/F5.5-ajustes-visuales` |
+| 0.5.2 | 21/10/2026 | F5.5 · ♯ o ♭ por nota y ajustes visuales | Rama `auto/F5.5-ajustes-visuales` |
 | 0.5.1 | 21/10/2026 | F5.5 · reintentar en Adivinar | Rama `auto/F5.1-notas` |
 | 0.5.0 | 21/10/2026 | F5.1 a F5.4 · escalas | Rama `auto/F5.1-notas` |
 | 0.4.2 | 21/10/2026 | F4.5 · idioma español o inglés | `main`, fusionada el 21/10 (PR #12) |
@@ -34,6 +35,27 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.5.3] — 21/10/2026 · Reintentar por defecto y auditoría AT-09
+
+### Cambiado
+- **J-13** · En Adivinar, al fallar se sigue intentando **por defecto** (tu decisión del 21/10): la respuesta solo se ve si pulsas «Ver la respuesta». «Ver respuesta» sigue en Ajustes › Adivinar › *Al fallar* para quien la prefiera.
+
+### Corregido (auditoría AT-09)
+- **E-01, N-06** · En Escalas, el lector grande y el lector de pantalla escriben la nota como la escala: en Fa mayor, Si♭ y no La♯.
+- **P-03** · Al salir de Escalas, el pentagrama deja de enseñar la escala y vuelve a tu última nota.
+- **E-05** · Al cambiar de afinación en Práctica, el progreso empieza de nuevo: cada casilla suena ya a otra nota.
+- **E-05, J-13** · Dos fallos seguidos ya no dejan una casilla roja para siempre.
+- **C-02** · «Restablecer» devuelve también Escalas y los botones ♯/♭ a lo de fábrica.
+- **E-05** · El aviso de Práctica cambia de nombre si pasas de Do Re Mi a C D E.
+- **A-01, N-06** · El pentagrama del Afinador respeta tu elección de ♯ o ♭.
+- **G-05** · Pulsar un botón ♯/♭ ya no hace perder el foco del teclado.
+- **J-13** · Con el reto en pausa (al volver a la app), «Ver la respuesta» espera a ▶.
+
+### Verificado
+- Banco: 68 de 68, con dos pruebas nuevas para lo de AT-09.
 
 ---
 
