@@ -6,7 +6,8 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.5.7** | 22/10/2026 | CP-5 · auditorías a fondo de F5 (AR-12 y AT-11) | Rama `auto/CP-5-correcciones` |
+| **0.6.0** | 22/10/2026 | F6.1 · el archivo autónomo, probado como la app | Rama `auto/F6.1-autonomo` |
+| 0.5.7 | 22/10/2026 | CP-5 · auditorías a fondo de F5 (AR-12 y AT-11) | Rama `auto/CP-5-correcciones` (PR #16) |
 | 0.5.6 | 21/10/2026 | F5.7 · auditorías AR-11 y AT-10 | `main`, fusionada el 22/10 (PR #15) |
 | 0.5.5 | 21/10/2026 | F5.7 · librería de acordes | `main`, fusionada el 22/10 (PR #15) |
 | 0.5.4 | 21/10/2026 | F5.6 · metrónomo | `main`, fusionada el 22/10 (PR #14) |
@@ -39,6 +40,25 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.6.0] — 22/10/2026 · F6.1 · El archivo autónomo, probado como la app
+
+La app se ve y se comporta igual que en la 0.5.7. Lo que cambia es cómo se construye y se comprueba el archivo autónomo (`dist/trasteando.html`), el que se abre con doble clic.
+
+### Añadido
+- **G-08** · El banco de pruebas se pasa **dos veces**: contra la app de varios archivos (`index.html` con `css/` y `js/`) y contra el archivo autónomo (`tests/autonomo.test.js`). En la segunda pasada, cada prueba lleva delante «[autónomo]». Hasta ahora el banco solo comprobaba que el autónomo era una copia exacta; ahora comprueba también que esa copia funciona. Las pruebas que leen archivos del repositorio o comparan las dos formas se pasan una sola vez. En total, 150 pruebas.
+- **G-07, G-08** · Una prueba propia del autónomo: la app lee de dentro de la página sus 17 grabaciones, exactamente las generadas (mismas huellas sha256), y no intenta descargar ninguna.
+- Cada módulo incrustado en el autónomo termina con su nombre (`//# sourceURL=js/…`), un estándar de las herramientas de desarrollo. Un error dentro del autónomo dice ahora «js/03-audio.js, línea 101», y no una línea perdida de `trasteando.html`.
+- El ensamblador se niega a construir el autónomo si un módulo contiene `</script` (o una hoja de estilo `</style`): como archivo suelto funciona, pero incrustado cortaría la página. Lo dice con el archivo y la línea, y no toca el autónomo que ya había. El banco tiene una prueba para ello.
+
+### Corregido (en el banco, no en la app)
+- Con una página de un solo archivo, el banco solo ejecutaba su **primer** bloque de código, herencia de antes de la 0.4.0. Con el autónomo actual, que trae 16, la app ni arrancaba en el banco. Ahora ejecuta los 16, uno a uno y con su nombre, como hace el navegador.
+- El DOM simulado del banco conserva los bloques de audio incrustado, para que la app los encuentre como en el navegador.
+
+### Comprobado en Chromium
+- El autónomo, abierto desde el disco y sin conexión: abre en 0,3 s, sonido listo en 0,25 s, ningún intento de conexión ni error.
 
 ---
 

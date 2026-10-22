@@ -1358,6 +1358,7 @@ function aplicarIdioma(){
   document.querySelectorAll('[data-t-title]').forEach(e => e.setAttribute('title', t(e.dataset.tTitle)));
   document.querySelectorAll('[data-t-placeholder]').forEach(e => e.setAttribute('placeholder', t(e.dataset.tPlaceholder)));
 }
+//# sourceURL=js/00-idioma.js
 </script>
 <script>
 "use strict";
@@ -1368,7 +1369,7 @@ function aplicarIdioma(){
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.5.7';
+const APP_VERSION = '0.6.0';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -1544,6 +1545,7 @@ function intervalosEscala(escala){
   }
   return out;
 }
+//# sourceURL=js/01-teoria.js
 </script>
 <script>
 "use strict";
@@ -1681,6 +1683,7 @@ function displayStrings(){
     number: 6 - i                   // numeración de guitarrista: 1ª = más aguda
   })).reverse();
 }
+//# sourceURL=js/02-estado.js
 </script>
 <script>
 "use strict";
@@ -2060,6 +2063,7 @@ function renderString(frequency, dur){
 function buzz(pattern){
   if (navigator.vibrate){ try { navigator.vibrate(pattern); } catch(e){} }
 }
+//# sourceURL=js/03-audio.js
 </script>
 <script>
 "use strict";
@@ -2196,6 +2200,7 @@ function clearStaff(){
   svg.setAttribute('viewBox', STAFF_CORTO);
   drawStaffBase(svg, 38, 166);
 }
+//# sourceURL=js/04-pentagrama.js
 </script>
 <script>
 "use strict";
@@ -2483,6 +2488,7 @@ function pressFret(cell, midi, rowIdx){
 function clearMarks(classes){
   document.querySelectorAll('.fret-cell').forEach(c => c.classList.remove(...classes));
 }
+//# sourceURL=js/05-mastil.js
 </script>
 <script>
 "use strict";
@@ -2553,6 +2559,7 @@ function zoom(delta){
   save();
   applyZoom();
 }
+//# sourceURL=js/06-zoom.js
 </script>
 <script>
 "use strict";
@@ -2766,6 +2773,7 @@ function revealAnswer(espera){
     nextTimer = setTimeout(newChallenge, NEXT_AFTER_REVEAL);
   }, espera);
 }
+//# sourceURL=js/07-adivinar.js
 </script>
 <script>
 "use strict";
@@ -2883,6 +2891,7 @@ function resetReader(){
   document.getElementById('note-name').innerHTML = '<span class="note-placeholder">' + t('reader.play') + '</span>';
   document.getElementById('note-oct').textContent = '';
 }
+//# sourceURL=js/08-afinador-referencia.js
 </script>
 <script>
 "use strict";
@@ -3113,6 +3122,7 @@ async function setTimbre(timbre){
     note.textContent = t('timbre.failed');
   }
 }
+//# sourceURL=js/09-navegacion.js
 </script>
 <script>
 "use strict";
@@ -3255,6 +3265,7 @@ function crearDetector(alResultado){
   w.onerror = ev => { try { ev.preventDefault(); } catch(e){} det.hilo = false; det.ocupado = false; det.cerrar(); };
   return det;
 }
+//# sourceURL=js/10-tono.js
 </script>
 <script>
 "use strict";
@@ -3565,6 +3576,7 @@ function bindMicTuner(){
   // Al bloquear el móvil o cambiar de app, el micrófono se apaga (privacidad, y iOS).
   document.addEventListener('visibilitychange', () => { if (document.hidden) stopMic(); });
 }
+//# sourceURL=js/11-afinador-micro.js
 </script>
 <script>
 "use strict";
@@ -3789,6 +3801,7 @@ function bindScales(){
   document.getElementById('scale-next').addEventListener('click', () => scaleStep(1));
   document.getElementById('scale-reset').addEventListener('click', () => { resetScalePractice(); renderScales(); });
 }
+//# sourceURL=js/13-escalas.js
 </script>
 <script>
 "use strict";
@@ -4255,6 +4268,7 @@ function refreshMetro(){
   buildMetroPicker();
   renderMetro();
 }
+//# sourceURL=js/14-metronomo.js
 </script>
 <script>
 "use strict";
@@ -4543,6 +4557,7 @@ function refreshChords(){
   buildChordList();
   renderChords();
 }
+//# sourceURL=js/15-acordes.js
 </script>
 <script>
 "use strict";
@@ -4825,6 +4840,7 @@ clearStaff();
 syncUI();
 applyZoom();
 updateRotateHint();
+//# sourceURL=js/99-arranque.js
 </script>
 </body>
 </html>

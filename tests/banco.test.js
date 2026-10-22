@@ -2,7 +2,7 @@
 // (Node busca solo los archivos *.test.js; no hace falta instalar nada).
 // Cada prueba cita los requisitos que verifica (ver docs/matriz-cumplimiento.md).
 'use strict';
-const test = require('node:test');
+const nodeTest = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('path');
 const fs = require('fs');
@@ -12,6 +12,15 @@ const { boot, sleep, fuente } = require('./dom-minimo');
 // APP_HTML permite pasar el banco a otra versión, por ejemplo para comprobar que una
 // prueba nueva falla con la versión anterior a la corrección.
 const APP = process.env.APP_HTML || path.join(__dirname, '..', 'index.html');
+// Desde la 0.6.0 (F6.1, G-08) este banco se pasa dos veces: aquí, contra la app de
+// varios archivos (index.html con css/ y js/), y desde autonomo.test.js, contra el
+// archivo autónomo (dist/trasteando.html). En esa segunda pasada cada prueba lleva
+// delante «[autónomo]», para saber cuál de las dos formas falla.
+const FORMA = process.env.TRASTEANDO_FORMA || '';
+const test = FORMA ? (nombre, ...resto) => nodeTest(`[${FORMA}] ${nombre}`, ...resto) : nodeTest;
+// Las pruebas que comparan las dos formas entre sí, o que leen archivos del
+// repositorio en vez de la app, bastan una vez: en la primera pasada.
+const unaVez = FORMA ? () => {} : test;
 const sinErrores = A => A.errors.filter(e => !/AudioContext|muestras/.test(e));
 /** Entra en Adivinar y pulsa ▶: desde la 0.3.3 nada suena ni puntúa hasta entonces. */
 const jugar = A => { A.doc.querySelector('.tab[data-screen="guess"]').click(); A.$('btn-repeat').click(); };
@@ -207,9 +216,14 @@ test('la app no descarga nada de otros servidores (S-07, F2.2)', () => {
 });
 
 /** Descargas simuladas: acaban cuando la prueba quiere, con 1000 muestras de silencio y luego sonido. */
+// Carga lenta simulada: cada grabación queda pendiente hasta terminarCargas().
+// En la app de varios archivos se sustituye la descarga (fetchAndDecode); en el
+// archivo autónomo la app lee de verdad el audio incrustado y lo que se sustituye
+// es el último paso, decodificarlo, que necesita un altavoz (G-08, F6.1).
 const cargaFalsa = `globalThis.__pend = [];
   globalThis.__buf = { sampleRate: 44100, getChannelData: () => { const d = new Float32Array(2000); d.fill(0.5, 1000); return d; } };
-  fetchAndDecode = url => new Promise(r => __pend.push(() => r(__buf)));`;
+  fetchAndDecode = url => new Promise(r => __pend.push(() => r(__buf)));
+  decodeData = datos => new Promise(r => __pend.push(() => r(__buf)));`;
 const terminarCargas = A => A.ev('while (__pend.length) __pend.shift()()');
 
 test('cambiar de timbre deprisa deja instalado el último elegido (S-02, AT-02 #1)', async () => {
@@ -272,7 +286,26 @@ test('con el audio dentro de la página no descarga nada (G-07, F2.3)', async ()
   assert.equal(A.ev('__descargas'), 0);
 });
 
-test('el archivo autónomo está al día con la app, con su audio y dentro de sus límites (G-07, G-08, F2.3)', () => {
+unaVez('el ensamblador nombra cada módulo del autónomo y se niega a incrustar uno que cortaría la página (G-08, F6.1)', () => {
+  const { scripts } = require('../herramientas/ensamblar');
+  // El autónomo trae los mismos módulos que index.html, en el mismo orden, con su
+  // nombre (//# sourceURL) y el mismo código.
+  const raiz = path.join(__dirname, '..');
+  const sueltos = scripts(path.join(raiz, 'index.html'));
+  const dentro = scripts(path.join(raiz, 'dist', 'trasteando.html'));
+  assert.deepEqual(dentro.map(s => s.nombre), sueltos.map(s => s.nombre));
+  dentro.forEach((s, i) => assert.equal(s.codigo, sueltos[i].codigo + '//# sourceURL=' + s.nombre + '\n', s.nombre));
+  // Un módulo con «</script» dentro: como archivo suelto funciona, incrustado cortaría la página.
+  const tmp = fs.mkdtempSync(path.join(require('os').tmpdir(), 'trasteando-'));
+  try {
+    fs.mkdirSync(path.join(tmp, 'js'));
+    fs.writeFileSync(path.join(tmp, 'index.html'), '<body>\n<script src="js/a.js"></script>\n</body>\n');
+    fs.writeFileSync(path.join(tmp, 'js', 'a.js'), "const x = 1;\nconst y = '</script>';\n");
+    assert.throws(() => fuente(path.join(tmp, 'index.html')), /js\/a\.js, línea 2/);
+  } finally { fs.rmSync(tmp, { recursive: true, force: true }); }
+});
+
+unaVez('el archivo autónomo está al día con la app, con su audio y dentro de sus límites (G-07, G-08, F2.3)', () => {
   const carpeta = path.join(__dirname, '..', 'dist');
   const pagina = fs.readFileSync(path.join(carpeta, 'trasteando.html'), 'utf8');
   const informe = JSON.parse(fs.readFileSync(path.join(carpeta, 'autonomo.json'), 'utf8'));
@@ -877,7 +910,9 @@ test('idioma: cada texto existe en español y en inglés, y cada clave de la pá
   const es = JSON.parse(A.ev('JSON.stringify(Object.keys(TEXTOS.es).sort())'));
   const en = JSON.parse(A.ev('JSON.stringify(Object.keys(TEXTOS.en).sort())'));
   assert.deepEqual(en, es, 'las dos lenguas tienen las mismas claves');
-  const html = fs.readFileSync(APP, 'utf8');
+  // Solo el HTML, sin el código: en el archivo autónomo los módulos van dentro de la
+  // página, y el ejemplo del comentario de 00-idioma.js parecería una clave más.
+  const html = fs.readFileSync(APP, 'utf8').replace(/<script[^>]*>[\s\S]*?<\/script>/g, '');
   const usadas = [...html.matchAll(/data-t(?:-aria|-title|-placeholder)?="([^"]+)"/g)].map(m => m[1]);
   assert.ok(usadas.length > 40);
   for (const k of usadas) assert.ok(es.includes(k), 'falta el texto de ' + k);
@@ -1396,7 +1431,7 @@ test('acordes: con otra afinación avisa y no dibuja; «Pasar a estándar» lo a
   assert.equal(A.doc.querySelectorAll('#board .finger').length, 3);
 });
 
-test('acordes: los cuatro colores de dedo contrastan con el mástil (3:1) y su número con el círculo (4,5:1) (AC-02, G-05)', () => {
+unaVez('acordes: los cuatro colores de dedo contrastan con el mástil (3:1) y su número con el círculo (4,5:1) (AC-02, G-05)', () => {
   const css = fs.readFileSync(path.join(__dirname, '..', 'css', 'trasteando.css'), 'utf8');
   const lum = hex => { const c = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255)
     .map(v => v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
@@ -1482,7 +1517,7 @@ test('AT-11: con el audio en pausa, Empezar espera a que despierte y suena; si n
 
 // --- Continuidad entre conversaciones (21/10): ESTADO.md no puede quedarse atrás ---
 
-test('docs/ESTADO.md está al día con la versión de la app (memoria entre conversaciones)', () => {
+unaVez('docs/ESTADO.md está al día con la versión de la app (memoria entre conversaciones)', () => {
   const v = fs.readFileSync(path.join(__dirname, '..', 'js', '01-teoria.js'), 'utf8').match(/APP_VERSION = '([\d.]+)'/)[1];
   const estado = fs.readFileSync(path.join(__dirname, '..', 'docs', 'ESTADO.md'), 'utf8');
   const linea = estado.split('\n').find(l => l.startsWith('**Actualizado:**')) || '';
