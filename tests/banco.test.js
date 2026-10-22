@@ -1445,6 +1445,41 @@ test('AT-10: cambiar de compás sonando no mueve el pulso; tras un bloqueo no se
   assert.equal(A.doc.querySelectorAll('#chord-list .cl-head').length, 2, 'populares y todos otra vez');
 });
 
+// --- CP-5 (22/10): AT-11 #1, arrancar con el audio en pausa ---
+// En el iPhone, tras una llamada, el audio queda en pausa. Safari no lo pone en
+// 'running' en el mismo instante en que se pide resume(), sino un poco después.
+// El audio simulado del banco despertaba al momento y por eso no se veía el fallo.
+const resumeLento = `__ctx.resume = function(){ this.reanudar++;
+  return new Promise(r => setTimeout(() => { this.state = 'running'; r(); }, 20)); };`;
+
+test('AT-11: con el audio en pausa, Empezar espera a que despierte y suena; si no despierta, lo dice; Parar cancela la espera (MT-04)', async t => {
+  const A = boot(APP, { metro: { bpm: 120, sig: '4/4', sub: 1, accent: true } });
+  A.ev(metroFalso);
+  t.after(() => A.ev('stopMetro()'));
+  // 1. El audio despierta poco después: el metrónomo suena.
+  A.ev(`__ctx.state = 'interrupted'; ${resumeLento}`);
+  const espera = A.ev('startMetro()');
+  assert.equal(A.ev('metro.sonando'), false, 'aún no suena: el audio está despertando');
+  assert.ok(A.ev('__ctx.reanudar') >= 1, 'resume() se pide dentro del toque');
+  await espera;
+  assert.equal(A.ev('metro.sonando'), true, 'suena en cuanto el audio despierta');
+  assert.equal(A.ev('metro.aviso'), '', 'sin «Se paró: el sistema detuvo el sonido»');
+  A.ev('__avanza(11)');
+  assert.ok(A.ev('__golpes().length') >= 2, 'y los golpes caen');
+  A.ev('stopMetro()');
+  // 2. El audio no despierta: no finge que suena, avisa.
+  A.ev(`__ctx.state = 'suspended'; __ctx.resume = function(){ this.reanudar++; return new Promise(() => {}); };`);
+  await A.ev('startMetro()');
+  assert.equal(A.ev('metro.sonando'), false);
+  assert.equal(A.ev('metro.aviso'), 'metro.noAudio');
+  // 3. Pulsar otra vez mientras espera lo cancela: no arranca después.
+  A.ev(resumeLento);
+  const otra = A.ev('startMetro()');
+  A.ev('toggleMetro()');
+  await otra;
+  assert.equal(A.ev('metro.sonando'), false, 'lo paraste antes de que despertara');
+});
+
 // --- Continuidad entre conversaciones (21/10): ESTADO.md no puede quedarse atrás ---
 
 test('docs/ESTADO.md está al día con la versión de la app (memoria entre conversaciones)', () => {

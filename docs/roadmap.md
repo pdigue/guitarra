@@ -1,7 +1,7 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 3.21 · **Fecha:** 21 de octubre de 2026
-**Válido para:** app `0.5.6` · `requisitos.md` v1.23 · `matriz-cumplimiento` v1.21 · `interfaz.md` v1.13 · `compatibilidad.md` v1.7 · `automatizacion.md` v1.2 · `CHANGELOG.md`
+**Versión:** 3.22 · **Fecha:** 22 de octubre de 2026
+**Válido para:** app `0.5.7` · `requisitos.md` v1.24 · `matriz-cumplimiento` v1.22 · `interfaz.md` v1.13 · `compatibilidad.md` v1.7 · `automatizacion.md` v1.2 · `CHANGELOG.md`
 **Gestiona:** chat de Desarrollo
 
 > ⚡ **Modo acelerado activo desde el 14/10** (detalle en `automatizacion.md`). El agente ejecuta las etapas por bloques —F1 a F3, luego F4 a F6— y solo para en las decisiones. Las pruebas que necesitan tus manos se agrupan en dos sesiones: **Sesión 1** con el iPhone y el ordenador al cerrar F3, y **Sesión 2** con la guitarra al cerrar F6.
@@ -12,7 +12,7 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** F5 casi completa: escalas (`0.5.0`), tus comentarios del 21/10 (`0.5.1` a `0.5.3`, ya en `main`), el **metrónomo** (`0.5.4`) y la **librería de acordes** (`0.5.5`), las dos con tu guía. Siguiente: el **saneamiento** con tus comentarios de usar la web (F5.8: Adivinar y Escalas), CP-5 y el cierre (F5.9). Pendientes tuyos, sin bloquear: fusionar el PR #14 (metrónomo), los 10 minutos con la guitarra (F4.3) y probar el metrónomo y los acordes en la web de pruebas.
+📍 **Estás aquí:** F5 casi completa y ya en `main` (22/10, PR #14 y #15): escalas (`0.5.0`), tus comentarios del 21/10 (`0.5.1` a `0.5.3`), el **metrónomo** (`0.5.4`) y la **librería de acordes** (`0.5.5` y `0.5.6`). **CP-5 hecho** el 22/10 (`0.5.7`, auditorías AR-12 y AT-11). Siguiente: el **saneamiento** F5.8, aparcado hasta que des tus comentarios de usar la web (Adivinar y Escalas), y el cierre (F5.9). Pendientes tuyos, sin bloquear: decidir si la pantalla se mantiene encendida mientras suena el metrónomo (AR-12 #2), los 10 minutos con la guitarra (F4.3) y probar el metrónomo y los acordes en la web de pruebas.
 
 | Fase | Objetivo | Versión | Dónde se usa | Etapas | Progreso |
 |------|----------|:---:|---|:---:|---|
@@ -20,12 +20,12 @@
 | **F2** | Sonido propio y archivo autónomo | 0.2.x | 📁 Archivo en cualquier dispositivo | 5 | `▰▰▰▰▰▰▰▰` 5/5 |
 | **F3** | Interfaz y adaptación | 0.3.x | 📁 Archivo | 4 | `▰▰▰▰▰▰▰▰` 4/4 |
 | **F4** | Afinador por micrófono | 0.4.x | 💻 Live Server | 5 | `▰▰▰▰▰▰▰▰` 5/5 · F4.3 y F4.4 con pendientes |
-| **F5** | Escalas, metrónomo y acordes | 0.5.x | 📁 Archivo | 9 | `▰▰▰▰▰▰▰▱▱` 7/9 · F5.4, F5.6 y F5.7 se usan con la guitarra en la Sesión 2 |
+| **F5** | Escalas, metrónomo y acordes | 0.5.x | 📁 Archivo | 9 | `▰▰▰▰▰▰▰▱▱` 7/9 · CP-5 hecho · F5.8 aparcada · F5.4, F5.6 y F5.7 se usan con la guitarra en la Sesión 2 |
 | **F6** | Preparación para distribución | 0.6.x | 💻 Live Server | 4 | `▱▱▱▱▱▱▱▱` 0/4 |
 | **F7** | Publicación y lanzamiento | **1.0.0** | 🌐 Web y tiendas | 5 | `▱▱▱▱▱▱▱▱` 0/5 |
 | **T** | Automatización con agentes *(activa)* | — | 🤖 Repositorio | 5 | `▰▰▰▰▰▱▱▱` 3/5 |
 
-**Leyenda de estados:** ⬜ pendiente · ⏳ en curso · 🔨 hecha (sin validar) · ✅ validada · 📅 en una sesión de pruebas contigo · ⛔ descartada
+**Leyenda de estados:** ⬜ pendiente · ⏳ en curso · 🔨 hecha (sin validar) · ✅ validada · 📅 en una sesión de pruebas contigo · ⏸ aparcada (espera algo tuyo) · ⛔ descartada
 
 ---
 
@@ -38,7 +38,7 @@ flowchart LR
   F2 --> CP2{{CP-2}} --> F3["F3 · Interfaz<br/>0.3.x · 📁"]
   F3 --> S1(["🧪 Sesión 1<br/>iPhone y ordenador"]):::done --> CP3{{CP-3}}:::done --> F4["F4 · Micrófono<br/>0.4.x · 💻<br/>F4.3 y F4.4 con pendientes"]
   F4 -.->|F4.3 pendiente: no bloquea| CP4{{CP-4}} --> F5["F5 · Escalas, metrónomo<br/>y acordes · 0.5.x · 📁"]:::now
-  F5 --> CP5{{CP-5}} --> F6["F6 · Preparación<br/>0.6.x · 💻"]
+  F5 --> CP5{{CP-5}}:::done --> F6["F6 · Preparación<br/>0.6.x · 💻"]
   F6 --> S2(["🎸 Sesión 2<br/>con la guitarra"]):::you --> CP6{{"CP-6<br/>¿lanzamos?"}} --> F7["F7 · Publicación<br/>1.0.0 · 🌐"]
   subgraph T["Pista T · modo acelerado, activo desde el 14/10"]
     direction LR
@@ -204,17 +204,19 @@ Peso principal en el **auditor de requisitos** como experto en experiencia de us
 | Etapa | Qué se hace | Requisitos | Cómo se valida | Aprenderás | Estado |
 |---|---|---|---|---|:---:|
 | **F5.1** | Cambiar cómo se representa una nota para que Si♭ y La♯ no sean lo mismo. **Bloquea el resto de F5** | Habilita P-03, E-03, E-04 | Cada escala mayor y menor usa siete letras distintas | Por qué dos notas que suenan igual se escriben distinto | ✅ `0.5.0`: letra + alteración; las 24 mayores y menores con siete letras (`tests/escalas.test.js`) |
-| **F5.2** | Catálogo y generador de escalas | E-01, E-02 | Contraste con una referencia externa; pruebas de intervalos | Una escala como patrón de intervalos | ✅ `0.5.0`: las 48 escalas frente al círculo de quintas |
-| **F5.3** | Submodo Mostrar, con intervalos y guiado | P-03, E-03, E-04, E-06 | Comparación con diagramas de referencia | Tono y semitono | ✅ `0.5.0` · falta que lo veas |
+| **F5.2** | Catálogo y generador de escalas | E-01, E-02 | Contraste con una referencia externa; pruebas de intervalos | Una escala como patrón de intervalos | 🔨 `0.5.0`: las 24 de siete notas con siete letras y 16 comparadas nota a nota con el libro · falta que lo veas (E-01) |
+| **F5.3** | Submodo Mostrar, con intervalos y guiado | P-03, E-03, E-04, E-06 | Comparación con diagramas de referencia | Tono y semitono | 🔨 `0.5.0` · falta que lo veas |
 | **F5.4** | Submodo Práctica | E-05 | Banco (pertenencia); con la guitarra, en la Sesión 2 | — | 🔨 `0.5.0`, validado por el banco · con la guitarra 📅 Sesión 2 |
 | **F5.5** | Tus comentarios del 21/10: reintentar en Adivinar, ♯ o ♭ por nota, lectura sin saltos, pentagrama más grande, nombre en horizontal | J-13, N-06 · retoques de G-01 y P-01 | Banco y disposición en tres pantallas | Preferencias que cambian la escritura sin cambiar el sonido | ✅ `0.5.1` y `0.5.2`; `0.5.3`: reintentar por defecto (tu decisión) y correcciones de AT-09 |
-| **F5.6** | Metrónomo como **área propia**, con su pestaña (tu decisión del 21/10), al estilo de la app que nos enseñaste: barra del tempo, compás, figura y acento en el primer tiempo; sigue sonando en las demás áreas hasta que lo pares | MT-01 a MT-05 | Banco: separación exacta de los golpes a 30, 120 y 250 ppm, compases, figuras y acento; con la guitarra, en la Sesión 2 | Programar sonido con el reloj de audio | ✅ `0.5.4`, validado por el banco · con la guitarra 📅 Sesión 2 |
-| **F5.7** | Librería de acordes, como la describiste el 21/10: listado con populares y los 30 acordes más habituales, buscador, y el acorde en el mástil con dedos numerados y de color, pentagrama y rasgueo | AC-01 a AC-06 | Banco: cada digitación da exactamente las notas del acorde; con la guitarra, en la Sesión 2 | Cómo se construye un acorde; digitación y cejilla | ✅ `0.5.5`, validado por el banco · con la guitarra 📅 Sesión 2 |
-| **F5.8** | Saneamiento con tus comentarios de usar la web de pruebas (tu petición del 21/10): la visualización de Adivinar y una vuelta a Escalas | Los que salgan | Tus comentarios, uno a uno, y el banco | — | ⬜ |
+| **F5.6** | Metrónomo como **área propia**, con su pestaña (tu decisión del 21/10), al estilo de la app que nos enseñaste: barra del tempo, compás, figura y acento en el primer tiempo; sigue sonando en las demás áreas hasta que lo pares | MT-01 a MT-05 | Banco: separación exacta de los golpes a 30, 120 y 250 ppm, compases, figuras y acento; con la guitarra, en la Sesión 2 | Programar sonido con el reloj de audio | 🔨 `0.5.4`, validado por el banco · `0.5.7`: arranca aunque el audio estuviera en pausa (AT-11 #1) · con la guitarra 📅 Sesión 2 |
+| **F5.7** | Librería de acordes, como la describiste el 21/10: listado con populares y los 30 acordes más habituales, buscador, y el acorde en el mástil con dedos numerados y de color, pentagrama y rasgueo | AC-01 a AC-06 | Banco: cada digitación da exactamente las notas del acorde; con la guitarra, en la Sesión 2 | Cómo se construye un acorde; digitación y cejilla | 🔨 `0.5.5`, validado por el banco · con la guitarra 📅 Sesión 2 |
+| **F5.8** | Saneamiento con tus comentarios de usar la web de pruebas (tu petición del 21/10): la visualización de Adivinar y una vuelta a Escalas | Una lista cerrada: cada comentario tuyo con su ID, que apruebas antes de programar; lo nuevo, como requisito nuevo (AR-12 #6) | Tus comentarios, uno a uno, y el banco; auditoría ligera | — | ⏸ aparcada el 22/10 hasta tus comentarios (tu decisión: no bloquea y se adelanta CP-5). Ya apuntados para ella: los hallazgos medios y bajos de CP-5 que tocan a Adivinar, Escalas y el metrónomo |
 | **F5.9** | Cierre | — | Etiqueta `v0.5.x` | — | ⬜ |
 
 ### 🔍 CP-5 — Checkpoint de escalas, metrónomo y acordes
 Ambos auditores, con atención a la corrección musical (escritura de las escalas y notas de cada digitación: es donde un error pasa desapercibido más tiempo) y a la precisión del pulso del metrónomo.
+
+**Hecho el 22/10** (`0.5.7`), con informes AR-12 y AT-11: sin críticos. De los tres altos, dos corregidos (el metrónomo arranca aunque el iPhone haya dejado el audio en pausa; una sola vara para lo que compruebas tú) y uno pendiente de tu decisión (mantener la pantalla encendida mientras suena el metrónomo). Los medios y bajos, anotados en la matriz, en el comentario de cada requisito.
 
 ---
 
@@ -395,7 +397,7 @@ flowchart TB
 | Contraste con referencia externa | Escalas y afinaciones frente a fuentes fiables | F5.2, F5.3 |
 | Checkpoint de auditoría | Informe de los auditores sobre el estado congelado | CP-1 a CP-6 |
 
-**Las dos sesiones contigo.** *Sesión 1*, al cerrar F3, con el iPhone y el ordenador: la lista de F1.1, el archivo autónomo en cada plataforma (F2.5) y quince minutos de uso real (F3.3). En el iPhone la app se sirve desde el ordenador por WiFi con Live Server, salvo que el archivo autónomo funcione. *Sesión 2*, al cerrar F6, con la guitarra: la práctica de escalas (F5.4), tocar con el metrónomo (F5.6), comparar los acordes con tu guitarra (F5.7) y, si la comprobación corta de F4.3 dejó algo pendiente, el afinador por micrófono. **Añadido tras la Sesión 1:** en el iPhone, repetir C07, C08 y D03 (que el sonido no se quede mudo: S-01), A09, A14 y E06 con la 0.3.3 (J-01, J-08, J-10, S-02); afinar de oído (E05: A-01, A-06), y una lista corta para los requisitos de F1.1 que la Sesión 1 no cubría.
+**Las dos sesiones contigo.** *Sesión 1*, al cerrar F3, con el iPhone y el ordenador: la lista de F1.1, el archivo autónomo en cada plataforma (F2.5) y quince minutos de uso real (F3.3). En el iPhone la app se sirve desde el ordenador por WiFi con Live Server, salvo que el archivo autónomo funcione. *Sesión 2*, al cerrar F6, con la guitarra: la práctica de escalas (F5.4), tocar con el metrónomo (F5.6), comparar los acordes con tu guitarra (F5.7) y, si la comprobación corta de F4.3 dejó algo pendiente, el afinador por micrófono. **Añadido tras la Sesión 1:** en el iPhone, repetir C07, C08 y D03 (que el sonido no se quede mudo: S-01), A09, A14 y E06 con la 0.3.3 (J-01, J-08, J-10, S-02); afinar de oído (E05: A-01, A-06), y una lista corta para los requisitos de F1.1 que la Sesión 1 no cubría. **Antes de la Sesión 2** (CP-5, AR-12 #5): un protocolo como el de la Sesión 1, con el resultado esperado de cada prueba: los 30 acordes con la digitación mostrada; el metrónomo a 60, 120 y 200 ppm, 5 minutos sin tocar la pantalla y que el clic se oiga por encima de la guitarra; volver tras una llamada y pulsar Empezar (AT-11 #1); y qué se comprueba de E-05 con la guitarra.
 
 **Despliegue de pruebas** (decisión del 15/10, **activo desde el 19/10**): `pdigue.github.io/guitarra`, servido desde la rama `pruebas` (`main` no se toca), que se actualiza con cada *pull request*. En el iPhone permite probar con `https` lo que el WiFi no deja: instalarla y, desde F4, el micrófono. Usarla sin conexión necesita el Service Worker (G-03), que se queda en F6.2 (decisión del 20/10): en la Sesión 1 el iPhone usa la web con conexión. La publicación oficial sigue siendo F7.1.
 
@@ -461,7 +463,8 @@ flowchart TB
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **3.21** | 21/10/2026 | `0.5.6`: correcciones de las auditorías AR-11 y AT-10. Continuidad entre conversaciones: `docs/ESTADO.md` y los generadores de documentos en el repositorio. |
+| **3.22** | 22/10/2026 | CP-5 hecho con la `0.5.7` (AR-12 y AT-11): F5.2, F5.3, F5.6 y F5.7 pasan a 🔨 hasta tu prueba, como F5.4 (una sola vara); F5.8, aparcada hasta tus comentarios (tu decisión del 22/10), con estado nuevo ⏸ en la leyenda; protocolo de la Sesión 2 pendiente; «Estás aquí» con las fusiones del 22/10. |
+| 3.21 | 21/10/2026 | `0.5.6`: correcciones de las auditorías AR-11 y AT-10. Continuidad entre conversaciones: `docs/ESTADO.md` y los generadores de documentos en el repositorio. |
 | 3.20 | 21/10/2026 | F5.7 hecha (`0.5.5`): la librería de acordes, con tu guía (listado con populares y 30 acordes, buscador). PR #13 fusionado. |
 | 3.19 | 21/10/2026 | F5.6 hecha (`0.5.4`): el metrónomo, con tu guía de la app de referencia. F5.8 nueva: saneamiento con tus comentarios de uso de la web (Adivinar y Escalas); el cierre pasa a F5.9. Seis pestañas aprobadas. |
 | 3.18 | 21/10/2026 | Tus decisiones del 21/10: el metrónomo, área propia (F5.6), y reintentar por defecto (`0.5.3`, con las correcciones de AT-09). Objetivo de F5, CP-5, Sesión 2 y riesgos al día con el metrónomo y los acordes; F4 ya no sale como terminada en el mapa (AR-10). |

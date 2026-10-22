@@ -23,6 +23,7 @@ const METRO_ADELANTO = 0.1;     // s de golpes programados por adelantado
 
 const metro = {
   sonando: false,
+  arrancando: false,            // esperando a que el audio despierte (AT-11 #1)
   ctx: null,                    // el contexto de audio con el que arrancó
   inicio: 0, n: 0,              // el golpe n suena en inicio + n × intervalo
   paso: 0,                      // golpe dentro del compás (0 … pulsos × subdivisión − 1)
@@ -106,11 +107,40 @@ function metroDibujar(){
   metro.frame = requestAnimationFrame(metroDibujar);
 }
 
+/* Arrancar (AT-11 #1). En el iPhone, tras una llamada, Siri u otra app, el audio
+   queda en pausa. resume() hay que pedirlo dentro del toque (iOS lo exige), pero
+   el estado no pasa a 'running' en ese mismo instante, sino un poco después: así
+   lo dice la especificación de Web Audio. Si se programaran los golpes enseguida,
+   metroProgramar() vería el audio aún parado y pararía el metrónomo. Por eso, si
+   no está sonando, se espera a que despierte (400 ms como mucho) y solo entonces
+   se arranca. Si ya suena, arranca en el acto, como antes.
+   Devuelve una promesa cuando tiene que esperar (el banco la usa). */
 function startMetro(){
-  if (metro.sonando) return;
+  if (metro.sonando || metro.arrancando) return;
   unlockAudio();
-  wakeAudio();
+  wakeAudio();                                  // resume() dentro del gesto
   if (!audioCtx){ metro.aviso = 'metro.noAudio'; renderMetro(); return; }
+  if (audioCtx.state === 'running'){ metroEnMarcha(); return; }
+  const ctx = audioCtx;
+  metro.arrancando = true;
+  let espera, despierta;
+  // resume() devuelve una promesa que se cumple cuando el audio ya suena.
+  try { despierta = Promise.resolve(ctx.resume()).catch(() => {}); } catch(e){ despierta = Promise.resolve(); }
+  return Promise.race([
+    despierta,
+    new Promise(r => { espera = setTimeout(r, 400); })
+  ]).then(() => {
+    clearTimeout(espera);
+    if (!metro.arrancando) return;              // lo paraste mientras esperaba
+    metro.arrancando = false;
+    // Si el audio no despertó, o se rehízo mientras tanto, no se finge que suena.
+    if (audioCtx !== ctx || ctx.state !== 'running'){ metro.aviso = 'metro.noAudio'; renderMetro(); return; }
+    metroEnMarcha();
+  });
+}
+
+/** Pone en marcha el metrónomo con el audio ya sonando. */
+function metroEnMarcha(){
   metro.ctx = audioCtx;
   metro.sonando = true;
   metro.aviso = '';
@@ -127,6 +157,7 @@ function startMetro(){
 function stopMetro(motivo){
   const estaba = metro.sonando;
   metro.sonando = false;
+  metro.arrancando = false;                     // también cancela un arranque en espera
   clearInterval(metro.timer); metro.timer = null;
   cancelAnimationFrame(metro.frame); metro.frame = null;
   metro.cola = [];
@@ -137,7 +168,7 @@ function stopMetro(motivo){
   return estaba;
 }
 
-function toggleMetro(){ if (metro.sonando) stopMetro(); else startMetro(); }
+function toggleMetro(){ if (metro.sonando || metro.arrancando) stopMetro(); else startMetro(); }
 
 /** Cambia el tempo, dentro de 30 a 250 (MT-01). Sonando, el siguiente golpe
  *  sigue en su sitio y los demás se cuentan desde él con el ritmo nuevo. */
