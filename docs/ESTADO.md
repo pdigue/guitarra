@@ -6,6 +6,7 @@
 > 1. **Al empezar:** este es el original (`docs/ESTADO.md`, en GitHub) o su copia en el proyecto de claude.ai (`claude/ESTADO.md`). Lee los dos y compáralos: deben ser idénticos. Si difieren, díselo a Pablo antes de seguir; manda el de GitHub. Lee también `CLAUDE.md` del repositorio: son las reglas.
 > 2. **Mientras trabajas:** actualiza este archivo en cada versión nueva de la app (en el mismo commit que sube `APP_VERSION`; una prueba del banco falla si no), tras cada fusión en `main` o decisión de Pablo, y cuando cambien sus pendientes. Cada vez, sube la misma versión al proyecto como `claude/ESTADO.md`.
 > 3. **Al terminar:** déjalo al día y acaba tu último mensaje con la línea «ESTADO actualizado: versión X, siguiente paso Y».
+> 4. **Propón tú el cambio de conversación** (Pablo no tiene que pedirlo) al cerrar una etapa, tras un par de días o si la conversación se ha resumido sola por larga: avísale, deja esto al día y recuérdale el mensaje de arranque de la sección 5. Si cambia la forma de trabajar, dale el texto nuevo de las instrucciones del proyecto.
 >
 > Con este archivo y `CLAUDE.md` basta para seguir; el resto de documentos se leen solo cuando la tarea los necesita, y por partes.
 
@@ -70,3 +71,12 @@
 - **Etapa nueva F5.8:** saneamiento con comentarios de uso, antes del cierre.
 
 El resto está en `CLAUDE.md` («Decisiones vigentes») y en la sección «Decisiones abiertas» de `requisitos.md`.
+
+## 5. Para abrir la siguiente conversación
+
+Siempre el mismo mensaje, dentro del proyecto «Aprendizaje guitarra»:
+
+> Lee ESTADO y sigue.
+
+Detrás, Pablo puede añadir lo que quiera ese día: aprobaciones («Fusiona el #14 y el #15»), comentarios de uso o una petición nueva. **Siguiente paso ahora:** fusionar los PR #14 y #15 y, con los comentarios de Pablo, el saneamiento de F5.8.
+

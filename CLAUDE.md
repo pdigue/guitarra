@@ -76,6 +76,17 @@ con una línea: «ESTADO actualizado: versión X, siguiente paso Y».
 11. Aprobación de fusiones: Pablo la da con palabras explícitas («fusiona el #N»).
     Un «ok» o «sigue» no basta para fusionar en main.
 
+## Cambio de conversación (lo propone el agente, no Pablo)
+Cuando se cierre una etapa, pasen un par de días o la conversación se haya
+resumido sola por ser larga, el agente lo dice sin esperar a que se lo pidan:
+1. «Conviene pasar a una conversación nueva».
+2. Deja ESTADO al día (repositorio y proyecto) y comprueba que el banco está en verde.
+3. Si cambió la forma de trabajar, da el texto nuevo completo de las
+   instrucciones del proyecto: Pablo lo pega; el agente no puede editarlas.
+4. Recuerda el mensaje de arranque, que es siempre el mismo («Lee ESTADO y
+   sigue»), y qué puede añadir Pablo (aprobaciones, comentarios).
+5. Termina con «ESTADO actualizado: versión X, siguiente paso Y».
+
 ## Continuidad y ahorro de uso
 Pablo tiene un límite de uso. Cada mensaje de una conversación larga vuelve a
 procesar todo lo anterior, así que lo caro es la longitud de la conversación,
