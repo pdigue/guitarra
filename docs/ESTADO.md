@@ -12,12 +12,13 @@
 
 ## 1. Dónde estamos
 
-- **App:** `0.5.6`, ya en `main` (22/10). Rama de trabajo: `auto/F5.8-saneamiento`, recién salida de `main`.
+- **App:** `0.5.6`, ya en `main` (22/10). Rama de trabajo: `auto/CP-5-correcciones` (contiene la de F5.8, que aún no tiene trabajo propio).
 - **Web de pruebas:** https://pdigue.github.io/guitarra/ (rama `pruebas`, con la `0.5.6`).
 - **Fase F5 · Escalas, metrónomo y acordes:**
   - Hechas F5.1 a F5.7: escalas, ♯/♭ por nota, reintentar por defecto, metrónomo y acordes.
-  - Siguiente, **F5.8 · saneamiento** con los comentarios de Pablo al usar la web: cómo se ve Adivinar y una vuelta a Escalas.
-  - Después CP-5 (auditorías del cierre de fase), F5.9 (cierre con la etiqueta `v0.5.x`) y F6 (preparación para distribución).
+  - **F5.8 · saneamiento** (cómo se ve Adivinar y una vuelta a Escalas): aparcada hasta que Pablo dé sus comentarios de uso. Decisión suya del 22/10: no bloquea y se adelanta CP-5.
+  - **CP-5 en curso** (22/10): auditorías a fondo AR-12 (requisitos) y AT-11 (técnica) lanzadas en paralelo sobre toda F5. El límite de uso de Pablo las cortó; se retoman, con SendMessage a los mismos auditores, cuando se restablece. Antes de lanzarlas: banco 80 de 80 y las cuatro comprobaciones de Chromium en verde.
+  - Después, F5.9 (cierre con la etiqueta `v0.5.x`) y F6 (preparación para distribución).
 - **PR abiertos:** ninguno. El 22/10, con su aprobación («Fusiona el #14 y el #15»), se fusionaron en `main`:
   - **#14**, metrónomo (`0.5.4`);
   - **#15**, acordes y correcciones de AT-10 y AR-11 (`0.5.5` y `0.5.6`), con su base cambiada antes a `main`.
@@ -43,7 +44,7 @@
 - **En Chromium**, con la salida siempre en la carpeta temporal de la conversación:
   - `node herramientas/comprobar-disposicion.js <salida>` (con `IDIOMA=en-US`, en inglés);
   - `node herramientas/comprobar-accesibilidad.js`;
-  - `node herramientas/comprobar-en-navegador.js <repo> index.html <salida>`;
+  - `node herramientas/comprobar-en-navegador.js <repo> index.html <salida>`, con `<repo>` como ruta **absoluta** (con `.` su servidor da 404 y falla esperando `#gate-btn`);
   - `node herramientas/comprobar-autonomo.js dist/trasteando.html <salida>`.
 
 **Requisitos y matriz:** se **generan**, no se editan a mano. La fuente es `herramientas/documentos/generar-requisitos.py`; las instrucciones están en su cabecera.
@@ -80,5 +81,5 @@ Siempre el mismo mensaje, dentro del proyecto «Aprendizaje guitarra»:
 
 > Lee ESTADO y sigue.
 
-Detrás, Pablo puede añadir lo que quiera ese día: aprobaciones («Fusiona el #16»), comentarios de uso o una petición nueva. **Siguiente paso ahora:** F5.8 · saneamiento, en la rama `auto/F5.8-saneamiento`, con los comentarios de uso de Pablo (cómo se ve Adivinar y una vuelta a Escalas).
+Detrás, Pablo puede añadir lo que quiera ese día: aprobaciones («Fusiona el #16»), comentarios de uso o una petición nueva. **Siguiente paso ahora:** terminar CP-5 en la rama `auto/CP-5-correcciones` (informes AR-12 y AT-11, corregir lo crítico y alto, PR). F5.8 espera los comentarios de uso de Pablo.
 
