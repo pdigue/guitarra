@@ -1,10 +1,13 @@
 # Trasteando — Estado para retomar
 
-**Actualizado:** 21/10/2026, al cerrar la `0.5.6` · **Lo mantiene:** el agente, al terminar cada etapa o cada conversación.
+**Actualizado:** 22/10/2026, con la app en la `0.5.6` · **Lo mantiene:** la conversación que trabaja, sin que Pablo tenga que vigilarlo.
 
-Este documento es la **memoria entre conversaciones**. Una conversación nueva empieza leyendo `CLAUDE.md` (las reglas) y este archivo (dónde estamos). Con eso basta para seguir; el resto de documentos se leen solo cuando la tarea los necesita, y por partes.
-
-El original vive en el repositorio (`docs/ESTADO.md`) y hay una copia idéntica en el proyecto de claude.ai (`claude/ESTADO.md`). Se actualizan juntos al cerrar cada etapa o conversación; al empezar, la conversación nueva compara las dos y avisa si difieren.
+> **Para la conversación que lee esto**
+> 1. **Al empezar:** este es el original (`docs/ESTADO.md`, en GitHub) o su copia en el proyecto de claude.ai (`claude/ESTADO.md`). Lee los dos y compáralos: deben ser idénticos. Si difieren, díselo a Pablo antes de seguir; manda el de GitHub. Lee también `CLAUDE.md` del repositorio: son las reglas.
+> 2. **Mientras trabajas:** actualiza este archivo en cada versión nueva de la app (en el mismo commit que sube `APP_VERSION`; una prueba del banco falla si no), tras cada fusión en `main` o decisión de Pablo, y cuando cambien sus pendientes. Cada vez, sube la misma versión al proyecto como `claude/ESTADO.md`.
+> 3. **Al terminar:** déjalo al día y acaba tu último mensaje con la línea «ESTADO actualizado: versión X, siguiente paso Y».
+>
+> Con este archivo y `CLAUDE.md` basta para seguir; el resto de documentos se leen solo cuando la tarea los necesita, y por partes.
 
 ## 1. Dónde estamos
 
