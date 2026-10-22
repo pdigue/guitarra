@@ -12,8 +12,8 @@
 
 ## 1. Dónde estamos
 
-- **App:** `0.6.1`, en la rama `auto/F5.8-saneamiento` (PR en §1, «PR abiertos»), que sale de `main` (`0.6.0`, desde el 22/10 con los PR #16 y #17). La rama `auto/F6.2-service-worker` solo lleva la actualización de ESTADO tras esas fusiones, y está contenida en la de F5.8.
-- **Web de pruebas:** https://pdigue.github.io/guitarra/ (rama `pruebas`, igual que `main`, con la `0.6.0`).
+- **App:** `0.6.1`, en la rama `auto/F5.8-saneamiento` (PR #18), que sale de `main` (`0.6.0`, desde el 22/10 con los PR #16 y #17). La rama `auto/F6.2-service-worker` solo lleva la actualización de ESTADO tras esas fusiones, y está contenida en la de F5.8.
+- **Web de pruebas:** https://pdigue.github.io/guitarra/ (rama `pruebas`, con la `0.6.1` del PR #18).
 - **Fase F5 · Escalas, metrónomo y acordes:**
   - Hechas F5.1 a F5.7: escalas, ♯/♭ por nota, reintentar por defecto, metrónomo y acordes. Desde la v3.22 del roadmap, F5.2, F5.3, F5.6 y F5.7 están en 🔨 (como F5.4) hasta las pruebas de Pablo.
   - **F5.8 · saneamiento** (cómo se ve Adivinar y una vuelta a Escalas), **en curso comentario a comentario** (regla de AR-12 #6: cada comentario con su número; lo nuevo, como requisito nuevo):
@@ -24,7 +24,7 @@
   - **F5 queda abierta** (decisión de Pablo, 22/10), como F4 con F4.3: F5.8 y F5.9 (cierre con la etiqueta `v0.5.x`) esperan sus comentarios.
 - **Fase F6 · Preparación para distribución** (en curso): F6.1 archivo autónomo (G-08), F6.2 Service Worker (G-03), F6.3 manifiesto e iconos (G-04) y F6.4 documentación pública y legal (G-06, G-11; la licencia del código la decide Pablo).
   - **F6.1 hecha** (22/10, `0.6.0`): las pruebas que arrancan la app (`banco.test.js` y `escalas.test.js`) se pasan dos veces, contra la app de varios archivos y contra el autónomo (`tests/autonomo.test.js`); el autónomo lee de dentro sus 17 grabaciones sin descargar nada; cada módulo incrustado lleva su nombre (`//# sourceURL`), un error dice el módulo y la línea exactos, y el ensamblador se niega a incrustar uno con `</script` o `<!--`. G-08 cumple y queda validado por el banco. Auditorías ligeras AR-13 y AT-12: sin críticos ni altos, una ronda; anotado en G-08 reconfirmarlo contra la web publicada en F7.1 y abrir el autónomo con doble clic en Windows en la Sesión 2.
-- **PR abiertos:** F5.8 #1 (`0.6.1`), contra `main` (número en el mensaje de cierre y aquí en cuanto exista).
+- **PR abiertos:** **#18**, F5.8 #1 (`0.6.1`, el péndulo), contra `main`. Espera su «fusiona el #18» y sus dos decisiones del péndulo (§2).
 - **Fusionados** el 22/10, con su aprobación:
   - «Fusiona el #14 y el #15»: **#14**, metrónomo (`0.5.4`), y **#15**, acordes y correcciones de AT-10 y AR-11 (`0.5.5` y `0.5.6`), con su base cambiada antes a `main`;
   - «fusiona 16 y 17»: **#16**, CP-5 (`0.5.7`), y **#17**, F6.1 (`0.6.0`), con su base cambiada antes a `main`. El banco pasó 156 de 156 sobre el resultado de la fusión antes de hacerla.
