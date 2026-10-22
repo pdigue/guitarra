@@ -32,7 +32,7 @@ V = {
  'G-05':('I+T','Todo control es alcanzable con teclado y muestra el foco; contrastes ≥ 4,5:1 medidos; el movimiento se reduce con prefers-reduced-motion; en pantallas táctiles, todo control y toda casilla del mástil mide al menos 40 × 40 px en la vista por defecto, salvo las cuerdas en vertical con menos de 660 px de alto y los trastes que el usuario estreche con «+» (hasta 28 px). Paleta por nota: las 7 naturales a ≥ 7,5 (OKLab × 100) entre sí con visión normal y con protanopía, deuteranopía y tritanopía simuladas, y las 12 a ≥ 8 con visión normal; el nombre de la nota siempre escrito.','V-07: comprobar-accesibilidad.js (teclado, contraste, movimiento) · paleta.py · V-06: 40 × 40 px · '+B+': teclado, etiquetas, paleta, grises, fila y asa',C20),
  'G-06':('I','CREDITOS.md lista cada recurso de terceros con su origen y su licencia, y la app muestra el texto de atribución en Ajustes.','CREDITOS.md (F2.1). Falta mostrarlo en la app (F6.4)',DV),
  'G-07':('T','En Windows (y Android cuando lo haya), con el ordenador en modo avión, dist/trasteando.html abre con doble clic en ≤ 3 s, suenan las grabaciones y funcionan Libre, Adivinar y el afinador por referencia. Audio ≤ 1,45 MB y archivo ≤ 2 MB.','V-03 y V-04: desde disco y sin conexión en Chromium, abre en 0,3 s y suena a menos de 1 cent · '+B+': autónomo al día, con su audio, huellas y límites',C15),
- 'G-08':('T','El archivo autónomo generado y la web publicada superan el mismo banco de pruebas.',B+': el autónomo es exactamente la app ensamblada (ensamblar.js) más su audio; la app en js/ se carga archivo a archivo',C15),
+ 'G-08':('T','El archivo autónomo generado y la web publicada superan el mismo banco de pruebas.',B+' en dos pasadas: app de varios archivos (banco.test.js) y archivo autónomo (autonomo.test.js), que además lee de dentro sus 17 grabaciones (huellas sha256) sin descargar nada · el autónomo es exactamente la app ensamblada más su audio · comprobar-autonomo (Chromium, file:// y sin conexión) · comprobar-en-navegador',C15),
  'G-09':('I','Ficha enviada a revisión en al menos una tienda, o decisión documentada de no hacerlo.','—',C14),
  'G-10':('I','Ajustes muestra la versión; CHANGELOG.md tiene una entrada por versión; existe la etiqueta de Git de cada cierre de fase.',B+' · CHANGELOG.md · F1.1 #12 · etiquetas v0.1.5, v0.2.3 y v0.3.3 (21/10)',C14),
  'G-12':('D','En Ajustes, Español / English cambia todos los textos de la app; la elección se guarda; la primera vez sigue al navegador.',B+': mismas claves en las dos lenguas, cambio y vuelta, primera vez según el navegador · comprobar-disposicion.js con IDIOMA=en-US',CL),
@@ -136,7 +136,7 @@ V = {
  'X-03':('D','La app instalada desde la web funciona en un Android, un iPhone y un Windows reales.','—',DV),
 }
 BENCH = {'G-10','D-01','D-02','D-04','J-02','J-07','J-08','J-10','J-12','A-10','V-09','C-05','L-02'}
-PARTIAL = {'V-01','V-04','C-07','G-05','G-06','PL-04','G-07','G-08','S-01','X-01',
+PARTIAL = {'V-01','V-04','C-07','G-05','G-06','PL-04','G-07','S-01','X-01',
            'E-01','E-02','E-03','E-04','E-06','P-03','MT-01','MT-05','AC-02','AC-03'}   # F5: banco hecho, falta tu prueba (CP-5, AR-12 #1)   # con evidencia, pero sin cumplir aún todo el criterio
 DECL = {'si':'Cumple','parcial':'Cumple parcialmente','no':'No cumple'}
 WHO = {'I':'Auditor de requisitos','A':'Auditor técnico','D':'Cliente','T':'Banco automático + auditor técnico','I+T':'Auditor técnico','N/A':'—'}
@@ -174,10 +174,10 @@ COLS = [('ID',10,'id'),('Categoría',16,'cat'),('Requisito',46,'req'),('Priorida
         ('Fase',9,'fase'),('Etapa',13,'etapa'),('Método',9,'met'),('Criterio de aceptación',48,'crit'),
         ('Declaración del proveedor',20,'decl'),('Desde versión',10,'ver_app'),('Evidencia',34,'ev'),
         ('Estado de verificación',21,'verif'),('Verifica',20,'who'),('Comentario del proveedor',44,'com'),
-        ('Comentario del cliente',32,None),('Cambio en v1.22',12,'flag')]
+        ('Comentario del cliente',32,None),('Cambio en v1.23',12,'flag')]
 ws['A1'] = 'Trasteando — Matriz de cumplimiento de requisitos'
 ws['A1'].font = Font(name=F, size=14, bold=True, color='2A1D13')
-ws['A2'] = 'Versión 1.22. Base: requisitos.md v1.24 · app 0.5.7 · roadmap 3.22 · emitida el 15/10/2026. Cliente: Pablo Díaz Guerra. Proveedor: chat de Desarrollo. Verificación independiente: auditores de requisitos y técnico.'
+ws['A2'] = 'Versión 1.23. Base: requisitos.md v1.25 · app 0.6.0 · roadmap 3.23 · emitida el 15/10/2026. Cliente: Pablo Díaz Guerra. Proveedor: chat de Desarrollo. Verificación independiente: auditores de requisitos y técnico.'
 ws['A2'].font = Font(name=F, size=9, color='6A5947')
 HR = 4
 for c, (h, w, _) in enumerate(COLS, 1):
@@ -297,6 +297,7 @@ for c, (h, w) in enumerate([('Versión',10),('Fecha',12),('Requisitos',12),('App
     cell = cc.cell(row=1, column=c, value=h); cell.font = Font(name=F, size=10, bold=True, color='FFFFFF'); cell.fill = dark
     cc.column_dimensions[get_column_letter(c)].width = w
 CC = [
+ ['1.23','22/10/2026','v1.25','0.6.0','F6.1: G-08 cumple y queda verificado por el banco, que se pasa entero contra la app de varios archivos y contra el archivo autónomo.'],
  ['1.22','22/10/2026','v1.24','0.5.7','Punto de control CP-5 (AR-12 y AT-11): una sola vara para lo que compruebas tú. E-01, E-02, E-03, E-04, E-06, P-03, MT-01, MT-05, AC-02 y AC-03, verificados parcialmente hasta la Sesión 2; MT-04, arranque con el audio en pausa (0.5.7); lo pendiente de CP-5, en el comentario de su requisito.'],
  ['1.21','21/10/2026','v1.23','0.5.6','Auditoría AR-11: G-02, C-04 y V-01 con las seis áreas; criterio de AC-01 preciso (sus4 y tríadas); evidencias completadas en MT-01, MT-05, AC-01, AC-03 y AC-04 (método T).'],
  ['1.20','21/10/2026','v1.22','0.5.5','AC-01 a AC-05 implementados y verificados por el banco (F5.7); AC-06 nuevo, el buscador; criterios al día con tu guía del listado.'],
@@ -331,10 +332,11 @@ wb.save(OUT_XLSX)
 L = []
 w = L.append
 w('# Trasteando — Matriz de cumplimiento de requisitos\n')
-w('**Versión:** 1.22 · **Fecha:** 22 de octubre de 2026 · **Base:** `requisitos.md` v1.24 · app `0.5.7` · `roadmap.md` v3.22  ')
+w('**Versión:** 1.23 · **Fecha:** 22 de octubre de 2026 · **Base:** `requisitos.md` v1.25 · app `0.6.0` · `roadmap.md` v3.23  ')
 w('**Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores\n')
 w('> Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.\n')
 w('**Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.\n')
+w('**Cambios en la 1.23:** F6.1: G-08 cumple y queda verificado por el banco, que se pasa entero contra la app de varios archivos y contra el archivo autónomo; el autónomo lee de dentro sus grabaciones sin descargar nada.\n')
 w('**Cambios en la 1.22:** punto de control CP-5 (AR-12 y AT-11): una sola vara; lo que espera tu prueba con el banco ya hecho queda *verificado parcialmente* (E-01, E-02, E-03, E-04, E-06, P-03, MT-01, MT-05, AC-02 y AC-03); MT-04 con el arranque de la 0.5.7; lo pendiente de CP-5, en su comentario.\n')
 w('**Cambios en la 1.21:** auditoría AR-11: seis áreas en G-02, C-04 y V-01; criterio de AC-01 y evidencias del metrónomo y los acordes completadas.\n')
 w('**Cambios en la 1.20:** la librería de acordes (AC-01 a AC-06), hecha y verificada por el banco; G-02 y C-04 con seis áreas.\n')
