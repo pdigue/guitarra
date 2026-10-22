@@ -6,9 +6,10 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.5.6** | 21/10/2026 | F5.7 · auditorías AR-11 y AT-10 | Rama `auto/F5.7-acordes` |
-| 0.5.5 | 21/10/2026 | F5.7 · librería de acordes | Rama `auto/F5.7-acordes` · PR #15 |
-| 0.5.4 | 21/10/2026 | F5.6 · metrónomo | Rama `auto/F5.6-metronomo` · PR #14 |
+| **0.5.7** | 22/10/2026 | CP-5 · auditorías a fondo de F5 (AR-12 y AT-11) | Rama `auto/CP-5-correcciones` |
+| 0.5.6 | 21/10/2026 | F5.7 · auditorías AR-11 y AT-10 | `main`, fusionada el 22/10 (PR #15) |
+| 0.5.5 | 21/10/2026 | F5.7 · librería de acordes | `main`, fusionada el 22/10 (PR #15) |
+| 0.5.4 | 21/10/2026 | F5.6 · metrónomo | `main`, fusionada el 22/10 (PR #14) |
 | 0.5.3 | 21/10/2026 | F5.5 · reintentar por defecto y auditoría AT-09 | `main`, fusionada el 21/10 (PR #13) |
 | 0.5.2 | 21/10/2026 | F5.5 · ♯ o ♭ por nota y ajustes visuales | `main`, fusionada el 21/10 (PR #13) |
 | 0.5.1 | 21/10/2026 | F5.5 · reintentar en Adivinar | `main`, fusionada el 21/10 (PR #13) |
@@ -38,6 +39,21 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.5.7] — 22/10/2026 · Punto de control CP-5 (cierre de las auditorías de F5)
+
+### Corregido (auditoría técnica AT-11)
+- **MT-04** · En el iPhone, tras una llamada, Siri u otra app, el audio queda en pausa. Al pulsar «Empezar», el metrónomo se paraba en el acto con «Se paró: el sistema detuvo el sonido». Ahora espera a que el audio despierte (como mucho 400 ms) y suena; si no despierta, lo dice. Pulsar otra vez mientras espera lo cancela. El banco tiene una prueba nueva con un audio que tarda en despertar, como el de Safari.
+
+### Documentos (auditoría de requisitos AR-12)
+- **Una sola vara** para lo que tienes que comprobar tú: MT-01, MT-05, AC-02 y AC-03 dejan de contar como validados solo por el banco y quedan *verificados parcialmente* hasta la Sesión 2, como ahora los de Escalas; E-02 también, hasta tener la tabla de referencia completa. Requisitos v1.24 (52 validados), matriz v1.22 y roadmap v3.22, con F5.2, F5.3, F5.6 y F5.7 en 🔨.
+- **F5.8 aparcada** hasta tus comentarios de uso (tu decisión del 22/10), con alcance cerrado. Protocolo de la Sesión 2 apuntado.
+- Los hallazgos medios y bajos de AR-12 y AT-11 quedan anotados en el comentario de cada requisito de la matriz.
+
+### Pendiente de tu decisión
+- **AR-12 #2** · Si nadie toca la pantalla, el iPhone se bloquea solo y el metrónomo se para. Propuesta: mantener la pantalla encendida mientras suena.
 
 ---
 
