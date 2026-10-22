@@ -58,8 +58,11 @@ def grabaciones(html):
 
 def main():
     # La misma página que ve el banco de pruebas: index.html con css/ y js/ dentro.
-    html = subprocess.run(['node', str(RAIZ / 'herramientas' / 'ensamblar.js'), str(RAIZ / 'index.html')],
-                          check=True, capture_output=True).stdout.decode('utf-8')
+    union = subprocess.run(['node', str(RAIZ / 'herramientas' / 'ensamblar.js'), str(RAIZ / 'index.html')],
+                           capture_output=True)
+    if union.returncode != 0:   # p. ej. un módulo que cortaría el archivo (F6.1): se dice por qué y no se escribe nada
+        sys.exit(union.stderr.decode('utf-8').strip() or 'ensamblar.js ha fallado')
+    html = union.stdout.decode('utf-8')
     version = re.search(r"APP_VERSION = '([^']+)'", html).group(1)
     medida = json.loads((RAIZ / 'samples' / 'afinacion.json').read_text(encoding='utf-8'))
     bloques, informe, fallos = [], [], []

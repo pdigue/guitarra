@@ -84,8 +84,13 @@ function matches(el, sel, scope){
   });
 }
 
-// Analizador de HTML suficiente para el <body> de index.html.
+// Analizador de HTML suficiente para el <body> de index.html y del archivo autónomo.
 const VOID = new Set(['meta','link','br','img','input','hr','source']);
+function conAtributos(el, attrs){
+  const ar = /([\w:-]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g; let a;
+  while ((a = ar.exec(attrs))) el.setAttribute(a[1], a[2] ?? a[3] ?? a[4] ?? '');
+  return el;
+}
 function parseBody(src){
   const start = src.indexOf('<body>');
   const body = new El('body');
@@ -99,16 +104,25 @@ function parseBody(src){
     const closing = m[1] === '/', tag = m[2].toLowerCase(), attrs = m[3] || '';
     if (tag === 'body' && closing) break;
     if (tag === 'script' || tag === 'style'){
-      if (!closing){ const end = src.indexOf('</' + tag + '>', re.lastIndex); re.lastIndex = end + tag.length + 3; }
+      if (!closing){
+        const end = src.indexOf('</' + tag + '>', re.lastIndex);
+        // Un <script> con id son datos, no código: el audio incrustado del archivo
+        // autónomo (G-07). Se conserva en el DOM, como en el navegador, para que la
+        // app lo encuentre con getElementById. El código lo ejecuta boot() aparte.
+        if (tag === 'script' && /\bid=/.test(attrs)){
+          const el = conAtributos(new El(tag), attrs);
+          el.textContent = src.slice(re.lastIndex, end);
+          stack[stack.length - 1].appendChild(el);
+        }
+        re.lastIndex = end + tag.length + 3;
+      }
       continue;
     }
     if (closing){
       for (let i = stack.length - 1; i > 0; i--) if (stack[i].tagName === tag.toUpperCase()){ stack.length = i; break; }
       continue;
     }
-    const el = new El(tag);
-    const ar = /([\w:-]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g; let a;
-    while ((a = ar.exec(attrs))) el.setAttribute(a[1], a[2] ?? a[3] ?? a[4] ?? '');
+    const el = conAtributos(new El(tag), attrs);
     stack[stack.length - 1].appendChild(el);
     if (!VOID.has(tag) && !/\/\s*$/.test(attrs)) stack.push(el);
   }
@@ -170,4 +184,19 @@ function boot(htmlPath, preset, extra){
 }
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-module.exports = { boot, sleep, El, fuente: ensamblar };
+
+// Desde la 0.6.0 (F6.1, G-08), los archivos de pruebas que arrancan la app se pasan
+// dos veces: contra la app de varios archivos y, desde autonomo.test.js, contra el
+// archivo autónomo. En esa segunda pasada, `test` pone «[autónomo]» delante de cada
+// nombre, y lo que se marca con `unaVez` (lo que lee el repositorio o compara las dos
+// formas) no se registra. Los dos admiten .skip, .todo y .only, como el original.
+const nodeTest = require('node:test');
+const FORMA = process.env.TRASTEANDO_FORMA || '';
+const conForma = f => (nombre, ...resto) => f(`[${FORMA}] ${nombre}`, ...resto);
+const nada = () => {};
+const test = FORMA
+  ? Object.assign(conForma(nodeTest), { skip: conForma(nodeTest.skip), todo: conForma(nodeTest.todo), only: conForma(nodeTest.only) })
+  : nodeTest;
+const unaVez = FORMA ? Object.assign(nada, { skip: nada, todo: nada, only: nada }) : nodeTest;
+
+module.exports = { boot, sleep, El, fuente: ensamblar, test, unaVez };

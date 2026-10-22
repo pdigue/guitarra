@@ -2,10 +2,11 @@
 // Lo que se comprueba es música, no código: que cada escala se escribe como en
 // cualquier libro de solfeo. Referencia: el círculo de quintas.
 'use strict';
-const test = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('path');
-const { boot } = require('./dom-minimo');
+// Como banco.test.js, se pasa también contra el archivo autónomo desde
+// autonomo.test.js; `test` pone allí «[autónomo]» delante de cada nombre (G-08, F6.1).
+const { boot, test } = require('./dom-minimo');
 const APP = process.env.APP_HTML || path.join(__dirname, '..', 'index.html');
 
 const A = boot(APP);
