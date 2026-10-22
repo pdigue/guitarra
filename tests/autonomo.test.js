@@ -15,7 +15,9 @@
 // tono.test.js no: carga por su cuenta el módulo del detector de tono, sin la
 // página, así que daría lo mismo en las dos pasadas. Dentro de banco.test.js, las
 // pruebas marcadas con unaVez (las que leen el repositorio o comparan las dos
-// formas) tampoco se repiten.
+// formas) tampoco se repiten. Una de ellas es la que vigila que el autónomo esté al
+// día: pasado este archivo solo (node --test tests/autonomo.test.js), un dist/ viejo
+// no se detecta (AT-12 #6). Para cerrar una etapa, siempre `node --test` entero.
 'use strict';
 const path = require('path');
 const DIST = path.join(__dirname, '..', 'dist');

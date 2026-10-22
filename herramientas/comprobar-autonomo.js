@@ -48,6 +48,15 @@ async function record(page, midi, file){
   const listo = Date.now() - t1;
   const r = { version: await page.evaluate(() => APP_VERSION), abre_ms: abre, sonido_listo_ms: listo,
               timbre: await page.evaluate(() => samplerTimbre) };
+  // F6.1 (AT-12 #2): un error dentro del autónomo tiene que decir el módulo y la línea
+  // de verdad. Se provoca en soundStart, cuya primera línea lee el búfer, y se compara
+  // con la línea que tiene en js/03-audio.js. El banco no puede verlo: solo el navegador.
+  const audioJs = fs.readFileSync(path.join(__dirname, '..', 'js', '03-audio.js'), 'utf8').split('\n');
+  const esperada = 'js/03-audio.js:' + (audioJs.findIndex(l => l.startsWith('function soundStart(')) + 2);
+  const pila = await page.evaluate(() => { try { soundStart(null); } catch (e) { return e.stack; } return ''; });
+  const dice = (pila.match(/js\/03-audio\.js:\d+/) || ['ningún módulo'])[0];
+  r.nombre_de_modulo = dice;
+  if (dice !== esperada) errores.push(`el error dice «${dice}» y debería decir «${esperada}»`);
   for (const midi of [40, 64, 76, 88]) await record(page, midi, path.join(OUT, 'autonomo-nylon-' + midi));
   await page.evaluate(() => setTimbre('acoustic'));
   await page.waitForFunction(() => samplerTimbre === 'acoustic', null, { timeout: 15000 });

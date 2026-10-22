@@ -184,4 +184,19 @@ function boot(htmlPath, preset, extra){
 }
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-module.exports = { boot, sleep, El, fuente: ensamblar };
+
+// Desde la 0.6.0 (F6.1, G-08), los archivos de pruebas que arrancan la app se pasan
+// dos veces: contra la app de varios archivos y, desde autonomo.test.js, contra el
+// archivo autónomo. En esa segunda pasada, `test` pone «[autónomo]» delante de cada
+// nombre, y lo que se marca con `unaVez` (lo que lee el repositorio o compara las dos
+// formas) no se registra. Los dos admiten .skip, .todo y .only, como el original.
+const nodeTest = require('node:test');
+const FORMA = process.env.TRASTEANDO_FORMA || '';
+const conForma = f => (nombre, ...resto) => f(`[${FORMA}] ${nombre}`, ...resto);
+const nada = () => {};
+const test = FORMA
+  ? Object.assign(conForma(nodeTest), { skip: conForma(nodeTest.skip), todo: conForma(nodeTest.todo), only: conForma(nodeTest.only) })
+  : nodeTest;
+const unaVez = FORMA ? Object.assign(nada, { skip: nada, todo: nada, only: nada }) : nodeTest;
+
+module.exports = { boot, sleep, El, fuente: ensamblar, test, unaVez };

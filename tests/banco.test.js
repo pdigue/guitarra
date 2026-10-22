@@ -2,25 +2,21 @@
 // (Node busca solo los archivos *.test.js; no hace falta instalar nada).
 // Cada prueba cita los requisitos que verifica (ver docs/matriz-cumplimiento.md).
 'use strict';
-const nodeTest = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
-const { boot, sleep, fuente } = require('./dom-minimo');
+// Desde la 0.6.0 (F6.1, G-08) este banco se pasa dos veces: aquí, contra la app de
+// varios archivos (index.html con css/ y js/), y desde autonomo.test.js, contra el
+// archivo autónomo (dist/trasteando.html), con «[autónomo]» delante de cada nombre
+// para saber cuál de las dos formas falla. `test` y `unaVez` vienen de dom-minimo.js:
+// lo que compara las dos formas entre sí, o lee archivos del repositorio en vez de
+// la app, se marca con `unaVez` y solo corre en la primera pasada.
+const { boot, sleep, fuente, test, unaVez } = require('./dom-minimo');
 
 // APP_HTML permite pasar el banco a otra versión, por ejemplo para comprobar que una
 // prueba nueva falla con la versión anterior a la corrección.
 const APP = process.env.APP_HTML || path.join(__dirname, '..', 'index.html');
-// Desde la 0.6.0 (F6.1, G-08) este banco se pasa dos veces: aquí, contra la app de
-// varios archivos (index.html con css/ y js/), y desde autonomo.test.js, contra el
-// archivo autónomo (dist/trasteando.html). En esa segunda pasada cada prueba lleva
-// delante «[autónomo]», para saber cuál de las dos formas falla.
-const FORMA = process.env.TRASTEANDO_FORMA || '';
-const test = FORMA ? (nombre, ...resto) => nodeTest(`[${FORMA}] ${nombre}`, ...resto) : nodeTest;
-// Las pruebas que comparan las dos formas entre sí, o que leen archivos del
-// repositorio en vez de la app, bastan una vez: en la primera pasada.
-const unaVez = FORMA ? () => {} : test;
 const sinErrores = A => A.errors.filter(e => !/AudioContext|muestras/.test(e));
 /** Entra en Adivinar y pulsa ▶: desde la 0.3.3 nada suena ni puntúa hasta entonces. */
 const jugar = A => { A.doc.querySelector('.tab[data-screen="guess"]').click(); A.$('btn-repeat').click(); };
@@ -294,15 +290,31 @@ unaVez('el ensamblador nombra cada módulo del autónomo y se niega a incrustar 
   const sueltos = scripts(path.join(raiz, 'index.html'));
   const dentro = scripts(path.join(raiz, 'dist', 'trasteando.html'));
   assert.deepEqual(dentro.map(s => s.nombre), sueltos.map(s => s.nombre));
-  dentro.forEach((s, i) => assert.equal(s.codigo, sueltos[i].codigo + '//# sourceURL=' + s.nombre + '\n', s.nombre));
+  // (si un módulo no acabara en salto de línea, el ensamblador se lo añade)
+  const conSalto = c => c.endsWith('\n') ? c : c + '\n';
+  dentro.forEach((s, i) => assert.equal(s.codigo, conSalto(sueltos[i].codigo) + '//# sourceURL=' + s.nombre + '\n', s.nombre));
+  // El código va pegado a <script>: un salto ahí contaría como primera línea del módulo
+  // y el navegador daría cada línea con una de más (AT-12 #2).
+  assert.doesNotMatch(fs.readFileSync(path.join(raiz, 'dist', 'trasteando.html'), 'utf8'), /<script>\n/);
   // Un módulo con «</script» dentro: como archivo suelto funciona, incrustado cortaría la página.
   const tmp = fs.mkdtempSync(path.join(require('os').tmpdir(), 'trasteando-'));
   try {
     fs.mkdirSync(path.join(tmp, 'js'));
     fs.writeFileSync(path.join(tmp, 'index.html'), '<body>\n<script src="js/a.js"></script>\n</body>\n');
     fs.writeFileSync(path.join(tmp, 'js', 'a.js'), "const x = 1;\nconst y = '</script>';\n");
-    assert.throws(() => fuente(path.join(tmp, 'index.html')), /js\/a\.js, línea 2/);
+    assert.throws(() => fuente(path.join(tmp, 'index.html')), /js\/a\.js, línea 2: contiene «<\/script»/);
+    // Y con «<!--», que dejaría sin efecto el cierre de verdad (AT-12 #3).
+    fs.writeFileSync(path.join(tmp, 'js', 'a.js'), "const x = '<!--';\n");
+    assert.throws(() => fuente(path.join(tmp, 'index.html')), /js\/a\.js, línea 1: contiene «<!--»/);
   } finally { fs.rmSync(tmp, { recursive: true, force: true }); }
+});
+
+unaVez('cada archivo de pruebas que arranca la app se pasa también contra el autónomo (G-08, AT-12 #1)', () => {
+  const autonomo = fs.readFileSync(path.join(__dirname, 'autonomo.test.js'), 'utf8');
+  const conApp = fs.readdirSync(__dirname).filter(f => f.endsWith('.test.js') && f !== 'autonomo.test.js')
+    .filter(f => /boot\(APP\b/.test(fs.readFileSync(path.join(__dirname, f), 'utf8')));
+  assert.ok(conApp.includes('banco.test.js') && conApp.includes('escalas.test.js'), 'la búsqueda no encuentra los conocidos');
+  for (const f of conApp) assert.ok(autonomo.includes(`require('./${f}')`), f + ' arranca la app y no se pasa contra el autónomo');
 });
 
 unaVez('el archivo autónomo está al día con la app, con su audio y dentro de sus límites (G-07, G-08, F2.3)', () => {
@@ -775,7 +787,8 @@ test('la app vive en css/ y js/: index.html los carga todos, en orden, y el ensa
   for (const f of cargados) assert.match(fs.readFileSync(path.join(raiz, f), 'utf8'), /^"use strict";\n/, f + ' empieza en modo estricto');
   const pagina = fuente(APP);
   assert.doesNotMatch(pagina, /<script src=|<link rel="stylesheet"/, 'el ensamblado lleva todo dentro');
-  assert.equal((pagina.match(/<script>\n/g) || []).length, cargados.length);
+  // Un bloque por módulo, cada uno con su nombre (F6.1).
+  assert.deepEqual([...pagina.matchAll(/\/\/# sourceURL=(\S+)\n<\/script>/g)].map(m => m[1]), cargados);
 });
 
 // --- F4.3: afinador por micrófono ---

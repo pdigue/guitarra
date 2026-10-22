@@ -20,7 +20,7 @@
   - **CP-5 hecho** (22/10, `0.5.7`): auditorías a fondo AR-12 y AT-11, sin críticos. Tres altos: el metrónomo no arrancaba con el audio en pausa en el iPhone (corregido); dos varas para verificar (corregido, una sola: lo que espera la prueba de Pablo queda *verificado parcialmente*); y el bloqueo automático del iPhone para el metrónomo (**decisión de Pablo**, ver §2). Los medios y bajos, en el comentario de cada requisito de la matriz; casi todos encajan en F5.8.
   - **F5 queda abierta** (decisión de Pablo, 22/10), como F4 con F4.3: F5.8 y F5.9 (cierre con la etiqueta `v0.5.x`) esperan sus comentarios.
 - **Fase F6 · Preparación para distribución** (en curso): F6.1 archivo autónomo (G-08), F6.2 Service Worker (G-03), F6.3 manifiesto e iconos (G-04) y F6.4 documentación pública y legal (G-06, G-11; la licencia del código la decide Pablo).
-  - **F6.1 hecha** (22/10, `0.6.0`): el banco entero se pasa dos veces, contra la app de varios archivos y contra el autónomo (`tests/autonomo.test.js`); el autónomo lee de dentro sus 17 grabaciones sin descargar nada; cada módulo incrustado lleva su nombre (`//# sourceURL`) y el ensamblador se niega a incrustar uno con `</script`. G-08 cumple y queda validado por el banco.
+  - **F6.1 hecha** (22/10, `0.6.0`): las pruebas que arrancan la app (`banco.test.js` y `escalas.test.js`) se pasan dos veces, contra la app de varios archivos y contra el autónomo (`tests/autonomo.test.js`); el autónomo lee de dentro sus 17 grabaciones sin descargar nada; cada módulo incrustado lleva su nombre (`//# sourceURL`), un error dice el módulo y la línea exactos, y el ensamblador se niega a incrustar uno con `</script` o `<!--`. G-08 cumple y queda validado por el banco. Auditorías ligeras AR-13 y AT-12: sin críticos ni altos, una ronda; anotado en G-08 reconfirmarlo contra la web publicada en F7.1 y abrir el autónomo con doble clic en Windows en la Sesión 2.
 - **PR abiertos:** **#16**, CP-5 (`0.5.7`), contra `main`; espera su «fusiona el #16». **F6.1** (`0.6.0`), contra la rama de CP-5 (número en §5 cuando exista).
 - **Fusionados** el 22/10, con su aprobación («Fusiona el #14 y el #15»):
   - **#14**, metrónomo (`0.5.4`);
@@ -28,7 +28,7 @@
 - **Documentos:**
   - requisitos v1.25 (109 requisitos, 53 validados), matriz v1.23, roadmap v3.23;
   - interfaz v1.13, compatibilidad v1.7, IT-03 (F5) e IT-04 (F6, crece con cada etapa);
-  - últimas auditorías: AR-12 y AT-11 (CP-5).
+  - últimas auditorías: AR-13 y AT-12 (F6.1, ligeras); a fondo, AR-12 y AT-11 (CP-5).
 
 ## 2. Pendiente de Pablo (no bloquea)
 
@@ -43,10 +43,10 @@
 ## 3. Cómo se trabaja (lo práctico)
 
 **Comprobaciones:**
-- **Banco:** `node --test`, que debe dar 150 de 150 (unos 2 minutos). Cada prueba usa `tests/dom-minimo.js`. Desde la `0.6.0` se pasa dos veces: `tests/banco.test.js` contra la app de varios archivos y `tests/autonomo.test.js` contra el autónomo, con «[autónomo]» delante de cada nombre. Las pruebas que leen archivos del repositorio o comparan las dos formas usan `unaVez` y solo corren en la primera pasada.
+- **Banco:** `node --test`, que debe dar 156 de 156 (unos 2 minutos). Cada prueba usa `tests/dom-minimo.js`. Desde la `0.6.0` se pasa dos veces: primero cada archivo contra la app de varios archivos, y luego `tests/autonomo.test.js` repite `banco.test.js` y `escalas.test.js` contra el autónomo, con «[autónomo]» delante de cada nombre. `test` y `unaVez` vienen de `tests/dom-minimo.js`: lo que lee el repositorio o compara las dos formas usa `unaVez` y solo corre en la primera pasada. Un archivo de pruebas nuevo que arranque la app tiene que añadirse a `autonomo.test.js` (una prueba lo vigila).
 - **Pruebas sueltas:** `node --test-name-pattern="texto" tests/banco.test.js` (o `tests/autonomo.test.js` para la del autónomo).
 - **Archivo autónomo:** tras cada cambio en `js/`, `css/` o `index.html`, regenerarlo con `python3 herramientas/generar-autonomo.py`. Si no, falla «el archivo autónomo está al día». Si un módulo contiene `</script`, el generador se para y lo dice.
-- **En Chromium**, con la salida siempre en la carpeta temporal de la conversación:
+- **En Chromium**, con la salida siempre en la carpeta temporal de la conversación (`comprobar-autonomo.js` comprueba también que un error dentro del autónomo dice su módulo y su línea):
   - `node herramientas/comprobar-disposicion.js <salida>` (con `IDIOMA=en-US`, en inglés);
   - `node herramientas/comprobar-accesibilidad.js`;
   - `node herramientas/comprobar-en-navegador.js <repo> index.html <salida>`, con `<repo>` como ruta **absoluta** (con `.` su servidor da 404 y falla esperando `#gate-btn`);
