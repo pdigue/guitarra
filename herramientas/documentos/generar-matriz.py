@@ -83,7 +83,7 @@ V = {
  'J-13':('T','Por defecto, «Reintentar»: un fallo rompe la racha pero el reto sigue; «Ver la respuesta» la enseña y suena; acertar tras fallar no suma. Con «Ver respuesta», como J-10.',B+': modo reintentar, ajuste guardado y valor por defecto; dos fallos seguidos no dejan casillas rojas (AT-09)',C21),
  'J-12':('T','Con «Ver todas las notas» activo, Adivinar no muestra los nombres.',B+' · F1.1 #10',RC),
  'E-01':('D','Se puede elegir tónica y tipo de escala entre el catálogo aprobado (mayor, menor natural, pentatónicas mayor y menor; 21/10).',B+': selectores de tónica y tipo',CL),
- 'E-02':('T','Para cada tónica y tipo, las posiciones generadas coinciden con una referencia externa en afinación estándar.','tests/escalas.test.js: las 48 escalas frente al círculo de quintas; casillas por clase de altura',CL),
+ 'E-02':('T','Para cada tónica y tipo, las posiciones generadas coinciden con una referencia externa en afinación estándar.','tests/escalas.test.js: las 24 mayores y menores con siete letras, sin mezclar ♯ y ♭ ni dobles alteraciones, y 16 de ellas nota a nota frente al libro; pentatónicas dentro de su escala; casillas por clase de altura',CL),
  'C-08':('N/A','Fuera del alcance actual.','—',CL),
  'S-09':('N/A','Fuera del alcance actual.','—',CL),
  'E-02b':('N/A','Fuera del alcance actual.','—',AR),
@@ -137,7 +137,7 @@ V = {
 }
 BENCH = {'G-10','D-01','D-02','D-04','J-02','J-07','J-08','J-10','J-12','A-10','V-09','C-05','L-02'}
 PARTIAL = {'V-01','V-04','C-07','G-05','G-06','PL-04','G-07','G-08','S-01','X-01',
-           'E-01','E-03','E-04','E-06','P-03','MT-01','MT-05','AC-02','AC-03'}   # F5: banco hecho, falta tu prueba (CP-5, AR-12 #1)   # con evidencia, pero sin cumplir aún todo el criterio
+           'E-01','E-02','E-03','E-04','E-06','P-03','MT-01','MT-05','AC-02','AC-03'}   # F5: banco hecho, falta tu prueba (CP-5, AR-12 #1)   # con evidencia, pero sin cumplir aún todo el criterio
 DECL = {'si':'Cumple','parcial':'Cumple parcialmente','no':'No cumple'}
 WHO = {'I':'Auditor de requisitos','A':'Auditor técnico','D':'Cliente','T':'Banco automático + auditor técnico','I+T':'Auditor técnico','N/A':'—'}
 
@@ -297,7 +297,7 @@ for c, (h, w) in enumerate([('Versión',10),('Fecha',12),('Requisitos',12),('App
     cell = cc.cell(row=1, column=c, value=h); cell.font = Font(name=F, size=10, bold=True, color='FFFFFF'); cell.fill = dark
     cc.column_dimensions[get_column_letter(c)].width = w
 CC = [
- ['1.22','22/10/2026','v1.24','0.5.7','Punto de control CP-5 (AR-12 y AT-11): una sola vara para lo que compruebas tú. E-01, E-03, E-04, E-06, P-03, MT-01, MT-05, AC-02 y AC-03, verificados parcialmente hasta la Sesión 2; MT-04, arranque con el audio en pausa (0.5.7); lo pendiente de CP-5, en el comentario de su requisito.'],
+ ['1.22','22/10/2026','v1.24','0.5.7','Punto de control CP-5 (AR-12 y AT-11): una sola vara para lo que compruebas tú. E-01, E-02, E-03, E-04, E-06, P-03, MT-01, MT-05, AC-02 y AC-03, verificados parcialmente hasta la Sesión 2; MT-04, arranque con el audio en pausa (0.5.7); lo pendiente de CP-5, en el comentario de su requisito.'],
  ['1.21','21/10/2026','v1.23','0.5.6','Auditoría AR-11: G-02, C-04 y V-01 con las seis áreas; criterio de AC-01 preciso (sus4 y tríadas); evidencias completadas en MT-01, MT-05, AC-01, AC-03 y AC-04 (método T).'],
  ['1.20','21/10/2026','v1.22','0.5.5','AC-01 a AC-05 implementados y verificados por el banco (F5.7); AC-06 nuevo, el buscador; criterios al día con tu guía del listado.'],
  ['1.19','21/10/2026','v1.21','0.5.4','MT-01 a MT-05 implementados y verificados por el banco (F5.6); criterios del metrónomo al día con tu guía: un solo acento, doce compases, figuras.'],
@@ -335,7 +335,7 @@ w('**Versión:** 1.22 · **Fecha:** 22 de octubre de 2026 · **Base:** `requisit
 w('**Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores\n')
 w('> Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.\n')
 w('**Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.\n')
-w('**Cambios en la 1.22:** punto de control CP-5 (AR-12 y AT-11): una sola vara; lo que espera tu prueba con el banco ya hecho queda *verificado parcialmente* (E-01, E-03, E-04, E-06, P-03, MT-01, MT-05, AC-02 y AC-03); MT-04 con el arranque de la 0.5.7; lo pendiente de CP-5, en su comentario.\n')
+w('**Cambios en la 1.22:** punto de control CP-5 (AR-12 y AT-11): una sola vara; lo que espera tu prueba con el banco ya hecho queda *verificado parcialmente* (E-01, E-02, E-03, E-04, E-06, P-03, MT-01, MT-05, AC-02 y AC-03); MT-04 con el arranque de la 0.5.7; lo pendiente de CP-5, en su comentario.\n')
 w('**Cambios en la 1.21:** auditoría AR-11: seis áreas en G-02, C-04 y V-01; criterio de AC-01 y evidencias del metrónomo y los acordes completadas.\n')
 w('**Cambios en la 1.20:** la librería de acordes (AC-01 a AC-06), hecha y verificada por el banco; G-02 y C-04 con seis áreas.\n')
 w('**Cambios en la 1.19:** el metrónomo (MT-01 a MT-05), hecho y verificado por el banco.\n')

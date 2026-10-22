@@ -23,4 +23,6 @@
 | 9 | Bajo (al crecer) | `js/01-teoria.js` | Una alteración fuera de ±2 escribiría «Doundefined» | Anotado en E-02 |
 | 10 | Bajo | `js/01-teoria.js` | `LATIN` y los campos `anglo` y `latin` ya no se usan y se saltarían N-06 | Anotado en N-06 |
 
+**Ronda 2** (22/10, ligera, solo la corrección del #1): resuelto. Parar, ocultar la app, el micrófono o rehacer el audio durante la espera la cancelan; si la promesa no se cumple, el tope de 400 ms avisa; la prueba falla con el código anterior. Nuevos, anotados en MT-04: tras Siri, si el audio sigue en pausa, «Vuelve a pulsar» se repite sin rehacer el audio (medio); durante la espera el botón no cambia (bajo); Empezar, Parar y Empezar en menos de 400 ms puede anular el tercero (bajo); faltan pruebas de rehacer el audio y de ocultar la app durante la espera (bajo).
+
 **Pruebas que faltan** (anotadas en su requisito): las 48 escalas en el mástil (E-02); el pentagrama con afinación muy grave (E-06); la cejilla y los 30 acordes dibujados (AC-01); que tras Parar no quede ningún golpe por sonar y 1000 golpes sin deriva con cambios de tempo (MT-04). En el iPhone, en la Sesión 2: diez minutos a 250 ppm con semicorcheas y volver tras una llamada y pulsar Empezar.

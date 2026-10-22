@@ -48,7 +48,7 @@ Nada todavía.
 - **MT-04** · En el iPhone, tras una llamada, Siri u otra app, el audio queda en pausa. Al pulsar «Empezar», el metrónomo se paraba en el acto con «Se paró: el sistema detuvo el sonido». Ahora espera a que el audio despierte (como mucho 400 ms) y suena; si no despierta, lo dice. Pulsar otra vez mientras espera lo cancela. El banco tiene una prueba nueva con un audio que tarda en despertar, como el de Safari.
 
 ### Documentos (auditoría de requisitos AR-12)
-- **Una sola vara** para lo que tienes que comprobar tú: MT-01, MT-05, AC-02 y AC-03 dejan de contar como validados solo por el banco y quedan *verificados parcialmente* hasta la Sesión 2, igual que los de Escalas. Requisitos v1.24 (53 validados), matriz v1.22 y roadmap v3.22, con F5.2, F5.3, F5.6 y F5.7 en 🔨.
+- **Una sola vara** para lo que tienes que comprobar tú: MT-01, MT-05, AC-02 y AC-03 dejan de contar como validados solo por el banco y quedan *verificados parcialmente* hasta la Sesión 2, como ahora los de Escalas; E-02 también, hasta tener la tabla de referencia completa. Requisitos v1.24 (52 validados), matriz v1.22 y roadmap v3.22, con F5.2, F5.3, F5.6 y F5.7 en 🔨.
 - **F5.8 aparcada** hasta tus comentarios de uso (tu decisión del 22/10), con alcance cerrado. Protocolo de la Sesión 2 apuntado.
 - Los hallazgos medios y bajos de AR-12 y AT-11 quedan anotados en el comentario de cada requisito de la matriz.
 

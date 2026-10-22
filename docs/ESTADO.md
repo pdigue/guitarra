@@ -24,7 +24,7 @@
   - **#14**, metrónomo (`0.5.4`);
   - **#15**, acordes y correcciones de AT-10 y AR-11 (`0.5.5` y `0.5.6`), con su base cambiada antes a `main`.
 - **Documentos:**
-  - requisitos v1.24 (109 requisitos, 53 validados), matriz v1.22, roadmap v3.22;
+  - requisitos v1.24 (109 requisitos, 52 validados), matriz v1.22, roadmap v3.22;
   - interfaz v1.13, compatibilidad v1.7, IT-03;
   - últimas auditorías: AR-12 y AT-11 (CP-5).
 

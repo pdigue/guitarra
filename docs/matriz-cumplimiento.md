@@ -7,7 +7,7 @@
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
 
-**Cambios en la 1.22:** punto de control CP-5 (AR-12 y AT-11): una sola vara; lo que espera tu prueba con el banco ya hecho queda *verificado parcialmente* (E-01, E-03, E-04, E-06, P-03, MT-01, MT-05, AC-02 y AC-03); MT-04 con el arranque de la 0.5.7; lo pendiente de CP-5, en su comentario.
+**Cambios en la 1.22:** punto de control CP-5 (AR-12 y AT-11): una sola vara; lo que espera tu prueba con el banco ya hecho queda *verificado parcialmente* (E-01, E-02, E-03, E-04, E-06, P-03, MT-01, MT-05, AC-02 y AC-03); MT-04 con el arranque de la 0.5.7; lo pendiente de CP-5, en su comentario.
 
 **Cambios en la 1.21:** auditoría AR-11: seis áreas en G-02, C-04 y V-01; criterio de AC-01 y evidencias del metrónomo y los acordes completadas.
 
@@ -53,7 +53,7 @@
 
 | Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 109 | 93 | 7 | 5 | 4 | 53 | 19 |
+| 109 | 93 | 7 | 5 | 4 | 52 | 20 |
 
 | ID | Etapa | Método | Criterio de aceptación | Declaración | Evidencia | Verificación | Origen |
 |---|---|:---:|---|---|---|---|---|
@@ -116,7 +116,7 @@
 | **J-12** | F1.3 | T | Con «Ver todas las notas» activo, Adivinar no muestra los nombres. | Cumple | Banco (node --test) · F1.1 #10 · Sesión 1: A10 | Verificado | Revisión de código 0.1.2 |
 | **J-13** | F5.5 | T | Por defecto, «Reintentar»: un fallo rompe la racha pero el reto sigue; «Ver la respuesta» la enseña y suena; acertar tras fallar no suma. Con «Ver respuesta», como J-10. | Cumple | Banco (node --test): modo reintentar, ajuste guardado y valor por defecto; dos fallos seguidos no dejan casillas rojas (AT-09) | Verificado | Cliente · 21/10 |
 | **E-01** | F5.2 | D | Se puede elegir tónica y tipo de escala entre el catálogo aprobado (mayor, menor natural, pentatónicas mayor y menor; 21/10). | Cumple | Banco (node --test): selectores de tónica y tipo | Verificado parcialmente | Cliente · listado 14/09 |
-| **E-02** | F5.2 | T | Para cada tónica y tipo, las posiciones generadas coinciden con una referencia externa en afinación estándar. | Cumple | tests/escalas.test.js: las 48 escalas frente al círculo de quintas; casillas por clase de altura | Verificado | Cliente · listado 14/09 |
+| **E-02** | F5.2 | T | Para cada tónica y tipo, las posiciones generadas coinciden con una referencia externa en afinación estándar. | Cumple | tests/escalas.test.js: las 24 mayores y menores con siete letras, sin mezclar ♯ y ♭ ni dobles alteraciones, y 16 de ellas nota a nota frente al libro; pentatónicas dentro de su escala; casillas por clase de altura | Verificado parcialmente | Cliente · listado 14/09 |
 | **E-02b** | Posterior | N/A | Fuera del alcance actual. | No aplica | — | No aplica | AR-01 |
 | **E-03** | F5.3 | D | Mostrar ilumina únicamente las notas de la escala, con su nombre escrito y la tónica con anillo. | Cumple | Banco (node --test): casillas de Do mayor y de Fa mayor (Si♭) | Verificado parcialmente | Cliente · listado 14/09 |
 | **E-04** | F5.3 | D | Las notas de la escala muestran su nombre y la línea de notas indica el intervalo T, ST o T½ respecto al grado anterior. | Cumple | Banco (node --test): «Do T Re T Mi ST Fa…» y la pentatónica menor | Verificado parcialmente | Cliente · listado 14/09 |
