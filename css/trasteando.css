@@ -374,17 +374,26 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 /* ===== METRÓNOMO (F5.6, MT-01 a MT-05) =====
    Área propia, sin mástil, como el Afinador: igual en vertical y en horizontal.
    Arriba la barra del tempo; en medio el nombre, el número y un punto por pulso;
-   abajo el compás, «Marcar» y Empezar (la app que nos enseñaste el 21/10). */
+   abajo el compás, «Marcar» y Empezar (la app que nos enseñaste el 21/10).
+   La barra es un péndulo (tu comentario del 22/10): la varilla y la pesa giran
+   sobre el pie con el ángulo --ang, que pone 14-metronomo.js en cada fotograma.
+   Como en un metrónomo mecánico, con la pesa arriba va más lento. */
 .metro { flex:1; min-height:0; overflow-y:auto; padding:12px 16px 8px; touch-action:pan-y;
   display:flex; flex-direction:column; align-items:center; gap:12px; }
-.metro-slider { --p:.23; position:relative; flex:1 1 auto; min-height:120px; max-height:340px; width:60px;
+/* La caja le da al péndulo el ancho para oscilar; el deslizador, dentro, mide 60 px. */
+.metro-pendulo { flex:1 1 auto; min-height:120px; max-height:340px; width:100%; display:flex; justify-content:center; }
+.metro-slider { --p:.23; --ang:0deg; position:relative; width:60px;
   cursor:pointer; touch-action:none; border-radius:12px; outline-offset:2px; }
-.ms-track { position:absolute; left:50%; top:14px; bottom:14px; width:8px; margin-left:-4px;
-  border-radius:4px; background:var(--surface2); border:1px solid var(--line2); overflow:hidden; }
-.ms-fill { position:absolute; left:0; right:0; bottom:0; height:calc(var(--p) * 100%); background:var(--amber); }
+/* La varilla gira sobre su pie: 14 px por encima del borde de abajo. */
+.ms-rod { position:absolute; inset:0; transform:rotate(var(--ang)); transform-origin:50% calc(100% - 14px); }
+.ms-track { position:absolute; left:50%; top:14px; bottom:14px; width:6px; margin-left:-3px;
+  border-radius:3px; background:var(--muted); }
+/* La pesa: arriba (--p = 0) el tempo más lento, abajo el más rápido. */
 .ms-thumb { position:absolute; left:50%; width:36px; height:36px; margin-left:-18px;
-  top:calc(14px + (1 - var(--p)) * (100% - 28px) - 18px); border-radius:50%;
+  top:calc(14px + var(--p) * (100% - 28px) - 18px); border-radius:50%;
   background:var(--text); border:3px solid var(--amber); box-shadow:0 2px 8px rgba(0,0,0,.45); }
+.ms-pivot { position:absolute; left:50%; bottom:14px; width:16px; height:16px; margin:0 0 -8px -8px;
+  border-radius:50%; background:var(--amber); }
 .metro-center { display:flex; flex-direction:column; align-items:center; gap:6px; width:100%; }
 .metro-name { font-family:Georgia,serif; font-style:italic; font-size:22px; color:var(--muted); line-height:1.1; }
 .metro-tempo { display:flex; align-items:center; justify-content:space-between; width:100%; max-width:340px; }
@@ -438,7 +447,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 /* Pantallas bajas en vertical (iPhone SE): todo más compacto, para que quepa. */
 @media (orientation:portrait) and (max-height:600px){
   .metro { gap:8px; padding-top:8px; }
-  .metro-slider { min-height:96px; }
+  .metro-pendulo { min-height:96px; }
   .metro-bpm { font-size:54px; }
   .metro-step { width:48px; height:48px; }
   .metro-name { font-size:19px; }
@@ -569,9 +578,9 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   #board-area { grid-column:2; grid-row:1; min-height:0; padding:6px 6px 2px; }
   #tuner { grid-column:2 / -1; grid-row:1; min-height:0; }
   #metro { grid-column:2 / -1; grid-row:1; min-height:0; display:grid;
-           grid-template-columns:64px minmax(0,1fr) minmax(0,1fr); grid-template-rows:minmax(0,1fr);
+           grid-template-columns:minmax(120px,.8fr) minmax(0,1fr) minmax(0,1fr); grid-template-rows:minmax(0,1fr);
            align-items:center; gap:8px 20px; padding:8px 16px; }
-  .metro-slider { align-self:stretch; height:auto; max-height:none; min-height:0; }
+  .metro-pendulo { align-self:stretch; height:auto; max-height:none; min-height:0; }
   .metro-bpm { font-size:56px; }
   .metro-step { width:50px; height:50px; }
   /* La ventana de compás, en dos columnas: en 342 px de alto no cabe apilada. */
@@ -653,7 +662,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .tab.active { background:var(--amber); border-color:var(--amber); color:#1a1006; }
   .tab.metro-on::after { top:-3px; left:auto; right:-2px; }
   .metro { width:100%; max-width:460px; margin:0 auto; padding:20px 20px 12px; }
-  .metro-slider { max-height:300px; }
+  .metro-pendulo { max-height:300px; }
 }
 /* Entre 600 y 959 px, seis pestañas no caben centradas sin pisar el nombre:
    se estrechan y se alinean a la derecha, junto a Ajustes. */

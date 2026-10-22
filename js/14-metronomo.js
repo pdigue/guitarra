@@ -30,7 +30,10 @@ const metro = {
   timer: null, frame: null,
   cola: [],                     // pulsos programados que aún no se han visto: { t, pulso }
   taps: [], tapPuntero: false,  // marcas de «Marcar» (ms); si el toque llegó con el dedo
-  aviso: ''                     // clave del texto que explica por qué se paró, si no lo paraste tú
+  aviso: '',                    // clave del texto que explica por qué se paró, si no lo paraste tú
+  // El péndulo (MT-06): cuántos pulsos se han visto, cuándo sonó el último, cuánto
+  // se abre y si lo estás arrastrando (entonces se queda recto).
+  vistos: 0, ultimo: null, amplitud: 30, arrastrando: false
 };
 
 const compasActual = () => COMPASES.find(c => c.id === state.metro.sig);
@@ -89,12 +92,16 @@ function metroProgramar(){
   }
 }
 
-/** Ilumina el pulso que suena y hace latir la pestaña (MT-04, MT-05). */
+/** Ilumina el pulso que suena, hace latir la pestaña y mueve el péndulo (MT-04, MT-05, MT-06). */
 function metroDibujar(){
   if (!metro.sonando) return;
   const ahora = audioCtx ? audioCtx.currentTime : 0;
   let visto = null;
-  while (metro.cola.length && metro.cola[0].t <= ahora) visto = metro.cola.shift();
+  while (metro.cola.length && metro.cola[0].t <= ahora){
+    visto = metro.cola.shift();
+    metro.vistos++; metro.ultimo = visto.t;     // el péndulo llega a un extremo en cada pulso
+  }
+  pintarPendulo(ahora);
   if (visto){
     document.querySelectorAll('#metro-dots .md').forEach((d, i) => d.classList.toggle('now', i === visto.pulso));
     const tab = document.querySelector('.tab[data-screen="metro"]');
@@ -105,6 +112,49 @@ function metroDibujar(){
     }
   }
   metro.frame = requestAnimationFrame(metroDibujar);
+}
+
+/* --- El péndulo (MT-06, tu comentario del 22/10, F5.8 #1) ---
+   Mientras suena, la barra oscila como la de un metrónomo mecánico: gira sobre su
+   pie y llega a un extremo en cada pulso, alternando izquierda y derecha, y entre
+   dos pulsos pasa por el centro. Sigue un coseno, como un péndulo de verdad:
+   rápido en el centro y lento al llegar a los extremos.
+   El ángulo sale del mismo reloj de audio que los golpes: en cada fotograma se
+   pregunta cuánto ha pasado desde el último pulso y se dibuja dónde debe estar.
+   Así no se adelanta ni se retrasa aunque el navegador vaya a tirones.
+   Se queda recto parado, mientras lo arrastras y con «reducir movimiento» (G-05). */
+const PENDULO_MAX = 30;          // grados a cada lado, como un metrónomo mecánico
+const PENDULO_MARGEN = 22;       // px que necesita la pesa (su radio y su borde) para no salirse
+
+/** Grados del péndulo en el instante `ahora`: `ultimo` es cuándo sonó el último
+ *  pulso, `periodo` lo que dura un pulso y `lado` dónde estaba entonces (−1
+ *  izquierda, 1 derecha). Al pulso siguiente llega justo al otro lado. */
+function anguloPendulo(ahora, ultimo, periodo, lado, amplitud){
+  const u = Math.max(0, Math.min(1, (ahora - ultimo) / periodo));
+  return lado * amplitud * Math.cos(Math.PI * u);
+}
+
+/** Cuánto puede abrirse sin salirse de su caja: 30°, o menos si la caja es
+ *  estrecha para lo larga que es la varilla (con el móvil en horizontal). */
+function amplitudPendulo(){
+  const caja = document.getElementById('metro-pendulo'), barra = document.getElementById('metro-slider');
+  const ancho = caja && caja.clientWidth, largo = barra && barra.clientHeight - 28;
+  if (!(ancho > 0) || !(largo > 0)) return PENDULO_MAX;
+  const seno = Math.max(0, Math.min(1, (ancho / 2 - PENDULO_MARGEN) / largo));
+  return Math.min(PENDULO_MAX, Math.asin(seno) * 180 / Math.PI);
+}
+
+const reducirMovimiento = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/** Pone la barra en su ángulo y lo devuelve. Antes del primer pulso espera en el
+ *  lado de salida, como un péndulo que sujetas antes de soltarlo. */
+function pintarPendulo(ahora){
+  let grados = 0;
+  if (metro.sonando && !metro.arrastrando && !reducirMovimiento())
+    grados = metro.ultimo === null ? -metro.amplitud
+      : anguloPendulo(ahora, metro.ultimo, 60 / state.metro.bpm, metro.vistos % 2 ? -1 : 1, metro.amplitud);
+  document.getElementById('metro-slider').style.setProperty('--ang', grados.toFixed(2) + 'deg');
+  return grados;
 }
 
 /* Arrancar (AT-11 #1). En el iPhone, tras una llamada, Siri u otra app, el audio
@@ -146,6 +196,7 @@ function metroEnMarcha(){
   metro.aviso = '';
   metro.inicio = audioCtx.currentTime + 0.06;   // un respiro para que el primer golpe no se corte
   metro.n = 0; metro.paso = 0; metro.cola = [];
+  metro.vistos = 0; metro.ultimo = null; metro.amplitud = amplitudPendulo();
   metroProgramar();
   metro.timer = setInterval(metroProgramar, METRO_CADA * 1000);
   metro.frame = requestAnimationFrame(metroDibujar);
@@ -236,27 +287,31 @@ function setAccent(on){
 
 /* --- La barra vertical del tempo (MT-01) ---
    Hecha a mano y no con <input type="range"> en vertical, que cada navegador
-   dibuja (o no) a su manera. Arriba, más rápido. Se arrastra con el dedo o el
-   ratón y se mueve con las flechas del teclado, como cualquier deslizador. */
+   dibuja (o no) a su manera. Es la varilla del péndulo y la pesa marca el tempo:
+   como en un metrónomo mecánico, con la pesa arriba va más lento (tu decisión
+   del 22/10). Se arrastra con el dedo o el ratón y se mueve con las flechas del
+   teclado; las flechas siguen la norma de los deslizadores (↑ sube el valor, o
+   sea, más rápido), que es lo que espera un lector de pantalla. */
 function sliderValor(clientY){
-  const pista = document.querySelector('#metro-slider .ms-track');
-  if (typeof pista.getBoundingClientRect !== 'function') return state.metro.bpm;
-  const r = pista.getBoundingClientRect();
-  if (!r.height) return state.metro.bpm;
-  const p = Math.max(0, Math.min(1, (r.bottom - clientY) / r.height));
+  // La caja del deslizador no gira (gira su dibujo): sirve aunque esté oscilando.
+  const s = document.getElementById('metro-slider');
+  if (typeof s.getBoundingClientRect !== 'function') return state.metro.bpm;
+  const r = s.getBoundingClientRect(), largo = r.height - 28;   // la varilla deja 14 px arriba y abajo
+  if (!(largo > 0)) return state.metro.bpm;
+  const p = Math.max(0, Math.min(1, (clientY - r.top - 14) / largo));
   return METRO_MIN + p * (METRO_MAX - METRO_MIN);
 }
 function bindSlider(){
   const s = document.getElementById('metro-slider');
-  let arrastrando = false;
   s.addEventListener('pointerdown', ev => {
-    arrastrando = true;
+    metro.arrastrando = true;                   // recta mientras la mueves: se ve dónde está la pesa
+    pintarPendulo(0);
     try { s.setPointerCapture(ev.pointerId); } catch(e){}
     setTempo(sliderValor(ev.clientY));
     s.focus();
   });
-  s.addEventListener('pointermove', ev => { if (arrastrando) setTempo(sliderValor(ev.clientY)); });
-  const soltar = () => { arrastrando = false; };
+  s.addEventListener('pointermove', ev => { if (metro.arrastrando) setTempo(sliderValor(ev.clientY)); });
+  const soltar = () => { metro.arrastrando = false; };   // al soltarla, el siguiente fotograma vuelve a oscilar
   s.addEventListener('pointerup', soltar);
   s.addEventListener('pointercancel', soltar);
   s.addEventListener('keydown', ev => {
@@ -372,6 +427,7 @@ function renderMetro(){
   const s = document.getElementById('metro-slider');
   s.style.setProperty('--p', String((m.bpm - METRO_MIN) / (METRO_MAX - METRO_MIN)));
   s.setAttribute('aria-valuenow', String(m.bpm));
+  if (!metro.sonando) s.style.setProperty('--ang', '0deg');   // parado, el péndulo descansa recto
   s.setAttribute('aria-valuetext', m.bpm + ' ' + t('metro.bpm') + ', ' + nombreTempo(m.bpm));
   document.getElementById('metro-minus').disabled = m.bpm <= METRO_MIN;
   document.getElementById('metro-plus').disabled = m.bpm >= METRO_MAX;
@@ -453,6 +509,8 @@ function bindMetro(){
     if (ev.clientX < r.left || ev.clientX > r.right || ev.clientY < r.top || ev.clientY > r.bottom) hidePicker();
   });
   document.getElementById('metro-play').addEventListener('click', toggleMetro);
+  // Al girar el móvil cambia el sitio que tiene el péndulo para oscilar.
+  window.addEventListener('resize', () => { if (metro.sonando) metro.amplitud = amplitudPendulo(); });
   renderMetro();
 }
 

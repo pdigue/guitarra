@@ -1340,6 +1340,69 @@ test('metrónomo: cambiar el tempo o la subdivisión mientras suena no adelanta 
   assert.deepEqual(pasos, [1, 1, 1, 0.5, 0.5, 0.5, 0.5, 0.25, 0.25, 0.25]);
 });
 
+// --- F5.8 #1: el péndulo del metrónomo (MT-06, tu comentario del 22/10) ---
+
+test('metrónomo: la barra oscila como un péndulo, un extremo en cada pulso y por el centro entre dos (MT-06, F5.8)', t => {
+  // 60 ppm: un pulso por segundo; en corcheas, para ver que la subdivisión no mueve el péndulo.
+  const A = boot(APP, { metro: { bpm: 60, sig: '4/4', sub: 2, accent: true } });
+  A.ev(metroFalso);
+  A.ev('startMetro()');
+  t.after(() => A.ev('stopMetro()'));
+  const angulo = () => parseFloat(A.$('metro-slider').style.getPropertyValue('--ang'));
+  const en = s => { A.ev(`__avanza(${s})`); A.ev('metroDibujar()'); return angulo(); };
+  assert.equal(A.ev('metro.amplitud'), 30, '30° a cada lado si cabe');
+  const inicio = A.ev('metro.inicio');                         // 10,06: el primer pulso
+  assert.equal(en(inicio - 0.05), -30, 'antes del primer pulso, sujeto en el lado de salida');
+  assert.ok(Math.abs(en(inicio) + 30) < 0.2, 'primer pulso: extremo izquierdo');
+  assert.ok(Math.abs(en(inicio + 0.5)) < 2, 'a medio camino, por el centro (y la corchea no cuenta como pulso)');
+  assert.ok(Math.abs(en(inicio + 1) - 30) < 0.2, 'segundo pulso: extremo derecho');
+  assert.ok(Math.abs(en(inicio + 2) + 30) < 0.2, 'tercero: otra vez a la izquierda');
+  assert.equal(A.ev('metro.vistos'), 3, 'tres pulsos, sin contar las corcheas');
+  // Mientras la arrastras, recta; al soltarla, sigue.
+  A.ev('metro.arrastrando = true; metroDibujar()');
+  assert.equal(angulo(), 0);
+  A.ev('metro.arrastrando = false; metroDibujar()');
+  assert.ok(Math.abs(angulo()) > 25);
+  // Parado, descansa recta.
+  A.ev('stopMetro()');
+  assert.equal(angulo(), 0);
+});
+
+test('metrónomo: con «reducir movimiento» el péndulo no oscila (MT-06, G-05, F5.8)', t => {
+  const A = boot(APP, { metro: { bpm: 120, sig: '4/4', sub: 1, accent: true } },
+    { matchMedia: q => ({ matches: /reduce/.test(q), media: q, addEventListener(){}, addListener(){} }) });
+  A.ev(metroFalso);
+  A.ev('startMetro()');
+  t.after(() => A.ev('stopMetro()'));
+  for (const s of [10.03, 10.06, 10.3, 10.56]){
+    A.ev(`__avanza(${s}); metroDibujar()`);
+    assert.equal(parseFloat(A.$('metro-slider').style.getPropertyValue('--ang')), 0, s + ' s');
+  }
+});
+
+test('metrónomo: como en uno mecánico, la pesa arriba es lo más lento; el péndulo se abre menos si no cabe (MT-06, F5.8)', () => {
+  const A = boot(APP, { metro: { bpm: 80, sig: '4/4', sub: 1, accent: true } });
+  // La caja del deslizador: arriba en y = 100, 328 px de alto (300 de varilla).
+  A.ev(`document.getElementById('metro-slider').getBoundingClientRect = () => ({ top: 100, bottom: 428, height: 328, left: 0, right: 60, width: 60 })`);
+  assert.equal(A.ev('Math.round(sliderValor(114))'), 30, 'pesa arriba: 30 ppm');
+  assert.equal(A.ev('Math.round(sliderValor(414))'), 250, 'pesa abajo: 250 ppm');
+  assert.equal(A.ev('Math.round(sliderValor(264))'), 140, 'en medio: 140 ppm');
+  const barra = A.$('metro-slider');
+  barra.dispatchEvent({ type: 'pointerdown', clientY: 114, pointerId: 1 });
+  assert.equal(A.ev('state.metro.bpm'), 30);
+  assert.equal(A.ev('metro.arrastrando'), true, 'mientras la arrastras, recta');
+  barra.dispatchEvent({ type: 'pointerup', pointerId: 1 });
+  assert.equal(A.ev('metro.arrastrando'), false);
+  assert.equal(barra.style.getPropertyValue('--p'), '0', 'el CSS pone la pesa arriba con --p = 0');
+  // La amplitud: con una varilla de 300 px, una caja de 400 deja los 30°; una de 200, unos 15°.
+  A.ev(`document.getElementById('metro-slider').clientHeight = 328`);
+  A.ev(`document.getElementById('metro-pendulo').clientWidth = 400`);
+  assert.equal(A.ev('amplitudPendulo()'), 30);
+  A.ev(`document.getElementById('metro-pendulo').clientWidth = 200`);
+  const a = A.ev('amplitudPendulo()');
+  assert.ok(a > 14 && a < 16, a + '°: la pesa no se sale de la caja');
+});
+
 // --- F5.7: librería de acordes (AC-01 a AC-06, tu petición del 21/10) ---
 
 test('acordes: cada digitación suena a su acorde, con la raíz (o el bajo) abajo, y se puede tocar con cuatro dedos (AC-01, AC-02)', () => {

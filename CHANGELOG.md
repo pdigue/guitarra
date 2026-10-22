@@ -6,7 +6,8 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.6.0** | 22/10/2026 | F6.1 · el archivo autónomo, probado como la app | `main`, fusionada el 22/10 (PR #17) |
+| **0.6.1** | 22/10/2026 | F5.8 · #1, el péndulo del metrónomo | Rama `auto/F5.8-saneamiento` |
+| 0.6.0 | 22/10/2026 | F6.1 · el archivo autónomo, probado como la app | `main`, fusionada el 22/10 (PR #17) |
 | 0.5.7 | 22/10/2026 | CP-5 · auditorías a fondo de F5 (AR-12 y AT-11) | `main`, fusionada el 22/10 (PR #16) |
 | 0.5.6 | 21/10/2026 | F5.7 · auditorías AR-11 y AT-10 | `main`, fusionada el 22/10 (PR #15) |
 | 0.5.5 | 21/10/2026 | F5.7 · librería de acordes | `main`, fusionada el 22/10 (PR #15) |
@@ -40,6 +41,26 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.6.1] — 22/10/2026 · F5.8 · El metrónomo, con péndulo
+
+Tu primer comentario de uso para F5.8 (#1): que la barra del metrónomo se mueva como la de uno de verdad.
+
+### Cambiado
+- **MT-06** (nuevo) · La barra del tempo es un **péndulo**. Mientras suena, oscila sobre su pie y llega a un extremo en cada pulso, alternando izquierda y derecha, hasta 30° a cada lado; entre dos pulsos pasa por el centro. Se mueve como un péndulo de verdad: rápido en el centro y lento al llegar a los extremos.
+- **La pesa arriba va más lenta**, como en un metrónomo mecánico (tu decisión del 22/10). Antes, arriba era más rápido. Las flechas del teclado no cambian: ↑ sigue subiendo el tempo, como en cualquier deslizador.
+- El ángulo sale del **reloj de audio**, el mismo que programa los golpes: el péndulo va con el sonido aunque el navegador vaya a tirones. Las subdivisiones no lo mueven, solo los pulsos.
+- Se queda **recto** parado, mientras lo arrastras (para ver dónde dejas la pesa) y con «reducir movimiento» activado en el sistema (G-05).
+- **Nunca se sale de la pantalla:** si no cabe, se abre menos. Con el iPhone en horizontal, unos 13°; para dejarle sitio, la columna de la barra es más ancha en esa disposición.
+
+### Comprobado
+- Banco: 162 de 162. Tres pruebas nuevas (también contra el autónomo), que fallan con la 0.6.0.
+- Chromium: ±30° en el iPhone en vertical y en el ordenador, ±12,7° en horizontal, nunca fuera de la pantalla y sin errores; quieto con «reducir movimiento». Disposición: el metrónomo cabe entero en las ocho pantallas; accesibilidad, todo correcto.
+
+### Documentos
+- Requisitos v1.26 (110, MT-06 nuevo), matriz v1.24, interfaz v1.14 y roadmap v3.24 (F5.8 en curso).
 
 ---
 
