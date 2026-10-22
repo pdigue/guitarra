@@ -12,15 +12,15 @@
 
 ## 1. Dónde estamos
 
-- **App:** `0.5.6`, en la rama `auto/F5.7-acordes`. `main` tiene la `0.5.3`.
+- **App:** `0.5.6`, ya en `main` (22/10). Rama de trabajo: `auto/F5.8-saneamiento`, recién salida de `main`.
 - **Web de pruebas:** https://pdigue.github.io/guitarra/ (rama `pruebas`, con la `0.5.6`).
 - **Fase F5 · Escalas, metrónomo y acordes:**
   - Hechas F5.1 a F5.7: escalas, ♯/♭ por nota, reintentar por defecto, metrónomo y acordes.
   - Siguiente, **F5.8 · saneamiento** con los comentarios de Pablo al usar la web: cómo se ve Adivinar y una vuelta a Escalas.
   - Después CP-5 (auditorías del cierre de fase), F5.9 (cierre con la etiqueta `v0.5.x`) y F6 (preparación para distribución).
-- **PR abiertos** (esperan su aprobación explícita, con palabras como «fusiona el #14»):
-  - **#14**, metrónomo (`0.5.4`), contra `main`.
-  - **#15**, acordes y correcciones de AT-10 y AR-11 (`0.5.5` y `0.5.6`), contra `auto/F5.6-metronomo`. Cuando se fusione el #14, se cambia su base a `main`.
+- **PR abiertos:** ninguno. El 22/10, con su aprobación («Fusiona el #14 y el #15»), se fusionaron en `main`:
+  - **#14**, metrónomo (`0.5.4`);
+  - **#15**, acordes y correcciones de AT-10 y AR-11 (`0.5.5` y `0.5.6`), con su base cambiada antes a `main`.
 - **Documentos:**
   - requisitos v1.23 (109 requisitos, 57 validados), matriz v1.21, roadmap v3.21;
   - interfaz v1.13, compatibilidad v1.7, IT-03;
@@ -28,9 +28,8 @@
 
 ## 2. Pendiente de Pablo (no bloquea)
 
-1. Aprobar los PR #14 y #15.
-2. Sus comentarios de uso para F5.8.
-3. La prueba de 10 minutos con la guitarra (protocolo en `docs/verificaciones/V-09-F4-afinador.md`). Después, crear la etiqueta `v0.4.x` en la web de GitHub: el agente no puede crear etiquetas ni releases (error 403).
+1. Sus comentarios de uso para F5.8.
+2. La prueba de 10 minutos con la guitarra (protocolo en `docs/verificaciones/V-09-F4-afinador.md`). Después, crear la etiqueta `v0.4.x` en la web de GitHub: el agente no puede crear etiquetas ni releases (error 403).
 
 ## 3. Cómo se trabaja (lo práctico)
 
@@ -78,5 +77,5 @@ Siempre el mismo mensaje, dentro del proyecto «Aprendizaje guitarra»:
 
 > Lee ESTADO y sigue.
 
-Detrás, Pablo puede añadir lo que quiera ese día: aprobaciones («Fusiona el #14 y el #15»), comentarios de uso o una petición nueva. **Siguiente paso ahora:** fusionar los PR #14 y #15 y, con los comentarios de Pablo, el saneamiento de F5.8.
+Detrás, Pablo puede añadir lo que quiera ese día: aprobaciones («Fusiona el #16»), comentarios de uso o una petición nueva. **Siguiente paso ahora:** F5.8 · saneamiento, en la rama `auto/F5.8-saneamiento`, con los comentarios de uso de Pablo (cómo se ve Adivinar y una vuelta a Escalas).
 
