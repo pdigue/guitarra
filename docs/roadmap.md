@@ -1,7 +1,7 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 3.23 · **Fecha:** 22 de octubre de 2026
-**Válido para:** app `0.6.0` · `requisitos.md` v1.25 · `matriz-cumplimiento` v1.23 · `interfaz.md` v1.13 · `compatibilidad.md` v1.7 · `automatizacion.md` v1.2 · `CHANGELOG.md`
+**Versión:** 3.24 · **Fecha:** 22 de octubre de 2026
+**Válido para:** app `0.6.1` · `requisitos.md` v1.26 · `matriz-cumplimiento` v1.24 · `interfaz.md` v1.14 · `compatibilidad.md` v1.7 · `automatizacion.md` v1.2 · `CHANGELOG.md`
 **Gestiona:** chat de Desarrollo
 
 > ⚡ **Modo acelerado activo desde el 14/10** (detalle en `automatizacion.md`). El agente ejecuta las etapas por bloques —F1 a F3, luego F4 a F6— y solo para en las decisiones. Las pruebas que necesitan tus manos se agrupan en dos sesiones: **Sesión 1** con el iPhone y el ordenador al cerrar F3, y **Sesión 2** con la guitarra al cerrar F6.
@@ -12,7 +12,7 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** **F6 · preparación para distribución**, con F5 abierta (tu decisión del 22/10). F5 está casi completa: escalas, metrónomo y acordes en `main` (PR #14 y #15) y **CP-5 hecho** (`0.5.7`, PR #16, a la espera de tu «fusiona»). **F6.1 hecha** el 22/10 (`0.6.0`): el archivo autónomo pasa el mismo banco que la app de varios archivos. Siguiente: **F6.2**, el Service Worker para usarla sin conexión desde la web. Pendientes tuyos, sin bloquear: tus comentarios de uso para F5.8 (Adivinar y Escalas) y el cierre F5.9, decidir si la pantalla se mantiene encendida mientras suena el metrónomo (AR-12 #2), los 10 minutos con la guitarra (F4.3) y la licencia del código antes de F6.4.
+📍 **Estás aquí:** **F6 · preparación para distribución**, con F5 abierta. En `main` desde el 22/10 (PR #16 y #17): F5 casi completa (escalas, metrónomo y acordes; CP-5 hecho) y **F6.1** (`0.6.0`), el archivo autónomo probado como la app. **F5.8 en curso** con tus comentarios de uso: el **#1**, el péndulo del metrónomo (MT-06), hecho en la `0.6.1`. Siguiente: tus demás comentarios para F5.8 y **F6.2**, el Service Worker para usarla sin conexión desde la web. Pendientes tuyos, sin bloquear: decidir si la pantalla se mantiene encendida mientras suena el metrónomo (AR-12 #2), los 10 minutos con la guitarra (F4.3) y la licencia del código antes de F6.4.
 
 | Fase | Objetivo | Versión | Dónde se usa | Etapas | Progreso |
 |------|----------|:---:|---|:---:|---|
@@ -20,7 +20,7 @@
 | **F2** | Sonido propio y archivo autónomo | 0.2.x | 📁 Archivo en cualquier dispositivo | 5 | `▰▰▰▰▰▰▰▰` 5/5 |
 | **F3** | Interfaz y adaptación | 0.3.x | 📁 Archivo | 4 | `▰▰▰▰▰▰▰▰` 4/4 |
 | **F4** | Afinador por micrófono | 0.4.x | 💻 Live Server | 5 | `▰▰▰▰▰▰▰▰` 5/5 · F4.3 y F4.4 con pendientes |
-| **F5** | Escalas, metrónomo y acordes | 0.5.x | 📁 Archivo | 9 | `▰▰▰▰▰▰▰▱▱` 7/9 · CP-5 hecho · F5.8 aparcada · F5.2 a F5.4, F5.6 y F5.7 esperan tu prueba (Sesión 2) |
+| **F5** | Escalas, metrónomo y acordes | 0.5.x | 📁 Archivo | 9 | `▰▰▰▰▰▰▰▱▱` 7/9 · CP-5 hecho · F5.8 en curso con tus comentarios · F5.2 a F5.4, F5.6 y F5.7 esperan tu prueba (Sesión 2) |
 | **F6** | Preparación para distribución | 0.6.x | 💻 Live Server | 4 | `▰▰▱▱▱▱▱▱` 1/4 · en curso |
 | **F7** | Publicación y lanzamiento | **1.0.0** | 🌐 Web y tiendas | 5 | `▱▱▱▱▱▱▱▱` 0/5 |
 | **T** | Automatización con agentes *(activa)* | — | 🤖 Repositorio | 5 | `▰▰▰▰▰▱▱▱` 3/5 |
@@ -210,7 +210,7 @@ Peso principal en el **auditor de requisitos** como experto en experiencia de us
 | **F5.5** | Tus comentarios del 21/10: reintentar en Adivinar, ♯ o ♭ por nota, lectura sin saltos, pentagrama más grande, nombre en horizontal | J-13, N-06 · retoques de G-01 y P-01 | Banco y disposición en tres pantallas | Preferencias que cambian la escritura sin cambiar el sonido | ✅ `0.5.1` y `0.5.2`; `0.5.3`: reintentar por defecto (tu decisión) y correcciones de AT-09 |
 | **F5.6** | Metrónomo como **área propia**, con su pestaña (tu decisión del 21/10), al estilo de la app que nos enseñaste: barra del tempo, compás, figura y acento en el primer tiempo; sigue sonando en las demás áreas hasta que lo pares | MT-01 a MT-05 | Banco: separación exacta de los golpes a 30, 120 y 250 ppm, compases, figuras y acento; con la guitarra, en la Sesión 2 | Programar sonido con el reloj de audio | 🔨 `0.5.4`, validado por el banco · `0.5.7`: arranca aunque el audio estuviera en pausa (AT-11 #1) · con la guitarra 📅 Sesión 2 |
 | **F5.7** | Librería de acordes, como la describiste el 21/10: listado con populares y los 30 acordes más habituales, buscador, y el acorde en el mástil con dedos numerados y de color, pentagrama y rasgueo | AC-01 a AC-06 | Banco: cada digitación da exactamente las notas del acorde; con la guitarra, en la Sesión 2 | Cómo se construye un acorde; digitación y cejilla | 🔨 `0.5.5`, validado por el banco · con la guitarra 📅 Sesión 2 |
-| **F5.8** | Saneamiento con tus comentarios de usar la web de pruebas (tu petición del 21/10): la visualización de Adivinar y una vuelta a Escalas | Una lista cerrada: cada comentario tuyo con su ID, que apruebas antes de programar; lo nuevo, como requisito nuevo (AR-12 #6) | Tus comentarios, uno a uno, y el banco; auditoría ligera | — | ⏸ aparcada el 22/10 hasta tus comentarios (tu decisión: no bloquea y se adelanta CP-5). Ya apuntados para ella: los hallazgos medios y bajos de CP-5 que tocan a Adivinar, Escalas y el metrónomo |
+| **F5.8** | Saneamiento con tus comentarios de usar la web de pruebas (tu petición del 21/10): la visualización de Adivinar y una vuelta a Escalas | Una lista cerrada: cada comentario tuyo con su ID, que apruebas antes de programar; lo nuevo, como requisito nuevo (AR-12 #6) | Tus comentarios, uno a uno, y el banco; auditoría ligera | — | 🔨 en curso desde el 22/10, comentario a comentario: **#1**, la barra del metrónomo como un péndulo, con la pesa arriba más lenta (MT-06, `0.6.1`). Ya apuntados para ella: los hallazgos medios y bajos de CP-5 que tocan a Adivinar, Escalas y el metrónomo |
 | **F5.9** | Cierre | — | Etiqueta `v0.5.x` | — | ⬜ |
 
 ### 🔍 CP-5 — Checkpoint de escalas, metrónomo y acordes
@@ -463,7 +463,8 @@ flowchart TB
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **3.23** | 22/10/2026 | F6.1 hecha con la `0.6.0`: el banco se pasa entero contra la app de varios archivos y contra el archivo autónomo (G-08). F6 en curso y F5 abierta en el diagrama; «Estás aquí» al día. Sesión 2: abrir el autónomo con doble clic en Windows (AR-13 #3). |
+| **3.24** | 22/10/2026 | F5.8 en curso: tu comentario #1, el péndulo del metrónomo (MT-06, `0.6.1`). #16 y #17 fusionados: «Estás aquí» al día. |
+| 3.23 | 22/10/2026 | F6.1 hecha con la `0.6.0`: el banco se pasa entero contra la app de varios archivos y contra el archivo autónomo (G-08). F6 en curso y F5 abierta en el diagrama; «Estás aquí» al día. Sesión 2: abrir el autónomo con doble clic en Windows (AR-13 #3). |
 | 3.22 | 22/10/2026 | CP-5 hecho con la `0.5.7` (AR-12 y AT-11): F5.2, F5.3, F5.6 y F5.7 pasan a 🔨 hasta tu prueba, como F5.4 (una sola vara), y F5.2 y F5.3 entran en la Sesión 2; F5.8, aparcada hasta tus comentarios (tu decisión del 22/10), con estado nuevo ⏸ en la leyenda; protocolo de la Sesión 2 pendiente; «Estás aquí» con las fusiones del 22/10. |
 | 3.21 | 21/10/2026 | `0.5.6`: correcciones de las auditorías AR-11 y AT-10. Continuidad entre conversaciones: `docs/ESTADO.md` y los generadores de documentos en el repositorio. |
 | 3.20 | 21/10/2026 | F5.7 hecha (`0.5.5`): la librería de acordes, con tu guía (listado con populares y 30 acordes, buscador). PR #13 fusionado. |

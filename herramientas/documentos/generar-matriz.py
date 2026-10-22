@@ -22,7 +22,7 @@ def plain(s):
     return s.strip()
 
 # id: (método, criterio de aceptación, evidencia, origen)
-C20='Cliente · 20/10 (interfaz.md v1.0)'; CL='Cliente · listado 14/09'; C21='Cliente · 21/10'; AR='AR-01'; DV='Desarrollo · v1.1'; C15='Cliente · 15/09'; C14='Cliente · 14/10'; D12='Desarrollo · v1.2'; RC='Revisión de código 0.1.2'
+C20='Cliente · 20/10 (interfaz.md v1.0)'; CL='Cliente · listado 14/09'; C21='Cliente · 21/10'; C22='Cliente · 22/10 (F5.8 #1)'; AR='AR-01'; DV='Desarrollo · v1.1'; C15='Cliente · 15/09'; C14='Cliente · 14/10'; D12='Desarrollo · v1.2'; RC='Revisión de código 0.1.2'
 B='Banco (node --test)'; MF='Desarrollo · medición F2.1'
 V = {
  'G-01':('I','El nombre «Trasteando» aparece en la pantalla de entrada, en la pestaña del navegador y en el manifiesto; en horizontal, arriba del panel.','F1.1 #14 · 0.5.2: comprobar-disposicion, título visible en horizontal',CL),
@@ -127,6 +127,7 @@ V = {
  'MT-03':('T','Cada figura reparte el pulso en 1, 2, 3 o 4 golpes iguales, más suaves que el pulso; cambiarla sonando empieza en el próximo pulso, sin mover el pulso.',B+': separación de las corcheas, volumen menor, cambio sonando',C21),
  'MT-04':('T','Los golpes programados a 30, 120 y 250 ppm se separan exactamente 60/tempo s (±1 ms), nunca se programan más de 100 ms por adelantado y el punto del pulso se ilumina; al ocultar la app se para.',B+': separación a 30, 120 y 250 ppm, cambio de tempo sonando sin adelantar ni repetir, parada al ocultar',C21),
  'MT-05':('D','El metrónomo tiene su pestaña; en marcha, sigue sonando en las demás áreas y su pestaña late con el pulso; al escuchar con el micrófono se para y lo dice; tempo, compás, figura y acento se recuerdan.',B+': sigue en Libre y en el Afinador hasta escuchar con el micrófono, pestaña que late, parada con el micrófono y aviso, datos guardados',C21),
+ 'MT-06':('D','Pesa arriba, 30 ppm, y abajo, 250. Sonando, la barra llega a un extremo en cada pulso, alternando los lados (hasta 30° a cada lado, sin salirse de la pantalla en ninguna disposición), y pasa por el centro entre dos; la subdivisión no la mueve. Recta parada, al arrastrarla y con «reducir movimiento».',B+': extremos alternos en cada pulso, centro a medio camino, la subdivisión no cuenta, recta al arrastrar, al parar y con «reducir movimiento», pesa arriba = 30 ppm, amplitud que cabe; las tres pruebas fallan con la 0.6.0 · Chromium: ±30° en iPhone vertical y ordenador, ±12,7° en horizontal, nunca fuera de la pantalla · comprobar-disposicion: ocho pantallas del metrónomo',C22),
  'AC-01':('T','A un lado el listado (populares arriba, los 30 acordes debajo) y al otro el mástil; cada digitación suena solo a notas del acorde, con la raíz, la nota que define el tipo (la tercera, o la cuarta en sus4) y la séptima si la lleva (la quinta se puede omitir), y con la raíz o el bajo indicado como nota más grave.',B+': las 30 digitaciones, una a una; populares y listado · comprobar-disposicion: listado y mástil a la vez en seis pantallas',C21),
  'AC-02':('D','Cada dedo tiene su número y su color, iguales en todos los acordes (Okabe-Ito); círculo ≥ 3:1 contra el mástil y número ≥ 4,5:1 contra el círculo; ○ y ✕ junto al nombre de la cuerda; cejilla como barra; el lector de pantalla dice el dedo.',B+': La menor y Fa dibujados, contraste de los cuatro colores · comprobar-accesibilidad: Acordes con Fa',C21),
  'AC-03':('D','El pentagrama escribe las notas del acorde apiladas, escritas como manda el acorde, y se oculta con su ajuste; en el móvil en vertical se aparta y vuelve al girarlo.',B+': cinco notas de La menor; B7 con Re♯ · el ajuste de pentagrama de siempre (F1.1) · comprobar-disposicion: seis pantallas',C21),
@@ -137,7 +138,7 @@ V = {
 }
 BENCH = {'G-10','D-01','D-02','D-04','J-02','J-07','J-08','J-10','J-12','A-10','V-09','C-05','L-02'}
 PARTIAL = {'V-01','V-04','C-07','G-05','G-06','PL-04','G-07','S-01','X-01',
-           'E-01','E-02','E-03','E-04','E-06','P-03','MT-01','MT-05','AC-02','AC-03'}   # F5: banco hecho, falta tu prueba (CP-5, AR-12 #1)   # con evidencia, pero sin cumplir aún todo el criterio
+           'E-01','E-02','E-03','E-04','E-06','P-03','MT-01','MT-05','MT-06','AC-02','AC-03'}   # F5: banco hecho, falta tu prueba (CP-5, AR-12 #1)   # con evidencia, pero sin cumplir aún todo el criterio
 DECL = {'si':'Cumple','parcial':'Cumple parcialmente','no':'No cumple'}
 WHO = {'I':'Auditor de requisitos','A':'Auditor técnico','D':'Cliente','T':'Banco automático + auditor técnico','I+T':'Auditor técnico','N/A':'—'}
 
@@ -174,10 +175,10 @@ COLS = [('ID',10,'id'),('Categoría',16,'cat'),('Requisito',46,'req'),('Priorida
         ('Fase',9,'fase'),('Etapa',13,'etapa'),('Método',9,'met'),('Criterio de aceptación',48,'crit'),
         ('Declaración del proveedor',20,'decl'),('Desde versión',10,'ver_app'),('Evidencia',34,'ev'),
         ('Estado de verificación',21,'verif'),('Verifica',20,'who'),('Comentario del proveedor',44,'com'),
-        ('Comentario del cliente',32,None),('Cambio en v1.23',12,'flag')]
+        ('Comentario del cliente',32,None),('Cambio en v1.24',12,'flag')]
 ws['A1'] = 'Trasteando — Matriz de cumplimiento de requisitos'
 ws['A1'].font = Font(name=F, size=14, bold=True, color='2A1D13')
-ws['A2'] = 'Versión 1.23. Base: requisitos.md v1.25 · app 0.6.0 · roadmap 3.23 · emitida el 15/10/2026. Cliente: Pablo Díaz Guerra. Proveedor: chat de Desarrollo. Verificación independiente: auditores de requisitos y técnico.'
+ws['A2'] = 'Versión 1.24. Base: requisitos.md v1.26 · app 0.6.1 · roadmap 3.24 · emitida el 15/10/2026. Cliente: Pablo Díaz Guerra. Proveedor: chat de Desarrollo. Verificación independiente: auditores de requisitos y técnico.'
 ws['A2'].font = Font(name=F, size=9, color='6A5947')
 HR = 4
 for c, (h, w, _) in enumerate(COLS, 1):
@@ -297,6 +298,7 @@ for c, (h, w) in enumerate([('Versión',10),('Fecha',12),('Requisitos',12),('App
     cell = cc.cell(row=1, column=c, value=h); cell.font = Font(name=F, size=10, bold=True, color='FFFFFF'); cell.fill = dark
     cc.column_dimensions[get_column_letter(c)].width = w
 CC = [
+ ['1.24','22/10/2026','v1.26','0.6.1','F5.8, tu comentario #1: MT-06 nuevo, el péndulo del metrónomo (la pesa arriba, más lento). Verificado parcialmente hasta la Sesión 2.'],
  ['1.23','22/10/2026','v1.25','0.6.0','F6.1: G-08 cumple y queda verificado por el banco, que pasa las pruebas que arrancan la app contra la app de varios archivos y contra el archivo autónomo (AR-13 y AT-12).'],
  ['1.22','22/10/2026','v1.24','0.5.7','Punto de control CP-5 (AR-12 y AT-11): una sola vara para lo que compruebas tú. E-01, E-02, E-03, E-04, E-06, P-03, MT-01, MT-05, AC-02 y AC-03, verificados parcialmente hasta la Sesión 2; MT-04, arranque con el audio en pausa (0.5.7); lo pendiente de CP-5, en el comentario de su requisito.'],
  ['1.21','21/10/2026','v1.23','0.5.6','Auditoría AR-11: G-02, C-04 y V-01 con las seis áreas; criterio de AC-01 preciso (sus4 y tríadas); evidencias completadas en MT-01, MT-05, AC-01, AC-03 y AC-04 (método T).'],
@@ -332,10 +334,11 @@ wb.save(OUT_XLSX)
 L = []
 w = L.append
 w('# Trasteando — Matriz de cumplimiento de requisitos\n')
-w('**Versión:** 1.23 · **Fecha:** 22 de octubre de 2026 · **Base:** `requisitos.md` v1.25 · app `0.6.0` · `roadmap.md` v3.23  ')
+w('**Versión:** 1.24 · **Fecha:** 22 de octubre de 2026 · **Base:** `requisitos.md` v1.26 · app `0.6.1` · `roadmap.md` v3.24  ')
 w('**Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores\n')
 w('> Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.\n')
 w('**Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.\n')
+w('**Cambios en la 1.24:** F5.8, tu primer comentario de uso (#1): MT-06 nuevo, el péndulo del metrónomo (la pesa arriba, más lento). Verificado parcialmente hasta la Sesión 2.\n')
 w('**Cambios en la 1.23:** F6.1: G-08 cumple y queda verificado por el banco, que pasa las pruebas que arrancan la app contra la app de varios archivos y contra el archivo autónomo; el autónomo lee de dentro sus grabaciones sin descargar nada. Lo pendiente de AR-13, en su comentario.\n')
 w('**Cambios en la 1.22:** punto de control CP-5 (AR-12 y AT-11): una sola vara; lo que espera tu prueba con el banco ya hecho queda *verificado parcialmente* (E-01, E-02, E-03, E-04, E-06, P-03, MT-01, MT-05, AC-02 y AC-03); MT-04 con el arranque de la 0.5.7; lo pendiente de CP-5, en su comentario.\n')
 w('**Cambios en la 1.21:** auditoría AR-11: seis áreas en G-02, C-04 y V-01; criterio de AC-01 y evidencias del metrónomo y los acordes completadas.\n')
