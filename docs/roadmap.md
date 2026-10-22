@@ -1,7 +1,7 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 3.19 · **Fecha:** 21 de octubre de 2026
-**Válido para:** app `0.5.4` · `requisitos.md` v1.21 · `matriz-cumplimiento` v1.19 · `interfaz.md` v1.11 · `compatibilidad.md` v1.7 · `automatizacion.md` v1.2 · `CHANGELOG.md`
+**Versión:** 3.21 · **Fecha:** 21 de octubre de 2026
+**Válido para:** app `0.5.6` · `requisitos.md` v1.23 · `matriz-cumplimiento` v1.21 · `interfaz.md` v1.13 · `compatibilidad.md` v1.7 · `automatizacion.md` v1.2 · `CHANGELOG.md`
 **Gestiona:** chat de Desarrollo
 
 > ⚡ **Modo acelerado activo desde el 14/10** (detalle en `automatizacion.md`). El agente ejecuta las etapas por bloques —F1 a F3, luego F4 a F6— y solo para en las decisiones. Las pruebas que necesitan tus manos se agrupan en dos sesiones: **Sesión 1** con el iPhone y el ordenador al cerrar F3, y **Sesión 2** con la guitarra al cerrar F6.
@@ -12,7 +12,7 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** F5 en marcha: escalas (`0.5.0`), tus comentarios del 21/10 (`0.5.1` a `0.5.3`) y el **metrónomo** (`0.5.4`, F5.6), hecho con tu guía de la app de referencia. Siguiente: la **librería de acordes** (F5.7); después, el **saneamiento** con tus comentarios de uso de la web (F5.8: Adivinar y Escalas), CP-5 y el cierre. Pendientes tuyos, sin bloquear: fusionar el PR #13, los 10 minutos con la guitarra (F4.3) y probar el metrónomo en la web de pruebas.
+📍 **Estás aquí:** F5 casi completa: escalas (`0.5.0`), tus comentarios del 21/10 (`0.5.1` a `0.5.3`, ya en `main`), el **metrónomo** (`0.5.4`) y la **librería de acordes** (`0.5.5`), las dos con tu guía. Siguiente: el **saneamiento** con tus comentarios de usar la web (F5.8: Adivinar y Escalas), CP-5 y el cierre (F5.9). Pendientes tuyos, sin bloquear: fusionar el PR #14 (metrónomo), los 10 minutos con la guitarra (F4.3) y probar el metrónomo y los acordes en la web de pruebas.
 
 | Fase | Objetivo | Versión | Dónde se usa | Etapas | Progreso |
 |------|----------|:---:|---|:---:|---|
@@ -20,7 +20,7 @@
 | **F2** | Sonido propio y archivo autónomo | 0.2.x | 📁 Archivo en cualquier dispositivo | 5 | `▰▰▰▰▰▰▰▰` 5/5 |
 | **F3** | Interfaz y adaptación | 0.3.x | 📁 Archivo | 4 | `▰▰▰▰▰▰▰▰` 4/4 |
 | **F4** | Afinador por micrófono | 0.4.x | 💻 Live Server | 5 | `▰▰▰▰▰▰▰▰` 5/5 · F4.3 y F4.4 con pendientes |
-| **F5** | Escalas, metrónomo y acordes | 0.5.x | 📁 Archivo | 9 | `▰▰▰▰▰▰▱▱▱` 6/9 · F5.4 y F5.6 se usan con la guitarra en la Sesión 2 |
+| **F5** | Escalas, metrónomo y acordes | 0.5.x | 📁 Archivo | 9 | `▰▰▰▰▰▰▰▱▱` 7/9 · F5.4, F5.6 y F5.7 se usan con la guitarra en la Sesión 2 |
 | **F6** | Preparación para distribución | 0.6.x | 💻 Live Server | 4 | `▱▱▱▱▱▱▱▱` 0/4 |
 | **F7** | Publicación y lanzamiento | **1.0.0** | 🌐 Web y tiendas | 5 | `▱▱▱▱▱▱▱▱` 0/5 |
 | **T** | Automatización con agentes *(activa)* | — | 🤖 Repositorio | 5 | `▰▰▰▰▰▱▱▱` 3/5 |
@@ -123,7 +123,7 @@ Cada pieza del proyecto lleva su propio número, y todas se citan entre sí.
 | 11 | 🆕 Numeración en «Guía»: solo 3, 5, 7, 9, 12… | D-04, V-09 |
 | 12 | Ajustes muestra «Trasteando» y la versión que estás probando | G-10 |
 | 13 | El récord y los ajustes sobreviven a recargar la página | J-08, C-05 |
-| 14 | Recorrido completo por las cuatro pestañas y Ajustes sin errores en la consola | General |
+| 14 | Recorrido completo por todas las áreas y Ajustes sin errores en la consola | General |
 | 15 | 🆕 Guitarra clásica, 1ª cuerda, trastes 7, 8 y 12: suenan Si, Do y Mi igual que en tu guitarra afinada, sin saltar medio tono en el 8 | S-01, S-08 |
 
 ### 🔍 CP-1 — Checkpoint ligero tras F1
@@ -209,7 +209,7 @@ Peso principal en el **auditor de requisitos** como experto en experiencia de us
 | **F5.4** | Submodo Práctica | E-05 | Banco (pertenencia); con la guitarra, en la Sesión 2 | — | 🔨 `0.5.0`, validado por el banco · con la guitarra 📅 Sesión 2 |
 | **F5.5** | Tus comentarios del 21/10: reintentar en Adivinar, ♯ o ♭ por nota, lectura sin saltos, pentagrama más grande, nombre en horizontal | J-13, N-06 · retoques de G-01 y P-01 | Banco y disposición en tres pantallas | Preferencias que cambian la escritura sin cambiar el sonido | ✅ `0.5.1` y `0.5.2`; `0.5.3`: reintentar por defecto (tu decisión) y correcciones de AT-09 |
 | **F5.6** | Metrónomo como **área propia**, con su pestaña (tu decisión del 21/10), al estilo de la app que nos enseñaste: barra del tempo, compás, figura y acento en el primer tiempo; sigue sonando en las demás áreas hasta que lo pares | MT-01 a MT-05 | Banco: separación exacta de los golpes a 30, 120 y 250 ppm, compases, figuras y acento; con la guitarra, en la Sesión 2 | Programar sonido con el reloj de audio | ✅ `0.5.4`, validado por el banco · con la guitarra 📅 Sesión 2 |
-| **F5.7** | Librería de acordes con dedos numerados y de color, pentagrama y rasgueo (tu petición del 21/10) | AC-01 a AC-05 | Banco: cada digitación da exactamente las notas del acorde; tú, comparando con tu guitarra | Cómo se construye un acorde; digitación | ⬜ |
+| **F5.7** | Librería de acordes, como la describiste el 21/10: listado con populares y los 30 acordes más habituales, buscador, y el acorde en el mástil con dedos numerados y de color, pentagrama y rasgueo | AC-01 a AC-06 | Banco: cada digitación da exactamente las notas del acorde; con la guitarra, en la Sesión 2 | Cómo se construye un acorde; digitación y cejilla | ✅ `0.5.5`, validado por el banco · con la guitarra 📅 Sesión 2 |
 | **F5.8** | Saneamiento con tus comentarios de usar la web de pruebas (tu petición del 21/10): la visualización de Adivinar y una vuelta a Escalas | Los que salgan | Tus comentarios, uno a uno, y el banco | — | ⬜ |
 | **F5.9** | Cierre | — | Etiqueta `v0.5.x` | — | ⬜ |
 
@@ -389,7 +389,7 @@ flowchart TB
 | Lista de comprobación manual | Recorrer casos concretos marcando cada uno | Sesión 1 (F1.1, F3.3) |
 | Banco de pruebas automático | Escenarios ejecutados por código, con resultado esperado; cada etapa añade los suyos | F1.3, F2.x, F4.1, F4.2 |
 | Medición objetiva | Medir una magnitud con una herramienta y compararla con el criterio: afinación de las muestras, peso del archivo | F2.1, F2.3, F2.4 |
-| Prueba en dispositivo real | Usar la app como usuario, con la guitarra delante | Sesión 1 (F2.5, F3.3) · comprobación corta tras F4.3 · Sesión 2 (F5.4, y F4.3 si la comprobación corta falló) · F7.2 |
+| Prueba en dispositivo real | Usar la app como usuario, con la guitarra delante | Sesión 1 (F2.5, F3.3) · comprobación corta tras F4.3 · Sesión 2 (F5.4, F5.6, F5.7, y F4.3 si la comprobación corta falló) · F7.2 |
 | Prueba de autonomía | Abrir el archivo sin conexión y sin servidor | F2.3, F2.5, F6.1 |
 | Auditoría con herramienta | Lighthouse, verificadores de contraste, simulador de daltonismo | F3.4, F6.3, F7.3 |
 | Contraste con referencia externa | Escalas y afinaciones frente a fuentes fiables | F5.2, F5.3 |
@@ -461,7 +461,9 @@ flowchart TB
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **3.19** | 21/10/2026 | F5.6 hecha (`0.5.4`): el metrónomo, con tu guía de la app de referencia. F5.8 nueva: saneamiento con tus comentarios de uso de la web (Adivinar y Escalas); el cierre pasa a F5.9. Seis pestañas aprobadas. |
+| **3.21** | 21/10/2026 | `0.5.6`: correcciones de las auditorías AR-11 y AT-10. Continuidad entre conversaciones: `docs/ESTADO.md` y los generadores de documentos en el repositorio. |
+| 3.20 | 21/10/2026 | F5.7 hecha (`0.5.5`): la librería de acordes, con tu guía (listado con populares y 30 acordes, buscador). PR #13 fusionado. |
+| 3.19 | 21/10/2026 | F5.6 hecha (`0.5.4`): el metrónomo, con tu guía de la app de referencia. F5.8 nueva: saneamiento con tus comentarios de uso de la web (Adivinar y Escalas); el cierre pasa a F5.9. Seis pestañas aprobadas. |
 | 3.18 | 21/10/2026 | Tus decisiones del 21/10: el metrónomo, área propia (F5.6), y reintentar por defecto (`0.5.3`, con las correcciones de AT-09). Objetivo de F5, CP-5, Sesión 2 y riesgos al día con el metrónomo y los acordes; F4 ya no sale como terminada en el mapa (AR-10). |
 | 3.17 | 21/10/2026 | Tus comentarios del 21/10: F5.5 hecha (`0.5.1` y `0.5.2`); metrónomo (F5.6) y librería de acordes (F5.7) añadidos al plan, con sus requisitos; el cierre pasa a F5.8. |
 | 3.16 | 21/10/2026 | F5.1 a F5.4 hechas con la `0.5.0`: escalas con notas escritas (catálogo decidido el 21/10), Mostrar con intervalos y paso a paso, y Práctica. F4.3 sigue pendiente sin bloquear. |

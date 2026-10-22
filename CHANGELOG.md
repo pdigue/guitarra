@@ -6,11 +6,13 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.5.4** | 21/10/2026 | F5.6 · metrónomo | Rama `auto/F5.6-metronomo` |
-| 0.5.3 | 21/10/2026 | F5.5 · reintentar por defecto y auditoría AT-09 | Rama `auto/F5.5-ajustes-visuales` · PR #13, pendiente de fusionar |
-| 0.5.2 | 21/10/2026 | F5.5 · ♯ o ♭ por nota y ajustes visuales | Rama `auto/F5.5-ajustes-visuales` |
-| 0.5.1 | 21/10/2026 | F5.5 · reintentar en Adivinar | Rama `auto/F5.1-notas` |
-| 0.5.0 | 21/10/2026 | F5.1 a F5.4 · escalas | Rama `auto/F5.1-notas` |
+| **0.5.6** | 21/10/2026 | F5.7 · auditorías AR-11 y AT-10 | Rama `auto/F5.7-acordes` |
+| 0.5.5 | 21/10/2026 | F5.7 · librería de acordes | Rama `auto/F5.7-acordes` · PR #15 |
+| 0.5.4 | 21/10/2026 | F5.6 · metrónomo | Rama `auto/F5.6-metronomo` · PR #14 |
+| 0.5.3 | 21/10/2026 | F5.5 · reintentar por defecto y auditoría AT-09 | `main`, fusionada el 21/10 (PR #13) |
+| 0.5.2 | 21/10/2026 | F5.5 · ♯ o ♭ por nota y ajustes visuales | `main`, fusionada el 21/10 (PR #13) |
+| 0.5.1 | 21/10/2026 | F5.5 · reintentar en Adivinar | `main`, fusionada el 21/10 (PR #13) |
+| 0.5.0 | 21/10/2026 | F5.1 a F5.4 · escalas | `main`, fusionada el 21/10 (PR #13) |
 | 0.4.2 | 21/10/2026 | F4.5 · idioma español o inglés | `main`, fusionada el 21/10 (PR #12) |
 | 0.4.1 | 21/10/2026 | F4.4 · pistas grandes y récord por afinación | `main`, fusionada el 21/10 (PR #12) |
 | 0.4.0 | 21/10/2026 | F4.1 a F4.3 · afinador por micrófono | `main`, fusionada el 21/10 (PR #12) |
@@ -39,6 +41,40 @@ Nada todavía.
 
 ---
 
+## [0.5.6] — 21/10/2026 · Auditorías del metrónomo y los acordes
+
+### Corregido (auditoría técnica AT-10)
+- **MT-02** · Cambiar de compás con el metrónomo sonando ya no desplaza el pulso: el compás nuevo empieza en el próximo pulso.
+- **MT-04** · Si el móvil se queda ocupado un momento, el metrónomo ya no suelta de golpe los clics atrasados: se los salta y sigue a tiempo.
+- **MT-03** · Figuras correctas en 3/8, 5/8 y 7/8, donde el pulso es la corchea (dos por pulso son semicorcheas), y dosillo y cuatrillo en los compuestos.
+- **MT-05** · Si el sistema detiene el sonido (una llamada en el iPhone), el metrónomo se para y lo dice, en vez de seguir «en marcha» en silencio. Su aviso cambia con el idioma.
+- **G-05** · Elegir una figura con el teclado ya no hace perder el foco. «Empezar» y «Parar» ya no dan una señal doble al lector de pantalla.
+- **AC-03** · En el pentagrama de un acorde, dos alteraciones cercanas ya no se pisan.
+- **AC-06** · «Restablecer» limpia también el buscador de acordes.
+
+### Documentos (auditoría de requisitos AR-11)
+- Seis áreas en todos los documentos; el aviso para girar sale también en Acordes y nunca en el Metrónomo; criterios y evidencias del metrónomo y los acordes completados.
+
+### Verificado
+- Banco: 79 de 79, con una prueba nueva para lo de AT-10.
+
+---
+
+## [0.5.5] — 21/10/2026 · Librería de acordes
+
+### Añadido
+- **AC-01** · Acordes, un área propia, como la describiste. A un lado está el listado: arriba los populares (C, G, D, A, E, Am, Em, Dm y F) y debajo los 30 acordes más habituales. Al otro lado, el acorde dibujado en el mástil. En vertical, el listado va arriba; en horizontal, a la derecha.
+- **AC-06** · Buscador: «G» deja G, Gm, G7 y G/B; «Sol» encuentra lo mismo.
+- **AC-02** · Cada dedo tiene su número y su color, siempre los mismos: 1 azul, 2 naranja, 3 rosa y 4 verde. Las cuerdas al aire llevan ○ y las que no suenan ✕, junto a su nombre. La cejilla se dibuja como una barra.
+- **AC-03, AC-04** · El pentagrama escribe el acorde con sus notas apiladas, como manda el acorde (B7 lleva Re♯). El acorde suena rasgueado al elegirlo y con «Tocar».
+- **AC-05** · Con otra afinación, Acordes lo avisa y ofrece pasar a la estándar.
+
+### Verificado
+- Banco: 78 de 78, con cinco pruebas nuevas. Comprueban, entre otras cosas, que las 30 digitaciones suenan a su acorde y se pueden tocar con cuatro dedos, y el contraste de los colores de los dedos.
+- Disposición en seis pantallas, accesibilidad y archivo autónomo.
+
+---
+
 ## [0.5.4] — 21/10/2026 · Metrónomo
 
 ### Añadido
@@ -48,7 +84,7 @@ Nada todavía.
 - **MT-05** · Sigue sonando en las demás áreas, con un punto que late en su pestaña; se para al ocultar la app y al escuchar con el micrófono, y lo dice.
 
 ### Verificado
-- Banco: 73 de 73, con cinco pruebas nuevas. Disposición del metrónomo y de su ventana en cinco pantallas, contraste y movimiento reducido, las 15 comprobaciones de F1.1 y el archivo autónomo, bien.
+- Banco: 73 de 73, con cinco pruebas nuevas. Disposición del metrónomo en cinco pantallas y de su ventana en tres, contraste y movimiento reducido, las 15 comprobaciones de F1.1 y el archivo autónomo, bien.
 
 ---
 

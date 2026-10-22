@@ -326,6 +326,51 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .mic-order.ok { color:var(--ok); } .mic-order.ko { color:var(--ko); }
 .mic-privacy { font-size:12px; color:var(--muted); text-align:center; margin:6px 0 8px; line-height:1.45; }
 
+/* ===== ACORDES (F5.7, AC-01 a AC-06) =====
+   Buscador y listado a un lado (arriba en vertical, a la derecha en horizontal);
+   el acorde, en el mástil. Cada dedo, su número y su color, los mismos en todos
+   los acordes (Okabe-Ito: se distinguen también con daltonismo). */
+:root { --f1:#56b4e9; --f2:#e69f00; --f3:#cc79a7; --f4:#2bb58a; }
+.chords-card { flex-shrink:0; display:flex; flex-direction:column; gap:6px; padding:6px 12px;
+  background:var(--surface); border-bottom:1px solid var(--line); }
+.chord-search { width:100%; min-height:40px; box-sizing:border-box; padding:0 12px; border-radius:10px; font:inherit; font-size:15px;
+  background:var(--bg); border:1px solid var(--line2); color:var(--text); }
+.chord-search::placeholder { color:var(--faint); }
+.chord-list { max-height:132px; overflow-y:auto; display:flex; flex-direction:column; gap:3px; touch-action:pan-y; }
+.cl-head { font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-top:2px; }
+.cl-group { display:flex; flex-wrap:wrap; gap:5px; }
+.chord-chip { min-width:52px; min-height:40px; padding:0 10px; border-radius:10px; cursor:pointer; font:inherit;
+  font-size:14px; font-weight:700; background:var(--surface2); border:1px solid var(--line2); color:var(--text); }
+.chord-chip.on { background:var(--amber); border-color:var(--amber); color:#1a1006; }
+.cl-empty { margin:4px 0; font-size:13px; color:var(--muted); }
+/* En vertical no cabe todo: el listado deja ver dos filas y se desplaza; el
+   pentagrama y el zoom se apartan para que el mástil conserve sus 40 px por
+   cuerda (V-01). El acorde ya se ve entero en el mástil; al girar el móvil,
+   vuelve el pentagrama con el acorde escrito. */
+@media (orientation:portrait) and (max-width:599px){
+  .chords-card { gap:4px; padding:5px 12px; }
+  .chord-list { max-height:92px; }
+  body[data-screen="chords"] .display, body[data-screen="chords"] .zoombar { display:none; }
+}
+.chord-info { display:flex; align-items:center; gap:10px; min-height:40px; }
+.chord-name { font-family:Georgia,serif; font-size:24px; font-weight:700; color:var(--amber); }
+.chord-notes { flex:1; min-width:0; font-size:13px; color:var(--muted); }
+.chord-play { flex-shrink:0; }
+.chord-tuning { margin:0; display:flex; align-items:center; flex-wrap:wrap; gap:6px 10px; font-size:13px; color:var(--ko); }
+/* En el mástil: las notas no se ven (show-all se apaga); se ven los dedos. */
+.finger { position:absolute; z-index:4; width:28px; height:28px; max-width:80%; max-height:80%; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:800; color:#10151c;
+  box-shadow:0 0 0 2px #160f07, 0 2px 6px rgba(0,0,0,.5); pointer-events:none; }
+.finger.f1 { background:var(--f1); } .finger.f2 { background:var(--f2); }
+.finger.f3 { background:var(--f3); } .finger.f4 { background:var(--f4); }
+.fret-cell.barre::after { content:''; position:absolute; z-index:3; left:50%; width:16px; margin-left:-8px;
+  top:0; bottom:0; background:var(--f1); opacity:.75; pointer-events:none; }
+.fret-cell.barre.barre-top::after { top:50%; border-radius:0; }
+.fret-cell.barre.barre-bottom::after { bottom:50%; }
+.board.chords .string-label[data-mark]::after { content:attr(data-mark); position:absolute; right:-1px; top:50%;
+  transform:translate(100%,-50%); z-index:5; font-size:13px; font-weight:800; color:var(--text);
+  background:var(--bg); border-radius:50%; width:16px; height:16px; display:flex; align-items:center; justify-content:center; }
+
 /* ===== METRÓNOMO (F5.6, MT-01 a MT-05) =====
    Área propia, sin mástil, como el Afinador: igual en vertical y en horizontal.
    Arriba la barra del tempo; en medio el nombre, el número y un punto por pulso;
@@ -432,7 +477,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .panel { display:contents; }
 .header { order:1; } .quickbar { order:2; } .challenge { order:3; } .display { order:4; }
 .rotate-hint { order:5; } .board-area { order:6; } .sc-nav, .zoombar { order:7; } .tuner, .metro { order:8; }
-.scales-card { order:3; }
+.scales-card, .chords-card { order:3; }
 .tabbar { order:9; }
 
 /* En pantallas táctiles en vertical el mástil no baja de 40 px por cuerda
@@ -545,6 +590,13 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .chip .short { display:inline-flex; }
   .challenge { padding:0; gap:6px; background:none; border:none; }
   .scales-card { padding:0; gap:6px; background:none; border:none; }
+  .chords-card { padding:0; gap:5px; background:none; border:none; }
+  body[data-screen="chords"] .zoombar { display:none; }   /* el acorde ya cabe: diez trastes a la vista */
+  .chord-list { max-height:min(150px, 40vh); }
+  .chord-chip { min-width:44px; padding:0 7px; font-size:13px; }
+  .chord-info { flex-wrap:wrap; gap:2px 8px; }
+  .chord-name { font-size:20px; }
+  .chord-notes { flex-basis:100%; order:3; font-size:12px; }
   .sc-top { flex-wrap:wrap; }
   .sc-top .seg { flex-basis:100%; }
   .sc-practice { flex-wrap:wrap; }
@@ -603,9 +655,11 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .metro { width:100%; max-width:460px; margin:0 auto; padding:20px 20px 12px; }
   .metro-slider { max-height:300px; }
 }
-/* Entre 600 y 959 px, las pestañas se estrechan para no pisar el nombre. */
+/* Entre 600 y 959 px, seis pestañas no caben centradas sin pisar el nombre:
+   se estrechan y se alinean a la derecha, junto a Ajustes. */
 @media (min-width:600px) and (max-width:959px) and (min-height:521px){
-  .tab { padding:0 10px; font-size:12.5px; }
+  .tabbar { left:auto; right:60px; transform:none; gap:3px; }
+  .tab { padding:0 8px; font-size:12px; }
 }
 
 /* Ajustes como panel lateral cuando hay anchura (interfaz.md §3). */

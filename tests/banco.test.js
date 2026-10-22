@@ -878,7 +878,7 @@ test('idioma: cada texto existe en español y en inglés, y cada clave de la pá
   const en = JSON.parse(A.ev('JSON.stringify(Object.keys(TEXTOS.en).sort())'));
   assert.deepEqual(en, es, 'las dos lenguas tienen las mismas claves');
   const html = fs.readFileSync(APP, 'utf8');
-  const usadas = [...html.matchAll(/data-t(?:-aria|-title)?="([^"]+)"/g)].map(m => m[1]);
+  const usadas = [...html.matchAll(/data-t(?:-aria|-title|-placeholder)?="([^"]+)"/g)].map(m => m[1]);
   assert.ok(usadas.length > 40);
   for (const k of usadas) assert.ok(es.includes(k), 'falta el texto de ' + k);
   // Y las claves que usa el código: t('…') con una clave literal.
@@ -898,7 +898,7 @@ test('idioma: en Ajustes se cambia a inglés y vuelve al español; se guarda y n
   assert.equal(JSON.parse(A.store.get('trasteando.v1')).lang, 'en');
   assert.equal(A.doc.documentElement.lang, 'en');
   const pestañas = A.doc.querySelectorAll('.tab [data-t]').map(e => e.textContent).join(' ');
-  assert.equal(pestañas, 'Free Guess Tuner Scales Metronome Settings');
+  assert.equal(pestañas, 'Free Guess Tuner Scales Chords Metronome Settings');
   assert.equal(A.$('sheet-title').textContent, 'Settings');
   assert.equal(A.$('st-streak').textContent, 'Streak 3', 'la racha sigue');
   assert.equal(A.$('st-record').textContent, 'Best 0 · Standard');
@@ -1290,4 +1290,166 @@ test('metrónomo: cambiar el tempo o la subdivisión mientras suena no adelanta 
   const g = JSON.parse(A.ev('JSON.stringify(__golpes().map(x => x[0]))'));
   const pasos = g.slice(1).map((x, i) => Math.round((x - g[i]) * 1000) / 1000);
   assert.deepEqual(pasos, [1, 1, 1, 0.5, 0.5, 0.5, 0.5, 0.25, 0.25, 0.25]);
+});
+
+// --- F5.7: librería de acordes (AC-01 a AC-06, tu petición del 21/10) ---
+
+test('acordes: cada digitación suena a su acorde, con la raíz (o el bajo) abajo, y se puede tocar con cuatro dedos (AC-01, AC-02)', () => {
+  const A = boot(APP);
+  const datos = JSON.parse(A.ev(`JSON.stringify(ACORDES.map(a => ({ id: idAcorde(a), tipo: a.tipo, c: a.c || null,
+    cuerdas: cuerdasAcorde(a), tonos: notasAcorde(a).map(pcEscrita), bajo: a.bajo === undefined ? null : PC_LETRA[a.bajo] })))`));
+  assert.equal(datos.length, 30);
+  assert.equal(new Set(datos.map(d => d.id)).size, 30, 'sin repetidos');
+  for (const d of datos){
+    const suenan = d.cuerdas.filter(c => c.midi !== null);
+    const pcs = new Set(suenan.map(c => c.midi % 12));
+    for (const pc of pcs) assert.ok(d.tonos.includes(pc), d.id + ': suena una nota que no es del acorde');
+    // La raíz, la tercera (o la cuarta en sus4) y la séptima, siempre; la quinta se puede omitir (C7).
+    for (const i of [0, 1, 3]) if (d.tonos[i] !== undefined) assert.ok(pcs.has(d.tonos[i]), d.id + ': falta un tono esencial');
+    const grave = Math.min(...suenan.map(c => c.midi));
+    assert.equal(grave % 12, d.bajo ?? d.tonos[0], d.id + ': el bajo');
+    // Dedos: cada cuerda pisada tiene dedo; un dedo, un solo traste; varias cuerdas solo con cejilla.
+    const porDedo = {};
+    for (const c of d.cuerdas){
+      if (!c.traste){ assert.equal(c.dedo, 0, d.id + ': dedo en cuerda al aire'); continue; }
+      assert.ok(c.dedo >= 1 && c.dedo <= 4, d.id + ': cuerda pisada sin dedo');
+      (porDedo[c.dedo] ||= []).push(c);
+    }
+    for (const [dedo, cs] of Object.entries(porDedo)){
+      assert.equal(new Set(cs.map(c => c.traste)).size, 1, d.id + ': el dedo ' + dedo + ' en dos trastes');
+      if (cs.length > 1) assert.ok(d.c && +dedo === 1 && cs[0].traste === d.c[0], d.id + ': varias cuerdas sin cejilla');
+    }
+    const trastes = d.cuerdas.map(c => c.traste).filter(f => f);
+    assert.ok(Math.max(...trastes) - Math.min(...trastes) <= 3, d.id + ': más de cuatro trastes de abertura');
+  }
+  // Se escriben como mandan: B7 lleva Re♯, no Mi♭.
+  assert.equal(A.ev("notasAcorde(acordePorId('B7')).map(nombreEscrito).join(' ')"), 'Si Re♯ Fa♯ La');
+  assert.equal(A.ev("notasAcorde(acordePorId('Cm')).map(nombreEscrito).join(' ')"), 'Do Mi♭ Sol');
+});
+
+test('acordes: populares arriba y los 30 debajo; el buscador filtra por cómo empieza el nombre, en las dos nomenclaturas (AC-01, AC-06)', () => {
+  const A = boot(APP, { notation: 'anglo' });
+  A.doc.querySelector('.tab[data-screen="chords"]').click();
+  assert.equal(A.$('chords-card').hidden, false);
+  assert.equal(A.$('board-area').hidden, false, 'a un lado el listado, al otro el mástil');
+  const titulos = () => A.doc.querySelectorAll('#chord-list .cl-head').map(h => h.textContent);
+  const nombres = () => A.doc.querySelectorAll('#chord-list .chord-chip').map(b => b.textContent);
+  assert.deepEqual(titulos(), ['Populares', 'Todos (30)']);
+  assert.deepEqual(nombres().slice(0, 9), ['C', 'G', 'D', 'A', 'E', 'Am', 'Em', 'Dm', 'F']);
+  assert.equal(nombres().length, 39);
+  const busca = q => { const s = A.$('chord-search'); s.value = q; s.dispatchEvent({ type: 'input', target: s }); return nombres(); };
+  assert.deepEqual(busca('G'), ['G', 'Gm', 'G7', 'G/B']);
+  assert.deepEqual(titulos(), ['Resultados (4)']);
+  assert.deepEqual(busca('g'), ['G', 'Gm', 'G7', 'G/B'], 'da igual mayúscula o minúscula');
+  assert.deepEqual(busca('Sol'), ['G', 'Gm', 'G7', 'G/B'], 'también en Do Re Mi');
+  assert.deepEqual(busca('D'), ['D', 'Dm', 'D7', 'Dm7', 'Dmaj7', 'Dsus4'], 'una letra: no trae los Do');
+  assert.deepEqual(busca('Am'), ['Am', 'Am7']);
+  assert.deepEqual(busca('f#'), []);
+  assert.match(A.$('chord-list').textContent, /Ningún acorde empieza por «f#»/);
+  busca('');
+  assert.deepEqual(titulos(), ['Populares', 'Todos (30)']);
+});
+
+test('acordes: el elegido se dibuja en el mástil con dedos numerados, ○ y ✕, cejilla, pentagrama y rasgueo (AC-02, AC-03, AC-04)', async () => {
+  const A = boot(APP);                                             // Do Re Mi
+  A.ev('globalThis.__plays = []; playMidi = m => __plays.push(m);');
+  A.doc.querySelector('.tab[data-screen="chords"]').click();
+  const chip = id => A.doc.querySelector(`#chord-list .chord-chip[data-id="${id}"]`);
+  assert.equal(chip('Am').textContent, 'Lam');
+  chip('Am').click();
+  assert.equal(chip('Am').getAttribute('aria-pressed'), 'true');
+  assert.equal(A.$('chord-name').textContent, 'Lam');
+  assert.equal(A.$('chord-notes').textContent, 'La · Do · Mi');
+  const dedos = () => A.doc.querySelectorAll('#board .finger').map(f => {
+    const c = f.parentNode; return c.dataset.row + '-' + c.dataset.fret + ':' + f.textContent; }).sort();
+  assert.deepEqual(dedos(), ['1-1:1', '2-2:3', '3-2:2'], '2ª cuerda traste 1 dedo 1; 3ª y 4ª en el 2');
+  const marcas = A.doc.querySelectorAll('#board .string-label').map(l => l.dataset.mark || '');
+  assert.deepEqual(marcas, ['○', '', '', '', '○', '✕'], '1ª y 5ª al aire; la 6ª no suena');
+  assert.match(A.doc.querySelector('.fret-cell[data-row="1"][data-fret="1"]').getAttribute('aria-label'), /dedo 1/);
+  assert.equal(A.$('staff').querySelectorAll('ellipse').length, 5, 'cinco notas apiladas');
+  await sleep(250);
+  assert.deepEqual(JSON.parse(A.ev('JSON.stringify(__plays)')), [45, 52, 57, 60, 64], 'rasgueado de grave a agudo');
+  // Fa: cejilla en el 1, de la 6ª a la 1ª.
+  chip('F').click();
+  const cejilla = A.doc.querySelectorAll('#board .fret-cell.barre');
+  assert.equal(cejilla.length, 6);
+  assert.ok(cejilla.every(c => c.dataset.fret === '1'));
+  assert.ok(A.doc.querySelector('.fret-cell.barre-top').dataset.row === '0' && A.doc.querySelector('.fret-cell.barre-bottom').dataset.row === '5');
+  assert.deepEqual(A.doc.querySelectorAll('#board .string-label').map(l => l.dataset.mark || ''), ['', '', '', '', '', '']);
+  assert.equal(JSON.parse(A.store.get('trasteando.v1')).chordId, 'F', 'el acorde elegido se recuerda');
+  // Al salir de Acordes, el mástil vuelve a ser el de siempre.
+  A.doc.querySelector('.tab[data-screen="free"]').click();
+  assert.equal(A.doc.querySelectorAll('#board .finger, #board .barre').length, 0);
+  assert.ok(!A.$('board').classList.contains('chords'));
+  assert.equal(A.doc.querySelectorAll('#board .string-label[data-mark]').length, 0);
+});
+
+test('acordes: con otra afinación avisa y no dibuja; «Pasar a estándar» lo arregla (AC-05)', () => {
+  const A = boot(APP, { tuningId: 'dropd', chordId: 'D' });
+  A.doc.querySelector('.tab[data-screen="chords"]').click();
+  assert.equal(A.$('chord-tuning').hidden, false);
+  assert.equal(A.doc.querySelectorAll('#board .finger').length, 0, 'las digitaciones no valen en Drop D');
+  assert.equal(A.$('chord-play').disabled, true);
+  A.$('chord-standard').click();
+  assert.equal(A.ev('state.tuningId'), 'standard');
+  assert.equal(A.$('chord-tuning').hidden, true);
+  assert.equal(A.doc.querySelectorAll('#board .finger').length, 3);
+});
+
+test('acordes: los cuatro colores de dedo contrastan con el mástil (3:1) y su número con el círculo (4,5:1) (AC-02, G-05)', () => {
+  const css = fs.readFileSync(path.join(__dirname, '..', 'css', 'trasteando.css'), 'utf8');
+  const lum = hex => { const c = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255)
+    .map(v => v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
+  const contraste = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+  const dedos = [1, 2, 3, 4].map(i => css.match(new RegExp(`--f${i}:(#[0-9a-f]{6})`))[1]);
+  const numero = css.match(/\.finger \{[^}]*color:(#[0-9a-f]{6})/)[1];
+  assert.equal(new Set(dedos).size, 4);
+  for (const f of dedos){
+    for (const madera of ['#32200f', '#432c16']) assert.ok(contraste(f, madera) >= 3, f + ' sobre ' + madera + ': ' + contraste(f, madera).toFixed(2));
+    assert.ok(contraste(f, numero) >= 4.5, 'número sobre ' + f + ': ' + contraste(f, numero).toFixed(2));
+  }
+});
+
+test('AT-10: cambiar de compás sonando no mueve el pulso; tras un bloqueo no se amontonan golpes; las figuras no se rehacen; avisos traducidos; Restablecer limpia el buscador', t => {
+  const A = boot(APP, { metro: { bpm: 60, sig: '4/4', sub: 2, accent: true } });
+  A.ev(metroFalso);
+  A.ev('startMetro()');
+  t.after(() => A.ev('stopMetro()'));
+  A.ev('__avanza(11.08)');                    // pulso a 11,06; ya programada su corchea de 11,56
+  A.ev("setCompas('3/4')");
+  A.ev('__avanza(12.2)');
+  const pulsos = JSON.parse(A.ev('JSON.stringify(__golpes().filter(g => g[1] !== 880).map(g => Math.round(g[0] * 1000) / 1000))'));
+  assert.deepEqual(pulsos.slice(-2), [11.06, 12.06], 'el acento del 3/4 cae en el pulso, no en la corchea');
+  assert.equal(JSON.parse(A.ev('JSON.stringify(__golpes().find(g => Math.abs(g[0] - 12.06) < 1e-6))'))[1], 1760);
+  A.ev('__ctx.currentTime += 1.5; metroProgramar()');   // el navegador estuvo 1,5 s ocupado
+  const atrasados = A.ev('__golpes().filter(g => g[0] < __ctx.currentTime - 0.01).length');
+  assert.equal(atrasados, JSON.parse(A.ev('JSON.stringify(__golpes().filter(g => g[0] < 12.3).length)')), 'ninguno en el pasado');
+  // Ventana: elegir figura no rehace los botones (el foco no se pierde) y en 5/8 dos por pulso son semicorcheas.
+  A.doc.querySelector('.tab[data-screen="metro"]').click();
+  A.$('metro-sig').click();
+  const fig = A.doc.querySelector('#metro-sub [data-v="3"]');
+  fig.click();
+  assert.equal(A.doc.querySelector('#metro-sub [data-v="3"]'), fig, 'el mismo botón');
+  A.doc.querySelector('#metro-sigs [data-v="5/8"]').click();
+  assert.equal(A.doc.querySelector('#metro-sub [data-v="2"]').getAttribute('aria-label'), 'Dos por pulso (semicorcheas)');
+  A.$('metro-ok').click();
+  // El aviso se traduce al cambiar de idioma.
+  A.ev("stopMetro(); startMetro(); stopMetro('hidden'); setLang('en')");
+  assert.equal(A.$('metro-note').textContent, 'It stopped when you left the app.');
+  A.ev("setLang('es')");
+  // Restablecer limpia el buscador de acordes.
+  A.doc.querySelector('.tab[data-screen="chords"]').click();
+  const s = A.$('chord-search'); s.value = 'Sol'; s.dispatchEvent({ type: 'input', target: s });
+  A.$('set-reset').click();
+  assert.equal(A.$('chord-search').value, '');
+  assert.equal(A.doc.querySelectorAll('#chord-list .cl-head').length, 2, 'populares y todos otra vez');
+});
+
+// --- Continuidad entre conversaciones (21/10): ESTADO.md no puede quedarse atrás ---
+
+test('docs/ESTADO.md está al día con la versión de la app (memoria entre conversaciones)', () => {
+  const v = fs.readFileSync(path.join(__dirname, '..', 'js', '01-teoria.js'), 'utf8').match(/APP_VERSION = '([\d.]+)'/)[1];
+  const estado = fs.readFileSync(path.join(__dirname, '..', 'docs', 'ESTADO.md'), 'utf8');
+  const linea = estado.split('\n').find(l => l.startsWith('**Actualizado:**')) || '';
+  assert.ok(linea.includes('`' + v + '`'), `ESTADO.md dice «${linea}», pero la app es la ${v}: actualízalo antes de cerrar`);
 });

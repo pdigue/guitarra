@@ -237,6 +237,7 @@ function rebuildAudio(){
   if (now - lastRebuild < 1000) return;       // pulsaciones repetidas: una basta (AT-06 #6)
   lastRebuild = now;
   if (typeof stopMic === 'function') stopMic();   // el micrófono va atado al audio viejo (AT-07 #6)
+  if (typeof stopMetro === 'function') stopMetro('audio');   // y el metrónomo, a su reloj (AT-10 #6)
   needsRebuild = false; rebuildOnNextGesture = false;
   const old = audioCtx;
   silenceAll();

@@ -1,15 +1,21 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 1.19 · **Fecha:** 21 de octubre de 2026 · **Base:** `requisitos.md` v1.21 · app `0.5.4` · `roadmap.md` v3.19  
+**Versión:** 1.21 · **Fecha:** 21 de octubre de 2026 · **Base:** `requisitos.md` v1.23 · app `0.5.6` · `roadmap.md` v3.21  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
 
+**Cambios en la 1.21:** auditoría AR-11: seis áreas en G-02, C-04 y V-01; criterio de AC-01 y evidencias del metrónomo y los acordes completadas.
+
+**Cambios en la 1.20:** la librería de acordes (AC-01 a AC-06), hecha y verificada por el banco; G-02 y C-04 con seis áreas.
+
 **Cambios en la 1.19:** el metrónomo (MT-01 a MT-05), hecho y verificado por el banco.
 
 **Cambios en la 1.18:** J-13 con «Reintentar» por defecto; el metrónomo, área propia (MT-05); criterios y evidencias al día tras AR-10 y AT-09.
+
+**Cambios en la 1.17:** J-13 y N-06 nuevos y verificados; criterios del metrónomo y de los acordes.
 
 **Cambios en la 1.16:** F5: escalas; E-02 y E-05 verificados por el banco.
 
@@ -45,12 +51,12 @@
 
 | Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 108 | 87 | 7 | 10 | 4 | 51 | 10 |
+| 109 | 93 | 7 | 5 | 4 | 57 | 10 |
 
 | ID | Etapa | Método | Criterio de aceptación | Declaración | Evidencia | Verificación | Origen |
 |---|---|:---:|---|---|---|---|---|
 | **G-01** | F1.1 | I | El nombre «Trasteando» aparece en la pantalla de entrada, en la pestaña del navegador y en el manifiesto; en horizontal, arriba del panel. | Cumple | F1.1 #14 · 0.5.2: comprobar-disposicion, título visible en horizontal · Sesión 1: A01 | Verificado | Cliente · listado 14/09 |
-| **G-02** | F1.1 | D | La barra inferior muestra Libre, Adivinar, Afinador y Escalas; cada destino activo abre su vista y cada área nueva (Metrónomo, Acordes) suma su destino. | Cumple | F1.1 #1 y #14 · Sesión 1 A12 · Sesión 1: A12 | Verificado | Cliente · listado 14/09 |
+| **G-02** | F1.1 | D | La navegación muestra las seis áreas (Libre, Adivinar, Afinador, Escalas, Acordes y Metrónomo) y cada destino abre su vista. | Cumple | F1.1 #1 y #14 · 0.5.5: comprobar-disposicion, seis pestañas en todas las pantallas · Sesión 1: A12 | Verificado | Cliente · listado 14/09 |
 | **G-03** | F6.2 · F7.2 | T | F6.2: tras una primera carga en localhost y sin red, la app abre y suena. F7.2: lo mismo desde la web publicada. | No cumple | — | Pendiente | Cliente · listado 14/09 |
 | **G-04** | F6.3 · F7.2 | D | Desde la web publicada, el navegador ofrece instalarla y abre a pantalla completa desde el icono. | Cumple parcialmente | — | Pendiente | Cliente · listado 14/09 |
 | **G-05** | F3.4 | I+T | Todo control es alcanzable con teclado y muestra el foco; contrastes ≥ 4,5:1 medidos; el movimiento se reduce con prefers-reduced-motion; en pantallas táctiles, todo control y toda casilla del mástil mide al menos 40 × 40 px en la vista por defecto, salvo las cuerdas en vertical con menos de 660 px de alto y los trastes que el usuario estreche con «+» (hasta 28 px). Paleta por nota: las 7 naturales a ≥ 7,5 (OKLab × 100) entre sí con visión normal y con protanopía, deuteranopía y tritanopía simuladas, y las 12 a ≥ 8 con visión normal; el nombre de la nota siempre escrito. | Cumple | V-07: comprobar-accesibilidad.js (teclado, contraste, movimiento) · paleta.py · V-06: 40 × 40 px · Banco (node --test): teclado, etiquetas, paleta, grises, fila y asa · Sesión 1: A18, C05 y C06 | Verificado | Cliente · 20/10 (interfaz.md v1.0) |
@@ -127,17 +133,18 @@
 | **A-09** | F1.1 | D | El pentagrama del afinador refleja la afinación seleccionada. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **A-10** | F1.1 | T | Al cambiar de afinación, el mástil y los retos se rehacen con las nuevas notas. | Cumple | Banco (node --test): Drop D | Verificado parcialmente | Cliente · listado 14/09 |
 | **A-11** | F1.1 | D | Tras recargar se mantiene la afinación, incluida la personalizada. | Cumple | F1.1 #13 | Pendiente | Cliente · listado 14/09 |
-| **MT-01** | F5.6 | D | Tempo de 30 a 250 con la barra vertical (también con el teclado), con − y + y marcando a ritmo, con su nombre italiano; arranca y para con un toque; en vertical y en horizontal sin aviso de girar. | Cumple | Banco (node --test): barra con teclado, − y +, «Marcar» (media y reinicio tras 2 s), límites y nombre del tempo · comprobar-disposicion: cinco pantallas | Verificado | Cliente · 21/10 |
+| **MT-01** | F5.6 | D | Tempo de 30 a 250 con la barra vertical (también con el teclado), con − y + y marcando a ritmo, con su nombre italiano; arranca y para con un toque; en vertical y en horizontal sin aviso de girar. | Cumple | Banco (node --test): barra con teclado, − y +, «Marcar» (media y reinicio tras 2 s), límites, nombre del tempo, Empezar y Parar · comprobar-disposicion: cinco pantallas | Verificado | Cliente · 21/10 |
 | **MT-02** | F5.6 | T | Los doce compases dan su número de pulsos (6/8, 9/8 y 12/8: 2, 3 y 4) y un punto por pulso; con acento, el primer pulso suena más agudo y fuerte, y sin él todos iguales. | Cumple | Banco (node --test): puntos por compás, golpes con y sin acento, ventana que se abre y se cierra, datos guardados y validados | Verificado | Cliente · 21/10 |
 | **MT-03** | F5.6 | T | Cada figura reparte el pulso en 1, 2, 3 o 4 golpes iguales, más suaves que el pulso; cambiarla sonando empieza en el próximo pulso, sin mover el pulso. | Cumple | Banco (node --test): separación de las corcheas, volumen menor, cambio sonando | Verificado | Cliente · 21/10 |
 | **MT-04** | F5.6 | T | Los golpes programados a 30, 120 y 250 ppm se separan exactamente 60/tempo s (±1 ms), nunca se programan más de 100 ms por adelantado y el punto del pulso se ilumina; al ocultar la app se para. | Cumple | Banco (node --test): separación a 30, 120 y 250 ppm, cambio de tempo sonando sin adelantar ni repetir, parada al ocultar | Verificado | Cliente · 21/10 |
-| **MT-05** | F5.6 | D | El metrónomo tiene su pestaña; en marcha, sigue sonando en las demás áreas y su pestaña late con el pulso; al escuchar con el micrófono se para y lo dice; tempo, compás, figura y acento se recuerdan. | Cumple | Banco (node --test): sigue en Libre, pestaña que late, parada con el micrófono y aviso, datos guardados | Verificado | Cliente · 21/10 |
-| **AC-01** | F5.7 | T | El catálogo tiene mayores, menores, 7, maj7 y m7 abiertos y cejillas habituales; cada digitación produce exactamente las notas del acorde. | No cumple | — | Pendiente | Cliente · 21/10 |
-| **AC-02** | F5.7 | D | Cada dedo tiene su número y su color, iguales en todos los acordes y distintos de la paleta de notas; círculo ≥ 3:1 contra el mástil y número ≥ 4,5:1 contra el círculo; cuerdas al aire y apagadas marcadas; cejilla marcada. | No cumple | — | Pendiente | Cliente · 21/10 |
-| **AC-03** | F5.7 | D | El pentagrama escribe las notas del acorde apiladas y se oculta con su ajuste. | No cumple | — | Pendiente | Cliente · 21/10 |
-| **AC-04** | F5.7 | D | El acorde suena rasgueado de grave a agudo; cada cuerda se puede tocar suelta. | No cumple | — | Pendiente | Cliente · 21/10 |
-| **AC-05** | F5.7 | I | Las digitaciones indican que son para la afinación estándar; con otra afinación, Acordes lo avisa y ofrece pasar a la estándar; el selector no ofrece combinaciones sin digitación. | No cumple | — | Pendiente | Cliente · 21/10 |
-| **V-01** | F3.2 | D | En horizontal, con un alto útil de 268 px o más, cada cuerda mide al menos 40 px (iPhone en Safari e instalada; simulador de Android). En vertical, en pantallas táctiles de menos de 600 px de ancho y en Libre, Adivinar y Escalas, aparece el aviso para girar; nunca en el Afinador; cerrado, no vuelve y «Restablecer» lo recupera. | Cumple | V-06: comprobar-disposicion.js en 14 pantallas: 52,8 / 60,8 / 42,5 px · Banco (node --test): aviso para girar · Sesión 1: C02, C03 y D03 | Verificado | Cliente · 20/10 (interfaz.md v1.0) |
+| **MT-05** | F5.6 | D | El metrónomo tiene su pestaña; en marcha, sigue sonando en las demás áreas y su pestaña late con el pulso; al escuchar con el micrófono se para y lo dice; tempo, compás, figura y acento se recuerdan. | Cumple | Banco (node --test): sigue en Libre y en el Afinador hasta escuchar con el micrófono, pestaña que late, parada con el micrófono y aviso, datos guardados | Verificado | Cliente · 21/10 |
+| **AC-01** | F5.7 | T | A un lado el listado (populares arriba, los 30 acordes debajo) y al otro el mástil; cada digitación suena solo a notas del acorde, con la raíz, la nota que define el tipo (la tercera, o la cuarta en sus4) y la séptima si la lleva (la quinta se puede omitir), y con la raíz o el bajo indicado como nota más grave. | Cumple | Banco (node --test): las 30 digitaciones, una a una; populares y listado · comprobar-disposicion: listado y mástil a la vez en seis pantallas | Verificado | Cliente · 21/10 |
+| **AC-02** | F5.7 | D | Cada dedo tiene su número y su color, iguales en todos los acordes (Okabe-Ito); círculo ≥ 3:1 contra el mástil y número ≥ 4,5:1 contra el círculo; ○ y ✕ junto al nombre de la cuerda; cejilla como barra; el lector de pantalla dice el dedo. | Cumple | Banco (node --test): La menor y Fa dibujados, contraste de los cuatro colores · comprobar-accesibilidad: Acordes con Fa | Verificado | Cliente · 21/10 |
+| **AC-03** | F5.7 | D | El pentagrama escribe las notas del acorde apiladas, escritas como manda el acorde, y se oculta con su ajuste; en el móvil en vertical se aparta y vuelve al girarlo. | Cumple | Banco (node --test): cinco notas de La menor; B7 con Re♯ · el ajuste de pentagrama de siempre (F1.1) · comprobar-disposicion: seis pantallas | Verificado | Cliente · 21/10 |
+| **AC-04** | F5.7 | T | El acorde suena rasgueado de grave a agudo al elegirlo y con «Tocar»; cada cuerda se puede tocar suelta. | Cumple | Banco (node --test): orden del rasgueo · cada casilla suena suelta como en todo el mástil (F1.1 #2) | Verificado | Cliente · 21/10 |
+| **AC-05** | F5.7 | T | Con otra afinación, Acordes avisa, no dibuja las digitaciones y «Pasar a estándar» las recupera. | Cumple | Banco (node --test): Drop D y vuelta a la estándar | Verificado | Cliente · 21/10 |
+| **AC-06** | F5.7 | T | El buscador deja los acordes que empiezan por lo escrito, sin distinguir mayúsculas y en las dos nomenclaturas; una letra sola, solo en la inglesa. | Cumple | Banco (node --test): G, g, Sol, D, Am, f# y vacío | Verificado | Cliente · 21/10 |
+| **V-01** | F3.2 | D | En horizontal, con un alto útil de 268 px o más, cada cuerda mide al menos 40 px (iPhone en Safari e instalada; simulador de Android). En vertical, en pantallas táctiles de menos de 600 px de ancho y en Libre, Adivinar, Escalas y Acordes, aparece el aviso para girar; nunca en el Afinador ni en el Metrónomo; cerrado, no vuelve y «Restablecer» lo recupera. | Cumple | V-06: comprobar-disposicion.js en 14 pantallas: 52,8 / 60,8 / 42,5 px · Banco (node --test): aviso para girar · Sesión 1: C02, C03 y D03 | Verificado | Cliente · 20/10 (interfaz.md v1.0) |
 | **V-02** | F1.1 | D | El afinador se usa con comodidad en vertical y en horizontal. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **V-03** | F1.1 | D | En una pantalla de 1280 px se ven los 24 trastes sin desplazarse. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **V-04** | F1.1 · F3.2 | D | El zoom cambia los trastes visibles entre 3 y el máximo que cabe, y la etiqueta dice la cifra real; «+» enseña más trastes y «−» menos. Con pointer: coarse, la vista por defecto usa trastes de al menos 40 px y el usuario puede pedir más trastes, de hasta 28 px; si el zoom guardado pide más de los que caben, se muestran los que caben y lo guardado se conserva (V-08). | Cumple | F1.1 #7 y #8 · V-06 · Banco (node --test): 40 px por defecto, 28 con «+», orden de los botones · Sesión 1: A07, A08 y C04 | Verificado | Cliente · 20/10 (interfaz.md v1.0) |
@@ -149,7 +156,7 @@
 | **C-01** | F1.1 | D | El botón de Ajustes abre el panel desde cualquier pantalla y Escape lo cierra. | Cumple | F1.1 #14 · Sesión 1: A19 y C05 | Verificado | Cliente · listado 14/09 |
 | **C-02** | F1.1 | I | El panel contiene todos los ajustes listados, el idioma (0.4.2) y la versión de la app. | Cumple | F1.1 #12 · Banco (node --test): grupo Idioma | Pendiente | Cliente · listado 14/09 |
 | **C-03** | F1.1 | D | Nomenclatura, pentagrama y pistas tienen chips de acceso rápido. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
-| **C-04** | F1.1 | D | La navegación (barra inferior, raíl o pestañas en la cabecera, según la disposición) lleva a cada área con un toque. | Cumple | F1.1 #14 · Sesión 1: A19 | Verificado | Cliente · 20/10 (interfaz.md v1.0) |
+| **C-04** | F1.1 | D | La navegación (barra inferior, raíl o pestañas en la cabecera, según la disposición) lleva a cada área con un toque. | Cumple | F1.1 #14 · 0.5.5: comprobar-disposicion, seis pestañas sin salirse ni pisar el nombre · Sesión 1: A19 | Verificado | Cliente · 20/10 (interfaz.md v1.0) |
 | **C-05** | F1.1 | T | Todos los ajustes persisten tras recargar, y unos ajustes corruptos o antiguos no rompen la app. | Cumple | Banco (node --test): migración · F1.1 #13 · Sesión 1: A14 y A15 | Verificado | Cliente · listado 14/09 |
 | **C-06** | F3.1 | I | interfaz.md aprobado por el cliente y revisado por el auditor de requisitos. | Cumple | interfaz.md v1.0 · AR-04 · aprobación del cliente el 20/10 | Verificado | Cliente · listado 14/09 |
 | **C-07** | F3.2 | D | Con un paso anterior en la sesión, «atrás» cierra Ajustes o vuelve al área anterior; desde la primera área actúa el sistema; al abrir o recargar se entra en Libre. Prueba manual en Windows y en el simulador de Android de Chrome. | Cumple | Banco (node --test): historial simulado con popstate (3 pruebas) · Sesión 1: A17 | Verificado | Cliente · 20/10 (interfaz.md v1.0) |

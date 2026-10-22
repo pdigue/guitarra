@@ -29,7 +29,7 @@ const metro = {
   timer: null, frame: null,
   cola: [],                     // pulsos programados que aún no se han visto: { t, pulso }
   taps: [], tapPuntero: false,  // marcas de «Marcar» (ms); si el toque llegó con el dedo
-  aviso: ''                     // por qué se paró, si no lo paraste tú
+  aviso: ''                     // clave del texto que explica por qué se paró, si no lo paraste tú
 };
 
 const compasActual = () => COMPASES.find(c => c.id === state.metro.sig);
@@ -69,13 +69,20 @@ function metroQueSuena(paso){
 function metroProgramar(){
   // Si el contexto de audio cambió (se rehízo tras una llamada en el iPhone) o
   // se cerró, se para: los golpes irían a un reloj que ya no suena.
-  if (!audioCtx || audioCtx !== metro.ctx || audioCtx.state === 'closed'){ stopMetro(); return; }
+  if (!audioCtx || audioCtx !== metro.ctx || audioCtx.state === 'closed'){ stopMetro('audio'); return; }
+  // Una llamada o el sistema dejan el audio en pausa: no suena nada, así que
+  // no se puede decir que siga «en marcha» (AT-10 #6).
+  if (audioCtx.state !== 'running'){ stopMetro('audio'); return; }
   const total = compasActual().pulsos * state.metro.sub;
   const hasta = audioCtx.currentTime + METRO_ADELANTO;
   for (let t = metro.inicio + metro.n * metroIntervalo(); t < hasta; t = metro.inicio + metro.n * metroIntervalo()){
     const golpe = metroQueSuena(metro.paso % total);
-    metroClic(t, golpe.tipo);
-    if (golpe.tipo !== 'sub') metro.cola.push({ t, pulso: golpe.pulso });
+    // Si el navegador estuvo ocupado y un golpe ya pasó, se salta: sonaría a
+    // destiempo, amontonado con los demás (AT-10 #2).
+    if (t >= audioCtx.currentTime - 0.005){
+      metroClic(t, golpe.tipo);
+      if (golpe.tipo !== 'sub') metro.cola.push({ t, pulso: golpe.pulso });
+    }
     metro.paso = (metro.paso + 1) % total;
     metro.n++;
   }
@@ -103,7 +110,7 @@ function startMetro(){
   if (metro.sonando) return;
   unlockAudio();
   wakeAudio();
-  if (!audioCtx){ metro.aviso = t('metro.noAudio'); renderMetro(); return; }
+  if (!audioCtx){ metro.aviso = 'metro.noAudio'; renderMetro(); return; }
   metro.ctx = audioCtx;
   metro.sonando = true;
   metro.aviso = '';
@@ -123,7 +130,7 @@ function stopMetro(motivo){
   clearInterval(metro.timer); metro.timer = null;
   cancelAnimationFrame(metro.frame); metro.frame = null;
   metro.cola = [];
-  if (estaba && motivo) metro.aviso = t(motivo === 'mic' ? 'metro.stoppedMic' : 'metro.stoppedHidden');
+  if (estaba && motivo) metro.aviso = { mic: 'metro.stoppedMic', hidden: 'metro.stoppedHidden', audio: 'metro.stoppedAudio' }[motivo];
   const tab = document.querySelector('.tab[data-screen="metro"]');
   if (tab) tab.classList.remove('beat');
   renderMetro();
@@ -151,7 +158,7 @@ function tapTempo(ahora){
   if (ts.length && ahora - ts[ts.length - 1] > 2000) ts.length = 0;
   ts.push(ahora);
   if (ts.length > 5) ts.shift();
-  if (ts.length < 2){ metro.aviso = t('metro.tapHint'); renderMetro(); return; }
+  if (ts.length < 2){ metro.aviso = 'metro.tapHint'; renderMetro(); return; }
   const media = (ts[ts.length - 1] - ts[0]) / (ts.length - 1);
   metro.aviso = '';
   setTempo(60000 / media);
@@ -163,7 +170,13 @@ function setCompas(id){
   if (!c || c.id === state.metro.sig) return;
   state.metro.sig = c.id;
   save();
-  if (metro.sonando){ metro.paso = 0; metro.cola = []; }   // el compás nuevo empieza en su primer pulso
+  if (metro.sonando){
+    // El compás nuevo empieza en el próximo pulso, en su sitio: si el siguiente
+    // golpe era una subdivisión, se espera al pulso (AT-10 #1).
+    const s = state.metro.sub, faltan = (s - metro.paso % s) % s;
+    metro.inicio += (metro.n + faltan) * metroIntervalo(); metro.n = 0;
+    metro.paso = 0; metro.cola = [];
+  }
   buildMetroDots();
   renderMetro();
 }
@@ -225,25 +238,36 @@ function bindSlider(){
   });
 }
 
-/* --- Figuras de la subdivisión, dibujadas en SVG --- */
-function iconoFigura(k, compuesto){
+/* --- Figuras de la subdivisión, dibujadas en SVG ---
+   El pulso es una negra (x/4), una corchea (3/8, 5/8, 7/8) o una negra con
+   puntillo (6/8, 9/8, 12/8), y las figuras se dibujan desde él: en 5/8, dos por
+   pulso son semicorcheas (AT-10 #4). */
+const figuraPulso = c => c.compuesto ? 'puntillo' : c.id.endsWith('/8') ? 'corchea' : 'negra';
+function iconoFigura(k, pulso){
   const svg = el('svg', { viewBox: '0 0 64 40', 'aria-hidden': 'true' });
   const xs = k === 1 ? [26] : k === 2 ? [18, 40] : k === 3 ? [10, 28, 46] : [6, 20, 34, 48];
   xs.forEach(x => {
     svg.appendChild(el('ellipse', { cx: x, cy: 33, rx: 6, ry: 4.4, transform: `rotate(-20 ${x} 33)`, fill: 'currentColor' }));
     svg.appendChild(el('line', { x1: x + 5.4, y1: 32, x2: x + 5.4, y2: 6, stroke: 'currentColor', 'stroke-width': 2 }));
   });
-  if (k > 1){
+  // Barras: una por cada vez que se parte por la mitad.
+  const base = pulso === 'corchea' ? 1 : 0;
+  const barras = k === 1 ? base : pulso === 'puntillo' ? 1 : base + (k === 4 ? 2 : 1);
+  if (k === 1){
+    for (let i = 0; i < barras; i++)       // corchea sola: su corchete
+      svg.appendChild(el('path', { d: `M ${31.4} ${6 + i * 6} c 7 4 8 9 4 14`, fill: 'none', stroke: 'currentColor', 'stroke-width': 2 }));
+  } else {
     const a = xs[0] + 5.4, b = xs[xs.length - 1] + 5.4;
-    svg.appendChild(el('rect', { x: a - 1, y: 5, width: b - a + 2, height: 4, fill: 'currentColor' }));
-    if (k === 4) svg.appendChild(el('rect', { x: a - 1, y: 12, width: b - a + 2, height: 3.4, fill: 'currentColor' }));
+    for (let i = 0; i < barras; i++)
+      svg.appendChild(el('rect', { x: a - 1, y: 5 + i * 6.5, width: b - a + 2, height: 3.6, fill: 'currentColor' }));
   }
-  if (k === 3 && !compuesto){
-    const tx = el('text', { x: (xs[0] + xs[2]) / 2 + 5.4, y: 3.5, 'text-anchor': 'middle', 'font-size': 9, fill: 'currentColor' });
-    tx.textContent = '3'; svg.appendChild(tx);
+  // Grupos irregulares, con su número: tresillo en los simples; dosillo y cuatrillo en los compuestos.
+  const grupo = pulso === 'puntillo' ? (k === 2 || k === 4 ? k : 0) : (k === 3 ? 3 : 0);
+  if (grupo){
+    const tx = el('text', { x: (xs[0] + xs[xs.length - 1]) / 2 + 5.4, y: 3.5, 'text-anchor': 'middle', 'font-size': 9, fill: 'currentColor' });
+    tx.textContent = String(grupo); svg.appendChild(tx);
   }
-  // En 6/8, 9/8 y 12/8 el pulso es una negra con puntillo.
-  if (k === 1 && compuesto) svg.appendChild(el('circle', { cx: 37, cy: 33, r: 2.2, fill: 'currentColor' }));
+  if (k === 1 && pulso === 'puntillo') svg.appendChild(el('circle', { cx: 37, cy: 33, r: 2.2, fill: 'currentColor' }));
   return svg;
 }
 
@@ -278,27 +302,35 @@ function buildMetroPicker(){
     b.addEventListener('click', () => { setCompas(c.id); renderPicker(); });
     sigs.appendChild(b);
   }
+  // Las cuatro figuras se crean una vez: rehacerlas en cada toque hacía perder
+  // el foco del teclado (AT-10 #3). Al cambiar de compás solo cambia su dibujo.
+  const subs = document.getElementById('metro-sub');
+  subs.innerHTML = ''; delete subs.dataset.pulso;
+  for (const k of [1, 2, 3, 4]){
+    const b = document.createElement('button');
+    b.className = 'mp-fig'; b.dataset.v = String(k);
+    b.addEventListener('click', () => { setSubdivision(k); renderPicker(); });
+    subs.appendChild(b);
+  }
   renderPicker();
 }
 
-/** Las figuras dependen del compás (con puntillo en los compuestos). */
+/** Marca el compás y la figura elegidos; las figuras se dibujan según el pulso. */
 function renderPicker(){
-  const m = state.metro, compuesto = !!compasActual().compuesto;
+  const m = state.metro, pulso = figuraPulso(compasActual());
   document.querySelectorAll('#metro-sigs .mp-sig').forEach(b => {
     const on = b.dataset.v === m.sig;
     b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
   });
   const subs = document.getElementById('metro-sub');
-  subs.innerHTML = '';
-  for (const k of [1, 2, 3, 4]){
-    const b = document.createElement('button');
-    b.className = 'mp-fig'; b.dataset.v = String(k);
-    b.appendChild(iconoFigura(k, compuesto));
-    b.setAttribute('aria-label', t('metro.sub.' + k + (compuesto && k > 1 ? 'c' : '')));
+  const redibujar = subs.dataset.pulso !== pulso;
+  subs.dataset.pulso = pulso;
+  subs.querySelectorAll('.mp-fig').forEach(b => {
+    const k = +b.dataset.v;
+    if (redibujar){ b.innerHTML = ''; b.appendChild(iconoFigura(k, pulso)); }
+    b.setAttribute('aria-label', t('metro.sub.' + k + (k > 1 ? { negra: '', corchea: 'e', puntillo: 'c' }[pulso] : '')));
     b.classList.toggle('on', k === m.sub); b.setAttribute('aria-pressed', String(k === m.sub));
-    b.addEventListener('click', () => { setSubdivision(k); renderPicker(); });
-    subs.appendChild(b);
-  }
+  });
   document.getElementById('metro-accent').checked = m.accent;
 }
 
@@ -323,9 +355,9 @@ function renderMetro(){
   });
   const play = document.getElementById('metro-play');
   play.textContent = metro.sonando ? t('metro.stop') : t('metro.start');
-  play.classList.toggle('on', metro.sonando);
-  play.setAttribute('aria-pressed', String(metro.sonando));
-  document.getElementById('metro-note').textContent = metro.aviso || (metro.sonando ? t('metro.playing') : '');
+  play.classList.toggle('on', metro.sonando);   // el texto ya dice Empezar o Parar: sin aria-pressed (AT-10 #9)
+  // El aviso se guarda como clave y se traduce al pintarlo: cambia con el idioma (AT-10 #5).
+  document.getElementById('metro-note').textContent = metro.aviso ? t(metro.aviso) : (metro.sonando ? t('metro.playing') : '');
   // Fuera de su área, la pestaña dice que está en marcha (también al lector de pantalla).
   const tab = document.querySelector('.tab[data-screen="metro"]');
   if (tab){
@@ -374,6 +406,7 @@ function bindMetro(){
     // (Intro o espacio) llega como click sin pointerdown.
     metro.tapPuntero = true; tapTempo(ev.timeStamp || Date.now());
   });
+  tap.addEventListener('pointercancel', () => { metro.tapPuntero = false; });   // si no llega el click, no se traga el siguiente toque
   tap.addEventListener('click', ev => {
     if (metro.tapPuntero){ metro.tapPuntero = false; return; }
     tapTempo(ev.timeStamp || Date.now());

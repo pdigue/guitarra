@@ -112,13 +112,21 @@ const TEXTOS = {
     'metro.withAccent': 'con acento', 'metro.noAccent': 'sin acento',
     'metro.sub': 'Subdivisión', 'metro.sub.1': 'Solo el pulso', 'metro.sub.2': 'Dos por pulso (corcheas)',
     'metro.sub.3': 'Tres por pulso (tresillos)', 'metro.sub.4': 'Cuatro por pulso (semicorcheas)',
-    'metro.sub.3c': 'Tres por pulso (corcheas)', 'metro.sub.2c': 'Dos por pulso', 'metro.sub.4c': 'Cuatro por pulso',
+    'metro.sub.3c': 'Tres por pulso (corcheas)', 'metro.sub.2c': 'Dos por pulso (dosillo)', 'metro.sub.4c': 'Cuatro por pulso (cuatrillo)',
+    'metro.sub.2e': 'Dos por pulso (semicorcheas)', 'metro.sub.3e': 'Tres por pulso (tresillo de semicorcheas)', 'metro.sub.4e': 'Cuatro por pulso (fusas)',
+    'metro.stoppedAudio': 'Se paró: el sistema detuvo el sonido. Vuelve a empezar.',
     'metro.start': 'Empezar', 'metro.stop': 'Parar',
     'metro.playing': 'Sonando. Puedes ir a otra área: sigue hasta que lo pares aquí.',
     'metro.noAudio': 'El sonido aún no está listo. Vuelve a pulsar.',
     'metro.stoppedMic': 'El metrónomo se ha parado: su clic confundiría al afinador.',
     'metro.stoppedHidden': 'Se paró al salir de la app.',
-    'metro.running': 'Metrónomo en marcha'
+    'metro.running': 'Metrónomo en marcha',
+    // Acordes (F5.7, AC-01 a AC-06)
+    'tab.chords': 'Acordes', 'chord.search': 'Buscar: G, Am…', 'chord.searchAria': 'Buscar acorde por su nombre',
+    'chord.popular': 'Populares', 'chord.all': 'Todos ({n})', 'chord.results': 'Resultados ({n})',
+    'chord.none': 'Ningún acorde empieza por «{q}».', 'chord.play': 'Tocar', 'chord.playAria': 'Tocar el acorde',
+    'chord.tuning': 'Las digitaciones son para la afinación estándar.', 'chord.toStandard': 'Pasar a estándar',
+    'chord.finger': 'dedo {n}', 'chord.open': 'al aire', 'chord.muted': 'no suena', 'chord.stringAria': '{o} cuerda: {e}'
   },
   en: {
     'gate.sub': 'Learn where every note lives on the fretboard. Tap to load the guitar sounds.',
@@ -217,13 +225,21 @@ const TEXTOS = {
     'metro.withAccent': 'accented', 'metro.noAccent': 'no accent',
     'metro.sub': 'Subdivision', 'metro.sub.1': 'Beat only', 'metro.sub.2': 'Two per beat (eighths)',
     'metro.sub.3': 'Three per beat (triplets)', 'metro.sub.4': 'Four per beat (sixteenths)',
-    'metro.sub.3c': 'Three per beat (eighths)', 'metro.sub.2c': 'Two per beat', 'metro.sub.4c': 'Four per beat',
+    'metro.sub.3c': 'Three per beat (eighths)', 'metro.sub.2c': 'Two per beat (duplet)', 'metro.sub.4c': 'Four per beat (quadruplet)',
+    'metro.sub.2e': 'Two per beat (sixteenths)', 'metro.sub.3e': 'Three per beat (sixteenth triplet)', 'metro.sub.4e': 'Four per beat (thirty-seconds)',
+    'metro.stoppedAudio': 'It stopped: the system halted the sound. Start again.',
     'metro.start': 'Start', 'metro.stop': 'Stop',
     'metro.playing': 'Playing. You can go to another area: it keeps going until you stop it here.',
     'metro.noAudio': 'Sound is not ready yet. Tap again.',
     'metro.stoppedMic': 'The metronome stopped: its click would confuse the tuner.',
     'metro.stoppedHidden': 'It stopped when you left the app.',
-    'metro.running': 'Metronome running'
+    'metro.running': 'Metronome running',
+    // Chords (F5.7, AC-01 to AC-06)
+    'tab.chords': 'Chords', 'chord.search': 'Search: G, Am…', 'chord.searchAria': 'Search a chord by name',
+    'chord.popular': 'Popular', 'chord.all': 'All ({n})', 'chord.results': 'Results ({n})',
+    'chord.none': 'No chord starts with “{q}”.', 'chord.play': 'Play', 'chord.playAria': 'Play the chord',
+    'chord.tuning': 'These fingerings are for standard tuning.', 'chord.toStandard': 'Switch to standard',
+    'chord.finger': 'finger {n}', 'chord.open': 'open', 'chord.muted': 'not played', 'chord.stringAria': '{o} string: {e}'
   }
 };
 
@@ -257,4 +273,5 @@ function aplicarIdioma(){
   document.querySelectorAll('[data-t]').forEach(e => { e.textContent = t(e.dataset.t); });
   document.querySelectorAll('[data-t-aria]').forEach(e => e.setAttribute('aria-label', t(e.dataset.tAria)));
   document.querySelectorAll('[data-t-title]').forEach(e => e.setAttribute('title', t(e.dataset.tTitle)));
+  document.querySelectorAll('[data-t-placeholder]').forEach(e => e.setAttribute('placeholder', t(e.dataset.tPlaceholder)));
 }

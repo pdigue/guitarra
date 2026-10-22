@@ -12,7 +12,7 @@
 <link rel="manifest" href='data:application/manifest+json,{"name":"Trasteando","short_name":"Trasteando","start_url":".","display":"standalone","background_color":"%23140e09","theme_color":"%23140e09","orientation":"any"}'>
 <link rel="icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" rx="40" fill="%23140e09"/><circle cx="90" cy="90" r="52" fill="none" stroke="%23e8a45c" stroke-width="5"/><circle cx="90" cy="90" r="40" fill="none" stroke="%236b4f30" stroke-width="3" stroke-dasharray="4 5"/><line x1="38" y1="74" x2="142" y2="74" stroke="%23e8dfd3" stroke-width="1.4"/><line x1="38" y1="82" x2="142" y2="82" stroke="%23e8dfd3" stroke-width="1.8"/><line x1="38" y1="90" x2="142" y2="90" stroke="%23e8dfd3" stroke-width="2.2"/><line x1="38" y1="98" x2="142" y2="98" stroke="%23e8dfd3" stroke-width="2.6"/><line x1="38" y1="106" x2="142" y2="106" stroke="%23e8dfd3" stroke-width="3"/></svg>'>  <!-- sin él, el navegador pide favicon.ico y da 404 (Sesión 1, A16) -->
 <link rel="apple-touch-icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" rx="40" fill="%23140e09"/><circle cx="90" cy="90" r="52" fill="none" stroke="%23e8a45c" stroke-width="5"/><circle cx="90" cy="90" r="40" fill="none" stroke="%236b4f30" stroke-width="3" stroke-dasharray="4 5"/><line x1="38" y1="74" x2="142" y2="74" stroke="%23e8dfd3" stroke-width="1.4"/><line x1="38" y1="82" x2="142" y2="82" stroke="%23e8dfd3" stroke-width="1.8"/><line x1="38" y1="90" x2="142" y2="90" stroke="%23e8dfd3" stroke-width="2.2"/><line x1="38" y1="98" x2="142" y2="98" stroke="%23e8dfd3" stroke-width="2.6"/><line x1="38" y1="106" x2="142" y2="106" stroke="%23e8dfd3" stroke-width="3"/></svg>'>
-<link rel="stylesheet" href="css/trasteando.css?v=0.5.4">
+<link rel="stylesheet" href="css/trasteando.css?v=0.5.6">
 </head>
 <body>
 
@@ -60,6 +60,10 @@
   <button class="tab" data-screen="scales">
     <svg viewBox="0 0 24 24"><path d="M4 18V6"/><path d="M4 8h5l3-3 3 3h5"/><path d="M9 18v-6"/><path d="M15 18v-8"/><path d="M20 18V8"/></svg>
     <span data-t="tab.scales">Escalas</span>
+  </button>
+  <button class="tab" data-screen="chords">
+    <svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1.5"/><line x1="5" y1="7" x2="19" y2="7"/><line x1="10" y1="3" x2="10" y2="21"/><line x1="14.5" y1="3" x2="14.5" y2="21"/><circle cx="10" cy="11" r="1.6" fill="currentColor"/><circle cx="14.5" cy="15" r="1.6" fill="currentColor"/></svg>
+    <span data-t="tab.chords">Acordes</span>
   </button>
   <button class="tab" data-screen="metro">
     <svg viewBox="0 0 24 24"><path d="M9.5 3.5h5L18 20H6z"/><line x1="7" y1="16" x2="18" y2="16"/><line x1="12" y1="16" x2="16.5" y2="6"/></svg>
@@ -122,6 +126,20 @@
       <button class="chip" id="scale-reset" data-t="scale.reset">Otra vez</button>
     </div>
   </div>
+</div>
+
+<!-- Acordes (F5.7): buscador y listado a un lado; el acorde, en el mástil (AC-01 a AC-06) -->
+<div class="chords-card" id="chords-card" hidden>
+  <input type="search" class="chord-search" id="chord-search" placeholder="Buscar: G, Am…" data-t-placeholder="chord.search"
+         aria-label="Buscar acorde por su nombre" data-t-aria="chord.searchAria" autocomplete="off" autocapitalize="off" spellcheck="false">
+  <div class="chord-list" id="chord-list" role="group" aria-label="Acordes" data-t-aria="tab.chords"></div>
+  <div class="chord-info">
+    <span class="chord-name" id="chord-name">C</span>
+    <span class="chord-notes" id="chord-notes"></span>
+    <button class="chip chord-play" id="chord-play" aria-label="Tocar el acorde" data-t-aria="chord.playAria">&#9654; <span data-t="chord.play">Tocar</span></button>
+  </div>
+  <p class="chord-tuning" id="chord-tuning" hidden><span data-t="chord.tuning">Las digitaciones son para la afinación estándar.</span>
+    <button class="chip" id="chord-standard" data-t="chord.toStandard">Pasar a estándar</button></p>
 </div>
 
 <!-- Pentagrama y nota leída -->
@@ -246,10 +264,10 @@
   </div>
   <div class="metro-controls">
     <div class="metro-row">
-      <button class="metro-sig" id="metro-sig"><span class="sig-n">4</span><span class="sig-d">4</span></button>
+      <button class="metro-sig" id="metro-sig" aria-haspopup="dialog"><span class="sig-n">4</span><span class="sig-d">4</span></button>
       <button class="metro-tap" id="metro-tap" aria-label="Marcar el tempo: toca a ritmo" data-t-aria="metro.tapAria"><span data-t="metro.tap">Marcar</span></button>
     </div>
-    <button class="metro-play" id="metro-play" aria-pressed="false">Empezar</button>
+    <button class="metro-play" id="metro-play">Empezar</button>
     <p class="metro-note" id="metro-note" role="status"></p>
   </div>
 </div>
@@ -368,20 +386,21 @@
      comparten lo que declaran. herramientas/ensamblar.js los une en un solo archivo
      para dist/trasteando.html (G-08). El «?v=» lleva la versión de la app: así el
      navegador no mezcla archivos de dos versiones guardados en su caché (AT-07 #3). -->
-<script src="js/00-idioma.js?v=0.5.4"></script>
-<script src="js/01-teoria.js?v=0.5.4"></script>
-<script src="js/02-estado.js?v=0.5.4"></script>
-<script src="js/03-audio.js?v=0.5.4"></script>
-<script src="js/04-pentagrama.js?v=0.5.4"></script>
-<script src="js/05-mastil.js?v=0.5.4"></script>
-<script src="js/06-zoom.js?v=0.5.4"></script>
-<script src="js/07-adivinar.js?v=0.5.4"></script>
-<script src="js/08-afinador-referencia.js?v=0.5.4"></script>
-<script src="js/09-navegacion.js?v=0.5.4"></script>
-<script src="js/10-tono.js?v=0.5.4"></script>
-<script src="js/11-afinador-micro.js?v=0.5.4"></script>
-<script src="js/13-escalas.js?v=0.5.4"></script>
-<script src="js/14-metronomo.js?v=0.5.4"></script>
-<script src="js/99-arranque.js?v=0.5.4"></script>
+<script src="js/00-idioma.js?v=0.5.6"></script>
+<script src="js/01-teoria.js?v=0.5.6"></script>
+<script src="js/02-estado.js?v=0.5.6"></script>
+<script src="js/03-audio.js?v=0.5.6"></script>
+<script src="js/04-pentagrama.js?v=0.5.6"></script>
+<script src="js/05-mastil.js?v=0.5.6"></script>
+<script src="js/06-zoom.js?v=0.5.6"></script>
+<script src="js/07-adivinar.js?v=0.5.6"></script>
+<script src="js/08-afinador-referencia.js?v=0.5.6"></script>
+<script src="js/09-navegacion.js?v=0.5.6"></script>
+<script src="js/10-tono.js?v=0.5.6"></script>
+<script src="js/11-afinador-micro.js?v=0.5.6"></script>
+<script src="js/13-escalas.js?v=0.5.6"></script>
+<script src="js/14-metronomo.js?v=0.5.6"></script>
+<script src="js/15-acordes.js?v=0.5.6"></script>
+<script src="js/99-arranque.js?v=0.5.6"></script>
 </body>
 </html>

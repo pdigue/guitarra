@@ -29,7 +29,8 @@ class El {
     this.style = { setProperty: (k, v) => { props[k] = String(v); }, getPropertyValue: k => props[k] || '' };
     this.dataset = new Proxy({}, {
       get: (_, k) => typeof k === 'string' ? (self.getAttribute(camelToData(k)) ?? undefined) : undefined,
-      set: (_, k, v) => { self.setAttribute(camelToData(k), String(v)); return true; }
+      set: (_, k, v) => { self.setAttribute(camelToData(k), String(v)); return true; },
+      deleteProperty: (_, k) => { self.removeAttribute(camelToData(k)); return true; }
     });
   }
   get id(){ return this.getAttribute('id') || ''; }
@@ -39,7 +40,10 @@ class El {
   set hidden(v){ v ? this.attrs.set('hidden', '') : this.attrs.delete('hidden'); }
   setAttribute(k, v){ if (k === 'class') this.className = v; else this.attrs.set(k, String(v)); }
   getAttribute(k){ return k === 'class' ? this.className : (this.attrs.has(k) ? this.attrs.get(k) : null); }
+  removeAttribute(k){ if (k === 'class') this.className = ''; else this.attrs.delete(k); }
   appendChild(c){ c.parentNode = this; this.children.push(c); return c; }
+  removeChild(c){ const i = this.children.indexOf(c); if (i >= 0) this.children.splice(i, 1); c.parentNode = null; return c; }
+  remove(){ if (this.parentNode) this.parentNode.removeChild(this); }
   get textContent(){ return this._text + this.children.map(c => c.textContent).join(''); }
   set textContent(v){ this.children = []; this._html = ''; this._text = String(v); }
   get innerHTML(){ return this._html || this._text; }

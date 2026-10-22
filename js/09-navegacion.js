@@ -10,6 +10,7 @@
 
 function setScreen(next){
   screen = next;
+  document.body.dataset.screen = next;   // para lo que cambia de disposición según el área (Acordes en vertical)
   document.querySelectorAll('.tab[data-screen]').forEach(t =>
     t.classList.toggle('active', t.dataset.screen === next));
 
@@ -17,6 +18,7 @@ function setScreen(next){
   const isGuess = next === 'guess';
   const isScales = next === 'scales';
   const isMetro = next === 'metro';
+  const isChords = next === 'chords';
   const sinMastil = isTuner || isMetro;   // áreas sin mástil: Afinador y Metrónomo
 
   document.getElementById('board-area').hidden = sinMastil;
@@ -29,6 +31,7 @@ function setScreen(next){
   document.getElementById('panel').hidden = sinMastil;
   document.getElementById('challenge').hidden = !isGuess;
   document.getElementById('scales-card').hidden = !isScales;
+  document.getElementById('chords-card').hidden = !isChords;
   document.getElementById('scale-nav').hidden = !isScales;
   updateRotateHint();
 
@@ -47,8 +50,10 @@ function setScreen(next){
     challenge = null;
     renderClues();              // fuera de Adivinar, las pistas no enseñan respuesta
   }
+  if (!isChords) leaveChords();
   if (isScales){ resetScalePractice(); sc.paso = 0; renderScales(); }
   else leaveScales();
+  if (isChords) renderChords();     // después de leaveScales: el pentagrama es del acorde
   if (!sinMastil) requestAnimationFrame(applyZoom);
 }
 
@@ -124,7 +129,7 @@ function openSheet(open){
    «atrás» cierra Ajustes o vuelve al área anterior. Desde la primera área no
    se bloquea nada: actúa el sistema. Es un estándar presente en todos los
    navegadores; si faltara, la app funciona igual sin ese paso. */
-const SCREEN_HASH = { free:'libre', guess:'adivinar', tuner:'afinador', scales:'escalas', metro:'metronomo' };
+const SCREEN_HASH = { free:'libre', guess:'adivinar', tuner:'afinador', scales:'escalas', chords:'acordes', metro:'metronomo' };
 const canHistory = typeof history !== 'undefined' && typeof history.pushState === 'function';
 const sheetIsOpen = () => document.getElementById('sheet').classList.contains('open');
 
@@ -189,10 +194,11 @@ function refreshNoteText(){
   renderTunerStaff();
   if (challenge) renderChallenge();
   buildScaleSelects(); renderScales();     // los nombres escritos siguen la nomenclatura
+  refreshChords();
   // El lector de nota se refresca desde lastMidi: la clase .active se limpia
   // a los 2,2 s, así que consultar el DOM fallaba pasado ese tiempo.
   refrescarLector();
-  if (lastMidi !== null && screen !== 'scales') showOnStaff(lastMidi, noteInfo(lastMidi).color);
+  if (lastMidi !== null && !pantallaConPentagramaPropio()) showOnStaff(lastMidi, noteInfo(lastMidi).color);
   syncUI();
 }
 

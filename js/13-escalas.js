@@ -34,6 +34,10 @@ function escrituraEnPantalla(midi){
     const i = pcsEscala().indexOf(((midi % 12) + 12) % 12);
     if (i >= 0) return notasEscala()[i];
   }
+  if (screen === 'chords'){                     // en Acordes, como lo escribe el acorde (B7: Re♯)
+    const e = escrituraEnAcorde(acordeActual(), midi);
+    if (e) return e;
+  }
   return escrituraPreferida(midi);
 }
 
@@ -191,6 +195,7 @@ function leaveScales(){
   clearMarks(['scale', 'scale-tonic', 'scale-step', 'correct', 'wrong']);
   refreshNoteNames();
   refrescarLector();
+  if (pantallaConPentagramaPropio()) return;   // Acordes dibuja el suyo
   if (lastMidi !== null) showOnStaff(lastMidi, noteInfo(lastMidi).color);
   else clearStaff();
 }

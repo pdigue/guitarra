@@ -58,6 +58,13 @@ const PANTALLAS = [
   ['iphone-safari-vertical-metronomo-compas',   390, 664, true, 'metro', false],
   ['iphone-se-safari-vertical-metronomo-compas',375, 553, true, 'metro', false],
   ['iphone-safari-horizontal-metronomo-compas', 750, 342, true, 'metro', false],
+  // Acordes (F5.7): buscador, listado y el acorde en el mástil (Fa, con cejilla).
+  ['iphone-safari-vertical-acordes',     390, 664, true,  'chords', true ],
+  ['iphone-se-safari-vertical-acordes',  375, 553, true,  'chords', true ],
+  ['android-pequeno-vertical-acordes',   360, 560, true,  'chords', true ],
+  ['iphone-safari-horizontal-acordes',   750, 342, true,  'chords', false],
+  ['windows-1280-acordes',              1280, 720, false, 'chords', false],
+  ['windows-tableta-acordes',            768, 900, false, 'chords', false],
   // Ajustes abierto: sus controles también miden 40 px (AR-05 #3).
   ['iphone-safari-vertical-ajustes',     390, 664, true,  'free',  true,  true],
   ['iphone-safari-horizontal-ajustes',   750, 342, true,  'free',  false, true],
@@ -80,6 +87,7 @@ const PANTALLAS = [
     // En el metrónomo, el caso de más puntos (7/8) en las pantallas pequeñas, y su ventana de compás.
     if (area === 'metro' && /se-|horizontal/.test(nombre)) await pagina.evaluate(() => setCompas('7/8'));
     if (nombre.endsWith('-compas')) await pagina.click('#metro-sig');
+    if (area === 'chords') await pagina.evaluate(() => selectChord('F', false));
     if (ajustes) await pagina.evaluate(() => [...document.querySelectorAll('#btn-settings, #btn-settings-rail')]
       .find(b => b.getClientRects().length).click());
     await pagina.waitForTimeout(400);
@@ -107,7 +115,7 @@ const PANTALLAS = [
                   Math.round(b.getBoundingClientRect().width) + '×' + Math.round(b.getBoundingClientRect().height));
       // Lo que se sale de la pantalla. El panel en horizontal puede desplazarse
       // por dentro (interfaz.md §7), así que lo que cuenta es el propio panel.
-      out.fuera = [...document.querySelectorAll('.header, .quickbar, .challenge, .scales-card, .sc-nav, .display, .zoombar, .rotate-hint, .board-area, .tabbar, .tuner, .metro, .panel, .brand')]
+      out.fuera = [...document.querySelectorAll('.header, .quickbar, .challenge, .scales-card, .sc-nav, .display, .zoombar, .rotate-hint, .board-area, .tabbar, .tuner, .metro, .chords-card, .panel, .brand')]
         .filter(vis).filter(e => {
           if (e.closest('.panel') && getComputedStyle(document.getElementById('panel')).display !== 'contents') return false;
           const r = e.getBoundingClientRect();

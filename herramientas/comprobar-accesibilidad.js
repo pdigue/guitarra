@@ -143,6 +143,7 @@ function medirContraste(){
     }],
     ['Adivinar', async () => { await pagina.click('.tab[data-screen="guess"]'); await pagina.waitForTimeout(700); }],
     ['Afinador', async () => { await pagina.click('.tab[data-screen="tuner"]'); await pagina.waitForTimeout(250); }],
+    ['Acordes, con Fa (cejilla y los cuatro dedos)', async () => { await pagina.click('.tab[data-screen="chords"]'); await pagina.evaluate(() => selectChord('F', false)); await pagina.waitForTimeout(300); }],
     ['Metrónomo, sonando', async () => { await pagina.click('.tab[data-screen="metro"]'); await pagina.click('#metro-play'); await pagina.waitForTimeout(400); }],
     ['Ajustes abierto', async () => { await pagina.click('#metro-play');
       await pagina.click('#btn-settings'); await pagina.waitForTimeout(400); }],
