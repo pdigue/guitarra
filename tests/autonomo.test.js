@@ -10,12 +10,19 @@
 //
 // node --test ejecuta cada archivo *.test.js en su propio proceso, así que las
 // variables de entorno que se ponen aquí no afectan a la primera pasada.
+//
+// Se repiten los dos archivos que arrancan la app: banco.test.js y escalas.test.js.
+// tono.test.js no: carga por su cuenta el módulo del detector de tono, sin la
+// página, así que daría lo mismo en las dos pasadas. Dentro de banco.test.js, las
+// pruebas marcadas con unaVez (las que leen el repositorio o comparan las dos
+// formas) tampoco se repiten.
 'use strict';
 const path = require('path');
 const DIST = path.join(__dirname, '..', 'dist');
 process.env.APP_HTML = path.join(DIST, 'trasteando.html');
 process.env.TRASTEANDO_FORMA = 'autónomo';
 require('./banco.test.js');
+require('./escalas.test.js');
 
 // Y una prueba que solo tiene sentido aquí: la app del autónomo encuentra dentro de
 // la página sus grabaciones, exactamente las que generó la herramienta (sus huellas
