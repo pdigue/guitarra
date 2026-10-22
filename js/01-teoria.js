@@ -6,7 +6,7 @@
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.5.3';
+const APP_VERSION = '0.5.4';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -135,6 +135,19 @@ function octavaEscrita(n, midi){ return Math.floor((midi - n.alt - PC_LETRA[n.le
    semitonos desde la tónica y el salto de letra de cada grado: la mayor usa
    las siete letras seguidas; las pentatónicas se saltan dos (la mayor no
    tiene 4º ni 7º grado). */
+/* Compases del metrónomo (MT-02). `pulsos` son los puntos que se ven y los
+   golpes principales que suenan. En los compases de 4, cada pulso es una negra.
+   En 6/8, 9/8 y 12/8 (compuestos) el pulso es la negra con puntillo, que vale
+   tres corcheas: 9/8 tiene tres pulsos, como en la app que nos enseñaste. En
+   3/8, 5/8 y 7/8 cada corchea es un pulso. El tempo cuenta pulsos. */
+const COMPASES = [
+  { id:'1/4', pulsos:1 }, { id:'2/4', pulsos:2 }, { id:'3/4', pulsos:3 }, { id:'4/4', pulsos:4 },
+  { id:'5/4', pulsos:5 }, { id:'6/4', pulsos:6 }, { id:'3/8', pulsos:3 }, { id:'5/8', pulsos:5 },
+  { id:'6/8', pulsos:2, compuesto:true }, { id:'7/8', pulsos:7 },
+  { id:'9/8', pulsos:3, compuesto:true }, { id:'12/8', pulsos:4, compuesto:true }
+];
+const METRO_MIN = 30, METRO_MAX = 250;         // tempo, en pulsos por minuto (MT-01)
+
 const ESCALAS = [
   { id:'mayor',      modo:'mayor', semitonos:[0,2,4,5,7,9,11], letras:[0,1,2,3,4,5,6] },
   { id:'menor',      modo:'menor', semitonos:[0,2,3,5,7,8,10], letras:[0,1,2,3,4,5,6] },

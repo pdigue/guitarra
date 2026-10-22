@@ -898,7 +898,7 @@ test('idioma: en Ajustes se cambia a inglés y vuelve al español; se guarda y n
   assert.equal(JSON.parse(A.store.get('trasteando.v1')).lang, 'en');
   assert.equal(A.doc.documentElement.lang, 'en');
   const pestañas = A.doc.querySelectorAll('.tab [data-t]').map(e => e.textContent).join(' ');
-  assert.equal(pestañas, 'Free Guess Tuner Scales Settings');
+  assert.equal(pestañas, 'Free Guess Tuner Scales Metronome Settings');
   assert.equal(A.$('sheet-title').textContent, 'Settings');
   assert.equal(A.$('st-streak').textContent, 'Streak 3', 'la racha sigue');
   assert.equal(A.$('st-record').textContent, 'Best 0 · Standard');
@@ -1134,4 +1134,160 @@ test('cada tecla negra se escribe con ♯ o con ♭ según Ajustes, igual en tod
   A.$('qb-notation').click();
   assert.equal(A.doc.querySelector('#set-accidentals [data-pc="6"][data-v="flat"]').textContent, 'G♭');
   assert.equal(boot(APP, { accidentals: { 6: 'flat', 2: 'flat', 8: 'x' } }).ev('JSON.stringify(state.accidentals)'), '{"6":"flat"}');
+});
+
+// --- F5.6: metrónomo (MT-01 a MT-05, tu petición del 21/10) ---
+
+/** Lo que el metrónomo necesita del audio simulado: osciladores que apuntan
+ *  cuándo arrancan, y un reloj (__ctx.currentTime) que avanza a mano. */
+const metroExtra = `
+  __ctx.createBuffer = () => ({});
+  __ctx.createOscillator = () => { const n = new Nodo('oscilador'); n.frequency = { value: 0 }; n.arranques = [];
+    n.start = t => n.arranques.push(t); n.stop = () => {}; return n; };
+  globalThis.__golpes = () => __nodos.filter(n => n.tipo === 'oscilador').map(n => [n.arranques[0], n.frequency.value]);
+  globalThis.__avanza = hasta => { while (__ctx.currentTime < hasta){ __ctx.currentTime += 0.025; metroProgramar(); } };`;
+const metroFalso = audioFalso + metroExtra;
+
+test('metrónomo: cada golpe cae a 60/tempo s exactos a 30, 120 y 250 ppm, programado por adelantado; el primero, con acento (MT-01, MT-04)', t => {
+  for (const bpm of [30, 120, 250]){
+    const A = boot(APP, { metro: { bpm, sig: '4/4', sub: 1, accent: true } });
+    A.ev(metroFalso);
+    A.ev('startMetro()');
+    t.after(() => A.ev('stopMetro()'));        // aunque algo falle, no se queda sonando
+    A.ev(`__avanza(${10 + 9 * 60 / bpm})`);
+    const g = JSON.parse(A.ev('JSON.stringify(__golpes())'));
+    assert.ok(g.length >= 9, bpm + ' ppm: ' + g.length + ' golpes');
+    for (let i = 1; i < g.length; i++)
+      assert.ok(Math.abs(g[i][0] - g[i - 1][0] - 60 / bpm) < 0.001, bpm + ' ppm, golpe ' + i + ': ' + (g[i][0] - g[i - 1][0]));
+    assert.deepEqual(g.slice(0, 5).map(x => x[1]), [1760, 1175, 1175, 1175, 1760], 'fuerte, normal, normal, normal, fuerte');
+    assert.ok(g.at(-1)[0] <= A.ev('__ctx.currentTime') + 0.1 + 1e-9, 'nunca más de 100 ms por adelantado');
+    assert.equal(A.ev('stopMetro()'), true);
+  }
+});
+
+test('metrónomo: compás y figura en su ventana, acento en el primer tiempo, un punto por pulso (MT-02, MT-03, MT-05)', t => {
+  const A = boot(APP);
+  A.ev(metroFalso);
+  t.after(() => A.ev('stopMetro()'));
+  A.doc.querySelector('.tab[data-screen="metro"]').click();
+  const puntos = () => A.doc.querySelectorAll('#metro-dots .md');
+  assert.equal(puntos().length, 4, '4/4: cuatro puntos');
+  assert.ok(puntos()[0].classList.contains('acc'), 'el primero, con acento: más grande');
+  A.$('metro-sig').click();
+  assert.equal(A.$('metro-picker').hidden, false, 'tocar el compás abre su ventana');
+  assert.equal(A.doc.querySelectorAll('#metro-sigs .mp-sig').length, 12);
+  A.doc.querySelector('#metro-sigs [data-v="3/4"]').click();
+  const acento = A.$('metro-accent'); acento.checked = false; acento.dispatchEvent({ type: 'change', target: acento });
+  A.doc.querySelector('#metro-sub [data-v="2"]').click();          // dos por pulso: corcheas
+  A.$('metro-ok').click();
+  assert.equal(A.$('metro-picker').hidden, true, '«Listo» la cierra');
+  assert.equal(puntos().length, 3);
+  assert.ok(!puntos()[0].classList.contains('acc'));
+  assert.equal(A.$('metro-sig').textContent, '34', 'el compás, un número sobre otro');
+  assert.deepEqual(JSON.parse(A.store.get('trasteando.v1')).metro, { bpm: 80, sig: '3/4', sub: 2, accent: false });
+  A.$('metro-play').click();
+  assert.equal(A.$('metro-play').textContent, 'Parar');
+  A.ev('__avanza(10 + 3 * 60 / 80)');                              // un compás
+  let g = JSON.parse(A.ev('JSON.stringify(__golpes())'));
+  assert.deepEqual(g.slice(0, 6).map(x => x[1]), [1175, 880, 1175, 880, 1175, 880], 'sin acento: todos los pulsos iguales');
+  assert.ok(Math.abs(g[1][0] - g[0][0] - 60 / 80 / 2) < 0.001, 'la corchea parte el pulso por la mitad');
+  const vol = JSON.parse(A.ev(`JSON.stringify(__nodos.filter(n => n.tipo === 'oscilador').map(n => n.destino.gain.ev[1][1]))`));
+  assert.ok(vol[1] < vol[0], 'la subdivisión suena más suave');
+  A.ev('setAccent(true)');
+  A.ev('__avanza(10 + 3 * 3 * 60 / 80)');
+  g = JSON.parse(A.ev('JSON.stringify(__golpes())'));
+  assert.ok(g.some(x => x[1] === 1760), 'con acento, el primer pulso suena más agudo');
+  A.$('metro-play').click();
+  // Compases compuestos: el pulso es la negra con puntillo.
+  for (const [c, n] of [['6/8', 2], ['9/8', 3], ['12/8', 4], ['7/8', 7], ['1/4', 1]]){
+    A.ev(`setCompas('${c}')`);
+    assert.equal(puntos().length, n, c + ': ' + n + ' puntos');
+  }
+  A.ev("setCompas('9/8'); renderPicker()");
+  assert.equal(A.doc.querySelector('#metro-sub [data-v="3"]').getAttribute('aria-label'), 'Tres por pulso (corcheas)');
+  // Lo guardado se valida: un dato roto vuelve al de fábrica.
+  assert.equal(boot(APP, { metro: { bpm: 400, sig: '9/4', sub: 7, accent: 'sí' } }).ev('JSON.stringify(state.metro)'),
+    '{"bpm":80,"sig":"4/4","sub":1,"accent":true}');
+});
+
+test('metrónomo: tempo con la barra vertical, − y +, el teclado y «Marcar», siempre entre 30 y 250, con su nombre (MT-01, G-02)', () => {
+  const A = boot(APP);
+  A.doc.querySelector('.tab[data-screen="metro"]').click();
+  assert.equal(A.$('metro').hidden, false);
+  assert.equal(A.$('board-area').hidden, true, 'sin mástil, como el Afinador');
+  assert.equal(A.$('panel').hidden, true);
+  assert.equal(A.$('rotate-hint').hidden, true, 'no pide girar el móvil');
+  assert.equal(A.$('metro-name').textContent, 'Andante');
+  A.$('metro-plus').click();
+  assert.equal(A.$('metro-bpm').textContent, '81');
+  A.$('metro-minus').click(); A.$('metro-minus').click();
+  assert.equal(A.ev('state.metro.bpm'), 79);
+  const barra = A.$('metro-slider');
+  const tecla = key => barra.dispatchEvent({ type: 'keydown', key, preventDefault(){} });
+  tecla('ArrowUp'); tecla('PageUp');
+  assert.equal(A.ev('state.metro.bpm'), 90);
+  assert.equal(barra.getAttribute('aria-valuenow'), '90');
+  tecla('End');
+  assert.equal(A.ev('state.metro.bpm'), 250);
+  assert.equal(A.$('metro-plus').disabled, true);
+  assert.equal(A.$('metro-name').textContent, 'Prestissimo');
+  tecla('Home');
+  assert.equal(A.$('metro-name').textContent, 'Grave');
+  A.ev('setTempo(50)');
+  assert.equal(A.$('metro-name').textContent, 'Lento', 'como en la app de referencia');
+  A.ev('tapTempo(1000); tapTempo(1500); tapTempo(2000); tapTempo(2500)');
+  assert.equal(A.ev('state.metro.bpm'), 120, 'cuatro toques cada medio segundo: 120');
+  assert.equal(A.$('metro-name').textContent, 'Allegro');
+  A.ev('tapTempo(6000)');                                       // tras una pausa, empieza de nuevo
+  assert.equal(A.ev('state.metro.bpm'), 120);
+  assert.match(A.$('metro-note').textContent, /Sigue tocando/);
+  A.ev('tapTempo(6100)');                                       // 600 ppm: se queda en 250
+  assert.equal(A.ev('state.metro.bpm'), 250);
+});
+
+test('metrónomo: sigue en las demás áreas con su pestaña latiendo; se para al escuchar con el micrófono y al ocultar la app (MT-04, MT-05)', async t => {
+  const A = boot(APP, null, microFalso());
+  A.ev(analizadorFalso + metroExtra);
+  t.after(() => A.ev('stopMetro(); stopMic()'));
+  const pestaña = A.doc.querySelector('.tab[data-screen="metro"]');
+  pestaña.click();
+  A.$('metro-play').click();
+  A.doc.querySelector('.tab[data-screen="free"]').click();
+  assert.equal(A.ev('metro.sonando'), true, 'sigue sonando en Libre');
+  assert.ok(pestaña.classList.contains('metro-on'));
+  assert.match(pestaña.getAttribute('aria-label'), /en marcha/);
+  A.ev('__avanza(10.2)'); await sleep(15);
+  assert.ok(pestaña.classList.contains('beat'), 'la pestaña late con el pulso');
+  // El micrófono lo para, y lo dice.
+  A.doc.querySelector('.tab[data-screen="tuner"]').click();
+  A.doc.querySelector('#tuner-mode [data-v="mic"]').click();
+  A.$('mic-start').click(); await sleep(10);
+  assert.equal(A.ev('metro.sonando'), false);
+  assert.equal(A.$('mic-metro').hidden, false);
+  assert.match(A.$('mic-metro').textContent, /clic confundiría al afinador/);
+  assert.ok(!pestaña.classList.contains('metro-on'));
+  A.ev('stopMic()');
+  // Con la app oculta, también.
+  pestaña.click();
+  A.$('metro-play').click();
+  assert.equal(A.ev('metro.sonando'), true);
+  A.ev('document.hidden = true; onVisibility(); document.hidden = false;');
+  assert.equal(A.ev('metro.sonando'), false);
+  assert.match(A.$('metro-note').textContent, /al salir de la app/);
+  assert.equal(A.$('metro-play').textContent, 'Empezar');
+});
+
+test('metrónomo: cambiar el tempo o la subdivisión mientras suena no adelanta ni repite golpes (MT-04)', t => {
+  const A = boot(APP, { metro: { bpm: 60, sig: '4/4', sub: 1, accent: true } });
+  A.ev(metroFalso);
+  A.ev('startMetro()');
+  t.after(() => A.ev('stopMetro()'));
+  A.ev('__avanza(12.5)');                     // golpes a 10,06, 11,06 y 12,06
+  A.ev('setTempo(120)');                      // el siguiente sigue a 13,06; desde ahí, cada 0,5 s
+  A.ev('__avanza(14.6)');
+  A.ev('setSubdivision(2)');                  // empieza en el próximo tiempo, 15,06
+  A.ev('__avanza(15.9)');
+  const g = JSON.parse(A.ev('JSON.stringify(__golpes().map(x => x[0]))'));
+  const pasos = g.slice(1).map((x, i) => Math.round((x - g[i]) * 1000) / 1000);
+  assert.deepEqual(pasos, [1, 1, 1, 0.5, 0.5, 0.5, 0.5, 0.25, 0.25, 0.25]);
 });

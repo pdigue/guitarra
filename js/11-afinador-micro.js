@@ -180,6 +180,11 @@ async function startMic(){
   if (motivo){ showMicPanel(motivo); return; }
   mic.arrancando = true;
   document.getElementById('mic-start').disabled = true;
+  // El clic del metrónomo entraría por el micrófono y confundiría al detector:
+  // se para, y se dice por qué (MT-05).
+  const aviso = document.getElementById('mic-metro');
+  aviso.hidden = !stopMetro('mic');
+  aviso.textContent = aviso.hidden ? '' : t('metro.stoppedMic');
   unlockAudio();
   wakeAudio();
   // En el iPhone, con la sesión de audio en «playback» no se puede grabar.

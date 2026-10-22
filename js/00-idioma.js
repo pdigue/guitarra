@@ -102,7 +102,23 @@ const TEXTOS = {
     'audio.rebuild': ' · se rehace al tocar',
     'tun.standard': 'Estándar (E A D G B E)', 'tun.standard.s': 'Estándar',
     'tun.halfstep': 'Medio tono abajo', 'tun.halfstep.s': 'Medio tono abajo',
-    'tun.custom': 'Personalizada', 'tun.custom.s': 'Personalizada'
+    'tun.custom': 'Personalizada', 'tun.custom.s': 'Personalizada',
+    // Metrónomo (F5.6, MT-01 a MT-05)
+    'tab.metro': 'Metrónomo', 'metro.bpm': 'pulsos por minuto', 'metro.tempo': 'Tempo',
+    'metro.slower': 'Más lento', 'metro.faster': 'Más rápido', 'metro.tap': 'Marcar',
+    'metro.tapAria': 'Marcar el tempo: toca a ritmo', 'metro.tapHint': 'Sigue tocando a ritmo…',
+    'metro.sig': 'Compás', 'metro.sigAria': 'Compás {c}, {f}. Cambiar compás, figura y acento',
+    'metro.sigOne': 'Compás {c}', 'metro.accent': 'Acento en el primer tiempo', 'metro.ok': 'Listo',
+    'metro.withAccent': 'con acento', 'metro.noAccent': 'sin acento',
+    'metro.sub': 'Subdivisión', 'metro.sub.1': 'Solo el pulso', 'metro.sub.2': 'Dos por pulso (corcheas)',
+    'metro.sub.3': 'Tres por pulso (tresillos)', 'metro.sub.4': 'Cuatro por pulso (semicorcheas)',
+    'metro.sub.3c': 'Tres por pulso (corcheas)', 'metro.sub.2c': 'Dos por pulso', 'metro.sub.4c': 'Cuatro por pulso',
+    'metro.start': 'Empezar', 'metro.stop': 'Parar',
+    'metro.playing': 'Sonando. Puedes ir a otra área: sigue hasta que lo pares aquí.',
+    'metro.noAudio': 'El sonido aún no está listo. Vuelve a pulsar.',
+    'metro.stoppedMic': 'El metrónomo se ha parado: su clic confundiría al afinador.',
+    'metro.stoppedHidden': 'Se paró al salir de la app.',
+    'metro.running': 'Metrónomo en marcha'
   },
   en: {
     'gate.sub': 'Learn where every note lives on the fretboard. Tap to load the guitar sounds.',
@@ -191,7 +207,23 @@ const TEXTOS = {
     'audio.rebuild': ' · restarts on your next tap',
     'tun.standard': 'Standard (E A D G B E)', 'tun.standard.s': 'Standard',
     'tun.halfstep': 'Half step down', 'tun.halfstep.s': 'Half step down',
-    'tun.custom': 'Custom', 'tun.custom.s': 'Custom'
+    'tun.custom': 'Custom', 'tun.custom.s': 'Custom',
+    // Metronome (F5.6, MT-01 to MT-05)
+    'tab.metro': 'Metronome', 'metro.bpm': 'beats per minute', 'metro.tempo': 'Tempo',
+    'metro.slower': 'Slower', 'metro.faster': 'Faster', 'metro.tap': 'Tap',
+    'metro.tapAria': 'Tap the tempo: tap in time', 'metro.tapHint': 'Keep tapping in time…',
+    'metro.sig': 'Time signature', 'metro.sigAria': 'Time signature {c}, {f}. Change time signature, note value and accent',
+    'metro.sigOne': 'Time signature {c}', 'metro.accent': 'Accent on the first beat', 'metro.ok': 'Done',
+    'metro.withAccent': 'accented', 'metro.noAccent': 'no accent',
+    'metro.sub': 'Subdivision', 'metro.sub.1': 'Beat only', 'metro.sub.2': 'Two per beat (eighths)',
+    'metro.sub.3': 'Three per beat (triplets)', 'metro.sub.4': 'Four per beat (sixteenths)',
+    'metro.sub.3c': 'Three per beat (eighths)', 'metro.sub.2c': 'Two per beat', 'metro.sub.4c': 'Four per beat',
+    'metro.start': 'Start', 'metro.stop': 'Stop',
+    'metro.playing': 'Playing. You can go to another area: it keeps going until you stop it here.',
+    'metro.noAudio': 'Sound is not ready yet. Tap again.',
+    'metro.stoppedMic': 'The metronome stopped: its click would confuse the tuner.',
+    'metro.stoppedHidden': 'It stopped when you left the app.',
+    'metro.running': 'Metronome running'
   }
 };
 

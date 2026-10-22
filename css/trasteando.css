@@ -326,6 +326,87 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .mic-order.ok { color:var(--ok); } .mic-order.ko { color:var(--ko); }
 .mic-privacy { font-size:12px; color:var(--muted); text-align:center; margin:6px 0 8px; line-height:1.45; }
 
+/* ===== METRÓNOMO (F5.6, MT-01 a MT-05) =====
+   Área propia, sin mástil, como el Afinador: igual en vertical y en horizontal.
+   Arriba la barra del tempo; en medio el nombre, el número y un punto por pulso;
+   abajo el compás, «Marcar» y Empezar (la app que nos enseñaste el 21/10). */
+.metro { flex:1; min-height:0; overflow-y:auto; padding:12px 16px 8px; touch-action:pan-y;
+  display:flex; flex-direction:column; align-items:center; gap:12px; }
+.metro-slider { --p:.23; position:relative; flex:1 1 auto; min-height:120px; max-height:340px; width:60px;
+  cursor:pointer; touch-action:none; border-radius:12px; outline-offset:2px; }
+.ms-track { position:absolute; left:50%; top:14px; bottom:14px; width:8px; margin-left:-4px;
+  border-radius:4px; background:var(--surface2); border:1px solid var(--line2); overflow:hidden; }
+.ms-fill { position:absolute; left:0; right:0; bottom:0; height:calc(var(--p) * 100%); background:var(--amber); }
+.ms-thumb { position:absolute; left:50%; width:36px; height:36px; margin-left:-18px;
+  top:calc(14px + (1 - var(--p)) * (100% - 28px) - 18px); border-radius:50%;
+  background:var(--text); border:3px solid var(--amber); box-shadow:0 2px 8px rgba(0,0,0,.45); }
+.metro-center { display:flex; flex-direction:column; align-items:center; gap:6px; width:100%; }
+.metro-name { font-family:Georgia,serif; font-style:italic; font-size:22px; color:var(--muted); line-height:1.1; }
+.metro-tempo { display:flex; align-items:center; justify-content:space-between; width:100%; max-width:340px; }
+.metro-step { width:56px; height:56px; border-radius:50%; flex-shrink:0; cursor:pointer;
+  background:none; border:1.5px solid var(--line2); color:var(--text); font-size:28px; line-height:1; }
+.metro-step:disabled { opacity:.4; cursor:default; }
+.metro-bpm { font-size:68px; line-height:1; font-weight:300; color:var(--text); font-variant-numeric:tabular-nums; }
+.metro-dots { display:flex; justify-content:space-between; width:100%; max-width:300px; padding:6px 4px; min-height:30px; align-items:center; }
+.metro-dots:has(.md:only-child) { justify-content:center; }
+.metro-dots.many { max-width:340px; }
+.md { width:14px; height:14px; border-radius:50%; border:1.5px solid var(--muted); box-sizing:border-box; }
+/* El acento: un punto más grande. El que suena: relleno. Forma y color a la vez. */
+.md.acc { width:20px; height:20px; border-width:2px; border-color:var(--text); }
+.md.now { background:var(--amber); border-color:var(--amber); }
+.metro-controls { display:flex; flex-direction:column; gap:10px; width:100%; max-width:420px; }
+.metro-row { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.metro-sig, .mp-sig { display:inline-flex; flex-direction:column; align-items:center; justify-content:center;
+  font-family:Georgia,serif; font-weight:700; line-height:.86; cursor:pointer; }
+.metro-sig { min-width:52px; height:56px; padding:0 8px; font-size:26px; background:none; border:1px solid transparent;
+  border-radius:10px; color:var(--text); }
+.metro-sig:hover { border-color:var(--line2); }
+.metro-tap { min-height:48px; padding:0 20px; border-radius:24px; cursor:pointer; font:inherit; font-size:14px; font-weight:600;
+  background:none; border:1.5px dashed var(--line2); color:var(--text); touch-action:manipulation; }
+.metro-play { min-height:54px; border-radius:14px; cursor:pointer; font:inherit; font-size:16px; font-weight:700;
+  letter-spacing:.06em; text-transform:uppercase; background:var(--amber); border:1.5px solid var(--amber); color:#160f07; }
+.metro-play.on { background:none; color:var(--amber); }
+.metro-note { min-height:17px; margin:0; font-size:12.5px; color:var(--muted); text-align:center; line-height:1.4; }
+
+/* Ventana de compás, figura y acento. */
+.metro-picker { width:min(380px, calc(100vw - 24px)); max-height:calc(100vh - 24px); max-height:calc(100dvh - 24px); overflow-y:auto; padding:16px;
+  border:1px solid var(--line2); border-radius:16px; background:var(--surface); color:var(--text); }
+.metro-picker[hidden] { display:none; }
+.metro-picker:not([open]):not([hidden]) { display:block; position:fixed; inset:0; margin:auto; height:fit-content; z-index:40; }
+.metro-picker::backdrop { background:rgba(10,6,3,.62); }
+.mp-title { margin:0 0 10px; font-size:13px; font-weight:600; color:var(--muted); }
+.mp-sigs { display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; justify-items:center; }
+.mp-sig { width:62px; height:62px; border-radius:50%; font-size:22px; border:none;
+  background:var(--surface2); color:var(--muted); }
+.mp-sig.on { background:var(--amber); color:#1a1006; }
+.mp-label { display:block; margin:16px 0 8px; font-size:13px; font-weight:600; color:var(--muted); }
+.mp-subs { display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; }
+.mp-fig { height:58px; border-radius:12px; cursor:pointer; background:var(--surface2); border:1px solid var(--line2);
+  color:var(--faint); display:flex; align-items:center; justify-content:center; }
+.mp-fig svg { width:56px; height:36px; }
+.mp-fig.on { color:var(--text); border-color:var(--amber); box-shadow:inset 0 0 0 1px var(--amber); }
+.mp-accent { display:flex; align-items:center; gap:12px; min-height:48px; margin:12px 0 8px; font-size:14px; cursor:pointer; }
+.mp-accent input { width:24px; height:24px; margin:0; accent-color:var(--amber); flex-shrink:0; cursor:pointer; }
+.mp-ok { width:100%; min-height:50px; border-radius:12px; cursor:pointer; font:inherit; font-size:15px; font-weight:700;
+  background:var(--amber); border:none; color:#160f07; }
+
+/* Pantallas bajas en vertical (iPhone SE): todo más compacto, para que quepa. */
+@media (orientation:portrait) and (max-height:600px){
+  .metro { gap:8px; padding-top:8px; }
+  .metro-slider { min-height:96px; }
+  .metro-bpm { font-size:54px; }
+  .metro-step { width:48px; height:48px; }
+  .metro-name { font-size:19px; }
+  .metro-play { min-height:48px; }
+}
+
+/* Con el metrónomo sonando, su pestaña lleva un punto que se enciende con
+   cada pulso (MT-05). Cambia la luz, no se mueve: vale con movimiento reducido. */
+.tab { position:relative; }
+.tab.metro-on::after { content:''; position:absolute; top:5px; left:calc(50% + 9px); width:8px; height:8px;
+  border-radius:50%; background:var(--amber); opacity:.45; }
+.tab.metro-on.beat::after { opacity:1; box-shadow:0 0 6px 2px rgba(232,164,92,.7); }
+
 /* ===== NAVEGACIÓN INFERIOR ===== */
 .tabbar { flex-shrink:0; display:flex; border-top:1px solid var(--line);
   background:var(--surface); padding-bottom:env(safe-area-inset-bottom); }
@@ -350,7 +431,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
    las demás con order. En horizontal pasa a ser la columna de la derecha. */
 .panel { display:contents; }
 .header { order:1; } .quickbar { order:2; } .challenge { order:3; } .display { order:4; }
-.rotate-hint { order:5; } .board-area { order:6; } .sc-nav, .zoombar { order:7; } .tuner { order:8; }
+.rotate-hint { order:5; } .board-area { order:6; } .sc-nav, .zoombar { order:7; } .tuner, .metro { order:8; }
 .scales-card { order:3; }
 .tabbar { order:9; }
 
@@ -437,10 +518,25 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .header, .rotate-hint { display:none; }
   .tabbar { grid-column:1; grid-row:1; flex-direction:column; justify-content:flex-start;
             gap:2px; border-top:none; border-right:1px solid var(--line); padding:6px 0; }
-  .tab { flex:0 0 auto; min-height:48px; padding:6px 2px; }
+  /* Un destino por área y ⚙: con seis áreas, 7 × 44 px caben en los 342 px del iPhone (interfaz §7b). */
+  .tab { flex:0 0 auto; min-height:44px; padding:5px 1px; font-size:9.5px; }
   .tab-settings { display:flex; margin-top:auto; }
   #board-area { grid-column:2; grid-row:1; min-height:0; padding:6px 6px 2px; }
   #tuner { grid-column:2 / -1; grid-row:1; min-height:0; }
+  #metro { grid-column:2 / -1; grid-row:1; min-height:0; display:grid;
+           grid-template-columns:64px minmax(0,1fr) minmax(0,1fr); grid-template-rows:minmax(0,1fr);
+           align-items:center; gap:8px 20px; padding:8px 16px; }
+  .metro-slider { align-self:stretch; height:auto; max-height:none; min-height:0; }
+  .metro-bpm { font-size:56px; }
+  .metro-step { width:50px; height:50px; }
+  /* La ventana de compás, en dos columnas: en 342 px de alto no cabe apilada. */
+  .metro-picker { width:min(640px, calc(100vw - 24px)); }
+  .metro-picker[open], .metro-picker:not([open]):not([hidden]) { display:grid; grid-template-columns:auto minmax(0,1fr);
+    grid-template-areas:"t l" "g s" "g a" "g o"; column-gap:22px; align-content:start; }
+  .mp-title { grid-area:t; } .mp-sigs { grid-area:g; gap:6px; align-self:start; }
+  .mp-label { grid-area:l; margin:0 0 10px; } .mp-subs { grid-area:s; align-self:start; }
+  .mp-accent { grid-area:a; margin:6px 0; } .mp-ok { grid-area:o; align-self:end; }
+  .mp-sig { width:52px; height:52px; font-size:19px; }
   .panel { grid-column:3; grid-row:1; display:flex; flex-direction:column; gap:6px;
            min-height:0; overflow-y:auto; padding:8px 8px 0; border-left:1px solid var(--line); }
   .quickbar { padding:0; border:none; overflow:visible; flex-wrap:wrap; gap:6px; }
@@ -503,6 +599,13 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
          border:1px solid var(--line); font-size:13px; }
   .tab svg { display:none; }
   .tab.active { background:var(--amber); border-color:var(--amber); color:#1a1006; }
+  .tab.metro-on::after { top:-3px; left:auto; right:-2px; }
+  .metro { width:100%; max-width:460px; margin:0 auto; padding:20px 20px 12px; }
+  .metro-slider { max-height:300px; }
+}
+/* Entre 600 y 959 px, las pestañas se estrechan para no pisar el nombre. */
+@media (min-width:600px) and (max-width:959px) and (min-height:521px){
+  .tab { padding:0 10px; font-size:12.5px; }
 }
 
 /* Ajustes como panel lateral cuando hay anchura (interfaz.md §3). */
