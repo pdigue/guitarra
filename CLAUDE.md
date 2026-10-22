@@ -55,12 +55,16 @@ con una línea: «ESTADO actualizado: versión X, siguiente paso Y».
 1. Nunca trabajes en main. Una rama por etapa: auto/F<fase>.<etapa>-<tema>.
 2. Una etapa está hecha cuando sus requisitos cumplen su criterio de aceptación
    y `node --test` está en verde.
-3. Auditorías: al cerrar cada fase (punto de control CP-n) y tras un cambio de
-   riesgo (audio, datos guardados, corrección musical), lanza en paralelo los
-   dos auditores de .claude/agents/: auditor-requisitos y auditor-tecnico. Son
-   ayudantes de solo lectura; sus informes van a docs/auditorias/ (AR-nn, AT-nn).
+3. Auditorías, en dos niveles (decisión de Pablo, 22/10). Siempre los dos
+   auditores de .claude/agents/ en paralelo, auditor-requisitos y
+   auditor-tecnico: ayudantes de solo lectura cuyos informes van a
+   docs/auditorias/ (AR-nn, AT-nn).
+   - Tras cada etapa (F5.6, F5.7…): revisión ligera de lo que cambió en esa
+     etapa, con un número limitado de pasos.
+   - Al cerrar cada fase (punto de control CP-n): revisión a fondo de toda la
+     fase, con atención a lo que indique el roadmap (p. ej. corrección musical).
    Corrige los hallazgos críticos y altos; anota los demás en la matriz.
-   Máximo dos rondas por punto de control.
+   Máximo dos rondas por etapa o punto de control.
 4. Todo cambio en requisitos.md va a su control de cambios y al informe de
    iteración, bajo «Cambios en requisitos». El cliente debe poder verlos todos.
 5. Versión de la app: 0.<fase>.<corrección>. Actualiza APP_VERSION y CHANGELOG.md
@@ -99,8 +103,8 @@ no los documentos en sí.
   empiece desde ahí.
 - Lee por partes. No vuelques diffs, registros ni documentos enteros al
   contexto si basta con un grep o con las líneas que fallan.
-- Auditorías: solo cuando lo dice la regla 3, con el alcance proporcional al
-  cambio. Cada auditor cuesta casi tanto como una conversación entera.
+- Auditorías: las de la regla 3, ni más ni menos; las ligeras, de verdad ligeras
+  (solo lo cambiado en la etapa).
 - Capturas de pantalla solo cuando cambie algo visual, y combinadas en una imagen.
 - Los documentos del proyecto de claude.ai se suben al cerrar la etapa, no en
   cada versión.
