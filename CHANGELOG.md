@@ -6,7 +6,7 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.6.0** | 22/10/2026 | F6.1 · el archivo autónomo, probado como la app | Rama `auto/F6.1-autonomo` |
+| **0.6.0** | 22/10/2026 | F6.1 · el archivo autónomo, probado como la app | Rama `auto/F6.1-autonomo` (PR #17) |
 | 0.5.7 | 22/10/2026 | CP-5 · auditorías a fondo de F5 (AR-12 y AT-11) | Rama `auto/CP-5-correcciones` (PR #16) |
 | 0.5.6 | 21/10/2026 | F5.7 · auditorías AR-11 y AT-10 | `main`, fusionada el 22/10 (PR #15) |
 | 0.5.5 | 21/10/2026 | F5.7 · librería de acordes | `main`, fusionada el 22/10 (PR #15) |
