@@ -17,7 +17,8 @@
 - **Fase F5 · Escalas, metrónomo y acordes:**
   - Hechas F5.1 a F5.7: escalas, ♯/♭ por nota, reintentar por defecto, metrónomo y acordes. Desde la v3.22 del roadmap, F5.2, F5.3, F5.6 y F5.7 están en 🔨 (como F5.4) hasta las pruebas de Pablo.
   - **F5.8 · saneamiento** (cómo se ve Adivinar y una vuelta a Escalas), **en curso comentario a comentario** (regla de AR-12 #6: cada comentario con su número; lo nuevo, como requisito nuevo):
-    - **#1 hecho** (22/10, `0.6.1`): la barra del metrónomo es un **péndulo** (MT-06, nuevo). Con la pesa arriba va más lento, como en uno mecánico (decisión de Pablo); sonando, llega a un extremo en cada pulso, hasta 30° a cada lado (unos 13° con el iPhone en horizontal, para no salirse); recto parado, al arrastrarlo y con «reducir movimiento». El ángulo sale del reloj de audio. Verificado parcialmente hasta la Sesión 2.
+    - **#1 hecho** (22/10, `0.6.1`): la barra del metrónomo es un **péndulo** (MT-06, nuevo). Con la pesa arriba va más lento, como en uno mecánico (decisión de Pablo); sonando, llega a un extremo en cada pulso, hasta 30° a cada lado (unos 13° con el iPhone en horizontal, para no salirse); recto parado, al arrastrarlo y con «reducir movimiento». El ángulo sale del reloj de audio. Auditorías AR-14 y AT-13: sin críticos, una ronda; corregidos tocar la pesa inclinada (cambiaba el tempo) y girar en otra área (al volver se salía). Verificado parcialmente hasta la Sesión 2.
+    - La tabla «Comentarios de F5.8» del roadmap guarda cada comentario, qué aprobó Pablo y qué solo se le explicó; se cierra cuando él lo diga o al empezar F5.9.
     - Esperan más comentarios suyos (Adivinar, Escalas).
   - **CP-5 hecho** (22/10, `0.5.7`): auditorías a fondo AR-12 y AT-11, sin críticos. Tres altos: el metrónomo no arrancaba con el audio en pausa en el iPhone (corregido); dos varas para verificar (corregido, una sola: lo que espera la prueba de Pablo queda *verificado parcialmente*); y el bloqueo automático del iPhone para el metrónomo (**decisión de Pablo**, ver §2). Los medios y bajos, en el comentario de cada requisito de la matriz; casi todos encajan en F5.8.
   - **F5 queda abierta** (decisión de Pablo, 22/10), como F4 con F4.3: F5.8 y F5.9 (cierre con la etiqueta `v0.5.x`) esperan sus comentarios.
@@ -28,23 +29,24 @@
   - «Fusiona el #14 y el #15»: **#14**, metrónomo (`0.5.4`), y **#15**, acordes y correcciones de AT-10 y AR-11 (`0.5.5` y `0.5.6`), con su base cambiada antes a `main`;
   - «fusiona 16 y 17»: **#16**, CP-5 (`0.5.7`), y **#17**, F6.1 (`0.6.0`), con su base cambiada antes a `main`. El banco pasó 156 de 156 sobre el resultado de la fusión antes de hacerla.
 - **Documentos:**
-  - requisitos v1.26 (110 requisitos, 53 validados), matriz v1.24, roadmap v3.24;
+  - requisitos v1.26 (110 requisitos, 53 validados; MT-06 nuevo, MT-01 y G-10 anotados), matriz v1.24, roadmap v3.24;
   - interfaz v1.14, compatibilidad v1.7, IT-03 (F5, con F5.8) e IT-04 (F6, crece con cada etapa);
-  - últimas auditorías: AR-13 y AT-12 (F6.1, ligeras); a fondo, AR-12 y AT-11 (CP-5).
+  - últimas auditorías: AR-14 y AT-13 (F5.8 #1, ligeras); a fondo, AR-12 y AT-11 (CP-5).
 
 ## 2. Pendiente de Pablo (no bloquea)
 
-1. **Decidir AR-12 #2** (no bloquea; el 22/10 prefirió avanzar sin decidirlo aún): si nadie toca la pantalla, el iPhone se bloquea solo y el metrónomo se para. Propuesta: mantener la pantalla encendida mientras suena, con Screen Wake Lock (detectando si existe) y, donde falte, un aviso para quitar el bloqueo automático; anotado en `compatibilidad.md` y con criterio de 5 minutos sin tocar la pantalla. Es una capacidad nueva: sin su «sí», no se hace.
-2. Sus comentarios de uso para F5.8 (no bloquean: F5 queda abierta mientras tanto).
-3. La prueba de 10 minutos con la guitarra (protocolo en `docs/verificaciones/V-09-F4-afinador.md`). Después, crear la etiqueta `v0.4.x` en la web de GitHub: el agente no puede crear etiquetas ni releases (error 403).
-4. Revisión de git del 22/10 (todo sano; copia completa en un *bundle*, enviada a Pablo y restaurada con el banco en 80 de 80). Quedan dos decisiones suyas:
+1. **Dos decisiones del péndulo** (AR-14 #2 y #8, no bloquean): en horizontal, aceptar unos 13° o acortar allí la varilla para acercarse a 30°; y con el teclado, ↑ sube el tempo (norma de los deslizadores, como ahora) o sube la pesa.
+2. **Decidir AR-12 #2** (no bloquea; el 22/10 prefirió avanzar sin decidirlo aún): si nadie toca la pantalla, el iPhone se bloquea solo y el metrónomo se para. Propuesta: mantener la pantalla encendida mientras suena, con Screen Wake Lock (detectando si existe) y, donde falte, un aviso para quitar el bloqueo automático; anotado en `compatibilidad.md` y con criterio de 5 minutos sin tocar la pantalla. Es una capacidad nueva: sin su «sí», no se hace.
+3. Sus comentarios de uso para F5.8 (no bloquean: F5 queda abierta mientras tanto).
+4. La prueba de 10 minutos con la guitarra (protocolo en `docs/verificaciones/V-09-F4-afinador.md`). Después, crear la etiqueta `v0.4.x` en la web de GitHub: el agente no puede crear etiquetas ni releases (error 403).
+5. Revisión de git del 22/10 (todo sano; copia completa en un *bundle*, enviada a Pablo y restaurada con el banco en 80 de 80). Quedan dos decisiones suyas:
    - **Proteger `main`** en GitHub (Settings → Rules): exigir pull request e impedir *force push* y borrado, sin pedir aprobaciones (no puede aprobar sus propios PR). `docs/automatizacion.md` cuenta con esa protección, pero no está activa. Lo hace él en la web.
    - **Borrar las 19 ramas `auto/…` ya fusionadas** (de `auto/F1-iteracion-0` a `auto/F5.7-acordes`, más `auto/CP-5-correcciones` y `auto/F6.1-autonomo`; `auto/F5.8-saneamiento` se queda para F5.8). No se pierde nada: todos sus commits están en `main` (y los anteriores al 22/10, también en el *bundle*). Solo con su «sí» explícito.
 
 ## 3. Cómo se trabaja (lo práctico)
 
 **Comprobaciones:**
-- **Banco:** `node --test`, que debe dar 162 de 162 (unos 2 minutos). Cada prueba usa `tests/dom-minimo.js`. Desde la `0.6.0` se pasa dos veces: primero cada archivo contra la app de varios archivos, y luego `tests/autonomo.test.js` repite `banco.test.js` y `escalas.test.js` contra el autónomo, con «[autónomo]» delante de cada nombre. `test` y `unaVez` vienen de `tests/dom-minimo.js`: lo que lee el repositorio o compara las dos formas usa `unaVez` y solo corre en la primera pasada. Un archivo de pruebas nuevo que arranque la app tiene que añadirse a `autonomo.test.js` (una prueba lo vigila).
+- **Banco:** `node --test`, que debe dar 168 de 168 (unos 2 minutos). Cada prueba usa `tests/dom-minimo.js`. Desde la `0.6.0` se pasa dos veces: primero cada archivo contra la app de varios archivos, y luego `tests/autonomo.test.js` repite `banco.test.js` y `escalas.test.js` contra el autónomo, con «[autónomo]» delante de cada nombre. `test` y `unaVez` vienen de `tests/dom-minimo.js`: lo que lee el repositorio o compara las dos formas usa `unaVez` y solo corre en la primera pasada. Un archivo de pruebas nuevo que arranque la app tiene que añadirse a `autonomo.test.js` (una prueba lo vigila).
 - **Pruebas sueltas:** `node --test-name-pattern="texto" tests/banco.test.js` (o `tests/autonomo.test.js` para la del autónomo).
 - **Archivo autónomo:** tras cada cambio en `js/`, `css/` o `index.html`, regenerarlo con `python3 herramientas/generar-autonomo.py`. Si no, falla «el archivo autónomo está al día». Si un módulo contiene `</script`, el generador se para y lo dice.
 - **En Chromium**, con la salida siempre en la carpeta temporal de la conversación (`comprobar-autonomo.js` comprueba también que un error dentro del autónomo dice su módulo y su línea):

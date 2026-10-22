@@ -385,7 +385,8 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .metro-slider { --p:.23; --ang:0deg; position:relative; width:60px;
   cursor:pointer; touch-action:none; border-radius:12px; outline-offset:2px; }
 /* La varilla gira sobre su pie: 14 px por encima del borde de abajo. */
-.ms-rod { position:absolute; inset:0; transform:rotate(var(--ang)); transform-origin:50% calc(100% - 14px); }
+.ms-rod { position:absolute; inset:0; transform:rotate(var(--ang)); transform-origin:50% calc(100% - 14px);
+  will-change:transform; }   /* capa propia: el giro lo hace la tarjeta gráfica (AT-13 #4) */
 .ms-track { position:absolute; left:50%; top:14px; bottom:14px; width:6px; margin-left:-3px;
   border-radius:3px; background:var(--muted); }
 /* La pesa: arriba (--p = 0) el tempo más lento, abajo el más rápido. */

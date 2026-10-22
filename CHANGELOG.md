@@ -53,14 +53,20 @@ Tu primer comentario de uso para F5.8 (#1): que la barra del metrónomo se mueva
 - **La pesa arriba va más lenta**, como en un metrónomo mecánico (tu decisión del 22/10). Antes, arriba era más rápido. Las flechas del teclado no cambian: ↑ sigue subiendo el tempo, como en cualquier deslizador.
 - El ángulo sale del **reloj de audio**, el mismo que programa los golpes: el péndulo va con el sonido aunque el navegador vaya a tirones. Las subdivisiones no lo mueven, solo los pulsos.
 - Se queda **recto** parado, mientras lo arrastras (para ver dónde dejas la pesa) y con «reducir movimiento» activado en el sistema (G-05).
-- **Nunca se sale de la pantalla:** si no cabe, se abre menos. Con el iPhone en horizontal, unos 13°; para dejarle sitio, la columna de la barra es más ancha en esa disposición.
+- **Nunca se sale de la pantalla:** si no cabe, se abre menos. Con el iPhone en horizontal, unos 13°; para dejarle sitio, la columna de la barra es más ancha en esa disposición. Si giras el móvil con el metrónomo sonando en otra área, al volver se abre lo que cabe.
+- **Tocar la pesa donde la ves**, aunque esté inclinada, no cambia el tempo: solo arrastrarla.
+- **El dibujo de la barra:** ya no tiene el relleno ámbar (con la pesa arriba = lento, ya no indicaba «más»); la varilla es gris y lleva un pie ámbar abajo, sobre el que gira.
 
 ### Comprobado
-- Banco: 162 de 162. Tres pruebas nuevas (también contra el autónomo), que fallan con la 0.6.0.
-- Chromium: ±30° en el iPhone en vertical y en el ordenador, ±12,7° en horizontal, nunca fuera de la pantalla y sin errores; quieto con «reducir movimiento». Disposición: el metrónomo cabe entero en las ocho pantallas; accesibilidad, todo correcto.
+- Banco: 168 de 168. Seis pruebas nuevas (también contra el autónomo), que fallan con la versión anterior.
+- Chromium: ±30° en el iPhone en vertical y en el ordenador, ±12,7° en horizontal (también al volver tras girar en otra área), nunca fuera de la pantalla y sin errores; quieto con «reducir movimiento». Disposición: el metrónomo cabe entero en las ocho pantallas; accesibilidad, todo correcto.
+
+### Auditorías ligeras (AR-14 y AT-13)
+- Sin críticos; una sola ronda. Corregidos los dos altos: tocar la pesa inclinada cambiaba el tempo hasta 30 ppm, y girar el móvil en otra área dejaba el péndulo demasiado abierto al volver. También: sin saltos al cambiar mucho el tempo en marcha, cambiar de compás no le hace perder pulsos, menos trabajo en cada fotograma y el arrastre no se queda enganchado.
+- **Dos decisiones tuyas** (AR-14 #2 y #8): el ángulo en horizontal y la dirección de las flechas del teclado. Anotado en MT-06 lo que se mira en la Sesión 2.
 
 ### Documentos
-- Requisitos v1.26 (110, MT-06 nuevo), matriz v1.24, interfaz v1.14 y roadmap v3.24 (F5.8 en curso).
+- Requisitos v1.26 (110: MT-06 nuevo; MT-01 y G-10 anotados), matriz v1.24, interfaz v1.14 y roadmap v3.24 (F5.8 en curso, con la tabla de tus comentarios).
 
 ---
 
