@@ -1,6 +1,6 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 3.24 · **Fecha:** 22 de octubre de 2026
+**Versión:** 3.25 · **Fecha:** 22 de octubre de 2026
 **Válido para:** app `0.6.1` · `requisitos.md` v1.26 · `matriz-cumplimiento` v1.24 · `interfaz.md` v1.14 · `compatibilidad.md` v1.7 · `automatizacion.md` v1.2 · `CHANGELOG.md`
 **Gestiona:** chat de Desarrollo
 
@@ -218,6 +218,13 @@ Peso principal en el **auditor de requisitos** como experto en experiencia de us
 | # | Tu comentario | Qué aprobaste (22/10) | Qué se te explicó, sin aprobar aún | Requisito | Versión | Estado |
 |---|---|---|---|---|---|---|
 | 1 | «Quiero que la barra del metronomo se mueva como hace un metronomo, oscilando de lado a lado e un rango acorde a un metronomo» | La pesa arriba, más lenta, como en uno mecánico; hacerlo ya | Hasta 30° a cada lado, un extremo en cada pulso, recta al arrastrarla y con «reducir movimiento». **Por decidir:** unos 13° en horizontal o una varilla más corta allí (AR-14 #2), y si ↑ sube el tempo o la pesa (AR-14 #8) | MT-06 (nuevo) | `0.6.1` | 🔨 hecho, a falta de tu prueba |
+| 2 | «El afinador creo que solamente coge como un pico del sonido y no se queda (…) de forma un poquito más constante como hacen los afinadores de otras aplicaciones (…) que mantenga un poco más la escucha y marque si está o no en rango (…) por defecto aparezca la parte de micrófono, no de por oído» | — (12/11: recibido) | Análisis: solo acepta lecturas muy claras (el ataque) y descarta la caída de la nota. Propuesta: seguir la nota mientras se apaga, sostener la última lectura y abrir en Micrófono | A-02, A-03 (por anotar) | — | ⬜ recibido el 12/11 |
+| 3 | «coge referencias de aplicaciones actuales para que el looking de la app sea más limpio (…) estética un poco Apple (…) tanto en ordenador como en móvil, como también en iPad, que me he dado cuenta que no está preparado» | — (12/11: recibido) | Propuesta: base visual nueva (color, letra, espacios) y tamaños propios para tableta. Base de color: Por decidir contigo (12/11) | V-xx, PL-xx (por anotar) | — | ⬜ recibido el 12/11 |
+| 4 | «en la parte de adivinar, las pistas deberían salir en grande, aprovechando toda la franja (…) si tocamos una nota que es incorrecta, aparece el nombre de la misma (…) al ser este nombre mucho más grande que las pistas, se confunde un poco qué tenemos que buscar y cuál es la que hemos tocado» | — (12/11: recibido) | Propuesta: la nota buscada, lo más grande de la pantalla; la tocada, pequeña y junto al fallo | J-xx (por anotar) | — | ⬜ recibido el 12/11 |
+| 5 | «La parte de escala no me gustaba nada como es. Quiero simplificarla (…) menos escalas (…) no haya tanto de práctica, sino (…) ir pudiendo tocar las notas de la escala e ir escuchando la propia escala (…) No es agradable entrar ahí y ver el traste de la guitarra lleno de notas» | — (12/11: recibido) | Propuesta: una posición cada vez en vez de todo el mástil, sin modo Práctica. Qué escalas quedan: Por decidir contigo (12/11). **Cambia requisitos de escalas** | E-xx (por anotar) | — | ⬜ recibido el 12/11 |
+| 6 | «En cuanto a la parte de acordes, es igual, parece confuso y engorroso. Simplifícalo y mejora el looking» | — (12/11: recibido) | Propuesta: menos acordes a la vista y el diagrama como protagonista | AC-xx (por anotar) | — | ⬜ recibido el 12/11 |
+| 7 | «el metrónomo no termina de funcionar del todo bien. Analízalo» | — (12/11: recibido) | Qué falla exactamente: Por decidir contigo (12/11). Va con la decisión pendiente de la pantalla encendida (AR-12 #2) | MT-xx (por anotar) | — | ⬜ recibido el 12/11 |
+| 8 | «propongas nuevas mejoras de cara a implementarlas. Quiero ver un cambio claro a mejor en la app, tanto en funcionamiento como en contenido, como en looking, en un corto plazo» | — (12/11: recibido) | Lista de propuestas enviada el 12/11; cada una que apruebes entra como requisito nuevo | — | — | ⬜ recibido el 12/11 |
 
 ### 🔍 CP-5 — Checkpoint de escalas, metrónomo y acordes
 Ambos auditores, con atención a la corrección musical (escritura de las escalas y notas de cada digitación: es donde un error pasa desapercibido más tiempo) y a la precisión del pulso del metrónomo.
@@ -469,7 +476,8 @@ flowchart TB
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **3.24** | 22/10/2026 | F5.8 en curso: tu comentario #1, el péndulo del metrónomo (MT-06, `0.6.1`), con las auditorías AR-14 y AT-13. Tabla «Comentarios de F5.8»; F5.9 con la regla de versión de una fase reabierta; la Sesión 2 suma el péndulo. #16 y #17 fusionados: «Estás aquí» al día. |
+| **3.25** | 12/11/2026 | F5.8: tus comentarios #2 a #8 del 12/11 (afinador, aspecto general e iPad, Adivinar, Escalas, Acordes, metrónomo y propuestas nuevas), recibidos y por decidir. F6.2 en pausa, a medias en su rama. |
+| 3.24 | 22/10/2026 | F5.8 en curso: tu comentario #1, el péndulo del metrónomo (MT-06, `0.6.1`), con las auditorías AR-14 y AT-13. Tabla «Comentarios de F5.8»; F5.9 con la regla de versión de una fase reabierta; la Sesión 2 suma el péndulo. #16 y #17 fusionados: «Estás aquí» al día. |
 | 3.23 | 22/10/2026 | F6.1 hecha con la `0.6.0`: el banco se pasa entero contra la app de varios archivos y contra el archivo autónomo (G-08). F6 en curso y F5 abierta en el diagrama; «Estás aquí» al día. Sesión 2: abrir el autónomo con doble clic en Windows (AR-13 #3). |
 | 3.22 | 22/10/2026 | CP-5 hecho con la `0.5.7` (AR-12 y AT-11): F5.2, F5.3, F5.6 y F5.7 pasan a 🔨 hasta tu prueba, como F5.4 (una sola vara), y F5.2 y F5.3 entran en la Sesión 2; F5.8, aparcada hasta tus comentarios (tu decisión del 22/10), con estado nuevo ⏸ en la leyenda; protocolo de la Sesión 2 pendiente; «Estás aquí» con las fusiones del 22/10. |
 | 3.21 | 21/10/2026 | `0.5.6`: correcciones de las auditorías AR-11 y AT-10. Continuidad entre conversaciones: `docs/ESTADO.md` y los generadores de documentos en el repositorio. |
