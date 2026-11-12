@@ -1,6 +1,6 @@
 # Trasteando — Estado para retomar
 
-**Actualizado:** 22/10/2026, con la app en la `0.6.1` · **Lo mantiene:** la conversación que trabaja, sin que Pablo tenga que vigilarlo.
+**Actualizado:** 12/11/2026, con la app en la `0.6.2` en esta rama (F6.2 **en pausa**, a medias; lo vigente es el ESTADO de `auto/F5.8-saneamiento`) · **Lo mantiene:** la conversación que trabaja, sin que Pablo tenga que vigilarlo.
 
 > **Para la conversación que lee esto**
 > 1. **Al empezar:** este es el original (`docs/ESTADO.md`, en GitHub) o su copia en el proyecto de claude.ai (`claude/ESTADO.md`). Lee los dos y compáralos: deben ser idénticos. Si difieren, díselo a Pablo antes de seguir; manda el de GitHub. Lee también `CLAUDE.md` del repositorio: son las reglas.
@@ -24,6 +24,7 @@
   - **F5 queda abierta** (decisión de Pablo, 22/10), como F4 con F4.3: F5.8 y F5.9 (cierre con la etiqueta `v0.5.x`) esperan sus comentarios.
 - **Fase F6 · Preparación para distribución** (en curso): F6.1 archivo autónomo (G-08), F6.2 Service Worker (G-03), F6.3 manifiesto e iconos (G-04) y F6.4 documentación pública y legal (G-06, G-11; la licencia del código la decide Pablo).
   - **F6.1 hecha** (22/10, `0.6.0`): las pruebas que arrancan la app (`banco.test.js` y `escalas.test.js`) se pasan dos veces, contra la app de varios archivos y contra el autónomo (`tests/autonomo.test.js`); el autónomo lee de dentro sus 17 grabaciones sin descargar nada; cada módulo incrustado lleva su nombre (`//# sourceURL`), un error dice el módulo y la línea exactos, y el ensamblador se niega a incrustar uno con `</script` o `<!--`. G-08 cumple y queda validado por el banco. Auditorías ligeras AR-13 y AT-12: sin críticos ni altos, una ronda; anotado en G-08 reconfirmarlo contra la web publicada en F7.1 y abrir el autónomo con doble clic en Windows en la Sesión 2.
+- **F6.2 en pausa** (12/11): `sw.js`, su registro, `tests/sw.test.js` y `herramientas/comprobar-sin-conexion.js` hechos y comprobados en Chromium (9 de 9); faltan documentos, auditorías y PR. Pablo pidió antes sus comentarios de F5.8: al retomarla, poner esta rama al día desde la de F5.8 y darle la versión que toque.
 - **PR abiertos:** **#18**, F5.8 #1 (`0.6.1`, el péndulo), contra `main`. Espera su «fusiona el #18» y sus dos decisiones del péndulo (§2).
 - **Fusionados** el 22/10, con su aprobación:
   - «Fusiona el #14 y el #15»: **#14**, metrónomo (`0.5.4`), y **#15**, acordes y correcciones de AT-10 y AR-11 (`0.5.5` y `0.5.6`), con su base cambiada antes a `main`;

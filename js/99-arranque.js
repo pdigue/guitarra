@@ -278,3 +278,26 @@ clearStaff();
 syncUI();
 applyZoom();
 updateRotateHint();
+
+/**
+ * Funcionar sin conexión desde la web (G-03, F6.2): se registra sw.js, el
+ * Service Worker que guarda la app la primera vez que se abre con red.
+ * Se detecta la capacidad, no el sistema (PL-04). No se registra:
+ * - si el navegador no tiene Service Worker (o lo tiene apagado);
+ * - con doble clic (file://), donde no existe y no hace falta;
+ * - en el archivo autónomo, que ya lleva su audio dentro (G-07).
+ * Se hace al terminar de cargar, para no quitarle red a la página al abrir.
+ * Si falla, la app sigue igual, solo que necesitará conexión.
+ */
+function registrarServiceWorker(){
+  if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return false;
+  // El autónomo se reconoce por sus grabaciones incrustadas (las que lee embeddedAudio).
+  const unaGrabacion = 'audio-nylon-' + Object.keys(SAMPLE_MAPS.nylon)[0];
+  if (document.getElementById(unaGrabacion)) return false;
+  const registrar = () => navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
+    .catch(e => console.warn('Sin conexión no funcionará:', e));
+  if (document.readyState === 'complete') registrar();
+  else window.addEventListener('load', registrar, { once: true });
+  return true;
+}
+registrarServiceWorker();
