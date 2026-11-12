@@ -6,8 +6,10 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.6.0** | 22/10/2026 | F6.1 · el archivo autónomo, probado como la app | Rama `auto/F6.1-autonomo` (PR #17) |
-| 0.5.7 | 22/10/2026 | CP-5 · auditorías a fondo de F5 (AR-12 y AT-11) | Rama `auto/CP-5-correcciones` (PR #16) |
+| **0.6.2** | 12/11/2026 | F5.8 · #2, el afinador sigue la nota; pantalla encendida | Rama `auto/F5.8-saneamiento` (PR #18) |
+| 0.6.1 | 22/10/2026 | F5.8 · #1, el péndulo del metrónomo | Rama `auto/F5.8-saneamiento` (PR #18) |
+| 0.6.0 | 22/10/2026 | F6.1 · el archivo autónomo, probado como la app | `main`, fusionada el 22/10 (PR #17) |
+| 0.5.7 | 22/10/2026 | CP-5 · auditorías a fondo de F5 (AR-12 y AT-11) | `main`, fusionada el 22/10 (PR #16) |
 | 0.5.6 | 21/10/2026 | F5.7 · auditorías AR-11 y AT-10 | `main`, fusionada el 22/10 (PR #15) |
 | 0.5.5 | 21/10/2026 | F5.7 · librería de acordes | `main`, fusionada el 22/10 (PR #15) |
 | 0.5.4 | 21/10/2026 | F5.6 · metrónomo | `main`, fusionada el 22/10 (PR #14) |
@@ -40,6 +42,59 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.6.2] — 12/11/2026 · F5.8 · El afinador sigue la nota, y la pantalla no se apaga
+
+Tus comentarios del 12/11, primera entrega (#2): «el afinador solamente coge como un pico del sonido», «que mantenga un poco más la escucha» y «por defecto aparezca la parte de micrófono». Y tu «sí» a mantener la pantalla encendida.
+
+### Cambiado
+- **A-02** · El afinador **sigue la nota mientras se apaga**. Antes solo aceptaba lecturas muy claras, y una cuerda solo suena así en el instante de pulsarla. Ahora:
+  - filtra el sonido antes de analizarlo (fuera lo de menos de 60 Hz y lo de más de 1200 Hz), y analiza trozos el doble de largos (85 ms);
+  - para *empezar* a seguir una nota pide lo mismo que antes (dos lecturas claras que coincidan), así un golpe o una voz no mueven la aguja;
+  - una vez enganchada, le basta mucha menos claridad mientras la lectura siga cerca de las últimas (20 cents) y suene 4 veces por encima del ruido de fondo, que mide todo el rato;
+  - la aguja promedia las 7 últimas lecturas quitando las extremas.
+  En el banco, a volumen de micrófono de móvil y con ruido: una cuerda sintética de 6 s se sigue de 3,5 a 3,7 s (antes, 2,6 s); con las 12 grabaciones reales, la primera lectura llega en 165 ms como mucho y, ya asentada la cuerda, ninguna se va más de 3,4 cents. En una medición suelta con las grabaciones enteras de la app (3 s; no está en el banco), cada cuerda se sigue entre 1,5 y 3 veces más tiempo.
+- **A-03** · Cuando la nota deja de oírse, **lo último medido se queda 2,5 s a la vista**, atenuado y con el rótulo «Última lectura», para que dé tiempo a mirar y girar la clavija. Luego la aguja vuelve a reposo.
+- **A-02** · El afinador **abre en Micrófono** donde se puede usar (en la web con `https`), sin escuchar hasta que pulsas «Activar el micrófono». Donde no se puede (el archivo con doble clic), abre en De oído. Si eliges tú un modo, se recuerda.
+- **A-02-CA** · Con el trozo más largo, el detector sigue dentro de su criterio: ±1,84 cents y 195 ms.
+
+### Añadido
+- **G-13** (nuevo) · **La pantalla no se apaga** mientras suena el metrónomo o escucha el afinador (Screen Wake Lock). Al parar, el móvil vuelve a bloquearse como siempre. Donde el navegador no lo permite, o el sistema lo niega, todo funciona igual y el metrónomo lo avisa. Si el micrófono se apaga al ocultarse la app, el afinador lo dice al volver.
+
+### Auditorías ligeras (AR-15 y AT-14)
+Sin críticos ni altos; una ronda. Corregido, entre otros: una octava clara ya no se pliega a la cuerda anterior (en Drop D, la 4ª releva a la 6ª); un instante de silencio total no deja en cero el ruido de fondo; elegir cuerda con una nota sonando repinta la lectura en vez de perderla; el aviso del metrónomo sale también si el sistema niega la pantalla encendida; «Restablecer» apaga el micrófono y vuelve a «Auto».
+
+### Pruebas
+- Banco: 178 de 178. Nuevas: la nota que se apaga, el ruido solo, el giro de clavija, el relevo de cuerda (también a la octava) y las 12 grabaciones reales con ruido (`tests/tono.test.js`); el modo por defecto y su recuerdo, la lectura sostenida y la pantalla encendida (`tests/banco.test.js`).
+- Chromium, con una grabación real como micrófono: «La2 · −11 cents · ▲ Sube un poco», en vertical y horizontal.
+
+---
+
+## [0.6.1] — 22/10/2026 · F5.8 · El metrónomo, con péndulo
+
+Tu primer comentario de uso para F5.8 (#1): que la barra del metrónomo se mueva como la de uno de verdad.
+
+### Cambiado
+- **MT-06** (nuevo) · La barra del tempo es un **péndulo**. Mientras suena, oscila sobre su pie y llega a un extremo en cada pulso, alternando izquierda y derecha, hasta 30° a cada lado; entre dos pulsos pasa por el centro. Se mueve como un péndulo de verdad: rápido en el centro y lento al llegar a los extremos.
+- **La pesa arriba va más lenta**, como en un metrónomo mecánico (tu decisión del 22/10). Antes, arriba era más rápido. Las flechas del teclado no cambian: ↑ sigue subiendo el tempo, como en cualquier deslizador.
+- El ángulo sale del **reloj de audio**, el mismo que programa los golpes: el péndulo va con el sonido aunque el navegador vaya a tirones. Las subdivisiones no lo mueven, solo los pulsos.
+- Se queda **recto** parado, mientras lo arrastras (para ver dónde dejas la pesa) y con «reducir movimiento» activado en el sistema (G-05).
+- **Nunca se sale de la pantalla:** si no cabe, se abre menos. Con el iPhone en horizontal, unos 13°; para dejarle sitio, la columna de la barra es más ancha en esa disposición. Si giras el móvil con el metrónomo sonando en otra área, al volver se abre lo que cabe.
+- **Tocar la pesa donde la ves**, aunque esté inclinada, no cambia el tempo: solo arrastrarla.
+- **El dibujo de la barra:** ya no tiene el relleno ámbar (con la pesa arriba = lento, ya no indicaba «más»); la varilla es gris y lleva un pie ámbar abajo, sobre el que gira.
+
+### Comprobado
+- Banco: 168 de 168. Seis pruebas nuevas (también contra el autónomo), que fallan con la versión anterior.
+- Chromium: ±30° en el iPhone en vertical y en el ordenador, ±12,7° en horizontal (también al volver tras girar en otra área), nunca fuera de la pantalla y sin errores; quieto con «reducir movimiento». Disposición: el metrónomo cabe entero en las ocho pantallas; accesibilidad, todo correcto.
+
+### Auditorías ligeras (AR-14 y AT-13)
+- Sin críticos; una sola ronda. Corregidos los dos altos: tocar la pesa inclinada cambiaba el tempo hasta 30 ppm, y girar el móvil en otra área dejaba el péndulo demasiado abierto al volver. También: sin saltos al cambiar mucho el tempo en marcha, cambiar de compás no le hace perder pulsos, menos trabajo en cada fotograma y el arrastre no se queda enganchado.
+- **Dos decisiones tuyas** (AR-14 #2 y #8): el ángulo en horizontal y la dirección de las flechas del teclado. Anotado en MT-06 lo que se mira en la Sesión 2.
+
+### Documentos
+- Requisitos v1.26 (110: MT-06 nuevo; MT-01 y G-10 anotados), matriz v1.24, interfaz v1.14 y roadmap v3.24 (F5.8 en curso, con la tabla de tus comentarios).
 
 ---
 

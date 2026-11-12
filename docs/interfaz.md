@@ -1,7 +1,7 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 1.13 · **Fecha:** 21 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0); la sección 7b (seis áreas, con Metrónomo y Acordes), aprobada el 21/10. Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
-**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.5.6` · `requisitos.md` v1.23 · `roadmap.md` v3.21
+**Versión:** 1.15 · **Fecha:** 12 de noviembre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0); la sección 7b (seis áreas, con Metrónomo y Acordes), aprobada el 21/10 y retocada el 22/10 con tu decisión de la pesa del metrónomo; los detalles del péndulo, a falta de tu visto bueno en la web de pruebas. Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
+**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.6.1` · `requisitos.md` v1.26 · `roadmap.md` v3.24
 **Revisión:** auditoría de requisitos AR-04 (`auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
 
@@ -95,10 +95,11 @@ Igual que Libre, con la **tarjeta del reto** entre el acceso rápido y el másti
 
 ### Afinador — bocetos A3 y A4
 
-Selector arriba: **De oído | Micrófono**. Debajo, en los dos modos, la **afinación activa** (A-06, A-07), porque el micrófono también la necesita para saber qué nota corresponde a cada cuerda.
+Selector arriba: **De oído | Micrófono**. Desde la 0.6.2 (tu comentario del 12/11) **abre en Micrófono** donde se puede usar, sin escuchar hasta que pulsas «Activar el micrófono»; donde no se puede, en De oído; y si eliges tú, se recuerda. Debajo, en los dos modos, la **afinación activa** (A-06, A-07), porque el micrófono también la necesita para saber qué nota corresponde a cada cuerda.
 
 - **De oído** (A-01, lo que hay hoy): una fila por cuerda, que suena al pulsarla y tiene − y + para bajarla o subirla un semitono (cualquier cambio la convierte en «Personalizada», A-08), y la afinación en el pentagrama (P-04, A-09).
 - **Micrófono** (F4, A-02…A-05): selector de cuerda **Auto | 6 … 1** (Auto detecta la cuerda según la afinación activa, A-04; elegir una manda sobre la detección, A-05); un indicador de aguja de −50 a +50 cents con la franja de afinado de ±5 en verde (A-03); la nota grande y los cents en número; la orden en texto y flecha, **«▲ Sube un poco» / «▼ Baja un poco» / «✓ Afinada»**; un aviso fijo, «El sonido se analiza solo en tu dispositivo» (G-11), y un botón para detener el micrófono.
+- **Nota sostenida** (0.6.2): la aguja sigue la nota mientras se apaga; cuando deja de oírse, la nota, los cents y la orden se quedan 2,5 s a la vista, atenuados y con el rótulo «Última lectura», y después vuelve a «Toca una cuerda». Mientras escucha, la pantalla no se apaga (G-13).
 - **Flujo del permiso:** la primera vez, una frase explica para qué se usa el micrófono **antes** de que el navegador lo pida. Si lo deniegas, se dice cómo activarlo en ese navegador. El micrófono se apaga al salir del Afinador.
 - **Si no hay micrófono** (archivo abierto con doble clic, navegador sin permiso o sin la capacidad): el modo Micrófono se muestra desactivado con el motivo, y De oído sigue funcionando (PL-04).
 - **Así quedó en la 0.4.0** (diferencias con lo de arriba, revisadas en AR-08):
@@ -166,7 +167,7 @@ Tu petición del 21/10 y tu decisión del mismo día: **el metrónomo es una fun
 - **Seis áreas, en este orden:** Libre · Adivinar · Afinador · Escalas · Acordes · Metrónomo. Las cuatro de siempre no cambian de sitio (principio 3); las nuevas van al final.
 - **Barra inferior (vertical):** seis destinos de 65 px de ancho en el iPhone, cada uno con icono y una etiqueta corta de 11 px. **Raíl (horizontal):** seis destinos de 44 px de alto y ⚙ abajo; caben en los 342 px del iPhone apaisado. **Ordenador:** seis pestañas en la cabecera.
 - **Metrónomo** (MT-01 a MT-05, hecho en la 0.5.4): pantalla propia, sin mástil, como el Afinador; funciona igual en vertical y en horizontal y no pide girar el móvil.
-  - **Pantalla principal**, de arriba abajo: una **barra vertical** para el tempo (arriba, más rápido; también con las flechas del teclado); el **nombre del tempo** en italiano (Lento, Andante, Allegro…); **− 80 +**; **un punto por pulso**, el primero más grande si lleva acento y relleno el que suena; abajo, el **compás** escrito como en la partitura (4 sobre 4) y «Marcar» (tocas a ritmo y lo calcula), y el botón **Empezar**. En horizontal, la barra a la izquierda, el tempo en medio y los controles a la derecha.
+  - **Pantalla principal**, de arriba abajo: una **barra vertical** para el tempo, que es un **péndulo** como el de un metrónomo mecánico (MT-06, tu comentario del 22/10): la pesa marca el tempo, arriba más lento y abajo más rápido; mientras suena, la barra oscila sobre su pie y llega a un extremo en cada pulso (hasta 30° a cada lado; menos si no cabe, como en horizontal); se queda recta parada, mientras la arrastras y con «reducir movimiento». También se mueve con las flechas del teclado (↑, más rápido, como cualquier deslizador); el **nombre del tempo** en italiano (Lento, Andante, Allegro…); **− 80 +**; **un punto por pulso**, el primero más grande si lleva acento y relleno el que suena; abajo, el **compás** escrito como en la partitura (4 sobre 4) y «Marcar» (tocas a ritmo y lo calcula), y el botón **Empezar**. En horizontal, la barra a la izquierda, el tempo en medio y los controles a la derecha.
   - **Al tocar el compás** se abre una ventana: los doce compases en círculos (1/4, 2/4, 3/4, 4/4, 5/4, 6/4, 3/8, 5/8, 6/8, 7/8, 9/8, 12/8), las cuatro figuras (solo el pulso, dos, tres o cuatro golpes por pulso), la casilla **Acento en el primer tiempo** y «Listo». En 6/8, 9/8 y 12/8 el pulso es la negra con puntillo: dos, tres o cuatro puntos. «Atrás», Escape o tocar fuera también la cierran. En horizontal, en dos columnas.
   - **Sigue sonando al cambiar de área**, para tocar encima en Libre, Escalas o Acordes. Mientras suena, su pestaña lleva un punto que se enciende con cada pulso; para pararlo, vuelves a ella. Se para al ocultar la app y **al escuchar con el micrófono** en el Afinador, con un aviso: su clic confundiría al detector.
 - **Acordes** (AC-01 a AC-06, hecho en la 0.5.5), como lo describiste el 21/10: **a un lado el listado, al otro el acorde en el mástil**.
@@ -253,7 +254,9 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.13** | 21/10/2026 | Auditoría AR-11: seis áreas en el mapa, el raíl y el ordenador; el aviso para girar, también en Acordes y nunca en el Metrónomo. |
+| **1.15** | 12/11/2026 | F5.8 #2: el afinador abre en Micrófono, sostiene la última lectura y mantiene la pantalla encendida (A-02, A-03, G-13). El metrónomo avisa donde no puede mantenerla. |
+| 1.14 | 22/10/2026 | F5.8, tu primer comentario de uso: la barra del metrónomo es un péndulo, con la pesa arriba más lenta (MT-06, nuevo). |
+| 1.13 | 21/10/2026 | Auditoría AR-11: seis áreas en el mapa, el raíl y el ordenador; el aviso para girar, también en Acordes y nunca en el Metrónomo. |
 | 1.12 | 21/10/2026 | Acordes, como lo describiste: listado con buscador, populares y los 30 acordes a un lado; el acorde en el mástil al otro. Disposición en vertical, horizontal y amplia. |
 | 1.11 | 21/10/2026 | Sección 7b aprobada. El metrónomo, rehecho con tu guía (la app que nos enseñaste): barra vertical, nombre del tempo, un punto por pulso y una ventana con compás, figura y acento en el primer tiempo. |
 | 1.10 | 21/10/2026 | Sección 7b rehecha con tu decisión del 21/10: el metrónomo es un área propia. Seis áreas, medidas de la barra y del raíl, el metrónomo sonando en otras áreas y parado con el micrófono, y los colores de dedo de Acordes. Pendiente de tu visto bueno. Mapa, raíl y alternativas al día (AR-10). |

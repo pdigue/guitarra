@@ -217,7 +217,8 @@ document.getElementById('set-reset').addEventListener('click', async () => {
   syncUI();
   applyZoom();
   updateRotateHint();          // «Restablecer» recupera el aviso para girar
-  setTunerMode(state.tunerMode);   // el afinador vuelve a «De oído»
+  stopMic(); setMicString('auto');    // el micrófono se apaga y la cuerda vuelve a «Auto» (AT-14 #12)
+  setTunerMode(tunerModeInicial());   // el afinador vuelve a su modo de fábrica
   // Escalas, ♯/♭ y nomenclatura también vuelven a lo de fábrica: sin esto, los
   // selectores y los botones seguían diciendo lo de antes (AT-09 #1).
   resetScalePractice(); sc.paso = 0;
