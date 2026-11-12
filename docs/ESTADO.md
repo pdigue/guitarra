@@ -30,7 +30,7 @@
   - «Fusiona el #14 y el #15»: **#14**, metrónomo (`0.5.4`), y **#15**, acordes y correcciones de AT-10 y AR-11 (`0.5.5` y `0.5.6`), con su base cambiada antes a `main`;
   - «fusiona 16 y 17»: **#16**, CP-5 (`0.5.7`), y **#17**, F6.1 (`0.6.0`), con su base cambiada antes a `main`. El banco pasó 156 de 156 sobre el resultado de la fusión antes de hacerla.
 - **Documentos:**
-  - requisitos v1.26 (110 requisitos, 53 validados; MT-06 nuevo, MT-01 y G-10 anotados), matriz v1.24, roadmap v3.24;
+  - requisitos v1.26 (110 requisitos, 53 validados; MT-06 nuevo, MT-01 y G-10 anotados), matriz v1.24, roadmap v3.25;
   - interfaz v1.14, compatibilidad v1.7, IT-03 (F5, con F5.8) e IT-04 (F6, crece con cada etapa);
   - últimas auditorías: AR-14 y AT-13 (F5.8 #1, ligeras); a fondo, AR-12 y AT-11 (CP-5).
 
