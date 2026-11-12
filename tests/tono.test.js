@@ -306,3 +306,47 @@ test('siguiendo una nota, si el detector salta a su octava se pliega; una nota l
   assert.equal(mic.siguiendo, false, 'sin lecturas un rato, se suelta');
   assert.equal(seguirNota(floja(110), 900), 0, 'y ya no basta con una lectura floja');
 });
+
+// --- Correcciones de la auditoría AT-14 ---
+
+test('una octava clara es otra cuerda (Drop D: 6ª y 4ª), no la misma plegada; y dos candidatas deben ser seguidas (AT-14 #1, #5)', () => {
+  const clara = hz => ({ hz, claridad: 0.95 });
+  reiniciar();
+  seguirNota(clara(73.42), 0); seguirNota(clara(73.42), 50);          // la 6ª en Re2
+  assert.equal(mic.siguiendo, true);
+  assert.equal(seguirNota(clara(146.83), 100), 0, 'la primera lectura de la 4ª aún no releva');
+  assert.ok(Math.abs(cents(seguirNota(clara(146.83), 150), 146.83)) < 1, 'la segunda, sí: Re3, no Re2');
+  reiniciar();
+  seguirNota(clara(110), 0);
+  assert.equal(seguirNota(clara(110), 1000), 0, 'un segundo después ya no son «dos seguidas»');
+  assert.equal(mic.siguiendo, false);
+});
+
+test('un instante de silencio total no deja el ruido de fondo en cero; y sin lecturas no se «sigue» nada (AT-14 #2, #3)', () => {
+  reiniciar();
+  for (let i = 0; i < 5; i++) seguirNota(null, i * 50, 0);
+  assert.ok(mic.ruido >= MIC.RUIDO_MINIMO, 'ruido estimado: ' + mic.ruido);
+  Object.assign(mic, { siguiendo: true, lecturas: [] });
+  assert.equal(seguirNota({ hz: 110, claridad: 0.6 }, 300), 0);
+  assert.equal(mic.siguiendo, false);
+});
+
+test('con las grabaciones reales y ruido de fondo, el camino entero del afinador da la nota a tiempo y sin lecturas disparatadas (A-02, AT-14)', () => {
+  let peor = 0, masLenta = 0;
+  for (const m of indice.muestras){
+    const x0 = leerWav(m.archivo);
+    let pico = 0;
+    for (const v of x0) pico = Math.max(pico, Math.abs(v));
+    reiniciar();
+    const validas = escuchar(conRuido(x0.map(v => v / pico * 0.05), 0.001)).filter(e => e.hz);
+    assert.ok(validas.length >= 5, `${m.archivo}: ${validas.length} lecturas`);
+    const primera = validas[0].ms - ENTRADA * 1000 - m.ataque_s * 1000;
+    masLenta = Math.max(masLenta, primera);
+    // Al pulsarla, una cuerda real suena unos cents alta y se asienta en unos
+    // 0,3 s (eso es la cuerda, no el detector): se mide ya asentada.
+    for (const e of validas) if (e.ms - ENTRADA * 1000 > m.ataque_s * 1000 + 300) peor = Math.max(peor, Math.abs(cents(e.hz, m.hz_medida)));
+  }
+  console.log(`  grabaciones con ruido: primera lectura en ${masLenta.toFixed(0)} ms como mucho; ya asentada la cuerda, peor lectura a ${peor.toFixed(1)} cents de su medida`);
+  assert.ok(masLenta < 300, 'primera lectura: ' + masLenta.toFixed(0) + ' ms');
+  assert.ok(peor <= 5, 'peor lectura: ' + peor.toFixed(1) + ' cents');
+});

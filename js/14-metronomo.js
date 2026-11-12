@@ -191,11 +191,11 @@ function startMetro(){
   if (audioCtx.state === 'running'){ metroEnMarcha(); return; }
   const ctx = audioCtx;
   metro.arrancando = true;
-  let espera, despierta;
+  let espera, reanudado;       // (no «despierta»: taparía a la de la pantalla, AT-14 #11)
   // resume() devuelve una promesa que se cumple cuando el audio ya suena.
-  try { despierta = Promise.resolve(ctx.resume()).catch(() => {}); } catch(e){ despierta = Promise.resolve(); }
+  try { reanudado = Promise.resolve(ctx.resume()).catch(() => {}); } catch(e){ reanudado = Promise.resolve(); }
   return Promise.race([
-    despierta,
+    reanudado,
     new Promise(r => { espera = setTimeout(r, 400); })
   ]).then(() => {
     clearTimeout(espera);
@@ -474,7 +474,7 @@ function renderMetro(){
   play.textContent = metro.sonando ? t('metro.stop') : t('metro.start');
   play.classList.toggle('on', metro.sonando);   // el texto ya dice Empezar o Parar: sin aria-pressed (AT-10 #9)
   // El aviso se guarda como clave y se traduce al pintarlo: cambia con el idioma (AT-10 #5).
-  document.getElementById('metro-note').textContent = metro.aviso ? t(metro.aviso) : (metro.sonando ? t('metro.playing') + (puedeDespierta() ? '' : ' ' + t('metro.noLock')) : '');
+  document.getElementById('metro-note').textContent = metro.aviso ? t(metro.aviso) : (metro.sonando ? t('metro.playing') + (pantallaSeApagara() ? ' ' + t('metro.noLock') : '') : '');
   // Fuera de su área, la pestaña dice que está en marcha (también al lector de pantalla).
   const tab = document.querySelector('.tab[data-screen="metro"]');
   if (tab){

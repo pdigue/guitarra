@@ -276,8 +276,10 @@ function updateAudioStatus(){
    bloquearse como siempre. Se detecta la capacidad (PL-04): donde no existe,
    no se hace nada y el metrónomo lo avisa. El sistema suelta el cerrojo por su
    cuenta al ocultar la app; al volver, se pide otra vez si sigue haciendo falta. */
-const despierta = { motivos: new Set(), cerrojo: null, pidiendo: false };
+const despierta = { motivos: new Set(), cerrojo: null, pidiendo: false, negado: false };
 const puedeDespierta = () => typeof navigator !== 'undefined' && !!navigator.wakeLock && typeof navigator.wakeLock.request === 'function';
+/** ¿Puede apagarse la pantalla mientras suena? Sí, si no hay cerrojo o el sistema lo ha negado (AT-14 #4). */
+const pantallaSeApagara = () => !puedeDespierta() || despierta.negado;
 
 /** `motivo` ('metro' o 'mic') empieza o deja de necesitar la pantalla encendida. */
 function pantallaDespierta(motivo, on){
@@ -290,12 +292,19 @@ async function pedirCerrojo(){
   if (!puedeDespierta() || despierta.cerrojo || despierta.pidiendo || document.hidden) return;
   despierta.pidiendo = true;
   let c = null;
-  try { c = await navigator.wakeLock.request('screen'); } catch(e){}   // puede negarse (batería baja): se sigue sin él
+  // Puede negarse (batería baja, o la app instalada en un iPhone antiguo): se
+  // sigue sin él, y el metrónomo lo avisa.
+  try { c = await navigator.wakeLock.request('screen'); despierta.negado = false; } catch(e){ despierta.negado = true; }
   despierta.pidiendo = false;
-  if (!c) return;
+  if (!c){ if (typeof renderMetro === 'function') renderMetro(); return; }
   if (!despierta.motivos.size){ try { c.release().catch(() => {}); } catch(e){} return; }   // paraste mientras se pedía
   despierta.cerrojo = c;
-  if (c.addEventListener) c.addEventListener('release', () => { if (despierta.cerrojo === c) despierta.cerrojo = null; });
+  // Si lo suelta el sistema con la app a la vista y algo sigue sonando, se pide otro (AT-14 #10).
+  if (c.addEventListener) c.addEventListener('release', () => {
+    if (despierta.cerrojo !== c) return;
+    despierta.cerrojo = null;
+    if (despierta.motivos.size) pedirCerrojo();
+  });
 }
 
 function onVisibility(){

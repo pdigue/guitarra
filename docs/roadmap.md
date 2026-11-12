@@ -1,7 +1,7 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 3.26 · **Fecha:** 22 de octubre de 2026
-**Válido para:** app `0.6.1` · `requisitos.md` v1.26 · `matriz-cumplimiento` v1.24 · `interfaz.md` v1.14 · `compatibilidad.md` v1.7 · `automatizacion.md` v1.2 · `CHANGELOG.md`
+**Versión:** 3.26 · **Fecha:** 12 de noviembre de 2026
+**Válido para:** app `0.6.2` · `requisitos.md` v1.27 · `matriz-cumplimiento` v1.25 · `interfaz.md` v1.15 · `compatibilidad.md` v1.8 · `automatizacion.md` v1.2 · `CHANGELOG.md`
 **Gestiona:** chat de Desarrollo
 
 > ⚡ **Modo acelerado activo desde el 14/10** (detalle en `automatizacion.md`). El agente ejecuta las etapas por bloques —F1 a F3, luego F4 a F6— y solo para en las decisiones. Las pruebas que necesitan tus manos se agrupan en dos sesiones: **Sesión 1** con el iPhone y el ordenador al cerrar F3, y **Sesión 2** con la guitarra al cerrar F6.
@@ -229,7 +229,7 @@ Peso principal en el **auditor de requisitos** como experto en experiencia de us
 ### 🔍 CP-5 — Checkpoint de escalas, metrónomo y acordes
 Ambos auditores, con atención a la corrección musical (escritura de las escalas y notas de cada digitación: es donde un error pasa desapercibido más tiempo) y a la precisión del pulso del metrónomo.
 
-**Hecho el 22/10** (`0.5.7`), con informes AR-12 y AT-11: sin críticos. De los tres altos, dos corregidos (el metrónomo arranca aunque el iPhone haya dejado el audio en pausa; una sola vara para lo que compruebas tú) y uno pendiente de tu decisión (mantener la pantalla encendida mientras suena el metrónomo). Los medios y bajos, anotados en la matriz, en el comentario de cada requisito.
+**Hecho el 22/10** (`0.5.7`), con informes AR-12 y AT-11: sin críticos. De los tres altos, dos corregidos (el metrónomo arranca aunque el iPhone haya dejado el audio en pausa; una sola vara para lo que compruebas tú) y uno que esperaba tu decisión (mantener la pantalla encendida mientras suena el metrónomo; **resuelto el 12/11**: G-13, `0.6.2`). Los medios y bajos, anotados en la matriz, en el comentario de cada requisito.
 
 ---
 

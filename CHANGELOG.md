@@ -55,16 +55,19 @@ Tus comentarios del 12/11, primera entrega (#2): «el afinador solamente coge co
   - para *empezar* a seguir una nota pide lo mismo que antes (dos lecturas claras que coincidan), así un golpe o una voz no mueven la aguja;
   - una vez enganchada, le basta mucha menos claridad mientras la lectura siga cerca de las últimas (20 cents) y suene 4 veces por encima del ruido de fondo, que mide todo el rato;
   - la aguja promedia las 7 últimas lecturas quitando las extremas.
-  Con las grabaciones de la app a volumen de micrófono de móvil y con ruido, sigue cada cuerda entre 1,3 y 3 veces más tiempo, y sin lecturas disparatadas.
-- **A-03** · Cuando la nota deja de oírse, **lo último medido se queda 2,5 s a la vista**, atenuado, para que dé tiempo a mirar y girar la clavija. Luego la aguja vuelve a reposo.
+  En el banco, a volumen de micrófono de móvil y con ruido: una cuerda sintética de 6 s se sigue de 3,5 a 3,7 s (antes, 2,6 s); con las 12 grabaciones reales, la primera lectura llega en 165 ms como mucho y, ya asentada la cuerda, ninguna se va más de 3,4 cents. En una medición suelta con las grabaciones enteras de la app (3 s; no está en el banco), cada cuerda se sigue entre 1,5 y 3 veces más tiempo.
+- **A-03** · Cuando la nota deja de oírse, **lo último medido se queda 2,5 s a la vista**, atenuado y con el rótulo «Última lectura», para que dé tiempo a mirar y girar la clavija. Luego la aguja vuelve a reposo.
 - **A-02** · El afinador **abre en Micrófono** donde se puede usar (en la web con `https`), sin escuchar hasta que pulsas «Activar el micrófono». Donde no se puede (el archivo con doble clic), abre en De oído. Si eliges tú un modo, se recuerda.
 - **A-02-CA** · Con el trozo más largo, el detector sigue dentro de su criterio: ±1,84 cents y 195 ms.
 
 ### Añadido
-- **G-13** (nuevo) · **La pantalla no se apaga** mientras suena el metrónomo o escucha el afinador (Screen Wake Lock). Al parar, el móvil vuelve a bloquearse como siempre. Donde el navegador no lo permite, todo funciona igual y el metrónomo lo avisa.
+- **G-13** (nuevo) · **La pantalla no se apaga** mientras suena el metrónomo o escucha el afinador (Screen Wake Lock). Al parar, el móvil vuelve a bloquearse como siempre. Donde el navegador no lo permite, o el sistema lo niega, todo funciona igual y el metrónomo lo avisa. Si el micrófono se apaga al ocultarse la app, el afinador lo dice al volver.
+
+### Auditorías ligeras (AR-15 y AT-14)
+Sin críticos ni altos; una ronda. Corregido, entre otros: una octava clara ya no se pliega a la cuerda anterior (en Drop D, la 4ª releva a la 6ª); un instante de silencio total no deja en cero el ruido de fondo; elegir cuerda con una nota sonando repinta la lectura en vez de perderla; el aviso del metrónomo sale también si el sistema niega la pantalla encendida; «Restablecer» apaga el micrófono y vuelve a «Auto».
 
 ### Pruebas
-- Banco: 175 de 175. Nuevas: la nota que se apaga, el ruido solo, el giro de clavija y el relevo de cuerda (`tests/tono.test.js`); el modo por defecto y su recuerdo, la lectura sostenida y la pantalla encendida (`tests/banco.test.js`).
+- Banco: 178 de 178. Nuevas: la nota que se apaga, el ruido solo, el giro de clavija, el relevo de cuerda (también a la octava) y las 12 grabaciones reales con ruido (`tests/tono.test.js`); el modo por defecto y su recuerdo, la lectura sostenida y la pantalla encendida (`tests/banco.test.js`).
 - Chromium, con una grabación real como micrófono: «La2 · −11 cents · ▲ Sube un poco», en vertical y horizontal.
 
 ---

@@ -847,6 +847,11 @@ test('afinador por micrófono: no escucha hasta que lo pides, y luego dice cuán
   await sleep(1000);
   assert.equal(lectura(A).nota, 'Mi4', 'un segundo después sigue a la vista');
   assert.ok(A.$('mic-live').classList.contains('held'), 'atenuada: ya no se oye');
+  assert.equal(A.$('mic-detail').textContent, 'Última lectura · +100 cents · 1ª cuerda', 'y lo dice con palabras (AR-15 #7)');
+  // Elegir cuerda con una lectura a la vista la repinta con esa cuerda, sin perderla (AT-14 #3).
+  A.doc.querySelector('#mic-string [data-v="2"]').click();
+  assert.equal(lectura(A).nota, 'Si3');
+  assert.match(A.$('mic-detail').textContent, /^Última lectura · .* · 2ª cuerda$/);
   await sleep(2200);
   assert.match(A.$('mic-detail').textContent, /Toca una cuerda/, 'en silencio la aguja vuelve a reposo');
   assert.ok(!A.$('mic-live').classList.contains('held'));
@@ -1684,7 +1689,7 @@ unaVez('docs/ESTADO.md está al día con la versión de la app (memoria entre co
 
 // --- F5.8 #2 (12/11): el afinador abre en Micrófono, y la pantalla no se apaga mientras se usa ---
 
-test('el afinador abre en Micrófono donde se puede usar, sin escuchar todavía; tu elección se recuerda (A-02, F5.8 #2)', () => {
+test('el afinador abre en Micrófono donde se puede usar, sin escuchar todavía; tu elección se recuerda (A-02, F5.8 #2)', async () => {
   const A = boot(APP, null, microFalso());
   A.doc.querySelector('.tab[data-screen="tuner"]').click();
   assert.equal(A.$('tuner-mic').hidden, false, 'con micrófono disponible, abre en Micrófono');
@@ -1698,6 +1703,15 @@ test('el afinador abre en Micrófono donde se puede usar, sin escuchar todavía;
   const guardado = JSON.parse(A.store.get('trasteando.v1'));
   assert.deepEqual([guardado.tunerMode, guardado.tunerPick], ['ear', true]);
   assert.equal(boot(APP, guardado, microFalso()).$('tuner-ear').hidden, false);
+  // «Restablecer» olvida la elección, apaga el micrófono y devuelve la cuerda a «Auto» (AT-14 #12).
+  const R = boot(APP, guardado, microFalso()); R.ev(analizadorFalso);
+  R.doc.querySelector('#tuner-mode [data-v="mic"]').click();
+  R.doc.querySelector('#mic-string [data-v="3"]').click();
+  R.$('set-reset').click();
+  await sleep(50);
+  assert.equal(R.$('tuner-mic').hidden, false);
+  assert.equal(R.ev('mic.string'), 'auto');
+  assert.equal(JSON.parse(R.store.get('trasteando.v1')).tunerPick, false);
   // Donde el micrófono no se puede usar (sin https, con doble clic), abre en De oído.
   const sin = boot(APP);
   assert.equal(sin.$('tuner-ear').hidden, false);
@@ -1730,6 +1744,24 @@ test('la pantalla se mantiene encendida mientras suena el metrónomo o escucha e
   B.doc.querySelector('.tab[data-screen="metro"]').click();
   B.$('metro-play').click(); await sleep(20);
   assert.equal(B.ev('metro.sonando'), true);
-  assert.match(B.$('metro-note').textContent, /Si la pantalla se apaga, se para/);
+  assert.match(B.$('metro-note').textContent, /si se apaga, el metrónomo se para/);
   assert.deepEqual(sinErrores(B), []);
+  // Existe, pero el sistema lo niega (batería baja): mismo aviso (AT-14 #4).
+  const negado = { navigator: { wakeLock: { request: async () => { throw new Error('NotAllowedError'); } } } };
+  const C = boot(APP, null, negado); C.ev(metroFalso);
+  t.after(() => C.ev('stopMetro()'));
+  C.doc.querySelector('.tab[data-screen="metro"]').click();
+  C.$('metro-play').click(); await sleep(30);
+  assert.equal(C.ev('metro.sonando'), true);
+  assert.match(C.$('metro-note').textContent, /si se apaga, el metrónomo se para/);
+  // Si el sistema suelta el cerrojo con la app a la vista y sigue sonando, se pide otro (AT-14 #10).
+  const dados = [];
+  const conEvento = { navigator: { wakeLock: { request: async () => { const c = { oyentes: [], release: async () => {}, addEventListener(_t, f){ c.oyentes.push(f); } }; dados.push(c); return c; } } } };
+  const D = boot(APP, null, conEvento); D.ev(metroFalso);
+  t.after(() => D.ev('stopMetro()'));
+  D.doc.querySelector('.tab[data-screen="metro"]').click();
+  D.$('metro-play').click(); await sleep(30);
+  assert.equal(dados.length, 1);
+  dados[0].oyentes.forEach(f => f()); await sleep(10);
+  assert.equal(dados.length, 2, 'se vuelve a pedir');
 });

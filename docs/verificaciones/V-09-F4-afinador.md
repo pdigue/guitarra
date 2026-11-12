@@ -25,14 +25,17 @@ En el iPhone, con Safari, en **https://pdigue.github.io/guitarra/** (la web de p
 
 | # | Haz | Resultado esperado | Requisitos |
 |---|---|---|---|
+| M0 | *(desde la 0.6.2)* Abre el **Afinador** | Abre ya en **Micrófono**, sin escuchar todavía | A-02 |
 | M1 | Afinador → **Micrófono** → «Activar el micrófono» → Permitir | La aguja en reposo y «Toca una cuerda» | A-02 |
 | M2 | Toca la 5ª cuerda al aire | «La2 · … · 5ª cuerda»; la app y tu afinador coinciden a ±5 cents | A-02, A-03 |
+| M2b | *(desde la 0.6.2)* Pulsa **una vez** la 5ª al aire y déjala sonar | La aguja la sigue al menos 3 s sin saltar de cuerda; al apagarse, la lectura se queda unos 2 s como «Última lectura», atenuada, y vuelve a «Toca una cuerda» | A-02, A-03 (F5.8 #2) |
 | M3 | Afina las 6 cuerdas con la app, en «Auto», hasta ver «✓ Afinada» en cada una | Tu afinador confirma cada cuerda a ±5 cents; la app no se equivoca de cuerda | A-02, A-03, A-04 |
 | M4 | Afloja la 6ª cerca de un semitono, elige **6** a mano y vuelve a afinarla | «Mi2 · unos −100 cents · ▲ Sube», y te lleva hasta «✓ Afinada» | A-05 |
-| M5 | Cambia la afinación a **Drop D** y afina la 6ª en «Auto» | «Re2 · 6ª cuerda» y «✓ Afinada» al llegar. Vuelve a Estándar al terminar | A-02 (afinación alternativa) |
-| M6 | Bloquea el móvil y desbloquéalo | El micrófono se ha apagado: vuelve el botón «Activar» y el indicador de micrófono del sistema desaparece | A-02, PL-04 |
+| M5 | Cambia la afinación a **Drop D** y afina la 6ª en «Auto» | «Re2 · 6ª cuerda» y «✓ Afinada» al llegar. Después pulsa la 4ª sin esperar: debe pasar a «Re3 · 4ª cuerda» (AT-14 #1). Vuelve a Estándar al terminar | A-02 (afinación alternativa) |
+| M6 | Bloquea el móvil y desbloquéalo | El micrófono se ha apagado: vuelve el botón «Activar», con la frase «El micrófono se apagó al ocultarse la app…», y el indicador de micrófono del sistema desaparece | A-02, PL-04 |
 | M7 | Ve a **Libre** y toca unas notas | Suenan como siempre, por el altavoz | PL-04 (sesión de audio) |
 | M8 | *(Opcional)* Repite M1 y M2 en la app instalada en la pantalla de inicio | Igual que en Safari | PL-03 |
+| M8b | *(desde la 0.6.2)* Pon el bloqueo automático del iPhone en **30 segundos** (Ajustes › Pantalla y brillo). Con el micrófono escuchando, no toques la pantalla 2 minutos. Repítelo con el **metrónomo** sonando 5 minutos. Al parar, espera 30 s | Mientras escucha o suena, la pantalla no se apaga; al parar, el iPhone se bloquea solo en esos 30 s. Apunta tu versión de iOS y si lo pruebas en Safari o en la app instalada (ahí solo funciona desde iOS 18.4: debe salir el aviso del metrónomo) | G-13 |
 | M9 | Lo que te haya resultado incómodo | Si la aguja tiembla, tarda o se equivoca de cuerda | — |
 
 ## 3. Auditorías (CP-4, primera ronda)
