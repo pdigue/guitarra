@@ -217,6 +217,7 @@ function metroEnMarcha(){
   metro.vistos = 0; metro.ultimo = null; metro.amplitud = null;   // se mide al pintarlo, con el área a la vista
   metroProgramar();
   metro.timer = setInterval(metroProgramar, METRO_CADA * 1000);
+  pantallaDespierta('metro', true);            // que el móvil no se bloquee y lo pare (G-13)
   metro.frame = requestAnimationFrame(metroDibujar);
   renderMetro();
 }
@@ -230,6 +231,7 @@ function stopMetro(motivo){
   clearInterval(metro.timer); metro.timer = null;
   cancelAnimationFrame(metro.frame); metro.frame = null;
   metro.cola = [];
+  pantallaDespierta('metro', false);
   if (estaba && motivo) metro.aviso = { mic: 'metro.stoppedMic', hidden: 'metro.stoppedHidden', audio: 'metro.stoppedAudio' }[motivo];
   const tab = document.querySelector('.tab[data-screen="metro"]');
   if (tab) tab.classList.remove('beat');
@@ -472,7 +474,7 @@ function renderMetro(){
   play.textContent = metro.sonando ? t('metro.stop') : t('metro.start');
   play.classList.toggle('on', metro.sonando);   // el texto ya dice Empezar o Parar: sin aria-pressed (AT-10 #9)
   // El aviso se guarda como clave y se traduce al pintarlo: cambia con el idioma (AT-10 #5).
-  document.getElementById('metro-note').textContent = metro.aviso ? t(metro.aviso) : (metro.sonando ? t('metro.playing') : '');
+  document.getElementById('metro-note').textContent = metro.aviso ? t(metro.aviso) : (metro.sonando ? t('metro.playing') + (puedeDespierta() ? '' : ' ' + t('metro.noLock')) : '');
   // Fuera de su área, la pestaña dice que está en marcha (también al lector de pantalla).
   const tab = document.querySelector('.tab[data-screen="metro"]');
   if (tab){

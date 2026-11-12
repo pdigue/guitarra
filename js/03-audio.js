@@ -269,6 +269,35 @@ function updateAudioStatus(){
     (rebuildOnNextGesture ? t('audio.rebuild') : '');
 }
 
+/* Pantalla despierta (G-13, F5.8). Si nadie toca la pantalla, el móvil se
+   bloquea solo, y con la app oculta el metrónomo y el micrófono se paran. Con
+   Screen Wake Lock se le pide al sistema que no la apague MIENTRAS suena el
+   metrónomo o escucha el afinador; al parar, se suelta y el móvil vuelve a
+   bloquearse como siempre. Se detecta la capacidad (PL-04): donde no existe,
+   no se hace nada y el metrónomo lo avisa. El sistema suelta el cerrojo por su
+   cuenta al ocultar la app; al volver, se pide otra vez si sigue haciendo falta. */
+const despierta = { motivos: new Set(), cerrojo: null, pidiendo: false };
+const puedeDespierta = () => typeof navigator !== 'undefined' && !!navigator.wakeLock && typeof navigator.wakeLock.request === 'function';
+
+/** `motivo` ('metro' o 'mic') empieza o deja de necesitar la pantalla encendida. */
+function pantallaDespierta(motivo, on){
+  if (on) despierta.motivos.add(motivo); else despierta.motivos.delete(motivo);
+  if (despierta.motivos.size) pedirCerrojo();
+  else if (despierta.cerrojo){ const c = despierta.cerrojo; despierta.cerrojo = null; try { c.release().catch(() => {}); } catch(e){} }
+}
+
+async function pedirCerrojo(){
+  if (!puedeDespierta() || despierta.cerrojo || despierta.pidiendo || document.hidden) return;
+  despierta.pidiendo = true;
+  let c = null;
+  try { c = await navigator.wakeLock.request('screen'); } catch(e){}   // puede negarse (batería baja): se sigue sin él
+  despierta.pidiendo = false;
+  if (!c) return;
+  if (!despierta.motivos.size){ try { c.release().catch(() => {}); } catch(e){} return; }   // paraste mientras se pedía
+  despierta.cerrojo = c;
+  if (c.addEventListener) c.addEventListener('release', () => { if (despierta.cerrojo === c) despierta.cerrojo = null; });
+}
+
 function onVisibility(){
   if (document.hidden){
     clearTimeout(playTimer);
@@ -280,6 +309,7 @@ function onVisibility(){
     // resume() siempre, no wakeAudio(): si el suspend() de hace un instante aún
     // no ha terminado, el estado dice 'running' y wakeAudio no haría nada (AT-06 #4).
     try { if (audioCtx && audioCtx.state !== 'closed') audioCtx.resume().catch(() => {}); } catch(e){}
+    if (despierta.motivos.size) pedirCerrojo();
     if (screen === 'guess'){
       // Se retoma esperando a ▶: ese toque es el que iOS exige para
       // reactivar el sonido, y no suena nada sin que lo pidas.

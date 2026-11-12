@@ -842,9 +842,14 @@ test('afinador por micrófono: no escucha hasta que lo pides, y luego dice cuán
   A.ev('__senal.hz = 349.23');                               // Fa4: 1 semitono sobre la 1ª
   await sleep(400);
   assert.deepEqual(lectura(A), { nota: 'Mi4', detalle: '+100 cents · 1ª cuerda', orden: '▼ Baja' });
+  // Al callar, lo último medido se queda a la vista, atenuado, y luego vuelve a reposo (F5.8 #2).
   A.ev('__senal.hz = 0');
-  await sleep(2000);
+  await sleep(1000);
+  assert.equal(lectura(A).nota, 'Mi4', 'un segundo después sigue a la vista');
+  assert.ok(A.$('mic-live').classList.contains('held'), 'atenuada: ya no se oye');
+  await sleep(2200);
   assert.match(A.$('mic-detail').textContent, /Toca una cuerda/, 'en silencio la aguja vuelve a reposo');
+  assert.ok(!A.$('mic-live').classList.contains('held'));
   A.doc.querySelector('.tab[data-screen="free"]').click();
   assert.equal(A.ev('__mic.pista.parada'), true, 'al salir del Afinador se apaga el micrófono');
 });
@@ -1675,4 +1680,56 @@ unaVez('docs/ESTADO.md está al día con la versión de la app (memoria entre co
   const estado = fs.readFileSync(path.join(__dirname, '..', 'docs', 'ESTADO.md'), 'utf8');
   const linea = estado.split('\n').find(l => l.startsWith('**Actualizado:**')) || '';
   assert.ok(linea.includes('`' + v + '`'), `ESTADO.md dice «${linea}», pero la app es la ${v}: actualízalo antes de cerrar`);
+});
+
+// --- F5.8 #2 (12/11): el afinador abre en Micrófono, y la pantalla no se apaga mientras se usa ---
+
+test('el afinador abre en Micrófono donde se puede usar, sin escuchar todavía; tu elección se recuerda (A-02, F5.8 #2)', () => {
+  const A = boot(APP, null, microFalso());
+  A.doc.querySelector('.tab[data-screen="tuner"]').click();
+  assert.equal(A.$('tuner-mic').hidden, false, 'con micrófono disponible, abre en Micrófono');
+  assert.equal(A.$('tuner-ear').hidden, true);
+  assert.equal(A.ev('__mic.pedido'), 0, 'pero no escucha hasta que pulsas «Activar»');
+  // Quien ya usaba la app tenía guardado «De oído» sin haberlo elegido: también le abre en Micrófono.
+  const viejo = boot(APP, { tunerMode: 'ear' }, microFalso());
+  assert.equal(viejo.$('tuner-mic').hidden, false);
+  // Si lo eliges tú, se recuerda.
+  A.doc.querySelector('#tuner-mode [data-v="ear"]').click();
+  const guardado = JSON.parse(A.store.get('trasteando.v1'));
+  assert.deepEqual([guardado.tunerMode, guardado.tunerPick], ['ear', true]);
+  assert.equal(boot(APP, guardado, microFalso()).$('tuner-ear').hidden, false);
+  // Donde el micrófono no se puede usar (sin https, con doble clic), abre en De oído.
+  const sin = boot(APP);
+  assert.equal(sin.$('tuner-ear').hidden, false);
+  assert.equal(sin.$('tuner-mic').hidden, true);
+});
+
+test('la pantalla se mantiene encendida mientras suena el metrónomo o escucha el afinador, y se suelta al parar (G-13)', async t => {
+  const pedidos = [];
+  const wakeLock = { request: async tipo => { const c = { tipo, suelto: false, release: async () => { c.suelto = true; } }; pedidos.push(c); return c; } };
+  const extra = microFalso(); extra.navigator.wakeLock = wakeLock;
+  const A = boot(APP, null, extra);
+  A.ev(analizadorFalso + metroExtra);
+  t.after(() => A.ev('stopMetro(); stopMic()'));
+  A.doc.querySelector('.tab[data-screen="metro"]').click();
+  assert.equal(pedidos.length, 0, 'parado no se pide nada');
+  A.$('metro-play').click(); await sleep(20);
+  assert.deepEqual(pedidos.map(c => [c.tipo, c.suelto]), [['screen', false]]);
+  assert.doesNotMatch(A.$('metro-note').textContent, /pantalla/);
+  A.$('metro-play').click(); await sleep(5);
+  assert.equal(pedidos[0].suelto, true, 'al parar, el móvil vuelve a bloquearse como siempre');
+  // El afinador: mientras escucha.
+  A.doc.querySelector('.tab[data-screen="tuner"]').click();
+  A.$('mic-start').click(); await sleep(20);
+  assert.deepEqual(pedidos.map(c => c.suelto), [true, false]);
+  A.$('mic-stop').click(); await sleep(5);
+  assert.deepEqual(pedidos.map(c => c.suelto), [true, true]);
+  // Donde no existe (PL-04), todo funciona igual y el metrónomo lo avisa.
+  const B = boot(APP); B.ev(metroFalso);
+  t.after(() => B.ev('stopMetro()'));
+  B.doc.querySelector('.tab[data-screen="metro"]').click();
+  B.$('metro-play').click(); await sleep(20);
+  assert.equal(B.ev('metro.sonando'), true);
+  assert.match(B.$('metro-note').textContent, /Si la pantalla se apaga, se para/);
+  assert.deepEqual(sinErrores(B), []);
 });

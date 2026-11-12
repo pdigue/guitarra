@@ -319,6 +319,9 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .mic-gauge { width:100%; max-width:300px; height:auto; display:block; }
 .mic-gauge .needle { transform-origin:120px 120px; transform-box:view-box; transition:transform .12s linear; }
 .mic-gauge.idle .needle { opacity:.25; }
+/* Sostenida (F5.8 #2): ya no se oye; lo último medido sigue a la vista, atenuado. */
+.mic-live.held .needle { opacity:.5; }
+.mic-live.held .mic-note, .mic-live.held .mic-order, .mic-live.held #mic-detail { opacity:.55; }
 .mic-read { width:100%; display:flex; flex-direction:column; align-items:center; gap:4px; }
 .mic-note { font-size:44px; font-weight:800; line-height:1; color:var(--text); }
 .mic-detail { font-size:13px; color:var(--muted); }

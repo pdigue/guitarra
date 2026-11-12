@@ -1,11 +1,13 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 1.24 · **Fecha:** 22 de octubre de 2026 · **Base:** `requisitos.md` v1.26 · app `0.6.1` · `roadmap.md` v3.24  
+**Versión:** 1.25 · **Fecha:** 12 de noviembre de 2026 · **Base:** `requisitos.md` v1.27 · app `0.6.2` · `roadmap.md` v3.26  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
+
+**Cambios en la 1.25:** F5.8, tus comentarios del 12/11 (#2): el afinador sigue la nota mientras se apaga, sostiene 2,5 s lo último medido y abre en Micrófono (A-02, A-02-CA y A-03, con sus criterios al día); G-13 nuevo, la pantalla encendida mientras suena el metrónomo o escucha el afinador, verificado parcialmente hasta tu prueba en el iPhone.
 
 **Cambios en la 1.24:** F5.8, tu primer comentario de uso (#1): MT-06 nuevo, el péndulo del metrónomo (la pesa arriba, más lento), con las correcciones de AR-14 y AT-13 en su criterio. Verificado parcialmente hasta la Sesión 2. MT-01 remite a MT-06 y G-10 dice cómo se numera una fase reabierta.
 
@@ -57,7 +59,7 @@
 
 | Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 110 | 95 | 6 | 5 | 4 | 53 | 20 |
+| 111 | 96 | 6 | 5 | 4 | 53 | 21 |
 
 | ID | Etapa | Método | Criterio de aceptación | Declaración | Evidencia | Verificación | Origen |
 |---|---|:---:|---|---|---|---|---|
@@ -73,6 +75,7 @@
 | **G-10** | F1.3 | I | Ajustes muestra la versión; CHANGELOG.md tiene una entrada por versión; existe la etiqueta de Git de cada cierre de fase. | Cumple | Banco (node --test) · CHANGELOG.md · F1.1 #12 · etiquetas v0.1.5, v0.2.3 y v0.3.3 (21/10) | Verificado | Cliente · 14/10 |
 | **G-11** | F6.4 | I | La política de privacidad está publicada y la app no envía ninguna petición con datos del usuario (pestaña Red). | No cumple | — | Pendiente | Desarrollo · v1.2 |
 | **G-12** | F4.5 | D | En Ajustes, Español / English cambia todos los textos de la app; la elección se guarda; la primera vez sigue al navegador. | Cumple | Banco (node --test): mismas claves en las dos lenguas, cambio y vuelta, primera vez según el navegador · comprobar-disposicion.js con IDIOMA=en-US | Pendiente | Cliente · listado 14/09 |
+| **G-13** | F5.8 | D | Con el metrónomo sonando, o el afinador escuchando, 5 minutos sin tocar la pantalla: el iPhone no se bloquea y sigue; al parar, vuelve a bloquearse solo. Donde no hay Wake Lock, funciona igual y el metrónomo lo avisa. | Cumple | Banco (node --test): se pide al empezar y se suelta al parar (metrónomo y micrófono); sin la capacidad, aviso y sin errores | Verificado parcialmente | Cliente · listado 14/09 |
 | **PL-01** | F2.5 · F7.2 | D | La lista de F1.1 se supera en Chrome, Edge y Firefox en Windows, y la app se instala como PWA desde Edge. | Cumple parcialmente | — | Pendiente | Cliente · 14/10 |
 | **PL-02** | F2.5 · F7.2 | D | La lista de comprobación se supera en Chrome para Android, en web y con la PWA instalada. | Cumple parcialmente | — | Pendiente | Cliente · 14/10 |
 | **PL-03** | F2.5 · F7.2 | D | La lista de comprobación se supera en Safari para iOS, en web y desde la pantalla de inicio. | Cumple parcialmente | — | Pendiente | Cliente · 14/10 |
@@ -128,9 +131,9 @@
 | **E-05b** | Posterior | N/A | Fuera del alcance actual. | No aplica | — | No aplica | AR-01 |
 | **E-06** | F5.3 | D | El guiado avanza nota a nota por la escala. | Cumple | Banco (node --test): pasos que suenan y se resaltan, de la tónica grave a su octava | Verificado parcialmente | Cliente · listado 14/09 |
 | **A-01** | F1.1 | D | Pulsar cada cuerda en el afinador reproduce su nota de referencia. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
-| **A-02** | F4.3 | D | Con una guitarra real, el afinador indica subir o bajar hasta dejarla afinada, en estándar y en una alternativa. | Cumple | comprobar-afinador.js (Chromium, grabación real 12 cents baja → «La2 · −11 cents · Sube un poco»; hilo aparte; se apaga al salir) · Banco (node --test): flujo del permiso | Pendiente | Cliente · listado 14/09 |
+| **A-02** | F4.3 | D | Con una guitarra real, el afinador indica subir o bajar hasta dejarla afinada, en estándar y en una alternativa. Sigue la nota mientras se apaga (al menos 3 s con una cuerda sintética de 6 s a volumen de móvil y con ruido), sin lecturas a más de 6 cents, y el ruido solo no mueve la aguja. Abre en Micrófono donde se puede usar, sin escuchar hasta «Activar». | Cumple | comprobar-afinador.js (Chromium, grabación real 12 cents baja → «La2 · −11 cents · Sube un poco»; hilo aparte; se apaga al salir) · Banco (node --test): flujo del permiso, modo por defecto y su recuerdo · tono.test.js: nota que se apaga, ruido, giro de clavija y relevo de cuerda | Pendiente | Cliente · listado 14/09 |
 | **A-02-CA** | F4.2 | T | Banco de pruebas: error ≤ ±2 cents y latencia < 300 ms sobre muestras desafinadas una cantidad conocida, tomando como referencia su frecuencia medida en samples/afinacion.json. | Cumple | tests/tono.test.js: 12 grabaciones reales de −45 a +40 cents; peor error 1,86 cents frente a su medida y 1,01 trozo a trozo; aguja en su nota en ≤ 168 ms + 3 ms de cálculo | Verificado | AR-01 |
-| **A-03** | F4.3 | D | La aguja indica la desviación en cents y marca «afinado» dentro de ±5 cents. | Cumple | Banco (node --test): «Sube un poco» a −12, «Afinada» a +3 · comprobar-afinador.js | Pendiente | Cliente · listado 14/09 |
+| **A-03** | F4.3 | D | La aguja indica la desviación en cents y marca «afinado» dentro de ±5 cents. Al callar la nota, lo último medido sigue 2,5 s a la vista, atenuado, y luego vuelve a reposo. | Cumple | Banco (node --test): «Sube un poco» a −12, «Afinada» a +3, sostenida al segundo de callar y en reposo a los 3 s · comprobar-afinador.js | Pendiente | Cliente · listado 14/09 |
 | **A-04** | F4.3 | T | Con la cuerda a menos de un semitono de su nota, el afinador identifica la cuerda correcta. | Cumple | Banco (node --test): las 6 cuerdas a −90 y +90 cents, y la 6ª en Drop D | Verificado | Cliente · listado 14/09 |
 | **A-05** | F4.3 | D | Con una cuerda fijada a mano, el afinador la usa como referencia aunque esté muy desafinada. | Cumple | Banco (node --test): 6ª elegida con un La2 sonando → +500 cents, y sin confundir la octava | Pendiente | Cliente · listado 14/09 |
 | **A-06** | F1.1 | I | La afinación estándar es E2 A2 D3 G3 B3 E4. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |

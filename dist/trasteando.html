@@ -334,6 +334,9 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .mic-gauge { width:100%; max-width:300px; height:auto; display:block; }
 .mic-gauge .needle { transform-origin:120px 120px; transform-box:view-box; transition:transform .12s linear; }
 .mic-gauge.idle .needle { opacity:.25; }
+/* Sostenida (F5.8 #2): ya no se oye; lo último medido sigue a la vista, atenuado. */
+.mic-live.held .needle { opacity:.5; }
+.mic-live.held .mic-note, .mic-live.held .mic-order, .mic-live.held #mic-detail { opacity:.55; }
 .mic-read { width:100%; display:flex; flex-direction:column; align-items:center; gap:4px; }
 .mic-note { font-size:44px; font-weight:800; line-height:1; color:var(--text); }
 .mic-detail { font-size:13px; color:var(--muted); }
@@ -1214,6 +1217,7 @@ const TEXTOS = {
     'metro.stoppedAudio': 'Se paró: el sistema detuvo el sonido. Vuelve a empezar.',
     'metro.start': 'Empezar', 'metro.stop': 'Parar',
     'metro.playing': 'Sonando. Puedes ir a otra área: sigue hasta que lo pares aquí.',
+    'metro.noLock': 'Si la pantalla se apaga, se para: en este navegador no puedo mantenerla encendida.',
     'metro.noAudio': 'El sonido aún no está listo. Vuelve a pulsar.',
     'metro.stoppedMic': 'El metrónomo se ha parado: su clic confundiría al afinador.',
     'metro.stoppedHidden': 'Se paró al salir de la app.',
@@ -1327,6 +1331,7 @@ const TEXTOS = {
     'metro.stoppedAudio': 'It stopped: the system halted the sound. Start again.',
     'metro.start': 'Start', 'metro.stop': 'Stop',
     'metro.playing': 'Playing. You can go to another area: it keeps going until you stop it here.',
+    'metro.noLock': 'If the screen turns off, it stops: this browser will not let me keep it on.',
     'metro.noAudio': 'Sound is not ready yet. Tap again.',
     'metro.stoppedMic': 'The metronome stopped: its click would confuse the tuner.',
     'metro.stoppedHidden': 'It stopped when you left the app.',
@@ -1382,7 +1387,7 @@ function aplicarIdioma(){
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.6.1';
+const APP_VERSION = '0.6.2';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -1587,7 +1592,8 @@ const DEFAULTS = {
   maxChallengeFret:12,    // hasta dónde llegan los retos del modo Adivinar
   records:{},             // récord de racha de cada afinación: { standard: 7, dropd: 3 } (J-11)
   rotateHintClosed:false, // el aviso para girar, una vez cerrado, no vuelve (V-01)
-  tunerMode:'ear',        // afinador: 'ear' de oído · 'mic' por micrófono (F4.3)
+  tunerMode:'mic',        // afinador: 'mic' por micrófono · 'ear' de oído (F4.3; por defecto Micrófono desde F5.8 #2)
+  tunerPick:false,        // true cuando lo has elegido tú: solo entonces se recuerda
   lang:null,              // 'es' o 'en' (G-12); sin elegir, el del navegador
   scaleId:'mayor',        // Escalas (F5): tipo, tónica (clase de altura) y submodo
   scalePc:0,
@@ -1626,7 +1632,8 @@ function sanitize(raw){
   }
   if (!['latin','anglo'].includes(s.notation)) s.notation = DEFAULTS.notation;
   if (!['nylon','acoustic'].includes(s.timbre)) s.timbre = DEFAULTS.timbre;
-  if (!['ear','mic'].includes(s.tunerMode)) s.tunerMode = DEFAULTS.tunerMode;
+  s.tunerPick = s.tunerPick === true;
+  if (!s.tunerPick || !['ear','mic'].includes(s.tunerMode)) s.tunerMode = DEFAULTS.tunerMode;
   if (!['es','en'].includes(s.lang)) s.lang = idiomaDelNavegador();
   if (!ESCALAS.some(e => e.id === s.scaleId)) s.scaleId = DEFAULTS.scaleId;
   if (!Number.isInteger(s.scalePc) || s.scalePc < 0 || s.scalePc > 11) s.scalePc = DEFAULTS.scalePc;
@@ -1968,6 +1975,35 @@ function updateAudioStatus(){
     (rebuildOnNextGesture ? t('audio.rebuild') : '');
 }
 
+/* Pantalla despierta (G-13, F5.8). Si nadie toca la pantalla, el móvil se
+   bloquea solo, y con la app oculta el metrónomo y el micrófono se paran. Con
+   Screen Wake Lock se le pide al sistema que no la apague MIENTRAS suena el
+   metrónomo o escucha el afinador; al parar, se suelta y el móvil vuelve a
+   bloquearse como siempre. Se detecta la capacidad (PL-04): donde no existe,
+   no se hace nada y el metrónomo lo avisa. El sistema suelta el cerrojo por su
+   cuenta al ocultar la app; al volver, se pide otra vez si sigue haciendo falta. */
+const despierta = { motivos: new Set(), cerrojo: null, pidiendo: false };
+const puedeDespierta = () => typeof navigator !== 'undefined' && !!navigator.wakeLock && typeof navigator.wakeLock.request === 'function';
+
+/** `motivo` ('metro' o 'mic') empieza o deja de necesitar la pantalla encendida. */
+function pantallaDespierta(motivo, on){
+  if (on) despierta.motivos.add(motivo); else despierta.motivos.delete(motivo);
+  if (despierta.motivos.size) pedirCerrojo();
+  else if (despierta.cerrojo){ const c = despierta.cerrojo; despierta.cerrojo = null; try { c.release().catch(() => {}); } catch(e){} }
+}
+
+async function pedirCerrojo(){
+  if (!puedeDespierta() || despierta.cerrojo || despierta.pidiendo || document.hidden) return;
+  despierta.pidiendo = true;
+  let c = null;
+  try { c = await navigator.wakeLock.request('screen'); } catch(e){}   // puede negarse (batería baja): se sigue sin él
+  despierta.pidiendo = false;
+  if (!c) return;
+  if (!despierta.motivos.size){ try { c.release().catch(() => {}); } catch(e){} return; }   // paraste mientras se pedía
+  despierta.cerrojo = c;
+  if (c.addEventListener) c.addEventListener('release', () => { if (despierta.cerrojo === c) despierta.cerrojo = null; });
+}
+
 function onVisibility(){
   if (document.hidden){
     clearTimeout(playTimer);
@@ -1979,6 +2015,7 @@ function onVisibility(){
     // resume() siempre, no wakeAudio(): si el suspend() de hace un instante aún
     // no ha terminado, el estado dice 'running' y wakeAudio no haría nada (AT-06 #4).
     try { if (audioCtx && audioCtx.state !== 'closed') audioCtx.resume().catch(() => {}); } catch(e){}
+    if (despierta.motivos.size) pedirCerrojo();
     if (screen === 'guess'){
       // Se retoma esperando a ▶: ese toque es el que iOS exige para
       // reactivar el sonido, y no suena nada sin que lo pidas.
@@ -3228,19 +3265,21 @@ function detectarTono(x, sr, ajustes){
  * autónomo. Si el navegador no deja crear el hilo, analiza en el principal
  * (PL-04): va igual, solo que comparte tiempo con la interfaz.
  *   alResultado(r, sr)  recibe lo que devuelve detectarTono
- * Devuelve { analizar(x, sr), cerrar(), hilo } (hilo: true si hay Worker).
+ * Devuelve { analizar(x, sr, ajustes), cerrar(), hilo } (hilo: true si hay Worker).
+ * `ajustes` (opcional) sustituye a TONO en ese trozo: el afinador es más
+ * tolerante con una nota que ya está siguiendo que al buscar una nueva.
  */
 function crearDetector(alResultado){
   const enPrincipal = {
     hilo: false,
-    analizar(x, sr){ alResultado(detectarTono(x, sr), sr); },
+    analizar(x, sr, ajustes){ alResultado(detectarTono(x, sr, ajustes), sr); },
     cerrar(){}
   };
   if (typeof Worker === 'undefined' || typeof Blob === 'undefined' || typeof URL === 'undefined') return enPrincipal;
   let url = null, w = null;
   try {
     const codigo = '"use strict";\nconst TONO = ' + JSON.stringify(TONO) + ';\n' + detectarTono.toString() +
-      '\nonmessage = e => postMessage({ r: detectarTono(e.data.x, e.data.sr), sr: e.data.sr });\n';
+      '\nonmessage = e => postMessage({ r: detectarTono(e.data.x, e.data.sr, e.data.a), sr: e.data.sr });\n';
     url = URL.createObjectURL(new Blob([codigo], { type: 'text/javascript' }));
     w = new Worker(url);
   } catch(e){
@@ -3251,15 +3290,15 @@ function crearDetector(alResultado){
     hilo: true,
     ocupado: false,
     desde: 0,
-    analizar(x, sr){
-      if (!det.hilo) return enPrincipal.analizar(x, sr);
+    analizar(x, sr, ajustes){
+      if (!det.hilo) return enPrincipal.analizar(x, sr, ajustes);
       if (det.ocupado){
         // Si el hilo lleva más de 1 s sin contestar, se da por perdido (AT-07 #9).
-        if (Date.now() - det.desde > 1000){ det.hilo = false; det.ocupado = false; det.cerrar(); return enPrincipal.analizar(x, sr); }
+        if (Date.now() - det.desde > 1000){ det.hilo = false; det.ocupado = false; det.cerrar(); return enPrincipal.analizar(x, sr, ajustes); }
         return;                               // si va con retraso, se salta un trozo
       }
       det.ocupado = true; det.desde = Date.now();
-      w.postMessage({ x, sr }, [x.buffer]);   // se pasa el trozo sin copiarlo
+      w.postMessage({ x, sr, a: ajustes }, [x.buffer]);   // se pasa el trozo sin copiarlo
     },
     cerrar(){ try { w.terminate(); URL.revokeObjectURL(url); } catch(e){} }
   };
@@ -3288,18 +3327,50 @@ function crearDetector(alResultado){
    calculamos los cents respecto a la cuerda y movemos la aguja.
    Un cent es la centésima parte de un semitono: cents = 1200 · log2(f / fRef). */
 
+/* Seguir la nota (F5.8 #2). Una cuerda suena fuerte y clara solo al pulsarla;
+   después se apaga durante segundos, cada vez más floja y más mezclada con el
+   ruido de la habitación. Para no quedarse solo con ese primer instante:
+   1. Antes de analizar, se filtra el sonido: fuera lo que queda por debajo de
+      60 Hz (zumbidos) y por encima de 1200 Hz (soplido), donde no hay nada de
+      una cuerda al aire que haga falta para saber su nota.
+   2. Para EMPEZAR a seguir una nota se pide lo de siempre: dos lecturas
+      seguidas, claras y que coincidan. Así un golpe o una voz no mueven la aguja.
+   3. Una vez «enganchada», basta con mucha menos claridad y volumen mientras
+      la lectura siga cerca de las anteriores: la nota se sigue hasta que se
+      hunde en el ruido de fondo. Ese ruido se mide todo el rato (el nivel más
+      bajo oído últimamente), y una lectura solo cuenta si suena bastante por
+      encima: pegada al ruido, la nota «baila» y la aguja engañaría.
+   4. Cuando deja de oírse, lo último medido se queda en pantalla, atenuado,
+      un par de segundos: da tiempo a mirar y girar la clavija. */
 const MIC = {
-  PERIODO_MS: 50,     // un trozo cada 50 ms: 20 lecturas por segundo
-  AFINADA: 5,         // ±5 cents es «afinada» (A-03)
-  SILENCIO_MS: 1500,  // sin lecturas durante este tiempo, la aguja vuelve a reposo
-  CLARIDAD: 0.8       // lecturas menos claras que esto (ruido, golpes) se ignoran
+  PERIODO_MS: 50,        // un trozo cada 50 ms: 20 lecturas por segundo
+  AFINADA: 5,            // ±5 cents es «afinada» (A-03)
+  CLARIDAD: 0.8,         // para empezar a seguir una nota: lecturas menos claras (ruido, golpes) se ignoran
+  CLARIDAD_SEGUIR: 0.5,  // siguiéndola ya, basta con esto…
+  CERCA: 20,             // …si cae a menos de estos cents de las últimas lecturas
+  LECTURAS: 7,           // cuántas lecturas se promedian para la aguja
+  SOBRE_RUIDO: 4,        // una lectura cuenta si suena al menos 4 veces (12 dB) por encima del ruido de fondo
+  RUIDO_INICIAL: 0.0005, // ruido de fondo supuesto al encender, hasta medirlo
+  RUIDO_SUBE: 1.03,      // sin nota, el ruido estimado sube como mucho un 3 % por trozo (se dobla en 1,2 s)…
+  RUIDO_SUBE_NOTA: 1.002, // …y con una nota sonando, un 0,2 % (17 s): la nota no es ruido. Bajar, baja al instante
+  SOLTAR_MS: 600,        // sin lecturas de la nota seguida durante este tiempo, se suelta
+  SOSTEN_MS: 2500,       // lo último medido se queda en pantalla este tiempo, atenuado
+  GRAVES_HZ: 60, AGUDOS_HZ: 1200   // el filtro de antes del análisis
 };
+// Lo que se le pide al detector en cada caso (sustituye a TONO en ese trozo).
+MIC.BUSCAR = Object.assign({}, TONO, { MIN_RMS: 0.002 });
+MIC.SEGUIR = Object.assign({}, TONO, { MIN_RMS: 0.0006, MAX_DPRIMA: 1 - MIC.CLARIDAD_SEGUIR });
 
 const mic = {
-  stream: null, src: null, analyser: null, det: null, timer: null,
+  stream: null, src: null, filtros: [], analyser: null, det: null, timer: null,
   string: 'auto',          // 'auto' o el número de cuerda elegido a mano (A-05)
-  lecturas: [],            // últimas frecuencias coherentes entre sí
+  lecturas: [],            // últimas frecuencias de la nota que se sigue
+  candidatas: [],          // lecturas claras de otra nota: con dos que coincidan, se cambia a ella
+  siguiendo: false,        // hay una nota «enganchada»
   ultima: 0,               // momento de la última lectura válida
+  ruido: MIC.RUIDO_INICIAL, // nivel del ruido de fondo: el más bajo oído últimamente
+  nivel: 0,                // nivel (RMS) del último trozo
+  mostrando: false,        // hay una lectura en pantalla (sonando o sostenida)
   orden: '',               // para no repetir el aviso al lector de pantalla
   arrancando: false
 };
@@ -3342,25 +3413,70 @@ function micTarget(hz){
   return (tal.dist > 100 && mitad.dist < 50) ? mitad : tal;
 }
 
-/** Cada lectura del detector. Se ignoran las sueltas (un golpe, un salto de
- *  octava): solo cuentan cuando dos seguidas coinciden. La aguja muestra la
- *  mediana de las últimas, para que no tiemble. */
-function onMicReading(r){
-  if (!mic.analyser) return;
-  const ahora = Date.now();
-  if (!r || r.claridad < MIC.CLARIDAD){
-    if (ahora - mic.ultima > MIC.SILENCIO_MS) showMicIdle();
-    return;
+/** El centro de unas lecturas: se ordenan, se quitan las de los extremos (con
+ *  cinco o más, las dos más bajas y las dos más altas) y se promedia el resto.
+ *  Una lectura suelta disparatada no lo mueve, y el temblor del ruido se reparte. */
+function centro(v){
+  const o = [...v].sort((x, y) => x - y), quitar = o.length >= 5 ? 2 : o.length >= 3 ? 1 : 0;
+  const medio = o.slice(quitar, o.length - quitar);
+  return medio.reduce((a, b) => a + b, 0) / medio.length;
+}
+
+/**
+ * Decide qué hacer con una lectura del detector (o con su falta) y devuelve
+ * la frecuencia que hay que enseñar, o 0 si esta lectura no cuenta.
+ * Va aparte de la pantalla para poder probarla con grabaciones (tests/tono.test.js).
+ */
+function seguirNota(r, ahora, nivel){
+  // El ruido de fondo: el nivel más bajo oído últimamente. Baja de golpe a
+  // cualquier nivel menor; subir, sube despacio, y casi nada mientras suena una
+  // nota, para que una nota larga no pase por ruido. Sin nivel, no se usa.
+  if (nivel >= 0){
+    const esNota = mic.siguiendo || (r && r.claridad >= MIC.CLARIDAD);
+    mic.ruido = Math.min(Math.max(nivel, 1e-6), mic.ruido * (esNota ? MIC.RUIDO_SUBE_NOTA : MIC.RUIDO_SUBE));
+    if (r && nivel < mic.ruido * MIC.SOBRE_RUIDO) r = null;   // pegada al ruido: no cuenta
   }
-  const previa = mic.lecturas[mic.lecturas.length - 1];
-  if (previa && Math.abs(centsEntre(r.hz, previa)) > 40) mic.lecturas = [];   // otra nota: se empieza de nuevo
-  mic.lecturas.push(r.hz);
-  if (mic.lecturas.length > 5) mic.lecturas.shift();
-  if (mic.lecturas.length < 2) return;
-  mic.ultima = ahora;
-  const ordenadas = [...mic.lecturas].sort((a, b) => a - b);
-  mic.ultimaHz = ordenadas[ordenadas.length >> 1];
-  showMicReading(mic.ultimaHz);
+  if (mic.siguiendo && r && r.claridad >= MIC.CLARIDAD_SEGUIR){
+    // ¿Es la nota que se sigue? Se compara con el centro de las últimas
+    // lecturas, no con la primera: al girar la clavija la nota se desliza, y
+    // hay que ir con ella; y una lectura mala suelta no arrastra a las demás.
+    // Al apagarse la fundamental, el detector puede dar la octava: se pliega.
+    let c = centsEntre(r.hz, centro(mic.lecturas));
+    const octavas = Math.round(c / 1200);
+    c -= 1200 * octavas;
+    if (Math.abs(c) < MIC.CERCA && Math.abs(octavas) <= 1){
+      mic.lecturas.push(r.hz / Math.pow(2, octavas));
+      if (mic.lecturas.length > MIC.LECTURAS) mic.lecturas.shift();
+      mic.candidatas = [];
+      mic.ultima = ahora;
+      return centro(mic.lecturas);
+    }
+  }
+  if (r && r.claridad >= MIC.CLARIDAD){
+    // Clara, pero no es la que se sigue (o no se sigue ninguna): candidata.
+    const previa = mic.candidatas[mic.candidatas.length - 1];
+    if (previa && Math.abs(centsEntre(r.hz, previa)) > 40) mic.candidatas = [];
+    mic.candidatas.push(r.hz);
+    if (mic.candidatas.length >= 2){          // dos seguidas que coinciden: es otra nota
+      mic.lecturas = mic.candidatas; mic.candidatas = [];
+      mic.siguiendo = true;
+      mic.ultima = ahora;
+      return centro(mic.lecturas);
+    }
+  }
+  if (mic.siguiendo && ahora - mic.ultima > MIC.SOLTAR_MS){ mic.siguiendo = false; mic.lecturas = []; }
+  return 0;
+}
+
+/** Cada lectura del detector: se enseña si cuenta; si no, lo último medido se
+ *  queda un rato atenuado y después la aguja vuelve a reposo. */
+function onMicReading(r, _sr, ahora = Date.now()){
+  if (!mic.analyser) return;
+  const hz = seguirNota(r, ahora, mic.nivel);
+  if (hz){ mic.ultimaHz = hz; showMicReading(hz); return; }
+  if (!mic.mostrando) return;
+  if (ahora - mic.ultima > MIC.SOSTEN_MS) showMicIdle();
+  else if (ahora - mic.ultima > 2 * MIC.PERIODO_MS) setMicHeld(true);
 }
 
 function showMicReading(hzDetectada){
@@ -3386,10 +3502,18 @@ function showMicReading(hzDetectada){
   else { orden = redondo > 50 ? 'baja' : 'baja-poco'; texto = ['▼', t(redondo > 50 ? 'mic.down' : 'mic.downBit')]; }
   setMicOrder(orden, texto);
   setNeedle(c, true);
+  mic.mostrando = true;
+  setMicHeld(false);
+}
+
+/** Sostenida: ya no se oye, pero lo último medido sigue a la vista, atenuado. */
+function setMicHeld(on){
+  document.getElementById('mic-live').classList.toggle('held', on);
 }
 
 function showMicIdle(){
-  mic.lecturas = [];
+  mic.lecturas = []; mic.candidatas = []; mic.siguiendo = false; mic.mostrando = false;
+  setMicHeld(false);
   document.getElementById('mic-note').textContent = '—';
   document.getElementById('mic-detail').textContent = t('mic.play');
   setMicOrder('', null);
@@ -3485,17 +3609,31 @@ async function startMic(){
   try {
     mic.src = audioCtx.createMediaStreamSource(mic.stream);
     mic.analyser = audioCtx.createAnalyser();
-    // El trozo debe abarcar dos periodos del Do2 más grave: 2048 valores a 44,1
-    // o 48 kHz; el doble con tarjetas de 96 kHz (AT-07 #1).
+    // El trozo abarca más de cuatro periodos del Do2 más grave: 4096 valores
+    // (85 ms) a 44,1 o 48 kHz; el doble con tarjetas de 96 kHz (AT-07 #1). Con
+    // el doble que antes, el detector promedia más sonido y el ruido le afecta
+    // menos, que es lo que hace falta para seguir una nota que se apaga.
     let tam = 2048;
-    while (tam < 2.2 * audioCtx.sampleRate / TONO.MIN_HZ && tam < 32768) tam *= 2;
+    while (tam < 4.4 * audioCtx.sampleRate / TONO.MIN_HZ && tam < 32768) tam *= 2;
     mic.analyser.fftSize = tam;
-    mic.src.connect(mic.analyser);          // solo al analizador: no sale por el altavoz
+    // micrófono → filtros → analizador. Solo al analizador: no sale por el altavoz.
+    // Dos pasos de agudos seguidos cortan más limpio que uno. Si el navegador
+    // no tiene filtros, se analiza sin ellos (PL-04).
+    let salida = mic.src;
+    if (audioCtx.createBiquadFilter){
+      for (const [tipo, hz, q] of [['highpass', MIC.GRAVES_HZ, 0.707], ['lowpass', MIC.AGUDOS_HZ, 0.54], ['lowpass', MIC.AGUDOS_HZ, 1.31]]){
+        const f = audioCtx.createBiquadFilter();
+        f.type = tipo; f.frequency.value = hz; f.Q.value = q;
+        salida.connect(f); salida = f; mic.filtros.push(f);
+      }
+    }
+    salida.connect(mic.analyser);
   } catch(e){ console.error(e); stopMic(); showMicPanel(t('mic.analyse')); return; }
   mic.det = crearDetector(onMicReading);
   mic.timer = setInterval(micTick, MIC.PERIODO_MS);
-  mic.ultima = 0;
+  mic.ultima = 0; mic.ruido = MIC.RUIDO_INICIAL; mic.nivel = 0;
   showMicIdle();
+  pantallaDespierta('mic', true);           // que el móvil no se bloquee mientras afinas (G-13)
   const conFoco = document.activeElement && document.activeElement.id === 'mic-start';
   document.getElementById('mic-intro').hidden = true;
   document.getElementById('mic-live').hidden = false;
@@ -3506,7 +3644,10 @@ function micTick(){
   if (!mic.analyser || !mic.det) return;
   const x = new Float32Array(mic.analyser.fftSize);
   mic.analyser.getFloatTimeDomainData(x);
-  mic.det.analizar(x, audioCtx.sampleRate);
+  let suma = 0;
+  for (let i = 0; i < x.length; i++) suma += x[i] * x[i];
+  mic.nivel = Math.sqrt(suma / x.length);   // para medir el ruido de fondo (seguirNota)
+  mic.det.analizar(x, audioCtx.sampleRate, mic.siguiendo ? MIC.SEGUIR : MIC.BUSCAR);
 }
 
 /** Apaga el micrófono del todo (el indicador del navegador desaparece). */
@@ -3515,9 +3656,11 @@ function stopMic(){
   clearInterval(mic.timer); mic.timer = null;
   if (mic.det){ mic.det.cerrar(); mic.det = null; }
   if (mic.src){ try { mic.src.disconnect(); } catch(e){} mic.src = null; }
+  mic.filtros.forEach(f => { try { f.disconnect(); } catch(e){} }); mic.filtros = [];
   mic.analyser = null;
+  pantallaDespierta('mic', false);
   if (mic.stream){ mic.stream.getTracks().forEach(pista => pista.stop()); mic.stream = null; restoreAudioSession(); }
-  mic.lecturas = [];
+  mic.lecturas = []; mic.candidatas = []; mic.siguiendo = false; mic.mostrando = false;
   showMicPanel('');
   if (conFoco) document.getElementById('mic-start').focus();
 }
@@ -3537,10 +3680,13 @@ function showMicPanel(motivo){
 }
 
 /** Cambia entre De oído y Micrófono. El micrófono no se enciende solo: hay que
- *  pulsar «Activar el micrófono», así nunca escucha sin que lo pidas. */
-function setTunerMode(modo){
+ *  pulsar «Activar el micrófono», así nunca escucha sin que lo pidas.
+ *  `elegido`: lo has pulsado tú, y entonces se recuerda. Si nunca has elegido,
+ *  el afinador abre en Micrófono donde se puede usar y en De oído donde no
+ *  (el archivo con doble clic, una web sin https): F5.8 #2. */
+function setTunerMode(modo, elegido){
   state.tunerMode = modo === 'mic' ? 'mic' : 'ear';
-  save();
+  if (elegido){ state.tunerPick = true; save(); }
   document.querySelectorAll('#tuner-mode button').forEach(b => {
     const on = b.dataset.v === state.tunerMode;
     b.classList.toggle('on', on); b.setAttribute('aria-pressed', on);
@@ -3550,6 +3696,8 @@ function setTunerMode(modo){
   if (state.tunerMode !== 'mic') stopMic();
   else if (!mic.analyser) showMicPanel(micUnavailable());
 }
+/** El modo con el que abre el afinador: el que elegiste o, si nunca elegiste, el que se pueda usar. */
+const tunerModeInicial = () => state.tunerPick ? state.tunerMode : (micUnavailable() ? 'ear' : 'mic');
 
 function setMicString(v){
   mic.string = v;
@@ -3570,12 +3718,12 @@ function labelMicStrings(){
 function bindMicTuner(){
   drawGauge();
   labelMicStrings();
-  document.querySelectorAll('#tuner-mode button').forEach(b => b.addEventListener('click', () => setTunerMode(b.dataset.v)));
+  document.querySelectorAll('#tuner-mode button').forEach(b => b.addEventListener('click', () => setTunerMode(b.dataset.v, true)));
   document.querySelectorAll('#mic-string button').forEach(b => b.addEventListener('click', () => setMicString(b.dataset.v)));
   document.getElementById('mic-start').addEventListener('click', startMic);
   document.getElementById('mic-stop').addEventListener('click', stopMic);
   setMicString('auto');
-  setTunerMode(state.tunerMode);
+  setTunerMode(tunerModeInicial());
   // Al bloquear el móvil o cambiar de app, el micrófono se apaga (privacidad, y iOS).
   document.addEventListener('visibilitychange', () => { if (document.hidden) stopMic(); });
 }
@@ -4024,6 +4172,7 @@ function metroEnMarcha(){
   metro.vistos = 0; metro.ultimo = null; metro.amplitud = null;   // se mide al pintarlo, con el área a la vista
   metroProgramar();
   metro.timer = setInterval(metroProgramar, METRO_CADA * 1000);
+  pantallaDespierta('metro', true);            // que el móvil no se bloquee y lo pare (G-13)
   metro.frame = requestAnimationFrame(metroDibujar);
   renderMetro();
 }
@@ -4037,6 +4186,7 @@ function stopMetro(motivo){
   clearInterval(metro.timer); metro.timer = null;
   cancelAnimationFrame(metro.frame); metro.frame = null;
   metro.cola = [];
+  pantallaDespierta('metro', false);
   if (estaba && motivo) metro.aviso = { mic: 'metro.stoppedMic', hidden: 'metro.stoppedHidden', audio: 'metro.stoppedAudio' }[motivo];
   const tab = document.querySelector('.tab[data-screen="metro"]');
   if (tab) tab.classList.remove('beat');
@@ -4279,7 +4429,7 @@ function renderMetro(){
   play.textContent = metro.sonando ? t('metro.stop') : t('metro.start');
   play.classList.toggle('on', metro.sonando);   // el texto ya dice Empezar o Parar: sin aria-pressed (AT-10 #9)
   // El aviso se guarda como clave y se traduce al pintarlo: cambia con el idioma (AT-10 #5).
-  document.getElementById('metro-note').textContent = metro.aviso ? t(metro.aviso) : (metro.sonando ? t('metro.playing') : '');
+  document.getElementById('metro-note').textContent = metro.aviso ? t(metro.aviso) : (metro.sonando ? t('metro.playing') + (puedeDespierta() ? '' : ' ' + t('metro.noLock')) : '');
   // Fuera de su área, la pestaña dice que está en marcha (también al lector de pantalla).
   const tab = document.querySelector('.tab[data-screen="metro"]');
   if (tab){
@@ -4864,7 +5014,7 @@ document.getElementById('set-reset').addEventListener('click', async () => {
   syncUI();
   applyZoom();
   updateRotateHint();          // «Restablecer» recupera el aviso para girar
-  setTunerMode(state.tunerMode);   // el afinador vuelve a «De oído»
+  setTunerMode(tunerModeInicial());   // el afinador vuelve a su modo de fábrica
   // Escalas, ♯/♭ y nomenclatura también vuelven a lo de fábrica: sin esto, los
   // selectores y los botones seguían diciendo lo de antes (AT-09 #1).
   resetScalePractice(); sc.paso = 0;

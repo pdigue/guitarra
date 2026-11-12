@@ -97,19 +97,21 @@ function detectarTono(x, sr, ajustes){
  * autónomo. Si el navegador no deja crear el hilo, analiza en el principal
  * (PL-04): va igual, solo que comparte tiempo con la interfaz.
  *   alResultado(r, sr)  recibe lo que devuelve detectarTono
- * Devuelve { analizar(x, sr), cerrar(), hilo } (hilo: true si hay Worker).
+ * Devuelve { analizar(x, sr, ajustes), cerrar(), hilo } (hilo: true si hay Worker).
+ * `ajustes` (opcional) sustituye a TONO en ese trozo: el afinador es más
+ * tolerante con una nota que ya está siguiendo que al buscar una nueva.
  */
 function crearDetector(alResultado){
   const enPrincipal = {
     hilo: false,
-    analizar(x, sr){ alResultado(detectarTono(x, sr), sr); },
+    analizar(x, sr, ajustes){ alResultado(detectarTono(x, sr, ajustes), sr); },
     cerrar(){}
   };
   if (typeof Worker === 'undefined' || typeof Blob === 'undefined' || typeof URL === 'undefined') return enPrincipal;
   let url = null, w = null;
   try {
     const codigo = '"use strict";\nconst TONO = ' + JSON.stringify(TONO) + ';\n' + detectarTono.toString() +
-      '\nonmessage = e => postMessage({ r: detectarTono(e.data.x, e.data.sr), sr: e.data.sr });\n';
+      '\nonmessage = e => postMessage({ r: detectarTono(e.data.x, e.data.sr, e.data.a), sr: e.data.sr });\n';
     url = URL.createObjectURL(new Blob([codigo], { type: 'text/javascript' }));
     w = new Worker(url);
   } catch(e){
@@ -120,15 +122,15 @@ function crearDetector(alResultado){
     hilo: true,
     ocupado: false,
     desde: 0,
-    analizar(x, sr){
-      if (!det.hilo) return enPrincipal.analizar(x, sr);
+    analizar(x, sr, ajustes){
+      if (!det.hilo) return enPrincipal.analizar(x, sr, ajustes);
       if (det.ocupado){
         // Si el hilo lleva más de 1 s sin contestar, se da por perdido (AT-07 #9).
-        if (Date.now() - det.desde > 1000){ det.hilo = false; det.ocupado = false; det.cerrar(); return enPrincipal.analizar(x, sr); }
+        if (Date.now() - det.desde > 1000){ det.hilo = false; det.ocupado = false; det.cerrar(); return enPrincipal.analizar(x, sr, ajustes); }
         return;                               // si va con retraso, se salta un trozo
       }
       det.ocupado = true; det.desde = Date.now();
-      w.postMessage({ x, sr }, [x.buffer]);   // se pasa el trozo sin copiarlo
+      w.postMessage({ x, sr, a: ajustes }, [x.buffer]);   // se pasa el trozo sin copiarlo
     },
     cerrar(){ try { w.terminate(); URL.revokeObjectURL(url); } catch(e){} }
   };

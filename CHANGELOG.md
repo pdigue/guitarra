@@ -6,7 +6,8 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.6.1** | 22/10/2026 | F5.8 · #1, el péndulo del metrónomo | Rama `auto/F5.8-saneamiento` (PR #18) |
+| **0.6.2** | 12/11/2026 | F5.8 · #2, el afinador sigue la nota; pantalla encendida | Rama `auto/F5.8-saneamiento` (PR #18) |
+| 0.6.1 | 22/10/2026 | F5.8 · #1, el péndulo del metrónomo | Rama `auto/F5.8-saneamiento` (PR #18) |
 | 0.6.0 | 22/10/2026 | F6.1 · el archivo autónomo, probado como la app | `main`, fusionada el 22/10 (PR #17) |
 | 0.5.7 | 22/10/2026 | CP-5 · auditorías a fondo de F5 (AR-12 y AT-11) | `main`, fusionada el 22/10 (PR #16) |
 | 0.5.6 | 21/10/2026 | F5.7 · auditorías AR-11 y AT-10 | `main`, fusionada el 22/10 (PR #15) |
@@ -41,6 +42,30 @@ Todas las versiones de la app, de la más reciente a la más antigua.
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.6.2] — 12/11/2026 · F5.8 · El afinador sigue la nota, y la pantalla no se apaga
+
+Tus comentarios del 12/11, primera entrega (#2): «el afinador solamente coge como un pico del sonido», «que mantenga un poco más la escucha» y «por defecto aparezca la parte de micrófono». Y tu «sí» a mantener la pantalla encendida.
+
+### Cambiado
+- **A-02** · El afinador **sigue la nota mientras se apaga**. Antes solo aceptaba lecturas muy claras, y una cuerda solo suena así en el instante de pulsarla. Ahora:
+  - filtra el sonido antes de analizarlo (fuera lo de menos de 60 Hz y lo de más de 1200 Hz), y analiza trozos el doble de largos (85 ms);
+  - para *empezar* a seguir una nota pide lo mismo que antes (dos lecturas claras que coincidan), así un golpe o una voz no mueven la aguja;
+  - una vez enganchada, le basta mucha menos claridad mientras la lectura siga cerca de las últimas (20 cents) y suene 4 veces por encima del ruido de fondo, que mide todo el rato;
+  - la aguja promedia las 7 últimas lecturas quitando las extremas.
+  Con las grabaciones de la app a volumen de micrófono de móvil y con ruido, sigue cada cuerda entre 1,3 y 3 veces más tiempo, y sin lecturas disparatadas.
+- **A-03** · Cuando la nota deja de oírse, **lo último medido se queda 2,5 s a la vista**, atenuado, para que dé tiempo a mirar y girar la clavija. Luego la aguja vuelve a reposo.
+- **A-02** · El afinador **abre en Micrófono** donde se puede usar (en la web con `https`), sin escuchar hasta que pulsas «Activar el micrófono». Donde no se puede (el archivo con doble clic), abre en De oído. Si eliges tú un modo, se recuerda.
+- **A-02-CA** · Con el trozo más largo, el detector sigue dentro de su criterio: ±1,84 cents y 195 ms.
+
+### Añadido
+- **G-13** (nuevo) · **La pantalla no se apaga** mientras suena el metrónomo o escucha el afinador (Screen Wake Lock). Al parar, el móvil vuelve a bloquearse como siempre. Donde el navegador no lo permite, todo funciona igual y el metrónomo lo avisa.
+
+### Pruebas
+- Banco: 175 de 175. Nuevas: la nota que se apaga, el ruido solo, el giro de clavija y el relevo de cuerda (`tests/tono.test.js`); el modo por defecto y su recuerdo, la lectura sostenida y la pantalla encendida (`tests/banco.test.js`).
+- Chromium, con una grabación real como micrófono: «La2 · −11 cents · ▲ Sube un poco», en vertical y horizontal.
 
 ---
 
