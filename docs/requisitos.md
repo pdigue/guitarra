@@ -1,7 +1,7 @@
 # Trasteando — Especificación de Requisitos
 
 **Versión del documento:** 2.1 · **Fecha:** 15 de noviembre de 2026  
-**Válido para:** app `0.6.3` · `roadmap.md` v4.0 · `matriz-cumplimiento` v2.1 · fase en curso **F6** (F5 sigue abierta)  
+**Válido para:** app `0.6.3` · `roadmap.md` v4.1 · `matriz-cumplimiento` v2.1 · fase en curso **F6** (F5 sigue abierta)  
 **Repositorio:** github.com/pdigue/guitarra, carpeta `docs/` · **Gestiona:** chat de Desarrollo  
 **Tipo de producto:** aplicación web progresiva (PWA), desarrollada en local y publicada al final del roadmap
 
@@ -11,7 +11,7 @@
 
 | Total | ✅ Implementados | 🟡 Parciales | ⬜ Pendientes | ✅ Validados |
 |:---:|:---:|:---:|:---:|:---:|
-| 113 | 98 | 6 | 9 | 53 |
+| 113 | 98 | 6 | 9 | 52 |
 
 > Un requisito implementado no cuenta como cumplido hasta superar su prueba. El primero validado fue **S-08**, en la 0.2.0. La Sesión 1 (20/10, en tu iPhone y tu PC) validó 35 de golpe; lo que cambió la 0.3.3 y el sonido en el iPhone esperan a la Sesión 2.
 
@@ -21,7 +21,7 @@
 | **F2** | Sonido propio y archivo autónomo | 9 | `▰▰▰▰▱▱▱▱▱▱` 4/9 |
 | **F3** | Interfaz y adaptación | 6 | `▰▰▰▰▰▰▰▰▱▱` 5/6 |
 | **F4** | Afinador por micrófono | 8 | `▰▰▰▰▰▰▰▰▰▰` 8/8 |
-| **F5** | Escalas, metrónomo y acordes | 24 | `▰▰▰▰▰▰▰▰▰▰` 24/24 |
+| **F5** | Escalas, metrónomo y acordes | 27 | `▰▰▰▰▰▰▰▰▰▰` 27/27 |
 | **F6** | Preparación para distribución | 5 | `▰▰▱▱▱▱▱▱▱▱` 1/5 |
 | **F7** | Publicación y lanzamiento | 9 | `▱▱▱▱▱▱▱▱▱▱` 0/9 |
 | **Posterior** | Fuera del alcance actual | 4 | `▱▱▱▱▱▱▱▱▱▱` 0/4 |
@@ -36,10 +36,10 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 
 | Versión | Fecha | App | Roadmap | Resumen | Origen |
 |---|---|:---:|:---:|---|---|
-| **2.1** | 15/11/2026 | 0.6.3 | 4.0 | F5.8 #3 y #4: temas elegibles (V-10) y disposición para tableta y ordenador (V-11); en Adivinar, las pistas en grande y la nota tocada en pequeño (J-01, J-06); el grupo Aspecto en Ajustes (C-02); notas de C-08, PL-03 y G-05. 2 nuevos y 6 modificados: 113 en total. | Tus comentarios F5.8 #3 y #4 |
+| **2.1** | 15/11/2026 | 0.6.3 | 4.0 | F5.8 #3 y #4: temas elegibles (V-10) y disposición para tableta y ordenador (V-11); en Adivinar, las pistas en grande y la nota tocada en pequeño (J-01, J-06); el grupo Aspecto en Ajustes (C-02) y las pestañas en tableta (C-04); el mástil de inicio a 40 px en tableta (V-04); C-08 deja los temas a V-10; notas de PL-03 y G-05. J-06 vuelve a «sin validar» hasta tu prueba. Con las auditorías AR-16 y AT-15. 2 nuevos y 8 modificados: 113 en total. | Tus comentarios F5.8 #3 y #4 |
 | 2.0 | 15/11/2026 | 0.6.2 | 4.0 | Baseline 0.6.2: mismos ID, textos, criterios, estados e implementación; cada nota se queda en lo vigente y lo pendiente de tu prueba. Corregido: en 13 requisitos la columna *Desde* llevaba la nota de la Sesión 1, que pasa a *Notas*. 111 en total. | Tu decisión del 15/11 |
 
-**En la 2.1:** nuevos 🆕 V-10, V-11 · modificados ✏️ G-05, PL-03, J-01, J-06, C-02, C-08.
+**En la 2.1:** nuevos 🆕 V-10, V-11 · modificados ✏️ G-05, PL-03, J-01, J-06, V-04, C-02, C-04, C-08.
 
 ---
 
@@ -184,12 +184,12 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 
 | ID | Requisito | Prior. | Etapa | Impl. | Valid. | Desde | Notas |
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
-| **J-01** ✏️ | Suena una nota aleatoria y el usuario busca su posición en el mástil. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Retos en los 12 primeros trastes; no suena nada hasta pulsar ▶, que después repite. La nota que tocas se lee en pequeño desde la 0.6.3 (F5.8 #4), para no competir con la buscada; la buscada, solo con la pista de nombre (J-06) o al responder. Lo de la 0.3.3 se confirma en la Sesión 2. |
+| **J-01** ✏️ | Suena una nota aleatoria y el usuario busca su posición en el mástil. | Alta | F1.1 · F5.8 | ✅ | ⬜ | 0.1.0 | Retos en los 12 primeros trastes; no suena nada hasta pulsar ▶, que después repite. La nota que tocas se lee en pequeño desde la 0.6.3 (F5.8 #4), para no competir con la buscada; la buscada, solo con la pista de nombre (J-06) o al responder. Lo de la 0.3.3 se confirma en la Sesión 2. |
 | **J-02** | Se acepta como acierto cualquier posición que produzca esa nota exacta. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (E04). |
 | **J-03** | Tras acertar se señalan las demás posiciones válidas. | Media | F1.1 | ✅ | ✅ | 0.1.0 | Reutiliza L-03. Validado en la Sesión 1 (E04). |
 | **J-04** | Pista opcional: nombre de la nota que suena. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (E04). |
 | **J-05** | Pista opcional: cuerda o cuerdas donde puede encontrarse. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (E04). |
-| **J-06** ✏️ | Las pistas se activan desde la propia interfaz, sin abrir el menú. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Las dos pistas son «esta nota en esta cuerda»; ninguna, «de oído». Encendida, cada pista ocupa su parte de la franja, con la respuesta en grande y borde discontinuo (0.6.3, F5.8 #4). Validado en la Sesión 1 (E04). |
+| **J-06** ✏️ | Las pistas se activan desde la propia interfaz, sin abrir el menú. | Alta | F1.1 · F5.8 | ✅ | ⬜ | 0.1.0 | Las dos pistas son «esta nota en esta cuerda»; ninguna, «de oído». Encendida, cada pista ocupa su parte de la franja, con la respuesta en grande y borde discontinuo (0.6.3, F5.8 #4). Lo esencial se validó en la Sesión 1 (E04); el aspecto de la 0.6.3, cuando lo pruebes (AR-16 #2). |
 | **J-07** | Contador de racha visible durante el juego. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (E04). |
 | **J-08** | El récord de racha más larga persiste entre sesiones. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | `localStorage`, un récord por afinación (J-11); «Restablecer» lo conserva y se borra con su propio botón. Lo de la 0.3.3 se confirma en la Sesión 2. |
 | **J-09** | Feedback visual inmediato de acierto y de error. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Color en la posición pulsada y destello en la barra del reto. Validado en la Sesión 1 (A09, E04). |
@@ -267,14 +267,14 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 | **V-01** | En móvil se **sugiere** la orientación horizontal con un aviso discreto; no se fuerza. | Alta | F3.2 | ✅ | ✅ | 0.3.0 | En horizontal, raíl, mástil a todo el alto y panel (52,8 px por cuerda en el iPhone). Aviso para girar solo con el dedo, en vertical y con menos de 600 px de ancho, en Libre, Adivinar, Escalas y Acordes. Validado en la Sesión 1 (C02, C03, D03). |
 | **V-02** | El afinador funciona en vertical y en horizontal. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
 | **V-03** | En escritorio el mástil aprovecha el ancho disponible. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Arranca con el mástil completo en pantallas anchas. |
-| **V-04** | Control de zoom que determina qué porción del mástil se ve. | Alta | F1.1 · F3.2 | ✅ | ✅ | 0.1.0 | De 3 a 24 trastes; por defecto de 40 px con el dedo (34 con ratón), hasta 28 px si se pide con «+»; lo guardado se conserva al girar. Validado en la Sesión 1 (A07, A08, C04). |
+| **V-04** ✏️ | Control de zoom que determina qué porción del mástil se ve. | Alta | F1.1 · F3.2 | ✅ | ✅ | 0.1.0 | De 3 a 24 trastes; por defecto de 40 px con el dedo (34 con ratón), hasta 28 px si se pide con «+»; lo guardado se conserva al girar. Desde la 0.6.3, con el dedo y 900 px o más, el mástil de inicio respeta los 40 px (antes, 38 en un iPad de 1024); a quien ya tenía un zoom guardado no le cambia hasta «Restablecer» (AT-15 #7). Validado en la Sesión 1 (A07, A08, C04). |
 | **V-05** | Cuando el mástil no cabe, el usuario se desplaza lateralmente. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (A08). |
 | **V-06** | El ancho de traste no cambia al desplazarse: el zoom fija el tamaño y el desplazamiento mueve la ventana. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (A07). |
 | **V-07** | El mástil se readapta al redimensionar la ventana. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (A08). |
 | **V-08** | El nivel de zoom persiste entre sesiones. | Baja | F1.1 | ✅ | ⬜ | 0.1.0 | Girar el móvil no pisa el zoom elegido. |
 | **V-09** | Al ocultar la numeración se puede conservar una **referencia de tramo**: el modo «Guía» deja solo los números de los trastes con marca. | Media | F1.3 | ✅ | ✅ | 0.1.2 | Sin números, los trastes 5 y 17 se confunden; se descartó el minimapa. Validado en la Sesión 1 (A11). |
-| **V-10** 🆕 | **Temas elegibles:** en Ajustes › Aspecto se elige el tema de la app: *Madera* (de fábrica), *Automático* (claro u oscuro, como el dispositivo) y *Partitura*. La elección se guarda; el mástil es oscuro en todos, y todos cumplen los contrastes de G-05. | Media | F5.8 | ✅ | ⬜ | 0.6.3 | Tu comentario F5.8 #3 (12/11) y parte de C-08. Comprobado con el banco y con `comprobar-accesibilidad.js` en los cuatro aspectos (Madera, Automático oscuro y claro, Partitura). Falta que elijas con las capturas y lo veas en el iPhone. |
-| **V-11** 🆕 | **Disposición para tableta y ordenador:** en pantallas de al menos 700 × 700 px (el iPad en las dos orientaciones, el ordenador), el mástil tiene un alto acotado y centrado, el pentagrama y la lectura crecen, textos y botones son mayores y las pestañas forman un control segmentado, en su propia fila si no caben junto al nombre. | Media | F5.8 | ✅ | ⬜ | 0.6.3 | Tu comentario F5.8 #3: el iPad «no está preparado» (cuerdas de 150 px en vertical). `comprobar-disposicion.js` mide cinco pantallas de iPad y una de ordenador: cuerdas de 44 a 67 px, nada se sale y las pestañas no pisan nada; con el dedo en horizontal, el mástil de inicio respeta los 40 px por traste (antes, 38 a 1024 px). Falta tu prueba en un iPad. |
+| **V-10** 🆕 | **Temas elegibles y aspecto limpio:** en Ajustes › Aspecto se elige el tema de la app: *Madera* (de fábrica), *Automático* (claro u oscuro, como el dispositivo) y *Partitura*. La elección se guarda y se cambia cuando quieras. En todos, un aspecto limpio (sin degradados de fondo, chips sin borde, tarjetas redondeadas); el mástil es oscuro en todos, y todos cumplen los contrastes de G-05. | Media | F5.8 | ✅ | ⬜ | 0.6.3 | Tu decisión del 15/11: Madera de fábrica y los tres elegibles. Falta verlo en el iPhone. Anotado: las reglas «más limpio» van al final del CSS y conviene subirlas junto a cada componente (AT-15 #5); G-05 pide 4,5:1 y la herramienta, desde F3.4, acepta 3:1 en texto grande, como WCAG: alinearlo en el cierre de F5 (AR-16 #5). |
+| **V-11** 🆕 | **Disposición para tableta y ordenador:** con un área útil de al menos 700 × 600 px (el iPad en las dos orientaciones, también con las barras de Safari, y el ordenador), el mástil tiene un alto acotado y centrado, el pentagrama y la lectura crecen, textos y botones son mayores y las pestañas forman un control segmentado, en su propia fila si no caben junto al nombre. | Media | F5.8 | ✅ | ⬜ | 0.6.3 | Tu comentario F5.8 #3: el iPad «no está preparado» (cuerdas de 150 px en vertical). Excepción al principio «el mástil manda» de `interfaz.md` §2, pendiente de tu aprobación (AR-16 #7). Falta tu prueba en un iPad. |
 
 ---
 
@@ -283,13 +283,13 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 | ID | Requisito | Prior. | Etapa | Impl. | Valid. | Desde | Notas |
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
 | **C-01** | Menú de configuración accesible desde cualquier pantalla. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Hoja desde abajo en vertical; panel lateral en horizontal y en pantallas amplias; es un diálogo (AT-04). Validado en la Sesión 1 (A19, C05). |
-| **C-02** ✏️ | El menú contiene nomenclatura, pentagrama, timbre, numeración de trastes (tres modos), ver todas las notas, señalar iguales y afinación activa, y muestra la versión de la app. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Grupos: idioma, aspecto (tema, V-10, 0.6.3), notación (con ♯ o ♭ por nota), Adivinar («Al fallar»), numeración y versión. En F6.4, «Acerca de» con créditos y privacidad. |
+| **C-02** ✏️ | El menú contiene nomenclatura, pentagrama, timbre, numeración de trastes (tres modos), ver todas las notas, señalar iguales y afinación activa, y muestra la versión de la app. | Alta | F1.1 · F5.8 | ✅ | ⬜ | 0.1.0 | Grupos: idioma, aspecto (tema, V-10, 0.6.3), notación (con ♯ o ♭ por nota), Adivinar («Al fallar»), numeración y versión. En F6.4, «Acerca de» con créditos y privacidad. |
 | **C-03** | Los ajustes frecuentes tienen acceso rápido sin abrir el menú. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Nomenclatura y pentagrama en chips bajo la cabecera (en el panel, en horizontal); las pistas del juego, en la tarjeta del reto. |
-| **C-04** | Navegación principal clara entre las áreas de la app. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Barra inferior con seis destinos en vertical, raíl en horizontal y pestañas en la cabecera en pantallas amplias; en pantallas bajas nunca se sale. Validado en la Sesión 1 (A19). |
+| **C-04** ✏️ | Navegación principal clara entre las áreas de la app. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Barra inferior con seis destinos en vertical, raíl en horizontal y pestañas en la cabecera en pantallas amplias; en pantallas bajas nunca se sale. Desde la 0.6.3, en tableta y ordenador las pestañas son un control segmentado, en su propia fila por debajo de 1100 px (V-11). Validado en la Sesión 1 (A19). |
 | **C-05** | Todos los ajustes persisten entre sesiones. | Media | F1.1 | ✅ | ✅ | 0.1.0 | Un único objeto de estado, validado campo a campo. Validado en la Sesión 1 (A14, A15). |
 | **C-06** | Especificación detallada de la interfaz: estructura de menús, jerarquía de controles y flujos de navegación. | Alta | F3.1 | ✅ | ✅ | 0.2.3 | `docs/interfaz.md`, aprobada el 20/10 (AR-04), con bocetos en `docs/interfaz/`. Cada cambio sube su versión. |
 | **C-07** | **Botón «atrás» del sistema:** mientras haya un paso anterior en la sesión, el botón o gesto «atrás» cierra Ajustes o vuelve al área anterior; desde la primera área actúa el sistema. Al abrir la app se entra en Libre. | Media | F3.2 | ✅ | ✅ | 0.3.0 | Cada área con su dirección (`#libre`…); en el iPhone instalado no hay botón atrás. Validado en la Sesión 1 (A17). |
-| **C-08** ✏️ | Menú **Personalización** dentro de Ajustes: estilos de nota en el mástil (círculo de color o solo el nombre, más grande o en negrita), estilo del traste y del mástil, interior claro para «Ver todas las notas» y temas de color de la app. | Media | Posterior | ⬜ | ⬜ | — | Tus comentarios de la Sesión 1 (A10, C06, E06). Los temas de color ya están (V-10, 0.6.3); el resto sigue para después; la paleta por nota de G-05 sigue de punto de partida. |
+| **C-08** ✏️ | Menú **Personalización** dentro de Ajustes: estilos de nota en el mástil (círculo de color o solo el nombre, más grande o en negrita), estilo del traste y del mástil, interior claro para «Ver todas las notas». Los temas de color están en V-10. | Media | Posterior | ⬜ | ⬜ | — | Tus comentarios de la Sesión 1 (A10, C06, E06). Los temas de color salieron a V-10 (0.6.3); el resto sigue para después; la paleta por nota de G-05 sigue de punto de partida. |
 
 ---
 
@@ -332,7 +332,7 @@ Qué requisitos cierra o valida cada etapa del roadmap. Es la misma información
 | **F5.5** | N-06, J-13 |
 | **F5.6** | MT-01, MT-02, MT-03, MT-04, MT-05 |
 | **F5.7** | AC-01, AC-02, AC-03, AC-04, AC-05, AC-06 |
-| **F5.8** | G-13, MT-06, V-10, V-11 |
+| **F5.8** | G-13, J-01, J-06, MT-06, V-10, V-11, C-02 |
 | **F6.1** | G-08 |
 | **F6.2** | G-03 |
 | **F6.3** | G-04 |

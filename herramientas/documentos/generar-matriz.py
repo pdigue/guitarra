@@ -17,7 +17,7 @@ CATN = dict(data['cats'])
 VER = data['versiones']   # las escribe generar-requisitos.py: una sola fuente para las versiones
 # Control de cambios desde la 2.0 (lo anterior, en docs/historico/matriz-cumplimiento.md)
 CC = [
- ['2.1','15/11/2026','v2.1','0.6.3','V-10 y V-11 nuevos (temas, tableta y ordenador), verificados parcialmente hasta que elijas y lo pruebes; criterios de J-01, J-06 y C-02 con la 0.6.3; evidencia de G-05 en los cuatro aspectos.'],
+ ['2.1','15/11/2026','v2.1','0.6.3','V-10 y V-11 nuevos (temas, tableta y ordenador), verificados parcialmente hasta tu prueba; criterios medibles de J-01 y J-06 (J-06, verificado parcialmente hasta tu prueba) y de C-02 y PL-03 con la 0.6.3; evidencias de G-05 y V-04. Con AR-16 y AT-15.'],
  ['2.0','15/11/2026','v2.0','0.6.2','Baseline 0.6.2: mismos ID, métodos, criterios, evidencias y estados de verificación que la 1.25; el comentario de cada requisito, en lo vigente. Historial 1.0 a 1.25 en docs/historico/.'],
 ]
 
@@ -47,7 +47,7 @@ V = {
  'PL-01':('D','La lista de F1.1 se supera en Chrome, Edge y Firefox en Windows, y la app se instala como PWA desde Edge.','—',C14),
  'PL-02':('D','La lista de comprobación se supera en Chrome para Android, en web y con la PWA instalada.','—',C14),
  'PL-04':('I+T','Cada capacidad del navegador que usa la app figura en docs/compatibilidad.md con su comportamiento en Windows, Android e iPhone y su alternativa; el banco arranca la app sin vibración ni audio y funciona.','docs/compatibilidad.md v1.8 · '+B+': sin matchMedia ni history',C14),
- 'PL-03':('D','La lista de comprobación se supera en Safari para iOS, en web y desde la pantalla de inicio.','—',C14),
+ 'PL-03':('D','La lista de comprobación se supera en Safari para iOS y iPadOS, en web y desde la pantalla de inicio.','—',C14),
  'N-01':('D','El chip de nomenclatura alterna todos los nombres entre Do-Re-Mi y C-D-E.','F1.1 #6',CL),
  'N-02':('D','El selector de Ajustes produce el mismo cambio que el chip.','F1.1 #14',CL),
  'N-03':('D','El chip está visible en la barra de acceso rápido sin abrir ningún menú.','F1.1 #14',CL),
@@ -76,12 +76,12 @@ V = {
  'L-01':('D','Al abrir la app se muestra el modo Libre.','F1.1 #14',CL),
  'L-02':('D','Con «Ver todas las notas» se ven todos los nombres; sin él, solo el de la nota pulsada.',B+' · F1.1 #10',CL),
  'L-03':('D','Al pulsar una nota se señalan las demás posiciones con el mismo sonido exacto y ninguna de otra octava.','F1.1 #14',CL),
- 'J-01':('D','En Adivinar nada suena hasta pulsar ▶ (resaltado); antes de ▶ el mástil suena pero no puntúa; después cada reto suena solo y ▶ lo repite. La lectura y el pentagrama muestran la nota que tocas (0.4.1), la lectura en pequeño desde la 0.6.3 (F5.8 #4); la buscada, solo con la pista de nombre o al responder.','F1.1 #14 · '+B+': ▶, y lectura de la nota tocada con las pistas aparte · Sesión 1: C07 y E04',CL),
+ 'J-01':('D','En Adivinar nada suena hasta pulsar ▶ (resaltado); antes de ▶ el mástil suena pero no puntúa; después cada reto suena solo y ▶ lo repite. La lectura y el pentagrama muestran la nota que tocas (0.4.1), la lectura, en Adivinar, a 20 px (24 en tableta) en el gris secundario, con 4,5:1 o más, desde la 0.6.3 (F5.8 #4); la buscada, solo con la pista de nombre o al responder.','F1.1 #14 · '+B+': ▶, y lectura de la nota tocada con las pistas aparte · Sesión 1: C07 y E04',CL),
  'J-02':('T','Cualquier posición con el mismo sonido cuenta como acierto.',B+': acierto',CL),
  'J-03':('D','Tras acertar se señalan las demás posiciones válidas.','F1.1 #14',CL),
  'J-04':('D','La pista «Nombre» muestra el nombre y la octava de la nota que suena.','F1.1 #14',CL),
  'J-05':('D','La pista «Cuerda» lista las cuerdas donde puede estar la nota.','F1.1 #14',CL),
- 'J-06':('D','Las dos pistas se activan con chips visibles en Adivinar, sin abrir Ajustes; encendidas, enseñan su respuesta en grande (0.4.1); desde la 0.6.3 cada una ocupa su parte de la franja y una respuesta larga se reduce para caber entera.','F1.1 #14 · '+B+': pistas grandes, también antes de ▶; pista larga (0.6.3)',CL),
+ 'J-06':('D','Las dos pistas se activan con chips visibles en Adivinar, sin abrir Ajustes; encendidas, enseñan su respuesta en grande (0.4.1); desde la 0.6.3, con una pista encendida esta ocupa todo el ancho de su fila y con dos, la mitad cada una; la respuesta, a 30 px en el móvil y 44 en tableta (21 y 34 si pasa de 7 caracteres, para caber entera).','F1.1 #14 · '+B+': pistas grandes, también antes de ▶; pista larga (0.6.3)',CL),
  'J-07':('T','La racha sube con cada acierto y vuelve a 0 con cada fallo.',B+': acierto y fallo',CL),
  'J-08':('T','El récord de cada afinación persiste tras recargar y tras «Restablecer todos los ajustes»; solo «Borrar los récords de racha» los pone a cero.',B+': récords por afinación guardados y restablecer · F1.1 #13 · Sesión 1: A15',CL),
  'J-09':('D','Acierto y fallo se distinguen al instante por color y destello.','F1.1 #9',CL),
@@ -91,8 +91,8 @@ V = {
  'J-12':('T','Con «Ver todas las notas» activo, Adivinar no muestra los nombres.',B+' · F1.1 #10',RC),
  'E-01':('D','Se puede elegir tónica y tipo de escala entre el catálogo aprobado (mayor, menor natural, pentatónicas mayor y menor; 21/10).',B+': selectores de tónica y tipo',CL),
  'E-02':('T','Para cada tónica y tipo, las posiciones generadas coinciden con una referencia externa en afinación estándar.','tests/escalas.test.js: las 24 mayores y menores con siete letras, sin mezclar ♯ y ♭ ni dobles alteraciones, y 16 de ellas nota a nota frente al libro; pentatónicas dentro de su escala; casillas por clase de altura',CL),
- 'V-10':('T','Ajustes › Aspecto ofrece Madera, Automático y Partitura; la elección se guarda y un valor desconocido vuelve a Madera; Automático sigue al dispositivo, también si cambia con la app abierta, y es oscuro si el navegador no sabe decirlo; en los cuatro aspectos todo texto cumple 4,5:1 (3:1 el grande) y el pentagrama de un tema claro usa la tinta del texto.',B+': temas, Automático y tinta · comprobar-accesibilidad con TEMA y ESQUEMA',C12b),
- 'V-11':('D','En 820 × 1180, 744 × 1133, 1180 × 820 y 1024 × 768 con el dedo, y 1440 × 900 con ratón: cuerdas de 40 a 80 px (30 a 80 con ratón), nada se sale de la pantalla y las pestañas no pisan el nombre ni Ajustes; con el dedo, el mástil de inicio no baja de 40 px por traste.','comprobar-disposicion: seis pantallas de tableta y ordenador',C12b),
+ 'V-10':('T','Ajustes › Aspecto ofrece Madera, Automático y Partitura; Madera es el de fábrica; la elección se guarda y un valor desconocido vuelve a Madera; Automático sigue al dispositivo, también si cambia con la app abierta, y es oscuro si el navegador no sabe decirlo; en un tema claro el pentagrama y la nota usan la tinta del texto, también tras cambiar de tema con una nota escrita; en los cuatro aspectos (Madera, Automático oscuro y claro, Partitura) todo texto pasa comprobar-accesibilidad con los umbrales de G-05; y el cliente aprueba el aspecto en su iPhone.',B+': temas, Automático (con y sin matchMedia), tinta al cambiar de tema · comprobar-accesibilidad con TEMA y ESQUEMA en los cuatro aspectos · elección del cliente el 15/11 (Madera de fábrica)',C12b),
+ 'V-11':('D','Con área útil de 700 × 600 px o más: cuerdas de 40 a 80 px con el dedo (30 a 80 con ratón), el mástil a lo sumo de 420 px de alto con el dedo y 380 con ratón; el pentagrama, hasta 230 px; pestañas en la cabecera desde 1100 px de ancho y en su fila por debajo, sin pisar el nombre ni Ajustes; nada se sale de la pantalla. Pantallas: iPad 820 × 1180, 744 × 1133, 1180 × 820, 1024 × 768 y 1133 × 670 (iPad mini en horizontal con las barras de Safari) con el dedo; ordenador 1440 × 900 y 1280 × 620 con ratón.','comprobar-disposicion: las pantallas de tableta y ordenador del criterio (con Adivinar, Libre, Metrónomo, Acordes y Ajustes), en español e inglés',C12b),
  'C-08':('N/A','Fuera del alcance actual.','—',CL),
  'S-09':('N/A','Fuera del alcance actual.','—',CL),
  'E-02b':('N/A','Fuera del alcance actual.','—',AR),
@@ -116,7 +116,7 @@ V = {
  'V-01':('D','En horizontal, con un alto útil de 268 px o más, cada cuerda mide al menos 40 px (iPhone en Safari e instalada; simulador de Android). En vertical, en pantallas táctiles de menos de 600 px de ancho y en Libre, Adivinar, Escalas y Acordes, aparece el aviso para girar; nunca en el Afinador ni en el Metrónomo; cerrado, no vuelve y «Restablecer» lo recupera.','V-06: comprobar-disposicion.js en 14 pantallas: 52,8 / 60,8 / 42,5 px · '+B+': aviso para girar',C20),
  'V-02':('D','El afinador se usa con comodidad en vertical y en horizontal.','F1.1 #14',CL),
  'V-03':('D','En una pantalla de 1280 px se ven los 24 trastes sin desplazarse.','F1.1 #14',CL),
- 'V-04':('D','El zoom cambia los trastes visibles entre 3 y el máximo que cabe, y la etiqueta dice la cifra real; «+» enseña más trastes y «−» menos. Con pointer: coarse, la vista por defecto usa trastes de al menos 40 px y el usuario puede pedir más trastes, de hasta 28 px; si el zoom guardado pide más de los que caben, se muestran los que caben y lo guardado se conserva (V-08).','F1.1 #7 y #8 · V-06 · '+B+': 40 px por defecto, 28 con «+», orden de los botones',C20),
+ 'V-04':('D','El zoom cambia los trastes visibles entre 3 y el máximo que cabe, y la etiqueta dice la cifra real; «+» enseña más trastes y «−» menos. Con pointer: coarse, la vista por defecto usa trastes de al menos 40 px y el usuario puede pedir más trastes, de hasta 28 px; si el zoom guardado pide más de los que caben, se muestran los que caben y lo guardado se conserva (V-08).','F1.1 #7 y #8 · V-06 · '+B+': 40 px por defecto, 28 con «+», orden de los botones · 0.6.3: comprobar-disposicion, iPad 1024 × 768 con el dedo a 41,5 px por traste',C20),
  'V-05':('D','Con el mástil más ancho que la pantalla se puede desplazar hasta el traste 24.','F1.1 #14',CL),
  'V-06':('D','Desplazarse no cambia el ancho de los trastes.','F1.1 #7',CL),
  'V-07':('D','Al redimensionar la ventana el mástil se reajusta sin perder el tramo visible.','F1.1 #7',CL),
@@ -147,7 +147,7 @@ V = {
 }
 BENCH = {'G-10','D-01','D-02','D-04','J-02','J-07','J-08','J-10','J-12','A-10','V-09','C-05','L-02'}
 PARTIAL = {'V-01','V-04','C-07','G-05','G-06','PL-04','G-07','S-01','X-01',
-           'E-01','E-02','E-03','E-04','E-06','P-03','MT-01','MT-05','MT-06','AC-02','AC-03','G-13','V-10','V-11'}   # F5: banco hecho, falta tu prueba (CP-5, AR-12 #1)   # con evidencia, pero sin cumplir aún todo el criterio
+           'E-01','E-02','E-03','E-04','E-06','P-03','MT-01','MT-05','MT-06','AC-02','AC-03','G-13','V-10','V-11','J-06'}   # F5: banco hecho, falta tu prueba (CP-5, AR-12 #1)   # con evidencia, pero sin cumplir aún todo el criterio
 DECL = {'si':'Cumple','parcial':'Cumple parcialmente','no':'No cumple'}
 WHO = {'I':'Auditor de requisitos','A':'Auditor técnico','D':'Cliente','T':'Banco automático + auditor técnico','I+T':'Auditor técnico','N/A':'—'}
 

@@ -82,9 +82,11 @@ function fitOctave(midi){
 }
 
 /** Los colores de nota (pastel) están pensados para fondo oscuro. En un tema
- *  claro (F5.8 #3) el pentagrama se escribe con la tinta del texto. */
+ *  claro (F5.8 #3) el pentagrama se escribe con la tinta del texto: «currentColor»
+ *  toma el color del CSS (.staff-svg { color:var(--text) }), sin poner var() en un
+ *  atributo del SVG, que no todos los navegadores aceptan (AT-15 #2). */
 function tintaNota(color){
-  return document.documentElement.dataset.scheme === 'light' && /^#/.test(color) ? 'var(--text)' : color;
+  return document.documentElement.dataset.scheme === 'light' && /^#/.test(color) ? 'currentColor' : color;
 }
 
 /** Dibuja una nota con sus líneas adicionales, su plica y su marca de octava. */

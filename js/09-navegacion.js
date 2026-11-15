@@ -62,7 +62,9 @@ function syncUI(){
   // entre claro y oscuro, el pentagrama se vuelve a escribir con su tinta.
   if (aplicarTema()){
     if (screen === 'scales') renderScales();
-    else if (lastMidi !== null && !pantallaConPentagramaPropio()) showOnStaff(lastMidi, noteInfo(lastMidi).color);
+    else if (screen === 'chords') refreshChords();
+    else if (lastMidi !== null) showOnStaff(lastMidi, noteInfo(lastMidi).color);
+    renderTunerStaff();   // el pentagrama del afinador de referencia, también (AT-15 #1)
   }
   // Acceso rápido
   const qn = document.getElementById('qb-notation');
@@ -245,10 +247,13 @@ function aplicarTema(){
   const cambia = html.dataset.theme !== state.theme || html.dataset.scheme !== (claro ? 'light' : 'dark');
   html.dataset.theme = state.theme;
   html.dataset.scheme = claro ? 'light' : 'dark';
-  // La barra del sistema (Safari, Android) toma el color de fondo del tema.
-  const meta = document.querySelector('meta[name="theme-color"]');
-  const fondo = window.getComputedStyle ? getComputedStyle(html).getPropertyValue('--bg').trim() : '';
-  if (meta && fondo) meta.setAttribute('content', fondo);
+  // La barra del sistema (Safari, Android) toma el color de fondo del tema. Solo
+  // si algo cambió: leer el estilo calculado obliga al navegador a recalcularlo (AT-15 #4).
+  if (cambia){
+    const meta = document.querySelector('meta[name="theme-color"]');
+    const fondo = window.getComputedStyle ? getComputedStyle(html).getPropertyValue('--bg').trim() : '';
+    if (meta && fondo) meta.setAttribute('content', fondo);
+  }
   return cambia;
 }
 // Si el dispositivo pasa de claro a oscuro con la app abierta, «Automático» lo sigue.

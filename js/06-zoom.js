@@ -13,12 +13,13 @@ function defaultVisibleFrets(){
   const landscape = w > window.innerHeight;
   // Escritorio: mástil entero. Con el dedo (un iPad en horizontal), los que
   // caben a 40 px (G-05, V-04): el mástil entero los dejaría en 38 px a 1024.
-  if (w >= 900) return coarsePointer() ? Math.min(NUM_FRETS, Math.floor((w - 110) / 40)) : NUM_FRETS;
+  if (w >= 900) return coarsePointer() ? Math.min(NUM_FRETS, Math.floor((w - LABEL_W - NUT_W - BOARD_PAD_X) / 40)) : NUM_FRETS;
   if (landscape) return 10;          // con 40 px por traste caben 10 en un iPhone con Safari
   return 5;                          // móvil vertical: pocos y anchos
 }
 
 const LABEL_W = 30, NUT_W = 40;   // deben coincidir con --label-w y --nut-w
+const BOARD_PAD_X = 40;           // relleno lateral de .board-area en tableta (20 + 20 px, css/trasteando.css)
 
 /** Cuántos trastes caben de verdad sin bajar del ancho mínimo cómodo. */
 function maxVisibleFrets(){

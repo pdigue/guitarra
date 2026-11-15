@@ -1,14 +1,14 @@
 # Trasteando — Estado para retomar
 
 **Actualizado:** 15/11/2026, con la app en la `0.6.3` · lo mantiene la conversación que trabaja.
-**Documentos:** requisitos v2.1 · matriz v2.1 · roadmap v4.0 (baseline 0.6.2; lo anterior, en `docs/historico/`)
+**Documentos:** requisitos v2.1 · matriz v2.1 · roadmap v4.1 (baseline 0.6.2; lo anterior, en `docs/historico/`)
 
 > **Al empezar:** compara este archivo (GitHub) con `claude/ESTADO.md` del proyecto; si difieren, avisa a Pablo (manda GitHub). Las reglas están en `CLAUDE.md`. **Al terminar:** déjalo al día y acaba con «ESTADO actualizado: versión X, siguiente paso Y». Propón tú el cambio de conversación al cerrar el bloque.
 
 ## 1. Dónde estamos
 - **Ramas:** `main` = `0.6.0`. `auto/F5.8-saneamiento` = `0.6.2` (PR #18: péndulo #1 y afinador #2, espera «fusiona el #18»). `auto/F5.8-aspecto` = `0.6.3` (PR #19, contra la anterior: baseline y F5.8 #3 y #4). `archivo/hasta-0.6.2` (472ff7a): salvavidas, no se borra nunca.
 - **Web de pruebas:** https://pdigue.github.io/guitarra/ (rama `pruebas`, con la `0.6.3`).
-- **Bloque en curso: F5.8 #3 y #4, el aspecto** (`0.6.3`, hecho; **espera la elección de Pablo**): temas en Ajustes › Aspecto (Madera, Automático y Partitura; V-10), disposición para iPad y ordenador (V-11), y en Adivinar las pistas en grande y la nota tocada en pequeño (J-01, J-06). Capturas enviadas el 15/11. **Para cerrarlo:** ajustar lo que elija (p. ej. qué tema queda de fábrica o quitar uno), auditoría técnica ligera (diff del bloque, ≤ 10 lecturas; la de requisitos también, porque cambiaron: V-10, V-11, J-01, J-06, C-02, C-08, PL-03, G-05), y los documentos de cierre (roadmap, `interfaz.md`, `compatibilidad.md` con `prefers-color-scheme`, informe IT-05 de una página).
+- **Bloque F5.8 #3 y #4, el aspecto: cerrado** (`0.6.3`, PR #19): temas en Ajustes › Aspecto (Madera de fábrica, Automático y Partitura, decisión del 15/11; V-10), tableta y ordenador (V-11), y pistas grandes en Adivinar (J-01, J-06). Auditorías ligeras AT-15 y AR-16, sin críticos; altos corregidos; lo demás, anotado en V-10, V-11 y V-04. Falta la prueba de Pablo en el iPhone y en un iPad.
 - **Después, una conversación por bloque:** Escalas (#5: las 4, una posición cada vez, sin Práctica; cambia requisitos), Acordes (#6), metrónomo (#7: pulso irregular y desfase; sospechosos, 100 ms programados y `outputLatency`), propuestas (#8), F5.9 (cierre, etiqueta `v0.5.x`) y retomar F6.2 (`auto/F6.2-service-worker`, `7692bc5`: código hecho, faltan documentos, auditoría y PR).
 - **Hecho en F5.8:** #1 péndulo (MT-06, `0.6.1`); #2 afinador que sigue la nota y abre en Micrófono, y pantalla encendida (A-02, A-03, G-13, `0.6.2`). Los dos, a falta de la prueba de Pablo.
 
@@ -19,7 +19,7 @@
 4. Afinador (AR-15 #8): si elige De oído se recuerda; ¿prefiere que abra siempre en Micrófono?
 5. Git: proteger `main` en GitHub (Settings → Rules: PR obligatorio, sin *force push* ni borrado); y, solo con su «sí», borrar las 19 ramas `auto/…` ya fusionadas.
 6. Pegar el texto nuevo de las instrucciones del proyecto (dado el 15/11).
-7. **Elegir tema** con las capturas del 15/11 (o en la web de pruebas, Ajustes › Aspecto): cuál de fábrica, si sobra alguno y qué cambiaría.
+7. Probar la `0.6.3` en el iPhone y, si puede, en un iPad (temas, Adivinar). Y aprobar expresamente dos cosas que se hicieron como se le propusieron (AR-16 #7 y #8): el mástil acotado en tableta (excepción a «el mástil manda») y la nota tocada en pequeño en Adivinar.
 
 ## 3. Cómo se trabaja
 - **Banco:** `node --test` en verde (unos 2 min). Las pruebas que arrancan la app se pasan dos veces (varios archivos y autónomo, `tests/autonomo.test.js`); un archivo nuevo que arranque la app se añade allí. Sueltas: `node --test-name-pattern="texto" tests/banco.test.js`. `tests/documentos.test.js`: baseline y versiones.
@@ -36,4 +36,4 @@
 - **22/10:** péndulo con la pesa arriba más lenta; F5 queda abierta (F5.8 y F5.9).
 
 ## 5. Para abrir la siguiente conversación
-Dentro del proyecto «Aprendizaje guitarra»: **«Lee ESTADO y sigue.»** Detrás, lo que quiera Pablo ese día (aprobaciones como «fusiona el #18», comentarios, peticiones). **Siguiente paso:** cerrar F5.8 #3 y #4 con la elección de Pablo (PR #19); después, Escalas (#5) en una conversación nueva.
+Dentro del proyecto «APP GUITARRA»: **«Lee ESTADO y sigue.»** Detrás, lo que quiera Pablo ese día (aprobaciones como «fusiona el #18», comentarios, peticiones). **Siguiente paso:** F5.8 #5, Escalas, en una conversación nueva (rama nueva desde `auto/F5.8-aspecto`; cambia requisitos: avisar a Pablo).

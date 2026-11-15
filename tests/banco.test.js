@@ -1799,7 +1799,12 @@ test('en un tema claro el pentagrama se escribe con la tinta del texto, no con e
   const A = boot(APP, { theme: 'partitura' });
   A.press(A.doc.querySelectorAll('.fret-cell')[8]);
   const cabeza = A.$('staff').querySelector('ellipse');
-  assert.equal(cabeza.getAttribute('fill'), 'var(--text)');
+  assert.equal(cabeza.getAttribute('fill'), 'currentColor', 'la tinta la pone el CSS, sin var() en el atributo (AT-15 #2)');
+  // Cambiar de tema con una nota en el pentagrama la vuelve a escribir (AT-15 #1).
+  A.doc.querySelector('#set-theme [data-v="madera"]').click();
+  assert.match(A.$('staff').querySelector('ellipse').getAttribute('fill'), /^#/, 'de vuelta en Madera, otra vez su color');
+  A.doc.querySelector('#set-theme [data-v="partitura"]').click();
+  assert.equal(A.$('staff').querySelector('ellipse').getAttribute('fill'), 'currentColor');
   const B = boot(APP);
   B.press(B.doc.querySelectorAll('.fret-cell')[8]);
   assert.match(B.$('staff').querySelector('ellipse').getAttribute('fill'), /^#/, 'en Madera, el color de la nota');

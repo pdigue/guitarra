@@ -749,8 +749,10 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 /* ===== F5.8 #3 · TEMAS: lo que no cambia con el tema =====
    Dentro del mástil (oscuro en todos los temas) los colores de acierto, fallo
    y texto son siempre los de la madera, para que contrasten con ella. */
-.board { --ok:#58c98a; --ko:#e86060; --text:#f4ece1; --amber:var(--board-accent); }
+.board { --ok:#58c98a; --ko:#e86060; --text:#f4ece1; --amber:var(--board-accent);
+  --muted:var(--board-muted); --faint:var(--board-muted); }   /* AT-15 #6 */
 .staff-clef { fill:var(--amber); }
+.staff-svg { color:var(--text); }   /* la tinta de las notas en un tema claro (currentColor) */
 /* En un tema claro, los colores de nota (pastel) no se leen sobre el papel:
    la nota leída y la pista se escriben con la tinta del texto. */
 html[data-scheme="light"] .note-name { color:var(--text); text-shadow:none; }
@@ -783,13 +785,13 @@ body[data-screen="guess"] .note-name { font-family:inherit; font-style:normal; f
   font-size:20px; line-height:24px; height:24px; color:var(--muted); text-shadow:none; }
 body[data-screen="guess"] .note-oct { margin-top:0; }
 
-/* ===== F5.8 #3 · TABLETA Y ORDENADOR (700 × 700 px o más; iPad en las dos
-   orientaciones) =====
+/* ===== F5.8 #3 · TABLETA Y ORDENADOR (700 × 600 px o más de área útil: el iPad en
+   las dos orientaciones, también con las barras de Safari, y el ordenador; AR-16 #1) =====
    Antes el mástil se estiraba hasta llenar la pantalla (cuerdas de 150 px en un
    iPad en vertical) y los textos eran los del móvil. Ahora el mástil tiene un
    alto razonable y se centra; lo que sobra va al pentagrama y a la lectura, y
    los textos y botones crecen. Las pestañas son un control segmentado. */
-@media (min-width:700px) and (min-height:700px){
+@media (min-width:700px) and (min-height:600px){
   .header { min-height:58px; padding:8px 20px; }
   .brand { font-size:24px; }
   .tabbar { gap:2px; padding:3px; background:var(--surface2); border-radius:12px; }
@@ -822,22 +824,43 @@ body[data-screen="guess"] .note-oct { margin-top:0; }
   .sheet { width:min(440px, 92vw); }
 }
 /* El ordenador (ratón), algo más compacto: cuerdas de unos 56 px. */
-@media (min-width:700px) and (min-height:700px) and (pointer:fine){
+@media (min-width:700px) and (min-height:600px) and (pointer:fine){
   .board { height:min(100%, 380px); }
   .board-area { min-height:calc(12px + 17px + 6 * 36px); }
+}
+/* Ventanas de ordenador bajas (1280 × 720 deja unos 620 px útiles): con ratón,
+   el mástil puede bajar a 30 px por cuerda para que Acordes quepa. */
+@media (min-width:700px) and (min-height:600px) and (max-height:699px) and (pointer:fine){
+  .board-area { min-height:calc(12px + 17px + 6 * 30px); }
+  .chord-list { max-height:80px; }
+  .challenge, .scales-card, .chords-card { padding:6px 16px; gap:4px; }
 }
 /* Tableta en vertical y pantallas medianas (iPad mini y iPad en vertical, iPad
    en horizontal de 1024 px): seis pestañas no caben junto al nombre, así que
    bajan a su propia fila, centradas, bajo la cabecera. */
-@media (min-width:700px) and (max-width:1099px) and (min-height:700px){
+@media (min-width:700px) and (max-width:1099px) and (min-height:600px){
   .tabbar { position:static; transform:none; order:1; align-self:center; margin:0 auto 4px; right:auto; left:auto; }
   .tab { padding:0 14px; font-size:14px; }
 }
 /* Pantallas grandes: el control segmentado, centrado en la cabecera. */
-@media (min-width:1100px) and (min-height:700px){
+@media (min-width:1100px) and (min-height:600px){
   .tabbar { left:50%; right:auto; transform:translateX(-50%); top:calc(env(safe-area-inset-top) + 9px); }
 }
 </style>
+<!-- El tema guardado, antes de pintar nada (AT-15 #3) -->
+<script>"use strict";
+// 00-aspecto.js · Pone el tema guardado en <html> antes de pintar nada (F5.8 #3, AT-15 #3).
+// Va en el <head>: si esperara a syncUI(), la página saldría un instante con
+// Madera aunque hubieras elegido otro tema. syncUI() lo completa después
+// (data-scheme, la barra del sistema). Si algo falla, se queda Madera.
+(function(){   // dentro de una función: no deja variables sueltas para los demás archivos
+try {
+  var guardado = JSON.parse(localStorage.getItem('trasteando.v1') || '{}');
+  if (guardado && guardado.theme) document.documentElement.setAttribute('data-theme', guardado.theme);
+} catch (e) {}
+})();
+//# sourceURL=js/00-aspecto.js
+</script>
 </head>
 <body>
 
@@ -2364,9 +2387,11 @@ function fitOctave(midi){
 }
 
 /** Los colores de nota (pastel) están pensados para fondo oscuro. En un tema
- *  claro (F5.8 #3) el pentagrama se escribe con la tinta del texto. */
+ *  claro (F5.8 #3) el pentagrama se escribe con la tinta del texto: «currentColor»
+ *  toma el color del CSS (.staff-svg { color:var(--text) }), sin poner var() en un
+ *  atributo del SVG, que no todos los navegadores aceptan (AT-15 #2). */
 function tintaNota(color){
-  return document.documentElement.dataset.scheme === 'light' && /^#/.test(color) ? 'var(--text)' : color;
+  return document.documentElement.dataset.scheme === 'light' && /^#/.test(color) ? 'currentColor' : color;
 }
 
 /** Dibuja una nota con sus líneas adicionales, su plica y su marca de octava. */
@@ -2725,12 +2750,13 @@ function defaultVisibleFrets(){
   const landscape = w > window.innerHeight;
   // Escritorio: mástil entero. Con el dedo (un iPad en horizontal), los que
   // caben a 40 px (G-05, V-04): el mástil entero los dejaría en 38 px a 1024.
-  if (w >= 900) return coarsePointer() ? Math.min(NUM_FRETS, Math.floor((w - 110) / 40)) : NUM_FRETS;
+  if (w >= 900) return coarsePointer() ? Math.min(NUM_FRETS, Math.floor((w - LABEL_W - NUT_W - BOARD_PAD_X) / 40)) : NUM_FRETS;
   if (landscape) return 10;          // con 40 px por traste caben 10 en un iPhone con Safari
   return 5;                          // móvil vertical: pocos y anchos
 }
 
 const LABEL_W = 30, NUT_W = 40;   // deben coincidir con --label-w y --nut-w
+const BOARD_PAD_X = 40;           // relleno lateral de .board-area en tableta (20 + 20 px, css/trasteando.css)
 
 /** Cuántos trastes caben de verdad sin bajar del ancho mínimo cómodo. */
 function maxVisibleFrets(){
@@ -3177,7 +3203,9 @@ function syncUI(){
   // entre claro y oscuro, el pentagrama se vuelve a escribir con su tinta.
   if (aplicarTema()){
     if (screen === 'scales') renderScales();
-    else if (lastMidi !== null && !pantallaConPentagramaPropio()) showOnStaff(lastMidi, noteInfo(lastMidi).color);
+    else if (screen === 'chords') refreshChords();
+    else if (lastMidi !== null) showOnStaff(lastMidi, noteInfo(lastMidi).color);
+    renderTunerStaff();   // el pentagrama del afinador de referencia, también (AT-15 #1)
   }
   // Acceso rápido
   const qn = document.getElementById('qb-notation');
@@ -3360,10 +3388,13 @@ function aplicarTema(){
   const cambia = html.dataset.theme !== state.theme || html.dataset.scheme !== (claro ? 'light' : 'dark');
   html.dataset.theme = state.theme;
   html.dataset.scheme = claro ? 'light' : 'dark';
-  // La barra del sistema (Safari, Android) toma el color de fondo del tema.
-  const meta = document.querySelector('meta[name="theme-color"]');
-  const fondo = window.getComputedStyle ? getComputedStyle(html).getPropertyValue('--bg').trim() : '';
-  if (meta && fondo) meta.setAttribute('content', fondo);
+  // La barra del sistema (Safari, Android) toma el color de fondo del tema. Solo
+  // si algo cambió: leer el estilo calculado obliga al navegador a recalcularlo (AT-15 #4).
+  if (cambia){
+    const meta = document.querySelector('meta[name="theme-color"]');
+    const fondo = window.getComputedStyle ? getComputedStyle(html).getPropertyValue('--bg').trim() : '';
+    if (meta && fondo) meta.setAttribute('content', fondo);
+  }
   return cambia;
 }
 // Si el dispositivo pasa de claro a oscuro con la app abierta, «Automático» lo sigue.

@@ -27,19 +27,28 @@ Tus comentarios del 12/11 #3 («un *looking* más limpio, estética un poco Appl
 
 ### Añadido
 - **V-10** · **Temas elegibles** en Ajustes › Aspecto: *Madera* (el de siempre, más limpio y de fábrica), *Automático* (claro u oscuro, como el dispositivo, con los grises y el naranja del sistema de Apple) y *Partitura* (papel, tinta y rojo de imprenta, la propuesta nueva). El mástil es oscuro en todos, para que los colores de las notas se lean igual. En un tema claro, la nota leída, las pistas y el pentagrama se escriben con la tinta del texto, porque los colores pastel no se leen sobre papel.
-- **V-11** · **Disposición propia para tableta y ordenador** (700 × 700 px o más): el mástil ya no se estira (en un iPad en vertical las cuerdas medían 150 px; ahora 67), se centra, y lo que sobra va al pentagrama y a la lectura, que crecen; textos y botones más grandes; las pestañas son un control segmentado, en su propia fila si no caben junto al nombre.
+- **V-11** · **Disposición propia para tableta y ordenador** (área útil de 700 × 600 px o más, también un iPad mini en horizontal con las barras de Safari): el mástil ya no se estira (en un iPad en vertical las cuerdas medían 150 px; ahora 67), se centra, y lo que sobra va al pentagrama y a la lectura, que crecen; textos y botones más grandes; las pestañas son un control segmentado, en su propia fila si no caben junto al nombre.
 
 ### Cambiado
 - **J-06** · En Adivinar, cada pista encendida **ocupa su parte de la franja**, con la respuesta en grande (30 px en el móvil, 44 en tableta); una respuesta larga («1ª 2ª 3ª 4ª») se reduce para caber entera.
 - **J-01** · La nota que tocas se lee **en pequeño y apagada**, junto al pentagrama, para que no compita con la que buscas.
 - **C-02** · Ajustes tiene el grupo **Aspecto**.
-- Más limpio en todos los temas: chips sin borde, tarjetas redondeadas, sin degradados de fondo ni líneas de separación de más.
+- **V-10** · Más limpio en todos los temas: chips sin borde, tarjetas redondeadas, sin degradados de fondo ni líneas de separación de más.
+- **C-04** · En tableta y ordenador, las pestañas son un control segmentado: en la cabecera desde 1100 px de ancho y, por debajo, en su propia fila.
 
 ### Corregido
 - **V-04** · En un iPad en horizontal (1024 px), el mástil de inicio enseñaba los 24 trastes a 38 px; con el dedo ahora enseña los que caben a 40 (22).
 
+### Corregido tras las auditorías AR-16 y AT-15
+- Al cambiar de tema, también se reescriben los pentagramas de Acordes y del Afinador (antes podían quedar notas pastel sobre papel claro).
+- El tema guardado se aplica antes de pintar la página (sin un instante de Madera al abrir).
+- La tinta del pentagrama en los temas claros ya no usa `var()` dentro de los atributos del SVG, que Safari podría no aceptar.
+- En ventanas de ordenador bajas (1280 × 720), Acordes cabe entero.
+- **J-06** vuelve a «sin validar» hasta que lo pruebes: cambió justo lo que validó la Sesión 1.
+
 ### Para el desarrollo
 - Fichas de color por tema en `css/trasteando.css`; `aplicarTema()` en `js/09-navegacion.js` pone `data-theme` y `data-scheme` en `<html>`.
+- `js/00-aspecto.js`, en el `<head>`: pone el tema guardado antes de pintar.
 - `comprobar-accesibilidad.js` admite `TEMA` y `ESQUEMA`; `comprobar-disposicion.js` mide seis pantallas de tableta y ordenador y comprueba que las pestañas no pisan nada.
 - Baseline 0.6.2 (15/11): requisitos y matriz v2.0 y v2.1, roadmap v4.0, histórico en `docs/historico/`, y `tests/documentos.test.js`.
 
