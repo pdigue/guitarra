@@ -22,7 +22,7 @@
 6. Pegar el texto nuevo de las instrucciones del proyecto (dado el 15/11).
 7. Probar la `0.6.3` en el iPhone (temas, Adivinar) y en un iPad, y confirmar el mástil acotado en tableta (AR-16 #7; de momento se da por bueno). La nota tocada en pequeño en Adivinar: aprobada el 15/11.
 8. Probar Escalas (`0.6.4`) en el iPhone: posiciones, «Escuchar» (380 ms por nota), «Todas» y Practicar.
-9. Probar Acordes (`0.6.5`) en el iPhone, el iPad y el ordenador, y decidir (AR-18 #3, #4): si en pantallas grandes los trastes se ven demasiado alargados (tope de unos 120 px por traste y mástil centrado) y si echas de menos los «Populares». Y aprobar el PR #21 con «fusiona el #21».
+9. Probar Acordes (`0.6.6`) en el iPhone, el iPad y el ordenador; decir si echa de menos los «Populares» (AR-18 #4). Y aprobar el PR #21 con «fusiona el #21».
 
 ## 3. Cómo se trabaja
 - **Banco:** `node --test` en verde (unos 2 min). Las pruebas que arrancan la app se pasan dos veces (varios archivos y autónomo, `tests/autonomo.test.js`); un archivo nuevo que arranque la app se añade allí. Sueltas: `node --test-name-pattern="texto" tests/banco.test.js`. `tests/documentos.test.js`: baseline y versiones.
@@ -34,7 +34,7 @@
 - **Trampas:** no usar `pkill -f "node --test"` ni `rev`. Arrays de la app: `JSON.parse(A.ev('JSON.stringify(...)'))`. Un metrónomo arrancado en una prueba se para en `t.after`.
 
 ## 4. Decisiones recientes
-- **15/11 · Acordes (F5.8 #6):** el mástil de la app acotado a los trastes 0 a 5 y grande (no un diagrama de cancionero), sin pentagrama; elegir por nota y tipo, sin buscador ni listado.
+- **15/11 · Acordes (F5.8 #6):** el mástil de la app acotado a los trastes 0 a 5 y grande (no un diagrama de cancionero), sin pentagrama; elegir por nota y tipo, sin buscador ni listado. Aceptada la anchura de los trastes en el ordenador, sin tope (AR-18 #3).
 - **15/11 · Fusiones:** #18, #19 y #20 a `main` (cada PR, cambiado antes a `main` como destino), para no alargar la cadena de ramas.
 - **15/11 · Escalas (F5.8 #5):** 3 notas por cuerda (2 en pentatónicas), la 1 en la tónica, «Escuchar» a ritmo fijo; recuperar «Todas» y una Práctica sencilla. Aprobada la nota tocada en pequeño (AR-16 #8).
 - **15/11 · Cambio de paradigma para gastar menos:** baseline 0.6.2 (requisitos y matriz v2.0, roadmap v4.0, CHANGELOG desde la 0.6.0, histórico aparte); auditoría técnica ligera una vez por bloque y de requisitos solo si cambian; documentos de cierre al cerrar el bloque; en claude.ai solo ESTADO y CLAUDE; una conversación por bloque.
