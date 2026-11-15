@@ -183,11 +183,12 @@ document.addEventListener('keydown', ev => {
 
 /* --- Aviso para girar el móvil (V-01, interfaz.md §7) ---
    Solo con el dedo, en vertical y en pantallas de menos de 600 px; nunca en
-   el Afinador ni en el Metrónomo, que funcionan igual en las dos orientaciones. Cerrado no vuelve:
+   el Afinador ni en el Metrónomo, que funcionan igual en las dos orientaciones, ni
+   en Acordes, que enseña siempre los trastes 0 a 5 (AC-07). Cerrado no vuelve:
    se guarda con los ajustes, y «Restablecer» lo recupera. */
 function updateRotateHint(){
   const show = coarsePointer() && window.innerHeight > window.innerWidth &&
-               window.innerWidth < 600 && screen !== 'tuner' && screen !== 'metro' && !state.rotateHintClosed;
+               window.innerWidth < 600 && screen !== 'tuner' && screen !== 'metro' && screen !== 'chords' && !state.rotateHintClosed;
   document.getElementById('rotate-hint').hidden = !show;
 }
 

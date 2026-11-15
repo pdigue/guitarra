@@ -226,7 +226,6 @@ document.getElementById('set-reset').addEventListener('click', async () => {
   // selectores y los botones seguían diciendo lo de antes (AT-09 #1).
   reiniciarEscala();
   stopMetro(); metro.aviso = ''; refreshMetro();          // el metrónomo vuelve a 80, 4/4 (MT-05)
-  document.getElementById('chord-search').value = '';    // y Acordes, sin filtro (AT-10 #7)
   refreshNoteText();
   hideSettings();
   // El reto anterior puede referirse a una nota que ya no existe en la

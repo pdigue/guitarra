@@ -132,10 +132,10 @@ const TEXTOS = {
     'metro.stoppedMic': 'El metrónomo se ha parado: su clic confundiría al afinador.',
     'metro.stoppedHidden': 'Se paró al salir de la app.',
     'metro.running': 'Metrónomo en marcha',
-    // Acordes (F5.7, AC-01 a AC-06)
-    'tab.chords': 'Acordes', 'chord.search': 'Buscar: G, Am…', 'chord.searchAria': 'Buscar acorde por su nombre',
-    'chord.popular': 'Populares', 'chord.all': 'Todos ({n})', 'chord.results': 'Resultados ({n})',
-    'chord.none': 'Ningún acorde empieza por «{q}».', 'chord.play': 'Tocar', 'chord.playAria': 'Tocar el acorde',
+    // Acordes (F5.7; F5.8 #6: nota y tipo, AC-01)
+    'tab.chords': 'Acordes', 'chord.rootsAria': 'Nota del acorde', 'chord.typesAria': 'Tipo de acorde',
+    'chord.major': 'Mayor', 'chord.minor': 'menor', 'chord.bass': '/bajo', 'chord.bassAria': 'Con otra nota en el bajo',
+    'chord.play': 'Tocar', 'chord.playAria': 'Tocar el acorde',
     'chord.tuning': 'Las digitaciones son para la afinación estándar.', 'chord.toStandard': 'Pasar a estándar',
     'chord.finger': 'dedo {n}', 'chord.open': 'al aire', 'chord.muted': 'no suena', 'chord.stringAria': '{o} cuerda: {e}'
   },
@@ -256,10 +256,10 @@ const TEXTOS = {
     'metro.stoppedMic': 'The metronome stopped: its click would confuse the tuner.',
     'metro.stoppedHidden': 'It stopped when you left the app.',
     'metro.running': 'Metronome running',
-    // Chords (F5.7, AC-01 to AC-06)
-    'tab.chords': 'Chords', 'chord.search': 'Search: G, Am…', 'chord.searchAria': 'Search a chord by name',
-    'chord.popular': 'Popular', 'chord.all': 'All ({n})', 'chord.results': 'Results ({n})',
-    'chord.none': 'No chord starts with “{q}”.', 'chord.play': 'Play', 'chord.playAria': 'Play the chord',
+    // Chords (F5.7; F5.8 #6: root and type, AC-01)
+    'tab.chords': 'Chords', 'chord.rootsAria': 'Chord root', 'chord.typesAria': 'Chord type',
+    'chord.major': 'Major', 'chord.minor': 'minor', 'chord.bass': '/bass', 'chord.bassAria': 'With another bass note',
+    'chord.play': 'Play', 'chord.playAria': 'Play the chord',
     'chord.tuning': 'These fingerings are for standard tuning.', 'chord.toStandard': 'Switch to standard',
     'chord.finger': 'finger {n}', 'chord.open': 'open', 'chord.muted': 'not played', 'chord.stringAria': '{o} string: {e}'
   }
