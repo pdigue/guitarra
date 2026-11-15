@@ -14,6 +14,12 @@ from openpyxl.utils import get_column_letter
 REQS, OUT_XLSX, OUT_MD = sys.argv[1], sys.argv[2], sys.argv[3]
 data = json.load(open(REQS, encoding='utf-8'))
 CATN = dict(data['cats'])
+VER = data['versiones']   # las escribe generar-requisitos.py: una sola fuente para las versiones
+# Control de cambios desde la 2.0 (lo anterior, en docs/historico/matriz-cumplimiento.md)
+CC = [
+ ['2.1','15/11/2026','v2.1','0.6.3','V-10 y V-11 nuevos (temas, tableta y ordenador), verificados parcialmente hasta que elijas y lo pruebes; criterios de J-01, J-06 y C-02 con la 0.6.3; evidencia de G-05 en los cuatro aspectos.'],
+ ['2.0','15/11/2026','v2.0','0.6.2','Baseline 0.6.2: mismos ID, métodos, criterios, evidencias y estados de verificación que la 1.25; el comentario de cada requisito, en lo vigente. Historial 1.0 a 1.25 en docs/historico/.'],
+]
 
 def plain(s):
     s = re.sub(r'\*\*([^*]+)\*\*', r'\1', s or '')
@@ -23,13 +29,13 @@ def plain(s):
 
 # id: (método, criterio de aceptación, evidencia, origen)
 C20='Cliente · 20/10 (interfaz.md v1.0)'; CL='Cliente · listado 14/09'; C21='Cliente · 21/10'; C22='Cliente · 22/10 (F5.8 #1)'; C12='Cliente · 12/11 (AR-12 #2, F5.8)'; AR='AR-01'; DV='Desarrollo · v1.1'; C15='Cliente · 15/09'; C14='Cliente · 14/10'; D12='Desarrollo · v1.2'; RC='Revisión de código 0.1.2'
-B='Banco (node --test)'; MF='Desarrollo · medición F2.1'
+C12b='Cliente · 12/11 (F5.8 #3)'; B='Banco (node --test)'; MF='Desarrollo · medición F2.1'
 V = {
  'G-01':('I','El nombre «Trasteando» aparece en la pantalla de entrada, en la pestaña del navegador y en el manifiesto; en horizontal, arriba del panel.','F1.1 #14 · 0.5.2: comprobar-disposicion, título visible en horizontal',CL),
  'G-02':('D','La navegación muestra las seis áreas (Libre, Adivinar, Afinador, Escalas, Acordes y Metrónomo) y cada destino abre su vista.','F1.1 #1 y #14 · 0.5.5: comprobar-disposicion, seis pestañas en todas las pantallas',CL),
  'G-03':('T','F6.2: tras una primera carga en localhost y sin red, la app abre y suena. F7.2: lo mismo desde la web publicada.','—',CL),
  'G-04':('D','Desde la web publicada, el navegador ofrece instalarla y abre a pantalla completa desde el icono.','—',CL),
- 'G-05':('I+T','Todo control es alcanzable con teclado y muestra el foco; contrastes ≥ 4,5:1 medidos; el movimiento se reduce con prefers-reduced-motion; en pantallas táctiles, todo control y toda casilla del mástil mide al menos 40 × 40 px en la vista por defecto, salvo las cuerdas en vertical con menos de 660 px de alto y los trastes que el usuario estreche con «+» (hasta 28 px). Paleta por nota: las 7 naturales a ≥ 7,5 (OKLab × 100) entre sí con visión normal y con protanopía, deuteranopía y tritanopía simuladas, y las 12 a ≥ 8 con visión normal; el nombre de la nota siempre escrito.','V-07: comprobar-accesibilidad.js (teclado, contraste, movimiento) · paleta.py · V-06: 40 × 40 px · '+B+': teclado, etiquetas, paleta, grises, fila y asa',C20),
+ 'G-05':('I+T','Todo control es alcanzable con teclado y muestra el foco; contrastes ≥ 4,5:1 medidos; el movimiento se reduce con prefers-reduced-motion; en pantallas táctiles, todo control y toda casilla del mástil mide al menos 40 × 40 px en la vista por defecto, salvo las cuerdas en vertical con menos de 660 px de alto y los trastes que el usuario estreche con «+» (hasta 28 px). Paleta por nota: las 7 naturales a ≥ 7,5 (OKLab × 100) entre sí con visión normal y con protanopía, deuteranopía y tritanopía simuladas, y las 12 a ≥ 8 con visión normal; el nombre de la nota siempre escrito.','V-07: comprobar-accesibilidad.js (teclado, contraste, movimiento) · paleta.py · V-06: 40 × 40 px · '+B+': teclado, etiquetas, paleta, grises, fila y asa · 0.6.3: comprobar-accesibilidad en Madera, Automático (oscuro y claro) y Partitura',C20),
  'G-06':('I','CREDITOS.md lista cada recurso de terceros con su origen y su licencia, y la app muestra el texto de atribución en Ajustes.','CREDITOS.md (F2.1). Falta mostrarlo en la app (F6.4)',DV),
  'G-07':('T','En Windows (y Android cuando lo haya), con el ordenador en modo avión, dist/trasteando.html abre con doble clic en ≤ 3 s, suenan las grabaciones y funcionan Libre, Adivinar y el afinador por referencia. Audio ≤ 1,45 MB y archivo ≤ 2 MB.','V-03 y V-04: desde disco y sin conexión en Chromium, abre en 0,3 s y suena a menos de 1 cent · '+B+': autónomo al día, con su audio, huellas y límites',C15),
  'G-08':('T','El archivo autónomo generado y la web publicada superan el mismo banco de pruebas.',B+' en dos pasadas: banco.test.js y escalas.test.js contra la app de varios archivos y contra el autónomo (autonomo.test.js), que además lee de dentro sus 17 grabaciones (huellas sha256) sin descargar nada; una sola vez, lo que lee el repositorio o compara las formas · el autónomo es exactamente la app ensamblada más su audio · comprobar-autonomo (Chromium, file:// y sin conexión: 0,15 s, ninguna conexión, error con módulo y línea exactos) · comprobar-en-navegador · CHANGELOG 0.6.0 · IT-04 · AR-13 y AT-12',C15),
@@ -70,12 +76,12 @@ V = {
  'L-01':('D','Al abrir la app se muestra el modo Libre.','F1.1 #14',CL),
  'L-02':('D','Con «Ver todas las notas» se ven todos los nombres; sin él, solo el de la nota pulsada.',B+' · F1.1 #10',CL),
  'L-03':('D','Al pulsar una nota se señalan las demás posiciones con el mismo sonido exacto y ninguna de otra octava.','F1.1 #14',CL),
- 'J-01':('D','En Adivinar nada suena hasta pulsar ▶ (resaltado); antes de ▶ el mástil suena pero no puntúa; después cada reto suena solo y ▶ lo repite. La lectura grande y el pentagrama muestran la nota que tocas (0.4.1); la buscada, solo con la pista de nombre o al responder.','F1.1 #14 · '+B+': ▶, y lectura de la nota tocada con las pistas aparte · Sesión 1: C07 y E04',CL),
+ 'J-01':('D','En Adivinar nada suena hasta pulsar ▶ (resaltado); antes de ▶ el mástil suena pero no puntúa; después cada reto suena solo y ▶ lo repite. La lectura y el pentagrama muestran la nota que tocas (0.4.1), la lectura en pequeño desde la 0.6.3 (F5.8 #4); la buscada, solo con la pista de nombre o al responder.','F1.1 #14 · '+B+': ▶, y lectura de la nota tocada con las pistas aparte · Sesión 1: C07 y E04',CL),
  'J-02':('T','Cualquier posición con el mismo sonido cuenta como acierto.',B+': acierto',CL),
  'J-03':('D','Tras acertar se señalan las demás posiciones válidas.','F1.1 #14',CL),
  'J-04':('D','La pista «Nombre» muestra el nombre y la octava de la nota que suena.','F1.1 #14',CL),
  'J-05':('D','La pista «Cuerda» lista las cuerdas donde puede estar la nota.','F1.1 #14',CL),
- 'J-06':('D','Las dos pistas se activan con chips visibles en Adivinar, sin abrir Ajustes; encendidas, enseñan su respuesta en grande (0.4.1).','F1.1 #14 · '+B+': pistas grandes, también antes de ▶',CL),
+ 'J-06':('D','Las dos pistas se activan con chips visibles en Adivinar, sin abrir Ajustes; encendidas, enseñan su respuesta en grande (0.4.1); desde la 0.6.3 cada una ocupa su parte de la franja y una respuesta larga se reduce para caber entera.','F1.1 #14 · '+B+': pistas grandes, también antes de ▶; pista larga (0.6.3)',CL),
  'J-07':('T','La racha sube con cada acierto y vuelve a 0 con cada fallo.',B+': acierto y fallo',CL),
  'J-08':('T','El récord de cada afinación persiste tras recargar y tras «Restablecer todos los ajustes»; solo «Borrar los récords de racha» los pone a cero.',B+': récords por afinación guardados y restablecer · F1.1 #13 · Sesión 1: A15',CL),
  'J-09':('D','Acierto y fallo se distinguen al instante por color y destello.','F1.1 #9',CL),
@@ -85,6 +91,8 @@ V = {
  'J-12':('T','Con «Ver todas las notas» activo, Adivinar no muestra los nombres.',B+' · F1.1 #10',RC),
  'E-01':('D','Se puede elegir tónica y tipo de escala entre el catálogo aprobado (mayor, menor natural, pentatónicas mayor y menor; 21/10).',B+': selectores de tónica y tipo',CL),
  'E-02':('T','Para cada tónica y tipo, las posiciones generadas coinciden con una referencia externa en afinación estándar.','tests/escalas.test.js: las 24 mayores y menores con siete letras, sin mezclar ♯ y ♭ ni dobles alteraciones, y 16 de ellas nota a nota frente al libro; pentatónicas dentro de su escala; casillas por clase de altura',CL),
+ 'V-10':('T','Ajustes › Aspecto ofrece Madera, Automático y Partitura; la elección se guarda y un valor desconocido vuelve a Madera; Automático sigue al dispositivo, también si cambia con la app abierta, y es oscuro si el navegador no sabe decirlo; en los cuatro aspectos todo texto cumple 4,5:1 (3:1 el grande) y el pentagrama de un tema claro usa la tinta del texto.',B+': temas, Automático y tinta · comprobar-accesibilidad con TEMA y ESQUEMA',C12b),
+ 'V-11':('D','En 820 × 1180, 744 × 1133, 1180 × 820 y 1024 × 768 con el dedo, y 1440 × 900 con ratón: cuerdas de 40 a 80 px (30 a 80 con ratón), nada se sale de la pantalla y las pestañas no pisan el nombre ni Ajustes; con el dedo, el mástil de inicio no baja de 40 px por traste.','comprobar-disposicion: seis pantallas de tableta y ordenador',C12b),
  'C-08':('N/A','Fuera del alcance actual.','—',CL),
  'S-09':('N/A','Fuera del alcance actual.','—',CL),
  'E-02b':('N/A','Fuera del alcance actual.','—',AR),
@@ -115,7 +123,7 @@ V = {
  'V-08':('D','El zoom se mantiene tras recargar y tras girar el móvil.','F1.1 #13',CL),
  'V-09':('T','El modo Guía mantiene visibles solo los números de los trastes con marca.',B+' · F1.1 #11',AR),
  'C-01':('D','El botón de Ajustes abre el panel desde cualquier pantalla y Escape lo cierra.','F1.1 #14',CL),
- 'C-02':('I','El panel contiene todos los ajustes listados, el idioma (0.4.2) y la versión de la app.','F1.1 #12 · '+B+': grupo Idioma',CL),
+ 'C-02':('I','El panel contiene todos los ajustes listados, el idioma (0.4.2), el tema (0.6.3) y la versión de la app.','F1.1 #12 · '+B+': grupos Idioma y Aspecto',CL),
  'C-03':('D','Nomenclatura, pentagrama y pistas tienen chips de acceso rápido.','F1.1 #14',CL),
  'C-04':('D','La navegación (barra inferior, raíl o pestañas en la cabecera, según la disposición) lleva a cada área con un toque.','F1.1 #14 · 0.5.5: comprobar-disposicion, seis pestañas sin salirse ni pisar el nombre',C20),
  'C-05':('T','Todos los ajustes persisten tras recargar, y unos ajustes corruptos o antiguos no rompen la app.',B+': migración · F1.1 #13',CL),
@@ -139,7 +147,7 @@ V = {
 }
 BENCH = {'G-10','D-01','D-02','D-04','J-02','J-07','J-08','J-10','J-12','A-10','V-09','C-05','L-02'}
 PARTIAL = {'V-01','V-04','C-07','G-05','G-06','PL-04','G-07','S-01','X-01',
-           'E-01','E-02','E-03','E-04','E-06','P-03','MT-01','MT-05','MT-06','AC-02','AC-03','G-13'}   # F5: banco hecho, falta tu prueba (CP-5, AR-12 #1)   # con evidencia, pero sin cumplir aún todo el criterio
+           'E-01','E-02','E-03','E-04','E-06','P-03','MT-01','MT-05','MT-06','AC-02','AC-03','G-13','V-10','V-11'}   # F5: banco hecho, falta tu prueba (CP-5, AR-12 #1)   # con evidencia, pero sin cumplir aún todo el criterio
 DECL = {'si':'Cumple','parcial':'Cumple parcialmente','no':'No cumple'}
 WHO = {'I':'Auditor de requisitos','A':'Auditor técnico','D':'Cliente','T':'Banco automático + auditor técnico','I+T':'Auditor técnico','N/A':'—'}
 
@@ -176,10 +184,10 @@ COLS = [('ID',10,'id'),('Categoría',16,'cat'),('Requisito',46,'req'),('Priorida
         ('Fase',9,'fase'),('Etapa',13,'etapa'),('Método',9,'met'),('Criterio de aceptación',48,'crit'),
         ('Declaración del proveedor',20,'decl'),('Desde versión',10,'ver_app'),('Evidencia',34,'ev'),
         ('Estado de verificación',21,'verif'),('Verifica',20,'who'),('Comentario del proveedor',44,'com'),
-        ('Comentario del cliente',32,None),('Cambio en v1.25',12,'flag')]
+        ('Comentario del cliente',32,None),('Cambio en v' + VER['matriz'],12,'flag')]
 ws['A1'] = 'Trasteando — Matriz de cumplimiento de requisitos'
 ws['A1'].font = Font(name=F, size=14, bold=True, color='2A1D13')
-ws['A2'] = 'Versión 1.25. Base: requisitos.md v1.27 · app 0.6.2 · roadmap 3.26 · emitida el 15/10/2026. Cliente: Pablo Díaz Guerra. Proveedor: chat de Desarrollo. Verificación independiente: auditores de requisitos y técnico.'
+ws['A2'] = 'Versión ' + VER['matriz'] + '. Base: requisitos.md v' + VER['doc'] + ' · app ' + VER['app'] + ' · roadmap ' + VER['roadmap'] + ' · emitida el 15/10/2026. Cliente: Pablo Díaz Guerra. Proveedor: chat de Desarrollo. Verificación independiente: auditores de requisitos y técnico.'
 ws['A2'].font = Font(name=F, size=9, color='6A5947')
 HR = 4
 for c, (h, w, _) in enumerate(COLS, 1):
@@ -298,34 +306,6 @@ cc = wb.create_sheet('Control de cambios')
 for c, (h, w) in enumerate([('Versión',10),('Fecha',12),('Requisitos',12),('App',8),('Cambios',90)], 1):
     cell = cc.cell(row=1, column=c, value=h); cell.font = Font(name=F, size=10, bold=True, color='FFFFFF'); cell.fill = dark
     cc.column_dimensions[get_column_letter(c)].width = w
-CC = [
- ['1.25','12/11/2026','v1.27','0.6.2','F5.8, tus comentarios del 12/11 (#2): el afinador sigue la nota mientras se apaga y abre en Micrófono (A-02, A-02-CA, A-03); G-13 nuevo, la pantalla encendida mientras suena el metrónomo o escucha el afinador. Verificados parcialmente hasta tu prueba.'],
- ['1.24','22/10/2026','v1.26','0.6.1','F5.8, tu comentario #1: MT-06 nuevo, el péndulo del metrónomo (la pesa arriba, más lento), con las correcciones de AR-14 y AT-13. Verificado parcialmente hasta la Sesión 2. MT-01 y G-10, anotados.'],
- ['1.23','22/10/2026','v1.25','0.6.0','F6.1: G-08 cumple y queda verificado por el banco, que pasa las pruebas que arrancan la app contra la app de varios archivos y contra el archivo autónomo (AR-13 y AT-12).'],
- ['1.22','22/10/2026','v1.24','0.5.7','Punto de control CP-5 (AR-12 y AT-11): una sola vara para lo que compruebas tú. E-01, E-02, E-03, E-04, E-06, P-03, MT-01, MT-05, AC-02 y AC-03, verificados parcialmente hasta la Sesión 2; MT-04, arranque con el audio en pausa (0.5.7); lo pendiente de CP-5, en el comentario de su requisito.'],
- ['1.21','21/10/2026','v1.23','0.5.6','Auditoría AR-11: G-02, C-04 y V-01 con las seis áreas; criterio de AC-01 preciso (sus4 y tríadas); evidencias completadas en MT-01, MT-05, AC-01, AC-03 y AC-04 (método T).'],
- ['1.20','21/10/2026','v1.22','0.5.5','AC-01 a AC-05 implementados y verificados por el banco (F5.7); AC-06 nuevo, el buscador; criterios al día con tu guía del listado.'],
- ['1.19','21/10/2026','v1.21','0.5.4','MT-01 a MT-05 implementados y verificados por el banco (F5.6); criterios del metrónomo al día con tu guía: un solo acento, doce compases, figuras.'],
- ['1.18','21/10/2026','v1.20','0.5.3','J-13 por defecto «Reintentar»; MT-05, el metrónomo con su pestaña; criterios de MT-01, AC-02, G-02 y N-06 completados; evidencias nuevas de G-01, P-01, N-06 y J-13 (AR-10 y AT-09); origen de los requisitos del 21/10 corregido.'],
- ['1.17','21/10/2026','v1.19','0.5.2','J-13 y N-06 nuevos, verificados por el banco; criterios de MT-01 a MT-05 y AC-01 a AC-05 (planificados).'],
- ['1.16','21/10/2026','v1.18','0.5.0','F5: criterios y evidencias de E-01 a E-06 y P-03; E-02 y E-05 verificados por el banco; E-04 con los intervalos en la línea de notas.'],
- ['1.15','21/10/2026','v1.17','0.4.2','G-12 nuevo (idioma); J-11 con criterio de banco, verificado; criterios de J-01 (lectura de la nota tocada), J-06 (pistas grandes), J-08 (récords por afinación) y C-02 (idioma).'],
- ['1.14','21/10/2026','v1.16','0.4.0','F4.1 a F4.3: evidencias del afinador por micrófono (A-02 a A-05, A-02-CA); A-02-CA y A-04 verificados por el banco; G-10 verificado con las etiquetas de F1 a F3.'],
- ['1.13','20/10/2026','v1.15','0.3.3','Sesión 1: 35 requisitos verificados en el iPhone y el PC del cliente (informe V-08), con la prueba que los valida en la evidencia. Criterios nuevos de J-01, J-08, J-10 y S-02 (pendientes de la Sesión 2); evidencia de S-01 (mudo en el iPhone) y PL-04; C-08 y S-09 nuevos, fuera de alcance.'],
- ['1.12','20/10/2026','v1.14','0.3.2','Criterios de V-04 y G-05: «+» enseña más trastes y el usuario puede pedir trastes de hasta 28 px con el dedo (comentario del cliente del 20/10).'],
- ['1.11','20/10/2026','v1.13','0.3.1','Etapa F3.4: G-05 cumple, verificado parcialmente hasta la Sesión 1. Su criterio añade los umbrales de la paleta (AR-06 #3).'],
- ['1.10','20/10/2026','v1.12','0.3.0','Etapa F3.2: V-01 y C-07 cumplen, verificados parcialmente hasta la Sesión 1. Criterios revisados: V-04 (lo guardado se conserva) y G-05 (excepción en vertical por debajo de 660 px de alto).'],
- ['1.9','20/10/2026','v1.11','0.2.3','Interfaz aprobada: C-06 verificado; C-07 nuevo; criterios revisados de V-01 (40 px con alto útil ≥ 268 px y aviso para girar), V-04 (trastes ≥ 40 px en pantallas táctiles), G-05 (controles de 40 × 40 px) y C-04 (navegación según la disposición).'],
- ['1.8','20/10/2026','v1.10','0.2.3','S-07 cumple y queda verificado: licencia CC BY de los 161 sonidos del pack de nylon.'],
- ['1.7','20/10/2026','v1.9','0.2.3','Evidencia de S-07: licencia de nylon comprobada en tres sonidos. Criterios sin cambios.'],
- ['1.6','19/10/2026','v1.8','0.2.3','CP-2: criterio de G-07 con los límites revisados y solo Windows y Android; X-01 cumple; evidencia de S-01 con la escucha del cliente (V-05).'],
- ['1.5','19/10/2026','v1.7','0.2.2','Criterio de S-08 según su nueva redacción: nota resultante a ±5 cents tras la corrección.'],
- ['1.4','19/10/2026','v1.6','0.2.1','G-07 y G-08 verificados parcialmente con el archivo autónomo (V-03 y banco); falta la prueba en cada plataforma (F2.5).'],
- ['1.3','19/10/2026','v1.5','0.2.0','S-08 verificado: la app usa sus grabaciones medidas (F2.2). Evidencias nuevas en S-01, S-07 y S-08: banco con todas las notas y grabación en el navegador (V-02).'],
- ['1.2','15/10/2026','v1.4','0.1.4','Nuevo PL-04: adaptabilidad entre sistemas, con docs/compatibilidad.md como evidencia. PL-02 sin Android de pruebas por ahora; X-02 con despliegue de pruebas previo.'],
- ['1.1','15/10/2026','v1.3','0.1.4','Nuevo S-08: afinación medida de cada muestra, verificado parcialmente hasta F2.2. Criterios revisados en CP-1: S-01, S-08, G-03, G-06 y A-02-CA. S-07 y G-06 pasan a «Cumple parcialmente» con CREDITOS.md y samples/. Las evidencias del banco apuntan a tests/ (node --test, 12 pruebas). Nueva comprobación F1.1 #15 para oír la corrección del registro agudo.'],
- ['1.0','14/10/2026','v1.2','0.1.2','Primera emisión. 90 requisitos con origen, método de verificación, criterio de aceptación, declaración del proveedor, evidencia y estado de verificación.'],
-]
 for i, row_ in enumerate(CC, 2):
     for c, v in enumerate(row_, 1):
         cell = cc.cell(row=i, column=c, value=v); cell.font = Font(name=F, size=10); cell.alignment = Alignment(wrap_text=True, vertical='top')
@@ -336,35 +316,11 @@ wb.save(OUT_XLSX)
 L = []
 w = L.append
 w('# Trasteando — Matriz de cumplimiento de requisitos\n')
-w('**Versión:** 1.25 · **Fecha:** 12 de noviembre de 2026 · **Base:** `requisitos.md` v1.27 · app `0.6.2` · `roadmap.md` v3.26  ')
+w('**Versión:** ' + VER['matriz'] + ' · **Fecha:** ' + VER['fecha'] + ' · **Base:** `requisitos.md` v' + VER['doc'] + ' · app `' + VER['app'] + '` · `roadmap.md` v' + VER['roadmap'] + '  ')
 w('**Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores\n')
-w('> Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.\n')
+w('> Versión en texto de `matriz-cumplimiento.xlsx`, para que los auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple. El historial hasta la 1.25 está en `docs/historico/matriz-cumplimiento.md`.\n')
 w('**Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.\n')
-w('**Cambios en la 1.25:** F5.8, tus comentarios del 12/11 (#2): el afinador sigue la nota mientras se apaga, sostiene 2,5 s lo último medido y abre en Micrófono (A-02, A-02-CA y A-03, con sus criterios al día); G-13 nuevo, la pantalla encendida mientras suena el metrónomo o escucha el afinador, verificado parcialmente hasta tu prueba en el iPhone.\n')
-w('**Cambios en la 1.24:** F5.8, tu primer comentario de uso (#1): MT-06 nuevo, el péndulo del metrónomo (la pesa arriba, más lento), con las correcciones de AR-14 y AT-13 en su criterio. Verificado parcialmente hasta la Sesión 2. MT-01 remite a MT-06 y G-10 dice cómo se numera una fase reabierta.\n')
-w('**Cambios en la 1.23:** F6.1: G-08 cumple y queda verificado por el banco, que pasa las pruebas que arrancan la app contra la app de varios archivos y contra el archivo autónomo; el autónomo lee de dentro sus grabaciones sin descargar nada. Lo pendiente de AR-13, en su comentario.\n')
-w('**Cambios en la 1.22:** punto de control CP-5 (AR-12 y AT-11): una sola vara; lo que espera tu prueba con el banco ya hecho queda *verificado parcialmente* (E-01, E-02, E-03, E-04, E-06, P-03, MT-01, MT-05, AC-02 y AC-03); MT-04 con el arranque de la 0.5.7; lo pendiente de CP-5, en su comentario.\n')
-w('**Cambios en la 1.21:** auditoría AR-11: seis áreas en G-02, C-04 y V-01; criterio de AC-01 y evidencias del metrónomo y los acordes completadas.\n')
-w('**Cambios en la 1.20:** la librería de acordes (AC-01 a AC-06), hecha y verificada por el banco; G-02 y C-04 con seis áreas.\n')
-w('**Cambios en la 1.19:** el metrónomo (MT-01 a MT-05), hecho y verificado por el banco.\n')
-w('**Cambios en la 1.18:** J-13 con «Reintentar» por defecto; el metrónomo, área propia (MT-05); criterios y evidencias al día tras AR-10 y AT-09.\n')
-w('**Cambios en la 1.17:** J-13 y N-06 nuevos y verificados; criterios del metrónomo y de los acordes.\n')
-w('**Cambios en la 1.16:** F5: escalas; E-02 y E-05 verificados por el banco.\n')
-w('**Cambios en la 1.15:** G-12 nuevo; J-11 verificado por el banco; criterios de J-01, J-06, J-08 y C-02 con la 0.4.1 y la 0.4.2.\n')
-w('**Cambios en la 1.14:** evidencias del afinador por micrófono; A-02-CA, A-04 y G-10 verificados.\n')
-w('**Cambios en la 1.13:** 35 requisitos verificados en la Sesión 1 (informe `V-08`), con su prueba en la evidencia; criterios de J-01, J-08, J-10 y S-02 con la 0.3.3, pendientes de la Sesión 2; evidencia de S-01 y PL-04; C-08 y S-09 nuevos, fuera de alcance.\n')
-w('**Cambios en la 1.12:** criterios de V-04 y G-05 con el zoom nuevo.\n')
-w('**Cambios en la 1.11:** F3.4. G-05 cumple; su criterio añade los umbrales de la paleta.\n')
-w('**Cambios en la 1.10:** F3.2. V-01 y C-07 cumplen; criterios revisados de V-04 y G-05.\n')
-w('**Cambios en la 1.9:** interfaz aprobada. C-06 verificado; C-07 nuevo; criterios revisados de V-01, V-04, G-05 y C-04.\n')
-w('**Cambios en la 1.8:** S-07 cumple y queda verificado (licencia del pack de nylon completa).\n')
-w('**Cambios en la 1.7:** evidencia nueva en S-07 (licencia de nylon en tres sonidos). Criterios sin cambios.\n')
-w('**Cambios en la 1.6:** CP-2: G-07 con límites revisados; X-01 cumple; escucha del cliente en S-01.\n')
-w('**Cambios en la 1.5:** criterio de S-08 según su nueva redacción.\n')
-w('**Cambios en la 1.4:** G-07 y G-08 verificados parcialmente con el archivo autónomo.\n')
-w('**Cambios en la 1.3:** S-08 verificado con la 0.2.0; evidencias nuevas en S-01, S-07 y S-08.\n')
-w('**Cambios en la 1.2:** PL-04 nuevo (adaptabilidad entre sistemas, evidencia en `docs/compatibilidad.md`).\n')
-w('**Cambios en la 1.1:** S-08 nuevo, verificado parcialmente hasta que la app use sus propias muestras (F2.2). Criterios revisados en CP-1: S-01, S-08, G-03, G-06 y A-02-CA. S-07 y G-06 pasan a *Cumple parcialmente* con `CREDITOS.md`. Las evidencias del banco apuntan a `tests/` (`node --test`). Nueva comprobación F1.1 #15.\n')
+for c in CC: w('**Cambios en la {}** ({}): {}\n'.format(c[0], c[1], c[4]))
 from collections import Counter
 cd = Counter(r['decl'] for r in rows); cv = Counter(r['verif'] for r in rows)
 w('| Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |')

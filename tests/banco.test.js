@@ -494,7 +494,7 @@ test('en Adivinar nada suena ni puntúa hasta pulsar ▶, y luego cada reto suen
   assert.equal(A.ev('__plays'), 4, 'cada visita vuelve a esperar a ▶');
 });
 
-test('en Adivinar la lectura grande es la nota que tocas; cada pista encendida enseña su respuesta en grande, también antes de ▶ (J-06, comentario del 21/10)', async () => {
+test('en Adivinar la lectura (pequeña desde la 0.6.3) es la nota que tocas; cada pista encendida enseña su respuesta en grande, también antes de ▶ (J-06, comentario del 21/10)', async () => {
   const A = boot(APP);
   A.doc.querySelector('.tab[data-screen="guess"]').click();
   const nota = A.$('qb-hint-note'), cuerda = A.$('qb-hint-string');
@@ -1764,4 +1764,53 @@ test('la pantalla se mantiene encendida mientras suena el metrónomo o escucha e
   assert.equal(dados.length, 1);
   dados[0].oyentes.forEach(f => f()); await sleep(10);
   assert.equal(dados.length, 2, 'se vuelve a pedir');
+});
+
+// --- F5.8 #3 y #4 (15/11): temas elegibles, y en Adivinar lo buscado en grande ---
+
+test('el tema de fábrica es Madera; Ajustes › Aspecto lo cambia, lo anuncia y lo guarda; uno desconocido vuelve a Madera (V-10, C-02, C-05)', () => {
+  const A = boot(APP);
+  const html = A.doc.documentElement;
+  assert.equal(html.dataset.theme, 'madera');
+  assert.equal(html.dataset.scheme, 'dark');
+  const boton = v => A.doc.querySelector(`#set-theme [data-v="${v}"]`);
+  assert.equal(boton('madera').getAttribute('aria-pressed'), 'true');
+  boton('partitura').click();
+  assert.equal(html.dataset.theme, 'partitura');
+  assert.equal(html.dataset.scheme, 'light', 'Partitura es un tema claro');
+  assert.equal(boton('partitura').getAttribute('aria-pressed'), 'true');
+  assert.equal(JSON.parse(A.store.get('trasteando.v1')).theme, 'partitura', 'se guarda');
+  assert.equal(boot(APP, { theme: 'partitura' }).doc.documentElement.dataset.theme, 'partitura', 'y vuelve al abrir');
+  assert.equal(boot(APP, { theme: 'neon' }).doc.documentElement.dataset.theme, 'madera', 'un valor desconocido no rompe nada');
+});
+
+test('«Automático» sigue el modo claro u oscuro del dispositivo, también si cambia con la app abierta; sin matchMedia, oscuro (V-10, PL-04)', () => {
+  let oyente = null;
+  const medio = { matches: true, addEventListener: (_, f) => { oyente = f; } };
+  const A = boot(APP, { theme: 'auto' }, { matchMedia: q => /prefers-color-scheme/.test(q) ? medio : { matches: false } });
+  const html = A.doc.documentElement;
+  assert.equal(html.dataset.scheme, 'dark');
+  medio.matches = false; oyente();
+  assert.equal(html.dataset.scheme, 'light', 'el dispositivo pasa a claro y la app lo sigue');
+  assert.equal(boot(APP, { theme: 'auto' }).doc.documentElement.dataset.scheme, 'dark', 'sin matchMedia, el caso más pobre: oscuro');
+});
+
+test('en un tema claro el pentagrama se escribe con la tinta del texto, no con el color pastel de la nota (V-10, G-05)', () => {
+  const A = boot(APP, { theme: 'partitura' });
+  A.press(A.doc.querySelectorAll('.fret-cell')[8]);
+  const cabeza = A.$('staff').querySelector('ellipse');
+  assert.equal(cabeza.getAttribute('fill'), 'var(--text)');
+  const B = boot(APP);
+  B.press(B.doc.querySelectorAll('.fret-cell')[8]);
+  assert.match(B.$('staff').querySelector('ellipse').getAttribute('fill'), /^#/, 'en Madera, el color de la nota');
+});
+
+test('en Adivinar una pista larga («1ª 2ª 3ª 4ª») se marca para caber entera en su mitad de la franja (J-06, F5.8 #4)', () => {
+  const A = boot(APP, { hintNote: true, hintString: true });
+  A.doc.querySelector('.tab[data-screen="guess"]').click();
+  assert.ok(A.doc.querySelector('.ch-hints').classList.contains('has-clue'), 'con pistas encendidas, la franja es de pistas');
+  for (const id of ['qb-hint-note', 'qb-hint-string']) {
+    const v = A.$(id).querySelector('.clue-v');
+    assert.equal(v.classList.contains('long'), v.textContent.length > 7, id + ': «' + v.textContent + '»');
+  }
 });

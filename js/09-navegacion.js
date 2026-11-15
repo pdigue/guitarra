@@ -58,6 +58,12 @@ function setScreen(next){
 }
 
 function syncUI(){
+  // F5.8 #3: primero el tema, que decide los colores de todo lo demás. Si cambia
+  // entre claro y oscuro, el pentagrama se vuelve a escribir con su tinta.
+  if (aplicarTema()){
+    if (screen === 'scales') renderScales();
+    else if (lastMidi !== null && !pantallaConPentagramaPropio()) showOnStaff(lastMidi, noteInfo(lastMidi).color);
+  }
   // Acceso rápido
   const qn = document.getElementById('qb-notation');
   qn.textContent = state.notation === 'latin' ? 'Do Re Mi' : 'C D E';
@@ -72,7 +78,7 @@ function syncUI(){
   // Ajustes. Los selectores segmentados anuncian su opción activa también a
   // los lectores de pantalla (aria-pressed), no solo con el color.
   const segs = { 'set-notation': state.notation, 'set-timbre': state.timbre,
-                 'set-fretnums': state.fretNums, 'set-lang': state.lang, 'set-onmiss': state.onMiss };
+                 'set-fretnums': state.fretNums, 'set-lang': state.lang, 'set-onmiss': state.onMiss, 'set-theme': state.theme };
   for (const id in segs){
     document.querySelectorAll('#'+id+' button').forEach(b => {
       const on = b.dataset.v === segs[id];
@@ -225,4 +231,29 @@ async function setTimbre(timbre){
     save(); syncUI();
     note.textContent = t('timbre.failed');
   }
+}
+
+/* ===== TEMA (F5.8 #3, C-08) =====
+   Pone el tema en <html data-theme>, y con «Automático» también si el
+   dispositivo está en claro u oscuro (data-scheme), que el CSS usa para elegir
+   sus colores. Si el navegador no sabe decirlo (sin matchMedia), oscuro (PL-04). */
+const esquemaOscuro = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+function aplicarTema(){
+  const html = document.documentElement;
+  const claro = state.theme === 'partitura' ||
+    (state.theme === 'auto' && !!esquemaOscuro && !esquemaOscuro.matches);
+  const cambia = html.dataset.theme !== state.theme || html.dataset.scheme !== (claro ? 'light' : 'dark');
+  html.dataset.theme = state.theme;
+  html.dataset.scheme = claro ? 'light' : 'dark';
+  // La barra del sistema (Safari, Android) toma el color de fondo del tema.
+  const meta = document.querySelector('meta[name="theme-color"]');
+  const fondo = window.getComputedStyle ? getComputedStyle(html).getPropertyValue('--bg').trim() : '';
+  if (meta && fondo) meta.setAttribute('content', fondo);
+  return cambia;
+}
+// Si el dispositivo pasa de claro a oscuro con la app abierta, «Automático» lo sigue.
+if (esquemaOscuro){
+  const alCambiar = () => { if (state.theme === 'auto') syncUI(); };
+  if (esquemaOscuro.addEventListener) esquemaOscuro.addEventListener('change', alCambiar);
+  else if (esquemaOscuro.addListener) esquemaOscuro.addListener(alCambiar);   // Safari antiguo
 }

@@ -11,7 +11,9 @@
 function defaultVisibleFrets(){
   const w = window.innerWidth;
   const landscape = w > window.innerHeight;
-  if (w >= 900) return NUM_FRETS;   // escritorio: mástil entero
+  // Escritorio: mástil entero. Con el dedo (un iPad en horizontal), los que
+  // caben a 40 px (G-05, V-04): el mástil entero los dejaría en 38 px a 1024.
+  if (w >= 900) return coarsePointer() ? Math.min(NUM_FRETS, Math.floor((w - 110) / 40)) : NUM_FRETS;
   if (landscape) return 10;          // con 40 px por traste caben 10 en un iPhone con Safari
   return 5;                          // móvil vertical: pocos y anchos
 }

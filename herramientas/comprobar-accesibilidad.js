@@ -23,6 +23,10 @@ const { chromium } = require('playwright');
 // La app sigue el idioma del navegador (G-12): por defecto se comprueba en español;
 // con IDIOMA=en-US, en inglés.
 const LOCALE = process.env.IDIOMA || 'es-ES';
+// Tema (F5.8 #3): TEMA=madera|auto|partitura, y ESQUEMA=light|dark para el
+// modo del sistema que ve «auto». Por defecto, el de fábrica (Madera).
+const TEMA = process.env.TEMA || 'madera';
+const ESQUEMA = process.env.ESQUEMA || 'dark';
 
 const APP = 'file://' + path.resolve(path.resolve(__dirname, '..'), process.env.APP_HTML || 'index.html');
 let fallos = 0;
@@ -74,9 +78,9 @@ function medirContraste(){
 
 (async () => {
   const navegador = await chromium.launch();
-  const pagina = await navegador.newPage({ locale: LOCALE, viewport: { width: 1280, height: 720 } });
-  await pagina.addInitScript(() => localStorage.setItem('trasteando.v1',
-    JSON.stringify({ showAllNotes: true, showEquals: true })));
+  const pagina = await navegador.newPage({ locale: LOCALE, viewport: { width: 1280, height: 720 }, colorScheme: ESQUEMA });
+  await pagina.addInitScript(tema => localStorage.setItem('trasteando.v1',
+    JSON.stringify({ showAllNotes: true, showEquals: true, theme: tema })), TEMA);
   await pagina.goto(APP);
 
   // ---------- 1. Solo con teclado ----------
