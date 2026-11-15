@@ -1004,17 +1004,17 @@ const escalasA = (preset) => { const A = boot(APP, preset); A.doc.querySelector(
 const celdasEscala = A => A.doc.querySelectorAll('.fret-cell.scale');
 const elegir = (A, id, v) => { const s = A.$(id); s.value = v; s.dispatchEvent({ type: 'change', target: s }); };
 
-test('Escalas › Mostrar: el mástil ilumina la escala con sus nombres escritos y la tónica con anillo; intervalos T y ST (E-01, E-03, E-04)', () => {
+test('Escalas: el mástil ilumina una posición de la escala con sus nombres escritos y la tónica con anillo; intervalos T y ST (E-01, E-03, E-04)', () => {
   const A = escalasA();
   assert.equal(A.$('scales-card').hidden, false);
   assert.ok(A.$('board').classList.contains('scales'));
   const pcs = new Set(celdasEscala(A).map(c => +c.dataset.midi % 12));
   assert.deepEqual([...pcs].sort((a, b) => a - b), [0, 2, 4, 5, 7, 9, 11], 'Do mayor');
+  assert.equal(celdasEscala(A).length, 18, 'una posición: 3 notas en cada cuerda, no todo el mástil');
   assert.ok(A.doc.querySelectorAll('.fret-cell.scale-tonic').every(c => +c.dataset.midi % 12 === 0));
   assert.equal(A.$('scale-line').textContent, 'DoTReTMiSTFaTSolTLaTSiSTDo');
   elegir(A, 'scale-tonic', '5');                                  // Fa mayor: Si♭, no La#
-  const sib = A.doc.querySelector('.fret-cell[data-midi="70"]');
-  assert.ok(sib.classList.contains('scale'));
+  const sib = celdasEscala(A).find(c => +c.dataset.midi % 12 === 10);
   assert.equal(sib.querySelector('.dot').textContent, 'Si♭');
   elegir(A, 'scale-type', 'pentaMenor'); elegir(A, 'scale-tonic', '9');
   assert.equal(A.$('scale-line').textContent, 'LaT½DoTReTMiT½SolTLa');
@@ -1026,45 +1026,170 @@ test('Escalas › Mostrar: el mástil ilumina la escala con sus nombres escritos
   assert.equal(A.doc.querySelector('.fret-cell[data-midi="70"] .dot').textContent, 'La♯');
 });
 
-test('Escalas › Mostrar: el paso a paso sube la escala desde la tónica grave, suena y se resalta (E-06, P-03)', () => {
+test('Escalas: el paso a paso sube la posición desde la nota más grave, suena y se resalta (E-06, P-03)', () => {
   const A = escalasA();
   A.ev('globalThis.__plays = []; playMidi = m => __plays.push(m);');
-  assert.match(A.$('scale-step-text').textContent, /^Paso 1 de 8 · Do, la tónica$/);
+  assert.match(A.$('scale-step-text').textContent, /^Paso 1 de 18 · Do, la tónica$/);
   assert.equal(A.$('scale-prev').disabled, true);
   A.$('scale-next').click(); A.$('scale-next').click();
   assert.deepEqual(A.ev('JSON.stringify(__plays)'), '[50,52]', 'Re3 y Mi3, desde el Do3');
-  assert.equal(A.$('scale-step-text').textContent, 'Paso 3 de 8 · Mi, un tono sobre Re');
-  assert.ok(A.doc.querySelectorAll('.fret-cell.scale-step').every(c => +c.dataset.midi === 52));
-  assert.ok(A.doc.querySelectorAll('.fret-cell.scale-step').length >= 2, 'todas las posiciones de ese Mi');
-  assert.equal(A.$('staff').querySelectorAll('ellipse').length, 8, 'el pentagrama escribe la escala');
-  for (let i = 0; i < 9; i++) A.$('scale-next').click();
-  assert.match(A.$('scale-step-text').textContent, /^Paso 8 de 8 · Do, un semitono sobre Si$/);
+  assert.equal(A.$('scale-step-text').textContent, 'Paso 3 de 18 · Mi, un tono sobre Re');
+  const paso = A.doc.querySelectorAll('.fret-cell.scale-step');
+  assert.equal(paso.length, 1, 'solo la casilla de la posición, no todos los Mi');
+  assert.equal(+paso[0].dataset.midi, 52);
+  assert.equal(A.doc.querySelector('#scale-line .now').textContent, 'Mi', 'los intervalos resaltan el grado');
+  assert.equal(A.$('staff').querySelectorAll('ellipse').length, 8, 'el pentagrama escribe 8 notas de la posición');
+  for (let i = 0; i < 20; i++) A.$('scale-next').click();
+  assert.match(A.$('scale-step-text').textContent, /^Paso 18 de 18 · Fa, un semitono sobre Mi$/);
   assert.equal(A.$('scale-next').disabled, true);
 });
 
-test('Escalas › Práctica: las notas de la escala cuentan una vez cada una; una ajena se marca y enseña las buenas (E-05)', async () => {
+test('Escalas: una posición cada vez; la 1 es la de la tónica y la vista la sigue (E-07, tu decisión del 15/11)', () => {
   const A = escalasA();
-  A.doc.querySelector('#scale-mode [data-v="practice"]').click();
-  assert.ok(A.$('board').classList.contains('practice'), 'las notas no se ven: se buscan');
-  assert.equal(A.$('scale-count').textContent, '0 de 7');
+  const pos = () => A.$('scale-pos').querySelector('.sc-long').textContent;
+  assert.equal(pos(), 'Posición 1 de 7 · trastes 8 a 13', 'Do mayor: la 1 empieza en el Do de la 6.ª, traste 8');
+  assert.equal(A.$('scale-pos').querySelector('.sc-short').textContent, '1/7', 'en corto, para el móvil');
+  assert.equal(A.$('scale-pos-prev').disabled, true);
+  A.$('scale-pos-next').click();
+  assert.equal(pos(), 'Posición 2 de 7 · trastes 10 a 15');
+  assert.match(A.$('scale-step-text').textContent, /^Paso 1 de 18 · Re: aquí empieza la posición$/);
+  A.$('scale-pos-next').click();
+  assert.equal(pos(), 'Posición 3 de 7 · trastes 0 a 5', 'pasado el traste 11, sigue desde la cejuela: la abierta');
+  // Las posiciones, como en los libros: 3 notas por cuerda; 2 en las pentatónicas.
+  const formas = JSON.parse(A.ev(`JSON.stringify(posicionesEscala().map(p => p.map(n => n.traste).join(',')))`));
+  assert.equal(formas[2], '0,1,3,0,2,3,0,2,3,0,2,4,1,3,5,1,3,5');
+  for (let i = 0; i < 9; i++) A.$('scale-pos-next').click();
+  assert.equal(pos(), 'Posición 7 de 7 · trastes 7 a 12');
+  assert.equal(A.$('scale-pos-next').disabled, true);
+  elegir(A, 'scale-type', 'pentaMenor'); elegir(A, 'scale-tonic', '9');
+  assert.equal(pos(), 'Posición 1 de 5 · trastes 5 a 8', 'La menor pentatónica: la «caja 1» de siempre');
+  assert.deepEqual(celdasEscala(A).map(c => +c.dataset.fret).sort((a, b) => a - b), [5,5,5,5,5,5,7,7,7,8,8,8]);
+  // La vista va a la posición (AR-17 #4): un mástil de 300 px con trastes de 50.
+  A.ev("document.getElementById('board').style.setProperty('--fret-w', '50px'); document.getElementById('board-scroll').clientWidth = 300;");
+  A.$('scale-pos-next').click();                                   // caja 2: trastes 7 a 10
+  assert.equal(A.ev("document.getElementById('board-scroll').scrollLeft"), 40 + 6 * 50, 'el traste 6, a la izquierda');
+  // En Drop D, la 6.ª baja un tono: la posición se reparte de otra forma (4 en la grave).
+  elegir(A, 'tuning-select', 'dropd');
+  assert.ok(A.ev('posicionesEscala().every(p => p.every(n => n.traste >= 0))'));
+  assert.equal(pos().startsWith('Posición 1 de 5'), true, 'otra afinación: vuelta a la 1');
+});
+
+test('Escalas: tocar una casilla de la posición la hace el paso actual; una de fuera solo suena (E-09)', () => {
+  const A = escalasA({ scaleId: 'pentaMenor', scalePc: 9 });
+  A.ev('globalThis.__plays = []; playMidi = m => __plays.push(m);');
+  const c = A.doc.querySelector('.fret-cell.scale[data-row="0"][data-fret="8"]');    // Do5 en la 1.ª
+  A.press(c);
+  assert.ok(c.classList.contains('scale-step'));
+  assert.match(A.$('scale-step-text').textContent, /^Paso 12 de 12 · Do, un tono y medio sobre La$/);
+  assert.equal(A.doc.querySelector('#scale-line .now').textContent, 'Do');
+  const fuera = A.doc.querySelector('.fret-cell[data-row="0"][data-fret="1"]');
+  const antes = A.ev('__plays.length');
+  A.press(fuera);
+  assert.equal(A.ev('__plays.length'), antes + 1, 'suena');
+  assert.ok(c.classList.contains('scale-step'), 'pero no cambia el paso');
+});
+
+test('Escalas › Todas: la escala también en el resto del mástil, más apagada; apagado de fábrica (E-10)', () => {
+  const A = escalasA();
+  assert.equal(A.$('qb-scale-all').hidden, false);
+  assert.equal(A.$('qb-scale-all').getAttribute('aria-pressed'), 'false');
+  assert.equal(A.doc.querySelectorAll('.fret-cell.scale-all').length, 0);
+  A.$('qb-scale-all').click();
+  assert.equal(A.$('qb-scale-all').getAttribute('aria-pressed'), 'true');
+  const todas = A.doc.querySelectorAll('.fret-cell.scale-all');
+  assert.ok(todas.length > 60, 'muchas más casillas: ' + todas.length);
+  assert.ok(todas.every(c => [0, 2, 4, 5, 7, 9, 11].includes(+c.dataset.midi % 12)));
+  assert.equal(celdasEscala(A).length, 18, 'la posición sigue destacada aparte');
+  A.doc.querySelector('.tab[data-screen="free"]').click();
+  assert.equal(A.$('qb-scale-all').hidden, true, 'fuera de Escalas no se ve el botón');
+  assert.equal(A.doc.querySelectorAll('.fret-cell.scale-all').length, 0);
+});
+
+test('Escalas › Practicar: tocar la posición en orden, de grave a agudo; un fallo se marca y no avanza (E-05b)', async () => {
+  const A = escalasA({ scaleId: 'pentaMenor', scalePc: 9 });
+  A.ev('playMidi = () => {}');
+  A.$('qb-scale-practice').click();
+  assert.ok(A.$('board').classList.contains('practice'), 'sin nombres: se tocan de memoria');
+  assert.match(A.$('scale-step-text').textContent, /^Práctica · toca la posición de grave a agudo/);
   assert.equal(A.$('staff').querySelectorAll('ellipse').length, 0, 'el pentagrama no da la respuesta');
-  const pulsa = midi => A.press(A.doc.querySelector('.fret-cell[data-midi="' + midi + '"]'));
-  pulsa(48); pulsa(60);                                           // Do3 y Do4: la misma nota
-  assert.equal(A.$('scale-count').textContent, '1 de 7');
-  assert.match(A.$('scale-msg').textContent, /^✓ Do está en Do mayor$/);
-  pulsa(54);                                                      // Fa#3
-  assert.match(A.$('scale-msg').textContent, /^✗ Fa♯ no está en Do mayor$/);
-  assert.ok(A.doc.querySelector('.fret-cell[data-midi="54"]').classList.contains('wrong'));
-  assert.ok(A.$('board').classList.contains('reveal-scale'), 'un momento, se ven las buenas');
-  assert.equal(A.$('scale-count').textContent, '1 de 7');
-  for (const m of [50, 52, 53, 55, 57, 59]) pulsa(m);
-  assert.equal(A.$('scale-count').textContent, '7 de 7');
-  assert.match(A.$('scale-msg').textContent, /Todas/);
-  assert.equal(A.$('staff').querySelectorAll('ellipse').length, 7);
-  A.$('scale-reset').click();
-  assert.equal(A.$('scale-count').textContent, '0 de 7');
-  assert.equal(A.doc.querySelectorAll('.fret-cell.correct').length, 0);
-  await sleep(10);
+  assert.equal(A.$('scale-next').disabled, true);
+  const pasos = JSON.parse(A.ev('JSON.stringify(pasosEscala())'));
+  const celda = k => { const [f, t] = pasos[k].celda.split('-'); return A.doc.querySelector(`.fret-cell[data-row="${f}"][data-fret="${t}"]`); };
+  A.press(celda(0)); A.press(celda(1));
+  assert.match(A.$('scale-step-text').textContent, /^Práctica · 3 de 12/);
+  assert.equal(A.doc.querySelectorAll('.fret-cell.correct').length, 2);
+  A.press(celda(5));                                               // se salta notas
+  assert.match(A.$('scale-step-text').textContent, /^✗ Esa no · 3 de 12/);
+  assert.ok(celda(5).classList.contains('wrong'));
+  // La nota buena, pero en otra cuerda: Re3 en la 6.ª, traste 10, en vez de la 5.ª al aire+5.
+  const otra = A.doc.querySelectorAll(`.fret-cell[data-midi="${pasos[2].midi}"]`).find(c => !c.classList.contains('scale'));
+  A.press(otra);
+  assert.match(A.$('scale-step-text').textContent, /otra cuerda/);
+  for (let k = 2; k < 12; k++) A.press(celda(k));
+  assert.match(A.$('scale-step-text').textContent, /^✓ ¡Completa! Ya tocas la posición 1 de la pentatónica menor de La/);
+  assert.equal(A.$('staff').querySelectorAll('ellipse').length, 8);
+  A.press(celda(0));
+  assert.match(A.$('scale-step-text').textContent, /^Práctica · 2 de 12/, 'la primera vuelve a empezar');
+  A.$('scale-pos-next').click();
+  assert.equal(A.doc.querySelectorAll('.fret-cell.correct').length, 0, 'otra posición, desde cero');
+  A.$('qb-scale-practice').click();
+  assert.ok(!A.$('board').classList.contains('practice'));
+  await sleep(1300);
+  assert.equal(A.doc.querySelectorAll('.fret-cell.wrong').length, 0);
+});
+
+test('Escalas › Escuchar: la posición suena subiendo y bajando, nota a nota; se calla al pararla, al cambiar de escala, de afinación, al ocultar la app y al salir (E-08, AT-16 #2 y #3)', async () => {
+  const A = escalasA({ scaleId: 'pentaMenor', scalePc: 9 });
+  A.ev('globalThis.__plays = []; playMidi = m => __plays.push(m); PAUSA_ESCALA = 2;');
+  A.$('scale-play').click();
+  assert.equal(A.$('scale-play').querySelector('.sc-long').textContent, '■ Parar');
+  assert.equal(A.$('scale-play').getAttribute('aria-pressed'), 'true');
+  assert.equal(A.$('scale-play').getAttribute('aria-label'), 'Escuchar la posición', 'una sola señal: «pulsado»');
+  for (let i = 0; i < 300 && A.ev('sc.sonando') !== null; i++) await sleep(10);   // cada repintado tarda un poco
+  const oidas = JSON.parse(A.ev('JSON.stringify(__plays)'));
+  assert.equal(oidas.length, 23, '12 subiendo y 11 bajando');
+  assert.equal(oidas[0], 45, 'La2, la tónica en el traste 5 de la 6.ª');
+  assert.deepEqual(oidas.slice(12), oidas.slice(0, 11).reverse());
+  assert.equal(A.$('scale-play').querySelector('.sc-long').textContent, '▶ Escuchar', 'al acabar, se apaga sola');
+  A.ev('PAUSA_ESCALA = 50;');
+  const callaCon = async (accion, porque) => {
+    A.$('scale-play').click();
+    assert.notEqual(A.ev('sc.sonando'), null);
+    accion();
+    assert.equal(A.ev('sc.sonando'), null, porque);
+    const n = A.ev('__plays.length'); await sleep(120);
+    assert.equal(A.ev('__plays.length'), n, porque + ': no suena nada más');
+  };
+  await callaCon(() => A.$('scale-play').click(), 'otro toque');
+  await callaCon(() => elegir(A, 'scale-tonic', '2'), 'otra tónica');
+  await callaCon(() => elegir(A, 'scale-type', 'mayor'), 'otro tipo');
+  await callaCon(() => elegir(A, 'tuning-select', 'dropd'), 'otra afinación');
+  await callaCon(() => A.ev("Object.defineProperty(document, 'hidden', { value: true, configurable: true }); onVisibility()"), 'app oculta');
+  A.ev("Object.defineProperty(document, 'hidden', { value: false, configurable: true })");
+  await callaCon(() => A.doc.querySelector('.tab[data-screen="free"]').click(), 'salir de Escalas');
+});
+
+test('Escalas: las posiciones salen bien en todas las afinaciones, escalas y tónicas; el submodo antiguo se olvida (AT-16 #3)', () => {
+  const A = escalasA({ scaleMode: 'practice' });
+  assert.equal(A.ev("'scaleMode' in state"), false, 'se borra al cargar: no vuelve a guardarse');
+  const malas = JSON.parse(A.ev(`JSON.stringify((() => {
+    const malas = [], antes = [state.tuningId, state.scaleId, state.scalePc];
+    const afins = TUNINGS.map(t => t.id);
+    state.customTuning = [38, 45, 50, 55, 59, 62];               // personalizada (Open G grave)
+    for (const af of afins) for (const e of ESCALAS) for (let pc = 0; pc < 12; pc++){
+      state.tuningId = af; state.scaleId = e.id; state.scalePc = pc;
+      const ps = posicionesEscala(), id = af + ' ' + e.id + ' ' + pc;
+      if (ps.length !== e.semitonos.length) malas.push(id + ': ' + ps.length + ' posiciones');
+      for (const p of ps){
+        if (p.length < 6) malas.push(id + ': posición corta');
+        if (p.some(n => n.traste < 0 || n.traste > NUM_FRETS)) malas.push(id + ': traste fuera');
+        for (let k = 1; k < p.length; k++){ const d = p[k].midi - p[k-1].midi; if (d < 1 || d > 3) malas.push(id + ': salto ' + d); }
+      }
+      if (ps[0][0].grado !== 0) malas.push(id + ': la 1 no es la de la tónica');
+    }
+    [state.tuningId, state.scaleId, state.scalePc] = antes;
+    return malas; })())`));
+  assert.deepEqual(malas.slice(0, 5), []);
 });
 
 // --- Adivinar: al fallar, ver la respuesta o seguir intentando (J-13, tu petición del 21/10) ---
@@ -1111,7 +1236,7 @@ test('el ajuste «Al fallar» se guarda; por defecto se sigue intentando (J-13, 
 
 // --- 0.5.3: lo que encontró la auditoría técnica AT-09 ---
 
-test('Escalas queda coherente: lector y lector de pantalla con la escritura de la escala, salir, cambiar de afinación, Restablecer y dos fallos seguidos (AT-09)', async () => {
+test('Escalas queda coherente: lector y lector de pantalla con la escritura de la escala, salir, cambiar de afinación y Restablecer (AT-09)', async () => {
   const A = escalasA({ scaleId: 'mayor', scalePc: 5 });          // Fa mayor
   const celda = m => A.doc.querySelector('.fret-cell[data-midi="' + m + '"]');
   // #5: en Fa mayor, la tecla de La♯/Si♭ se lee Si♭ en todas partes.
@@ -1128,18 +1253,11 @@ test('Escalas queda coherente: lector y lector de pantalla con la escritura de l
   assert.equal(fa.querySelectorAll('ellipse').length, 1);
   assert.equal(A.$('note-name').textContent, 'La♯', 'fuera de la escala, tu preferencia');
   assert.ok(cy(fa) > 0);
-  // #3: cambiar de afinación reinicia la práctica (las casillas suenan a otra nota).
+  // #3: cambiar de afinación vuelve a la posición de la tónica (las casillas suenan a otra nota).
   A.doc.querySelector('.tab[data-screen="scales"]').click();
-  A.doc.querySelector('#scale-mode [data-v="practice"]').click();
-  A.press(celda(53));
-  assert.equal(A.$('scale-count').textContent, '1 de 7');
+  A.$('scale-pos-next').click();
   elegir(A, 'tuning-select', 'dropd');
-  assert.equal(A.$('scale-count').textContent, '0 de 7');
-  assert.equal(A.doc.querySelectorAll('.fret-cell.correct').length, 0);
-  // #4: dos fallos seguidos; ninguna casilla se queda roja.
-  A.press(celda(54)); await sleep(300); A.press(celda(56));
-  await sleep(1700);
-  assert.equal(A.doc.querySelectorAll('.fret-cell.wrong').length, 0, 'ninguna casilla roja pegada');
+  assert.equal(A.ev('posicionActual()[0].grado'), 0, 'la de la tónica');
   // #1: Restablecer devuelve selectores y botones a lo de fábrica.
   A.$('qb-notation').click();                                    // C D E
   elegir(A, 'scale-type', 'menor'); elegir(A, 'scale-tonic', '9');

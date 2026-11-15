@@ -8,7 +8,8 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.6.3** | 15/11/2026 | F5.8 · #3 y #4, temas, iPad y Adivinar | Rama `auto/F5.8-aspecto` |
+| **0.6.4** | 15/11/2026 | F5.8 · #5, Escalas por posiciones | Rama `auto/F5.8-escalas` |
+| 0.6.3 | 15/11/2026 | F5.8 · #3 y #4, temas, iPad y Adivinar | Rama `auto/F5.8-aspecto` (PR #19) |
 | 0.6.2 | 12/11/2026 | F5.8 · #2, el afinador sigue la nota; pantalla encendida | Rama `auto/F5.8-saneamiento` (PR #18) |
 | 0.6.1 | 22/10/2026 | F5.8 · #1, el péndulo del metrónomo | Rama `auto/F5.8-saneamiento` (PR #18) |
 | 0.6.0 | 22/10/2026 | F6.1 · el archivo autónomo, probado como la app | `main`, fusionada el 22/10 (PR #17) |
@@ -18,6 +19,38 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.6.4] — 15/11/2026 · F5.8 · Escalas, una posición cada vez
+
+Tu comentario del 12/11 #5: «la parte de escala no me gustaba nada (…) que no haya tanto de práctica, sino ir pudiendo tocar las notas de la escala e ir escuchando la propia escala (…) No es agradable entrar ahí y ver el traste de la guitarra lleno de notas».
+
+### Añadido
+- **E-07** · **Una posición cada vez.** La escala ya no llena el mástil: se reparte en posiciones de 3 notas por cuerda en la mayor y la menor (7) y de 2 en las pentatónicas (las 5 «cajas» de siempre). La **posición 1 es la de la tónica**, como en los libros; ◀ ▶ las recorre hacia el cuerpo («Posición 1 de 7 · trastes 8 a 13») y la vista del mástil va sola a la posición.
+- **E-08** · **Escuchar:** un botón toca la posición entera, subiendo y bajando, con cada nota resaltada; otro toque la para.
+- **E-09** · **Tocar la escala:** al tocar una casilla de la posición, suena y el paso a paso salta a ella.
+- **E-10** · **Todas:** un botón (arriba, junto a «Do Re Mi») enseña la escala también en el resto del mástil, más pequeña y apagada. Apagado de fábrica.
+- **E-05b** · **Practicar:** las casillas de la posición se quedan sin nombre ni color y hay que tocarlas en orden, de grave a agudo; las buenas quedan en verde, y un fallo se marca en rojo (con aviso propio si es la misma nota en otra cuerda).
+
+### Cambiado
+- **E-05** · **Se retira la Práctica de antes** (contar las notas de la escala que encontrabas por todo el mástil). La sustituyen E-09 y la Práctica nueva (E-05b).
+- **E-03** · Solo se ven las casillas de la posición (18, o 12 en las pentatónicas), con su nombre y la tónica con anillo; el resto del mástil queda limpio.
+- **E-06** · El paso a paso recorre la posición de su nota más grave a la más aguda y resalta esa casilla, no todas las que suenan igual.
+- **E-04** · En la línea «Do T Re T Mi…» se resalta el grado del paso actual.
+- **P-03** · El pentagrama escribe 8 notas seguidas de la posición alrededor del paso (la posición entera no cabe).
+
+### Corregido tras las auditorías AR-17 y AT-16
+- «Escuchar» se para al ocultar la app (si no, sus notas se acumulaban y sonaban juntas al volver).
+- El lector de pantalla ya no repite «Posición 1 de 7…» en cada nota de «Escuchar».
+- Al cambiar de afinación estando en Escalas, la vista va a la posición.
+- Con una afinación personalizada muy abierta, las posiciones no se salen del mástil.
+- Cuando ◀ o ▶ llega al final, el foco del teclado pasa al otro botón.
+- E-05 no cambia de significado: se retira y su sustituto lleva ID nuevo (E-09).
+
+### Para el desarrollo
+- `posicionesEscala()` en `js/13-escalas.js` calcula las posiciones con alturas (vale en cualquier afinación: en Drop D la 6.ª se queda con 4 notas). `reiniciarEscala()` sustituye a `resetScalePractice()`; `state.scaleMode` desaparece (se borra al cargar).
+- Requisitos y matriz v2.2 (con un estado nuevo, «retirado», en el generador); roadmap v4.2.
 
 ---
 

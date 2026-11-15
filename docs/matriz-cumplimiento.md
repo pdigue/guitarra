@@ -1,11 +1,13 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 2.1 · **Fecha:** 15 de noviembre de 2026 · **Base:** `requisitos.md` v2.1 · app `0.6.3` · `roadmap.md` v4.1  
+**Versión:** 2.2 · **Fecha:** 15 de noviembre de 2026 · **Base:** `requisitos.md` v2.2 · app `0.6.4` · `roadmap.md` v4.2  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple. El historial hasta la 1.25 está en `docs/historico/matriz-cumplimiento.md`.
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
+
+**Cambios en la 2.2** (15/11/2026): F5.8 #5: E-07 (posiciones), E-08 (Escuchar), E-09 (tocar la escala) y E-10 (Todas) nuevos, verificados parcialmente hasta tu prueba; E-05 retirado (No aplica); E-05b pasa a la Práctica nueva, en F5.8; criterios de E-03, E-05b y E-06; evidencias de E-02, E-04 y P-03. Con AR-17 y AT-16.
 
 **Cambios en la 2.1** (15/11/2026): V-10 y V-11 nuevos (temas, tableta y ordenador), verificados parcialmente hasta tu prueba; criterios medibles de J-01 y J-06 (J-06, verificado parcialmente hasta tu prueba) y de C-02 y PL-03 con la 0.6.3; evidencias de G-05 y V-04. Con AR-16 y AT-15.
 
@@ -13,7 +15,7 @@
 
 | Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 113 | 98 | 6 | 5 | 4 | 52 | 24 |
+| 117 | 102 | 6 | 5 | 4 | 51 | 29 |
 
 | ID | Etapa | Método | Criterio de aceptación | Declaración | Evidencia | Verificación | Origen |
 |---|---|:---:|---|---|---|---|---|
@@ -58,7 +60,7 @@
 | **S-09** | Posterior | N/A | Fuera del alcance actual. | No aplica | — | No aplica | Cliente · listado 14/09 |
 | **P-01** | F1.1 | A | Toda posición del mástil, en cualquier afinación permitida, se dibuja dentro del pentagrama. | Cumple | Análisis 15/09: ninguna nota fuera en todo el rango · F1.1 #3 y #4 · 0.5.2: pentagrama de una nota de 152 px de alto en el iPhone en horizontal (comprobar-disposicion) · Sesión 1: A05 | Verificado | Cliente · listado 14/09 |
 | **P-02** | F1.1 | D | El pentagrama se oculta y se muestra desde el chip y desde Ajustes. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
-| **P-03** | F5.3 | D | El pentagrama funciona en Libre, Adivinar y Escalas. | Cumple | Banco (node --test): la escala escrita en el pentagrama (8 notas en Mostrar; las encontradas en Práctica) | Verificado parcialmente | Cliente · listado 14/09 |
+| **P-03** | F5.3 | D | El pentagrama funciona en Libre, Adivinar y Escalas. | Cumple | Banco (node --test): en Escalas, 8 notas de la posición alrededor del paso actual (0.6.4) | Verificado parcialmente | Cliente · listado 14/09 |
 | **P-04** | F1.1 | D | El afinador muestra en un pentagrama las seis notas de la afinación activa. | Cumple | F1.1 #14 · Sesión 1: A13 | Verificado | Cliente · listado 14/09 |
 | **L-01** | F1.1 | D | Al abrir la app se muestra el modo Libre. | Cumple | F1.1 #14 · Sesión 1: A01 | Verificado | Cliente · listado 14/09 |
 | **L-02** | F1.1 | D | Con «Ver todas las notas» se ven todos los nombres; sin él, solo el de la nota pulsada. | Cumple | Banco (node --test) · F1.1 #10 · Sesión 1: A10 | Verificado | Cliente · listado 14/09 |
@@ -79,11 +81,15 @@
 | **E-01** | F5.2 | D | Se puede elegir tónica y tipo de escala entre el catálogo aprobado (mayor, menor natural, pentatónicas mayor y menor; 21/10). | Cumple | Banco (node --test): selectores de tónica y tipo | Verificado parcialmente | Cliente · listado 14/09 |
 | **E-02** | F5.2 | T | Para cada tónica y tipo, las posiciones generadas coinciden con una referencia externa en afinación estándar. | Cumple | tests/escalas.test.js: las 24 mayores y menores con siete letras, sin mezclar ♯ y ♭ ni dobles alteraciones, y 16 de ellas nota a nota frente al libro; pentatónicas dentro de su escala; casillas por clase de altura | Verificado parcialmente | Cliente · listado 14/09 |
 | **E-02b** | Posterior | N/A | Fuera del alcance actual. | No aplica | — | No aplica | AR-01 |
-| **E-03** | F5.3 | D | Mostrar ilumina únicamente las notas de la escala, con su nombre escrito y la tónica con anillo. | Cumple | Banco (node --test): casillas de Do mayor y de Fa mayor (Si♭) | Verificado parcialmente | Cliente · listado 14/09 |
-| **E-04** | F5.3 | D | Las notas de la escala muestran su nombre y la línea de notas indica el intervalo T, ST o T½ respecto al grado anterior. | Cumple | Banco (node --test): «Do T Re T Mi ST Fa…» y la pentatónica menor | Verificado parcialmente | Cliente · listado 14/09 |
-| **E-05** | F5.4 | T | En Práctica, una nota ajena marca error e ilumina las correctas; una nota de la escala no marca error. | Cumple | Banco (node --test): conteo de notas distintas, fallo, revelado y reinicio; reinicio al cambiar de afinación (AT-09) | Verificado | Cliente · listado 14/09 |
-| **E-05b** | Posterior | N/A | Fuera del alcance actual. | No aplica | — | No aplica | AR-01 |
-| **E-06** | F5.3 | D | El guiado avanza nota a nota por la escala. | Cumple | Banco (node --test): pasos que suenan y se resaltan, de la tónica grave a su octava | Verificado parcialmente | Cliente · listado 14/09 |
+| **E-03** | F5.3 · F5.8 | D | Se ilumina solo una posición de la escala (en afinación estándar, 18 casillas en la mayor y la menor y 12 en las pentatónicas), con su nombre escrito y la tónica con anillo. | Cumple | Banco (node --test): las 18 casillas de Do mayor con sus 7 notas, las 12 de la caja 1 de La pentatónica menor y el Si♭ de Fa mayor (0.6.4) | Verificado parcialmente | Cliente · listado 14/09 |
+| **E-04** | F5.3 | D | Las notas de la escala muestran su nombre y la línea de notas indica el intervalo T, ST o T½ respecto al grado anterior. | Cumple | Banco (node --test): «Do T Re T Mi ST Fa…», la pentatónica menor y el grado del paso resaltado (0.6.4) | Verificado parcialmente | Cliente · listado 14/09 |
+| **E-05** | Retirado | N/A | Retirado en la 0.6.4 (F5.8 #5): lo sustituyen E-09 y E-05b. | No aplica | — | No aplica | Cliente · listado 14/09 |
+| **E-05b** | F5.8 | D | Con «Practicar», las casillas de la posición no dicen su nota; solo avanza la siguiente en orden de grave a agudo; un fallo se marca en rojo sin avanzar, con aviso propio si es la misma nota en otra cuerda; completa, la primera vuelve a empezar; otra posición empieza de cero. | Cumple | Banco (node --test): caja 1 de La pentatónica menor entera, un salto, la nota en otra cuerda, repetir y cambiar de posición (0.6.4) | Verificado parcialmente | Cliente · 12/11 (AR-12 #2, F5.8) |
+| **E-09** | F5.8 | D | Al pulsar una casilla de la posición, suena y pasa a ser el paso actual (texto e intervalos la siguen); una de fuera suena y no cambia el paso. | Cumple | Banco (node --test): la última casilla de la caja 1 de La pentatónica menor y una de fuera (0.6.4) | Verificado parcialmente | Cliente · 12/11 (AR-12 #2, F5.8) |
+| **E-06** | F5.3 · F5.8 | D | El guiado avanza nota a nota por la posición, de su nota más grave a la más aguda, y resalta solo esa casilla. | Cumple | Banco (node --test): 18 pasos en Do mayor que suenan y se resaltan, con su intervalo (0.6.4) | Verificado parcialmente | Cliente · listado 14/09 |
+| **E-07** | F5.8 | D | Mayor y menor tienen 7 posiciones de 3 notas por cuerda y las pentatónicas 5 de 2; la 1 empieza en la tónica y las demás siguen hacia el cuerpo; ◀ ▶ las recorre; al llegar se ve la 1; la vista del mástil va a la posición. | Cumple | Banco (node --test): posiciones 1 a 7 de Do mayor (la abierta, 0,1,3 | 0,2,3…), la caja 1 de La pentatónica menor (trastes 5 a 8) la vista que va a la caja 2 y un barrido de las 7 afinaciones, 4 escalas y 12 tónicas: 7 o 5 posiciones, la 1 en la tónica, trastes dentro del mástil y saltos de 1 a 3 semitonos (0.6.4) | Verificado parcialmente | Cliente · 12/11 (AR-12 #2, F5.8) |
+| **E-08** | F5.8 | D | «Escuchar» toca la posición subiendo y bajando sin repetir la nota de arriba, resaltando cada una; otro toque la para; se calla al cambiar de tónica, de tipo o de afinación, al ocultar la app y al salir de Escalas. | Cumple | Banco (node --test): 23 notas en La pentatónica menor y las seis formas de pararla (0.6.4) | Verificado parcialmente | Cliente · 12/11 (AR-12 #2, F5.8) |
+| **E-10** | F5.8 | D | «Todas» enseña el resto de las casillas de la escala, apagadas, sin dejar de destacar la posición; está apagado al entrar y su botón solo se ve en Escalas. | Cumple | Banco (node --test): Do mayor con «Todas», solo notas de la escala, y fuera de Escalas (0.6.4) | Verificado parcialmente | Cliente · 12/11 (AR-12 #2, F5.8) |
 | **A-01** | F1.1 | D | Pulsar cada cuerda en el afinador reproduce su nota de referencia. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **A-02** | F4.3 | D | Con una guitarra real, el afinador indica subir o bajar hasta dejarla afinada, en estándar y en una alternativa. Sigue la nota mientras se apaga (al menos 3 s con una cuerda sintética de 6 s a volumen de móvil y con ruido), sin lecturas a más de 6 cents, y el ruido solo no mueve la aguja. Con las 12 grabaciones reales y ruido: primera lectura en menos de 300 ms y, ya asentada la cuerda, a menos de 5 cents de su medida. Abre en Micrófono donde se puede usar, sin escuchar hasta «Activar». Tu prueba (V-09, M0, M2b y M5): pulsas una vez la 5ª y la aguja la sigue al menos 3 s sin saltar de cuerda; en Drop D, la 4ª releva a la 6ª. | Cumple | comprobar-afinador.js (Chromium, grabación real 12 cents baja → «La2 · −11 cents · Sube un poco»; hilo aparte; se apaga al salir) · Banco (node --test): flujo del permiso, modo por defecto y su recuerdo · tono.test.js: nota que se apaga, ruido, giro de clavija, relevo de cuerda (también a la octava) y las 12 grabaciones con ruido | Pendiente | Cliente · listado 14/09 |
 | **A-02-CA** | F4.2 | T | Banco de pruebas: error ≤ ±2 cents y latencia < 300 ms sobre muestras desafinadas una cantidad conocida, tomando como referencia su frecuencia medida en samples/afinacion.json. | Cumple | tests/tono.test.js: 12 grabaciones reales de −45 a +40 cents; peor error 1,84 cents frente a su medida y 0,62 trozo a trozo; aguja en su nota en ≤ 195 ms + unos 5 ms de cálculo (trozos de 4096 valores, desde la 0.6.2) | Verificado | AR-01 |

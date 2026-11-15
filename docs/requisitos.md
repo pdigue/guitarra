@@ -1,7 +1,7 @@
 # Trasteando — Especificación de Requisitos
 
-**Versión del documento:** 2.1 · **Fecha:** 15 de noviembre de 2026  
-**Válido para:** app `0.6.3` · `roadmap.md` v4.1 · `matriz-cumplimiento` v2.1 · fase en curso **F6** (F5 sigue abierta)  
+**Versión del documento:** 2.2 · **Fecha:** 15 de noviembre de 2026  
+**Válido para:** app `0.6.4` · `roadmap.md` v4.2 · `matriz-cumplimiento` v2.2 · fase en curso **F6** (F5 sigue abierta)  
 **Repositorio:** github.com/pdigue/guitarra, carpeta `docs/` · **Gestiona:** chat de Desarrollo  
 **Tipo de producto:** aplicación web progresiva (PWA), desarrollada en local y publicada al final del roadmap
 
@@ -9,9 +9,9 @@
 
 ## 1. Estado de un vistazo
 
-| Total | ✅ Implementados | 🟡 Parciales | ⬜ Pendientes | ✅ Validados |
-|:---:|:---:|:---:|:---:|:---:|
-| 113 | 98 | 6 | 9 | 52 |
+| Total | ✅ Implementados | 🟡 Parciales | ⬜ Pendientes | ➖ Retirados | ✅ Validados |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| 117 | 102 | 6 | 8 | 1 | 51 |
 
 > Un requisito implementado no cuenta como cumplido hasta superar su prueba. El primero validado fue **S-08**, en la 0.2.0. La Sesión 1 (20/10, en tu iPhone y tu PC) validó 35 de golpe; lo que cambió la 0.3.3 y el sonido en el iPhone esperan a la Sesión 2.
 
@@ -21,10 +21,10 @@
 | **F2** | Sonido propio y archivo autónomo | 9 | `▰▰▰▰▱▱▱▱▱▱` 4/9 |
 | **F3** | Interfaz y adaptación | 6 | `▰▰▰▰▰▰▰▰▱▱` 5/6 |
 | **F4** | Afinador por micrófono | 8 | `▰▰▰▰▰▰▰▰▰▰` 8/8 |
-| **F5** | Escalas, metrónomo y acordes | 27 | `▰▰▰▰▰▰▰▰▰▰` 27/27 |
+| **F5** | Escalas, metrónomo y acordes | 31 | `▰▰▰▰▰▰▰▰▰▰` 31/31 |
 | **F6** | Preparación para distribución | 5 | `▰▰▱▱▱▱▱▱▱▱` 1/5 |
 | **F7** | Publicación y lanzamiento | 9 | `▱▱▱▱▱▱▱▱▱▱` 0/9 |
-| **Posterior** | Fuera del alcance actual | 4 | `▱▱▱▱▱▱▱▱▱▱` 0/4 |
+| **Posterior** | Fuera del alcance actual | 3 | `▱▱▱▱▱▱▱▱▱▱` 0/3 |
 
 *Un requisito puede aparecer en dos fases si se implementa en una y se valida o completa en otra.*
 
@@ -36,10 +36,11 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 
 | Versión | Fecha | App | Roadmap | Resumen | Origen |
 |---|---|:---:|:---:|---|---|
-| **2.1** | 15/11/2026 | 0.6.3 | 4.0 | F5.8 #3 y #4: temas elegibles (V-10) y disposición para tableta y ordenador (V-11); en Adivinar, las pistas en grande y la nota tocada en pequeño (J-01, J-06); el grupo Aspecto en Ajustes (C-02) y las pestañas en tableta (C-04); el mástil de inicio a 40 px en tableta (V-04); C-08 deja los temas a V-10; notas de PL-03 y G-05. J-06 vuelve a «sin validar» hasta tu prueba. Con las auditorías AR-16 y AT-15. 2 nuevos y 8 modificados: 113 en total. | Tus comentarios F5.8 #3 y #4 |
+| **2.2** | 15/11/2026 | 0.6.4 | 4.2 | F5.8 #5, Escalas: una posición cada vez en vez de todo el mástil (E-07, nuevo: 3 notas por cuerda en la mayor y la menor y 2 en las pentatónicas; la 1 es la de la tónica, tu decisión del 15/11); «Escuchar» la posición (E-08, nuevo); tocar una casilla la hace el paso actual (E-09, nuevo); «Todas», la escala en todo el mástil (E-10, nuevo, tu respuesta del 15/11); **se retira E-05** (la Práctica de pertenencia) y **E-05b** pasa a ser la Práctica nueva, tocar la posición en orden (tu respuesta del 15/11); E-03, E-04 y E-06 dejan de hablar de «Mostrar» y recorren la posición; el pentagrama, 8 notas alrededor del paso (P-03); E-02 y E-02b, el alcance de las otras afinaciones; E-01, nota. Con las auditorías AR-17 y AT-16. 4 nuevos, 1 retirado y 9 modificados: 117 en total. | Tu comentario F5.8 #5 y tus respuestas del 15/11 |
+| 2.1 | 15/11/2026 | 0.6.3 | 4.0 | F5.8 #3 y #4: temas elegibles (V-10) y disposición para tableta y ordenador (V-11); en Adivinar, las pistas en grande y la nota tocada en pequeño (J-01, J-06); el grupo Aspecto en Ajustes (C-02) y las pestañas en tableta (C-04); el mástil de inicio a 40 px en tableta (V-04); C-08 deja los temas a V-10; notas de PL-03 y G-05. J-06 vuelve a «sin validar» hasta tu prueba. Con las auditorías AR-16 y AT-15. 2 nuevos y 8 modificados: 113 en total. | Tus comentarios F5.8 #3 y #4 |
 | 2.0 | 15/11/2026 | 0.6.2 | 4.0 | Baseline 0.6.2: mismos ID, textos, criterios, estados e implementación; cada nota se queda en lo vigente y lo pendiente de tu prueba. Corregido: en 13 requisitos la columna *Desde* llevaba la nota de la Sesión 1, que pasa a *Notas*. 111 en total. | Tu decisión del 15/11 |
 
-**En la 2.1:** nuevos 🆕 V-10, V-11 · modificados ✏️ G-05, PL-03, J-01, J-06, V-04, C-02, C-04, C-08.
+**En la 2.2:** nuevos 🆕 E-09, E-07, E-08, E-10 · modificados ✏️ P-03, E-01, E-02, E-02b, E-03, E-04, E-05, E-05b, E-06.
 
 ---
 
@@ -78,7 +79,7 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 | **G-02** | La app se organiza en áreas accesibles desde una navegación principal: Libre, Adivinar, Afinador, Escalas, Acordes y Metrónomo. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Seis áreas desde la 0.5.5. Validado en la Sesión 1 (A12). Pendiente: un registro de áreas, para que añadir una no obligue a tocar cinco sitios (AT-11 #4). |
 | **G-03** | La app funciona sin conexión una vez cargada **desde la web**. | Media | F6.2 · F7.2 | ⬜ | ⬜ | — | Service Worker en F6.2 (en pausa en `auto/F6.2-service-worker`); se valida en `localhost` (F6.2) y desde la web publicada (F7.2). En modo archivo, el audio va dentro (G-07). |
 | **G-04** | La app es instalable como PWA (icono en la pantalla de inicio, pantalla completa). | Alta | F6.3 · F7.2 | 🟡 | ⬜ | 0.1.0 | Hoy, manifiesto incrustado (`data:`). Falta el manifiesto con iconos PNG (F6.3) y probarla instalada desde `https` (F7.2). |
-| **G-05** ✏️ | La interfaz cumple unos mínimos de accesibilidad: foco de teclado visible, respeto a `prefers-reduced-motion`, contraste suficiente y etiquetas accesibles en los controles solo-icono. | Media | F3.4 | ✅ | ✅ | 0.1.1 | Teclado completo con foco visible y el mástil como cuadrícula; textos a 4,5:1 o más; nada se anima con «reducir movimiento»; táctil de 40 px (28 px si se pide con «+»); paleta por nota apta para daltonismo. Desde la 0.6.3 los contrastes se miden en cada tema (V-10). Excepción: en vertical por debajo de 660 px de alto. Validado en la Sesión 1 (A18, C05, C06). |
+| **G-05** | La interfaz cumple unos mínimos de accesibilidad: foco de teclado visible, respeto a `prefers-reduced-motion`, contraste suficiente y etiquetas accesibles en los controles solo-icono. | Media | F3.4 | ✅ | ✅ | 0.1.1 | Teclado completo con foco visible y el mástil como cuadrícula; textos a 4,5:1 o más; nada se anima con «reducir movimiento»; táctil de 40 px (28 px si se pide con «+»); paleta por nota apta para daltonismo. Desde la 0.6.3 los contrastes se miden en cada tema (V-10). Excepción: en vertical por debajo de 660 px de alto. Validado en la Sesión 1 (A18, C05, C06). |
 | **G-06** | El proyecto documenta sus dependencias externas y la licencia de cada recurso de terceros que distribuye, y la app muestra los créditos. | Media | F2.1 · F6.4 | 🟡 | ⬜ | — | `CREDITOS.md` con origen, licencia y huella de cada muestra. Falta mostrar los créditos en la app y elegir la licencia del código (F6.4, decisión tuya). |
 | **G-07** | **Modo archivo autónomo** en Windows y Android: la app funciona completa —salvo el afinador por micrófono— abriendo el archivo directamente (`file://`), sin servidor y sin conexión. En iPhone, donde no se pueden abrir páginas desde Archivos, la autonomía llega por G-03. | Alta | F2.3 · F2.5 | ✅ | ✅ | 0.2.1 | `dist/trasteando.html` con las 17 grabaciones dentro: audio ≤ 1,45 MB y archivo ≤ 2 MB; abre en 0,3 s en Chromium. Validado en la Sesión 1 (B02 a B04, C09). |
 | **G-08** | El proyecto conserva **dos formas de distribución** equivalentes: el archivo autónomo (para llevárselo) y la web publicada (para instalarla como PWA). | Media | F4.1 · F6.1 | ✅ | ✅ | 0.1.0 | Dos formas: `index.html` (varios archivos) y `dist/trasteando.html` (autónomo, generado); desde la 0.6.0 el banco pasa las pruebas de la app contra las dos. Pendiente (AR-13): reconfirmarlo contra la web publicada (F7.1) y abrir el autónomo con doble clic en Windows, en modo avión (Sesión 2). |
@@ -111,7 +112,7 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
 | **PL-01** | **Windows:** la app funciona en Chrome, Edge y Firefox actuales —en modo archivo, local y web— e instalada como PWA desde Edge o Chrome. | Alta | F2.5 · F7.2 | 🟡 | ⬜ | 0.1.0 | Plataforma de desarrollo, la mejor cubierta. Tienda: Microsoft Store (F7.4). |
 | **PL-02** | **Android:** la app funciona en Chrome —en web e instalada como PWA— y, si es viable, en modo archivo. | Alta | F2.5 · F7.2 | 🟡 | ⬜ | 0.1.0 | Sin Android de pruebas: se valida con el simulador de Chrome (parcial) y en uno real como tarde en F7.2. Tienda: Google Play (F7.4). |
-| **PL-03** ✏️ | **iPhone y iPad:** la app funciona en Safari, en web e instalada con «Añadir a pantalla de inicio». | Alta | F2.5 · F7.2 | 🟡 | ⬜ | 0.1.0 | Móvil de referencia del proyecto. Se prueba en la web de pruebas (`https`); el modo archivo no es viable en el iPhone. Disposición propia para iPad desde la 0.6.3 (V-11). Tienda: App Store, que exige Mac con Xcode y cuenta de Apple (F7.4). |
+| **PL-03** | **iPhone y iPad:** la app funciona en Safari, en web e instalada con «Añadir a pantalla de inicio». | Alta | F2.5 · F7.2 | 🟡 | ⬜ | 0.1.0 | Móvil de referencia del proyecto. Se prueba en la web de pruebas (`https`); el modo archivo no es viable en el iPhone. Disposición propia para iPad desde la 0.6.3 (V-11). Tienda: App Store, que exige Mac con Xcode y cuenta de Apple (F7.4). |
 | **PL-04** | **Adaptabilidad entre sistemas:** la app solo usa estándares web; detecta cada capacidad en lugar del sistema, y toda capacidad que no esté en Windows, Android e iPhone tiene alternativa, de modo que la app sigue funcionando donde falta. | Alta | F2.2 · F3.2 · F7.2 | 🟡 | ⬜ | 0.1.4 | Solo estándares y detección de capacidades; inventario y alternativas en `docs/compatibilidad.md`, revisado en cada etapa que añade una capacidad. El banco arranca la app sin las opcionales. |
 
 ---
@@ -165,7 +166,7 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
 | **P-01** | Al pulsar una nota en el mástil, se representa en el pentagrama. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Clave de sol octavada con trazado propio; 8va, 15ma u 8vb en los extremos; la lectura tiene alto fijo. Validado en la Sesión 1 (A05). |
 | **P-02** | El pentagrama se puede mostrar u ocultar. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | En Ajustes y en el acceso rápido. |
-| **P-03** | El pentagrama está disponible en todos los modos de aprendizaje. | Media | F5.3 | ✅ | ⬜ | 0.5.0 | Libre, Adivinar y Escalas (la escala entera, con sus alteraciones). |
+| **P-03** ✏️ | El pentagrama está disponible en todos los modos de aprendizaje. | Media | F5.3 | ✅ | ⬜ | 0.5.0 | Libre, Adivinar y Escalas. En Escalas, desde la 0.6.4, 8 notas seguidas de la posición alrededor del paso actual, con sus alteraciones (la posición tiene 12 o 18 y no caben). |
 | **P-04** | En el afinador, la afinación seleccionada se muestra como seis notas en un pentagrama. | Media | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (A13). |
 
 ---
@@ -184,12 +185,12 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 
 | ID | Requisito | Prior. | Etapa | Impl. | Valid. | Desde | Notas |
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
-| **J-01** ✏️ | Suena una nota aleatoria y el usuario busca su posición en el mástil. | Alta | F1.1 · F5.8 | ✅ | ⬜ | 0.1.0 | Retos en los 12 primeros trastes; no suena nada hasta pulsar ▶, que después repite. La nota que tocas se lee en pequeño desde la 0.6.3 (F5.8 #4), para no competir con la buscada; la buscada, solo con la pista de nombre (J-06) o al responder. Lo de la 0.3.3 se confirma en la Sesión 2. |
+| **J-01** | Suena una nota aleatoria y el usuario busca su posición en el mástil. | Alta | F1.1 · F5.8 | ✅ | ⬜ | 0.1.0 | Retos en los 12 primeros trastes; no suena nada hasta pulsar ▶, que después repite. La nota que tocas se lee en pequeño desde la 0.6.3 (F5.8 #4), para no competir con la buscada; la buscada, solo con la pista de nombre (J-06) o al responder. Lo de la 0.3.3 se confirma en la Sesión 2. |
 | **J-02** | Se acepta como acierto cualquier posición que produzca esa nota exacta. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (E04). |
 | **J-03** | Tras acertar se señalan las demás posiciones válidas. | Media | F1.1 | ✅ | ✅ | 0.1.0 | Reutiliza L-03. Validado en la Sesión 1 (E04). |
 | **J-04** | Pista opcional: nombre de la nota que suena. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (E04). |
 | **J-05** | Pista opcional: cuerda o cuerdas donde puede encontrarse. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (E04). |
-| **J-06** ✏️ | Las pistas se activan desde la propia interfaz, sin abrir el menú. | Alta | F1.1 · F5.8 | ✅ | ⬜ | 0.1.0 | Las dos pistas son «esta nota en esta cuerda»; ninguna, «de oído». Encendida, cada pista ocupa su parte de la franja, con la respuesta en grande y borde discontinuo (0.6.3, F5.8 #4). Lo esencial se validó en la Sesión 1 (E04); el aspecto de la 0.6.3, cuando lo pruebes (AR-16 #2). |
+| **J-06** | Las pistas se activan desde la propia interfaz, sin abrir el menú. | Alta | F1.1 · F5.8 | ✅ | ⬜ | 0.1.0 | Las dos pistas son «esta nota en esta cuerda»; ninguna, «de oído». Encendida, cada pista ocupa su parte de la franja, con la respuesta en grande y borde discontinuo (0.6.3, F5.8 #4). Lo esencial se validó en la Sesión 1 (E04); el aspecto de la 0.6.3, cuando lo pruebes (AR-16 #2). |
 | **J-07** | Contador de racha visible durante el juego. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (E04). |
 | **J-08** | El récord de racha más larga persiste entre sesiones. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | `localStorage`, un récord por afinación (J-11); «Restablecer» lo conserva y se borra con su propio botón. Lo de la 0.3.3 se confirma en la Sesión 2. |
 | **J-09** | Feedback visual inmediato de acierto y de error. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Color en la posición pulsada y destello en la barra del reto. Validado en la Sesión 1 (A09, E04). |
@@ -204,14 +205,18 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 
 | ID | Requisito | Prior. | Etapa | Impl. | Valid. | Desde | Notas |
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
-| **E-01** | Selección de escala a practicar (tónica + tipo). | Alta | F5.2 | ✅ | ⬜ | 0.5.0 | Mayor, menor natural y las dos pentatónicas, en las 12 tónicas, con la tónica escrita según el tipo. Falta que lo veas. F5.8 #5 (decidido): se quedan las 4, mejor presentadas. |
-| **E-02** | El generador de escalas opera **solo en afinación estándar** en la primera entrega. | Alta | F5.2 | ✅ | ⬜ | 0.5.0 | Las 24 mayores y menores, con siete letras distintas, y 16 comparadas con el libro (banco). Pendiente: las 48 contra una tabla de referencia y en el mástil (AR-12 #4); error claro con una alteración fuera de ±2 (AT-11 #9); confirmar que vale en otras afinaciones (AR-12 #9). |
-| **E-02b** | Escalas en afinaciones alternativas y variantes de digitación (por ejemplo, escala en octavas). | Media | Posterior | ⬜ | ⬜ | — | Fuera del alcance de F5. |
-| **E-03** | Submodo Mostrar: la app ilumina las notas que componen la escala. | Alta | F5.3 | ✅ | ⬜ | 0.5.0 | Solo las notas de la escala, con su nombre escrito y la tónica con anillo. Falta que lo veas. |
-| **E-04** | En Mostrar se indica el nombre de cada nota y su separación interválica respecto a la anterior. | Alta | F5.3 | ✅ | ⬜ | 0.5.0 | Línea «Do T Re T Mi ST Fa…» sobre el paso a paso; T½ en las pentatónicas. Falta que lo veas. Pendiente: T, ST y T½ en inglés, y que T½ no se lea como medio tono (AR-12 #8). |
-| **E-05** | Submodo Práctica: valida **solo la pertenencia** de la nota a la escala; al pulsar una ajena, marca error e ilumina las correctas. | Alta | F5.4 | ✅ | ✅ | 0.5.0 | Cada nota distinta cuenta una vez; una ajena, en rojo; empieza de nuevo al cambiar de afinación. Validado por el banco; falta con la guitarra (Sesión 2). |
-| **E-05b** | Validación del orden de la escala y de patrones de digitación concretos. | Media | Posterior | ⬜ | ⬜ | — | Fuera del alcance de F5. |
-| **E-06** | Guiado nota a nota en el submodo Mostrar. | Media | F5.3 | ✅ | ⬜ | 0.5.0 | ◀ ▶ de la tónica más grave a su octava, con sonido, resalte y explicación. Falta que lo veas. Pendiente: con afinaciones muy graves el pentagrama cambia de octava a mitad (AT-11 #3). |
+| **E-01** ✏️ | Selección de escala a practicar (tónica + tipo). | Alta | F5.2 | ✅ | ⬜ | 0.5.0 | Mayor, menor natural y las dos pentatónicas, en las 12 tónicas, con la tónica escrita según el tipo. Falta que lo veas. F5.8 #5 (decidido): se quedan las 4, presentadas por posiciones desde la 0.6.4 (E-07). |
+| **E-02** ✏️ | El generador de escalas opera **solo en afinación estándar** en la primera entrega. | Alta | F5.2 | ✅ | ⬜ | 0.5.0 | Las 24 mayores y menores, con siete letras distintas, y 16 comparadas con el libro (banco). Pendiente: las 48 contra una tabla de referencia y en el mástil (AR-12 #4); error claro con una alteración fuera de ±2 (AT-11 #9); confirmar que vale en otras afinaciones (AR-12 #9). Desde la 0.6.4 las posiciones (E-07) se calculan con alturas y el banco comprueba en todas las afinaciones de fábrica que no salen trastes fuera del mástil ni saltos raros; que suenen bien en ellas, con la guitarra, es E-02b. |
+| **E-02b** ✏️ | Escalas validadas en afinaciones alternativas, y otras digitaciones además de las posiciones de E-07 (por ejemplo, en octavas o CAGED). | Media | Posterior | ⬜ | ⬜ | — | Fuera del alcance de F5. Las posiciones de E-07 ya salen en cualquier afinación (0.6.4), sin validar con la guitarra (AR-17 #3). |
+| **E-03** ✏️ | La app ilumina en el mástil **una posición de la escala cada vez**, no el mástil entero: las notas de esa posición, con su nombre escrito y la tónica con anillo; el resto del mástil queda limpio. | Alta | F5.3 · F5.8 | ✅ | ⬜ | 0.5.0 | Desde la 0.6.4 (tu comentario F5.8 #5: «no es agradable ver el mástil lleno de notas»), 18 casillas en la mayor y la menor y 12 en las pentatónicas. Falta que lo veas. |
+| **E-04** ✏️ | Se indica el nombre de cada nota y su separación interválica respecto a la anterior. | Alta | F5.3 | ✅ | ⬜ | 0.5.0 | Línea «Do T Re T Mi ST Fa…» de tónica a tónica, con el grado del paso actual resaltado (0.6.4); T½ en las pentatónicas. Falta que lo veas. Pendiente: T, ST y T½ en inglés, y que T½ no se lea como medio tono (AR-12 #8). |
+| **E-05** ✏️ | ~~Submodo Práctica: valida **solo la pertenencia** de la nota a la escala; al pulsar una ajena, marca error e ilumina las correctas.~~ **Retirado en la 0.6.4.** | Alta | Retirado | ➖ | ⬜ | 0.5.0 | Se quitó por tu comentario F5.8 #5 («no haya tanto de práctica, sino ir pudiendo tocar las notas e ir escuchando la escala»). Lo sustituyen E-09 (tocar la escala) y E-05b (la Práctica nueva, en orden). Su ID no se reutiliza (AR-17 #2). |
+| **E-05b** ✏️ | **Practicar la posición:** con «Practicar», las casillas de la posición se ven sin nombre ni color y hay que tocarlas **en orden, de grave a agudo**; la buena se queda en verde con su nombre y una que no toca se marca en rojo un momento, con aviso propio si suena igual pero está en otra cuerda. Al completarla, tocar la primera vuelve a empezar; cambiar de posición, de escala o de afinación, también. | Media | F5.8 | ✅ | ⬜ | 0.6.4 | Antes era «validación del orden y de patrones de digitación concretos», para después; tu respuesta del 15/11 la trae ahora, sencilla. El pentagrama escribe solo las notas ya tocadas. Falta que lo veas. |
+| **E-09** 🆕 | **Tocar la escala:** al pulsar una casilla de la posición, suena y pasa a ser el paso actual (texto, intervalos y pentagrama la siguen); una casilla de fuera solo suena. | Alta | F5.8 | ✅ | ⬜ | 0.6.4 | Tu comentario F5.8 #5: «ir pudiendo tocar las notas de la escala». Falta que lo veas. |
+| **E-06** ✏️ | Guiado nota a nota por la posición elegida. | Media | F5.3 · F5.8 | ✅ | ⬜ | 0.5.0 | ◀ ▶ de la nota más grave de la posición a la más aguda (antes, una octava desde la tónica grave), con sonido, resalte de esa casilla y explicación («Mi, un tono sobre Re»). Falta que lo veas. Pendiente: con afinaciones muy graves el pentagrama cambia de octava a mitad (AT-11 #3). |
+| **E-07** 🆕 | **Una posición cada vez:** cada escala se reparte en posiciones que empiezan en una de sus notas sobre la 6.ª cuerda y suben nota a nota, 3 por cuerda en la mayor y la menor (7 posiciones) y 2 en las pentatónicas (las 5 cajas). La **posición 1 es la que empieza en la tónica**; las siguientes van hacia el cuerpo y, pasado el traste 11, siguen desde la cejuela. Se eligen con ◀ ▶ («Posición 1 de 7 · trastes 8 a 13»; en el móvil, «1/7»), al llegar se ve la 1 y la vista del mástil va a la posición elegida. | Alta | F5.8 | ✅ | ⬜ | 0.6.4 | Tu comentario F5.8 #5 y tus respuestas del 15/11 (3 notas por cuerda; la 1 en la tónica). Se calcula con alturas, no con dibujos de memoria: vale en las otras afinaciones (en Drop D, 4 notas en la 6.ª cuando la 5.ª no llega). Falta que lo veas. |
+| **E-08** 🆕 | **Escuchar la posición:** un botón la hace sonar entera, subiendo y bajando, con cada nota resaltada en el mástil y en el pentagrama; otro toque la para, y se calla al salir de Escalas, al ocultar la app y al cambiar de escala, de posición o de afinación. | Media | F5.8 | ✅ | ⬜ | 0.6.4 | Tu comentario F5.8 #5: «ir escuchando la propia escala». Una nota cada 380 ms, fija (tu respuesta del 15/11). Falta que lo oigas. |
+| **E-10** 🆕 | **Todas:** un botón enseña la escala también en el resto del mástil, más pequeña y apagada, sin perder la posición elegida, que sigue destacada. Apagado al entrar en la app. | Media | F5.8 | ✅ | ⬜ | 0.6.4 | Tu respuesta del 15/11 («ver todo el mástil», apagado por defecto). No se guarda entre sesiones. Falta que lo veas. |
 
 ---
 
@@ -267,14 +272,14 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 | **V-01** | En móvil se **sugiere** la orientación horizontal con un aviso discreto; no se fuerza. | Alta | F3.2 | ✅ | ✅ | 0.3.0 | En horizontal, raíl, mástil a todo el alto y panel (52,8 px por cuerda en el iPhone). Aviso para girar solo con el dedo, en vertical y con menos de 600 px de ancho, en Libre, Adivinar, Escalas y Acordes. Validado en la Sesión 1 (C02, C03, D03). |
 | **V-02** | El afinador funciona en vertical y en horizontal. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
 | **V-03** | En escritorio el mástil aprovecha el ancho disponible. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Arranca con el mástil completo en pantallas anchas. |
-| **V-04** ✏️ | Control de zoom que determina qué porción del mástil se ve. | Alta | F1.1 · F3.2 | ✅ | ✅ | 0.1.0 | De 3 a 24 trastes; por defecto de 40 px con el dedo (34 con ratón), hasta 28 px si se pide con «+»; lo guardado se conserva al girar. Desde la 0.6.3, con el dedo y 900 px o más, el mástil de inicio respeta los 40 px (antes, 38 en un iPad de 1024); a quien ya tenía un zoom guardado no le cambia hasta «Restablecer» (AT-15 #7). Validado en la Sesión 1 (A07, A08, C04). |
+| **V-04** | Control de zoom que determina qué porción del mástil se ve. | Alta | F1.1 · F3.2 | ✅ | ✅ | 0.1.0 | De 3 a 24 trastes; por defecto de 40 px con el dedo (34 con ratón), hasta 28 px si se pide con «+»; lo guardado se conserva al girar. Desde la 0.6.3, con el dedo y 900 px o más, el mástil de inicio respeta los 40 px (antes, 38 en un iPad de 1024); a quien ya tenía un zoom guardado no le cambia hasta «Restablecer» (AT-15 #7). Validado en la Sesión 1 (A07, A08, C04). |
 | **V-05** | Cuando el mástil no cabe, el usuario se desplaza lateralmente. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (A08). |
 | **V-06** | El ancho de traste no cambia al desplazarse: el zoom fija el tamaño y el desplazamiento mueve la ventana. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (A07). |
 | **V-07** | El mástil se readapta al redimensionar la ventana. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (A08). |
 | **V-08** | El nivel de zoom persiste entre sesiones. | Baja | F1.1 | ✅ | ⬜ | 0.1.0 | Girar el móvil no pisa el zoom elegido. |
 | **V-09** | Al ocultar la numeración se puede conservar una **referencia de tramo**: el modo «Guía» deja solo los números de los trastes con marca. | Media | F1.3 | ✅ | ✅ | 0.1.2 | Sin números, los trastes 5 y 17 se confunden; se descartó el minimapa. Validado en la Sesión 1 (A11). |
-| **V-10** 🆕 | **Temas elegibles y aspecto limpio:** en Ajustes › Aspecto se elige el tema de la app: *Madera* (de fábrica), *Automático* (claro u oscuro, como el dispositivo) y *Partitura*. La elección se guarda y se cambia cuando quieras. En todos, un aspecto limpio (sin degradados de fondo, chips sin borde, tarjetas redondeadas); el mástil es oscuro en todos, y todos cumplen los contrastes de G-05. | Media | F5.8 | ✅ | ⬜ | 0.6.3 | Tu decisión del 15/11: Madera de fábrica y los tres elegibles. Falta verlo en el iPhone. Anotado: las reglas «más limpio» van al final del CSS y conviene subirlas junto a cada componente (AT-15 #5); G-05 pide 4,5:1 y la herramienta, desde F3.4, acepta 3:1 en texto grande, como WCAG: alinearlo en el cierre de F5 (AR-16 #5). |
-| **V-11** 🆕 | **Disposición para tableta y ordenador:** con un área útil de al menos 700 × 600 px (el iPad en las dos orientaciones, también con las barras de Safari, y el ordenador), el mástil tiene un alto acotado y centrado, el pentagrama y la lectura crecen, textos y botones son mayores y las pestañas forman un control segmentado, en su propia fila si no caben junto al nombre. | Media | F5.8 | ✅ | ⬜ | 0.6.3 | Tu comentario F5.8 #3: el iPad «no está preparado» (cuerdas de 150 px en vertical). Excepción al principio «el mástil manda» de `interfaz.md` §2, pendiente de tu aprobación (AR-16 #7). Falta tu prueba en un iPad. |
+| **V-10** | **Temas elegibles y aspecto limpio:** en Ajustes › Aspecto se elige el tema de la app: *Madera* (de fábrica), *Automático* (claro u oscuro, como el dispositivo) y *Partitura*. La elección se guarda y se cambia cuando quieras. En todos, un aspecto limpio (sin degradados de fondo, chips sin borde, tarjetas redondeadas); el mástil es oscuro en todos, y todos cumplen los contrastes de G-05. | Media | F5.8 | ✅ | ⬜ | 0.6.3 | Tu decisión del 15/11: Madera de fábrica y los tres elegibles. Falta verlo en el iPhone. Anotado: las reglas «más limpio» van al final del CSS y conviene subirlas junto a cada componente (AT-15 #5); G-05 pide 4,5:1 y la herramienta, desde F3.4, acepta 3:1 en texto grande, como WCAG: alinearlo en el cierre de F5 (AR-16 #5). |
+| **V-11** | **Disposición para tableta y ordenador:** con un área útil de al menos 700 × 600 px (el iPad en las dos orientaciones, también con las barras de Safari, y el ordenador), el mástil tiene un alto acotado y centrado, el pentagrama y la lectura crecen, textos y botones son mayores y las pestañas forman un control segmentado, en su propia fila si no caben junto al nombre. | Media | F5.8 | ✅ | ⬜ | 0.6.3 | Tu comentario F5.8 #3: el iPad «no está preparado» (cuerdas de 150 px en vertical). Excepción al principio «el mástil manda» de `interfaz.md` §2, pendiente de tu aprobación (AR-16 #7). Falta tu prueba en un iPad. |
 
 ---
 
@@ -283,13 +288,13 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 | ID | Requisito | Prior. | Etapa | Impl. | Valid. | Desde | Notas |
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
 | **C-01** | Menú de configuración accesible desde cualquier pantalla. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Hoja desde abajo en vertical; panel lateral en horizontal y en pantallas amplias; es un diálogo (AT-04). Validado en la Sesión 1 (A19, C05). |
-| **C-02** ✏️ | El menú contiene nomenclatura, pentagrama, timbre, numeración de trastes (tres modos), ver todas las notas, señalar iguales y afinación activa, y muestra la versión de la app. | Alta | F1.1 · F5.8 | ✅ | ⬜ | 0.1.0 | Grupos: idioma, aspecto (tema, V-10, 0.6.3), notación (con ♯ o ♭ por nota), Adivinar («Al fallar»), numeración y versión. En F6.4, «Acerca de» con créditos y privacidad. |
+| **C-02** | El menú contiene nomenclatura, pentagrama, timbre, numeración de trastes (tres modos), ver todas las notas, señalar iguales y afinación activa, y muestra la versión de la app. | Alta | F1.1 · F5.8 | ✅ | ⬜ | 0.1.0 | Grupos: idioma, aspecto (tema, V-10, 0.6.3), notación (con ♯ o ♭ por nota), Adivinar («Al fallar»), numeración y versión. En F6.4, «Acerca de» con créditos y privacidad. |
 | **C-03** | Los ajustes frecuentes tienen acceso rápido sin abrir el menú. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Nomenclatura y pentagrama en chips bajo la cabecera (en el panel, en horizontal); las pistas del juego, en la tarjeta del reto. |
-| **C-04** ✏️ | Navegación principal clara entre las áreas de la app. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Barra inferior con seis destinos en vertical, raíl en horizontal y pestañas en la cabecera en pantallas amplias; en pantallas bajas nunca se sale. Desde la 0.6.3, en tableta y ordenador las pestañas son un control segmentado, en su propia fila por debajo de 1100 px (V-11). Validado en la Sesión 1 (A19). |
+| **C-04** | Navegación principal clara entre las áreas de la app. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Barra inferior con seis destinos en vertical, raíl en horizontal y pestañas en la cabecera en pantallas amplias; en pantallas bajas nunca se sale. Desde la 0.6.3, en tableta y ordenador las pestañas son un control segmentado, en su propia fila por debajo de 1100 px (V-11). Validado en la Sesión 1 (A19). |
 | **C-05** | Todos los ajustes persisten entre sesiones. | Media | F1.1 | ✅ | ✅ | 0.1.0 | Un único objeto de estado, validado campo a campo. Validado en la Sesión 1 (A14, A15). |
 | **C-06** | Especificación detallada de la interfaz: estructura de menús, jerarquía de controles y flujos de navegación. | Alta | F3.1 | ✅ | ✅ | 0.2.3 | `docs/interfaz.md`, aprobada el 20/10 (AR-04), con bocetos en `docs/interfaz/`. Cada cambio sube su versión. |
 | **C-07** | **Botón «atrás» del sistema:** mientras haya un paso anterior en la sesión, el botón o gesto «atrás» cierra Ajustes o vuelve al área anterior; desde la primera área actúa el sistema. Al abrir la app se entra en Libre. | Media | F3.2 | ✅ | ✅ | 0.3.0 | Cada área con su dirección (`#libre`…); en el iPhone instalado no hay botón atrás. Validado en la Sesión 1 (A17). |
-| **C-08** ✏️ | Menú **Personalización** dentro de Ajustes: estilos de nota en el mástil (círculo de color o solo el nombre, más grande o en negrita), estilo del traste y del mástil, interior claro para «Ver todas las notas». Los temas de color están en V-10. | Media | Posterior | ⬜ | ⬜ | — | Tus comentarios de la Sesión 1 (A10, C06, E06). Los temas de color salieron a V-10 (0.6.3); el resto sigue para después; la paleta por nota de G-05 sigue de punto de partida. |
+| **C-08** | Menú **Personalización** dentro de Ajustes: estilos de nota en el mástil (círculo de color o solo el nombre, más grande o en negrita), estilo del traste y del mástil, interior claro para «Ver todas las notas». Los temas de color están en V-10. | Media | Posterior | ⬜ | ⬜ | — | Tus comentarios de la Sesión 1 (A10, C06, E06). Los temas de color salieron a V-10 (0.6.3); el resto sigue para después; la paleta por nota de G-05 sigue de punto de partida. |
 
 ---
 
@@ -328,11 +333,10 @@ Qué requisitos cierra o valida cada etapa del roadmap. Es la misma información
 | **F4.5** | G-12 |
 | **F5.2** | E-01, E-02 |
 | **F5.3** | P-03, E-03, E-04, E-06 |
-| **F5.4** | E-05 |
 | **F5.5** | N-06, J-13 |
 | **F5.6** | MT-01, MT-02, MT-03, MT-04, MT-05 |
 | **F5.7** | AC-01, AC-02, AC-03, AC-04, AC-05, AC-06 |
-| **F5.8** | G-13, J-01, J-06, MT-06, V-10, V-11, C-02 |
+| **F5.8** | G-13, J-01, J-06, E-03, E-05b, E-09, E-06, E-07, E-08, E-10, MT-06, V-10, V-11, C-02 |
 | **F6.1** | G-08 |
 | **F6.2** | G-03 |
 | **F6.3** | G-04 |
@@ -340,7 +344,8 @@ Qué requisitos cierra o valida cada etapa del roadmap. Es la misma información
 | **F7.1** | X-02 |
 | **F7.2** | G-03, G-04, PL-01, PL-02, PL-03, PL-04, X-03 |
 | **F7.4** | G-09 |
-| **Posterior** | S-09, E-02b, E-05b, C-08 |
+| **Posterior** | S-09, E-02b, C-08 |
+| **Retirado** | E-05 |
 
 ---
 
@@ -386,7 +391,7 @@ Qué requisitos cierra o valida cada etapa del roadmap. Es la misma información
 
 **Cerradas el 14/10:** S-07 → opción A, licencia verificada · móvil de referencia → iPhone · automatización → modo acelerado por bloques (F1–F3, sesión con el móvil, F4–F6, sesión con la guitarra, F7).
 
-**Cerradas antes:** nombre (*Trasteando*) · L-02 (ajuste del usuario) · J-10 (el fallo rompe la racha) · E-05 (solo pertenencia) · A-07 (cinco afinaciones) · V-01 (sugerir, no forzar).
+**Cerradas antes:** nombre (*Trasteando*) · L-02 (ajuste del usuario) · J-10 (el fallo rompe la racha) · E-05 (solo pertenencia; la Práctica se quitó en la 0.6.4) · A-07 (cinco afinaciones) · V-01 (sugerir, no forzar).
 
 ---
 
