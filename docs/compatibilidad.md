@@ -1,6 +1,6 @@
 # Trasteando — Compatibilidad entre sistemas operativos
 
-**Versión:** 1.9 · **Fecha:** 15 de noviembre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
+**Versión:** 1.10 · **Fecha:** 15 de noviembre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
 
 La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este documento lista cada capacidad del navegador que usa o usará, cómo se comporta en cada sistema y qué hace la app donde falta. Se revisa en cada etapa que añada una capacidad nueva.
 
@@ -58,7 +58,8 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.9** | 15/11/2026 | Temas (V-10, 0.6.3, F5.8 #3): `prefers-color-scheme` con su evento `change`, `color-scheme` y `meta theme-color`. |
+| **1.10** | 15/11/2026 | F5.8 #5 (0.6.4, Escalas por posiciones): sin capacidades nuevas; solo temporizadores y desplazamiento del mástil, ya en uso en Acordes. |
+| 1.9 | 15/11/2026 | Temas (V-10, 0.6.3, F5.8 #3): `prefers-color-scheme` con su evento `change`, `color-scheme` y `meta theme-color`. |
 | 1.8 | 12/11/2026 | Screen Wake Lock (G-13) y filtros de audio para el micrófono (A-02), en la 0.6.2 (F5.8 #2). |
 | 1.7 | 21/10/2026 | Metrónomo (F5.6, 0.5.4): reloj de audio con osciladores, `<dialog>`, captura del puntero, `accent-color` y `dvh`; `:has()` también para centrar un solo punto. |
 | 1.6 | 21/10/2026 | Idioma del navegador (G-12, 0.4.2). |
