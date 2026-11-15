@@ -8,8 +8,9 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.6.6** | 15/11/2026 | F5.8 · #6, arranca también en un marco aislado | Rama `auto/F5.8-acordes` (PR #21) |
-| 0.6.5 | 15/11/2026 | F5.8 · #6, Acordes más sencillo | Rama `auto/F5.8-acordes` (PR #21) |
+| **0.6.7** | 15/11/2026 | F5.8 · #7, el metrónomo sin huecos y a la par | Rama `auto/F5.8-metronomo` (PR #22) |
+| 0.6.6 | 15/11/2026 | F5.8 · #6, arranca también en un marco aislado | `main`, fusionada el 15/11 (PR #21) |
+| 0.6.5 | 15/11/2026 | F5.8 · #6, Acordes más sencillo | `main`, fusionada el 15/11 (PR #21) |
 | 0.6.4 | 15/11/2026 | F5.8 · #5, Escalas por posiciones | `main`, fusionada el 15/11 (PR #20) |
 | 0.6.3 | 15/11/2026 | F5.8 · #3 y #4, temas, iPad y Adivinar | `main`, fusionada el 15/11 (PR #19) |
 | 0.6.2 | 12/11/2026 | F5.8 · #2, el afinador sigue la nota; pantalla encendida | `main`, fusionada el 15/11 (PR #18) |
@@ -21,6 +22,21 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.6.7] — 15/11/2026 · F5.8 · El metrónomo, sin huecos y con lo que se ve a la par de lo que se oye
+
+Tu comentario del 12/11 #7: «el metrónomo no termina de funcionar del todo bien. Analízalo». Lo que notabas: a veces el pulso suena irregular y lo que se ve no va con el sonido.
+
+### Corregido
+- **MT-04** · **Ya no se pierden golpes.** Solo había 100 ms de golpes programados por adelantado: si el móvil se entretenía más de unos 75 ms, el golpe siguiente ya había pasado y se saltaba, y eso se oía como un pulso irregular. Ahora se programan 300 ms, que aguantan tirones de hasta 0,25 s. Medido en Chromium con tirones de 200 ms: antes se perdían 10 de 63 golpes; ahora, ninguno.
+- **MT-04** · **Los cambios siguen siendo inmediatos.** Con más golpes apuntados, un cambio de tempo, compás, figura o acento (o Parar) tardaría en notarse: los golpes que aún no han sonado se retiran y se vuelven a apuntar con lo nuevo. Parar ya no deja escapar ningún golpe.
+- **MT-04, MT-06** · **La luz y el péndulo van con lo que se oye.** Se calculaban con el sonido que el navegador *prepara*, que sale por el altavoz un poco después (0,15 a 0,25 s con auriculares Bluetooth). Ahora se pregunta al navegador qué está sonando (`getOutputTimestamp()` o las latencias que declare) y la luz espera a ese momento.
+- Los osciladores de cada golpe se sueltan al acabar (AT-11 #6).
+
+### Añadido
+- `herramientas/medir-metronomo.js`: mide en un Chromium real golpes perdidos, intervalos y el retraso de la luz, bajo tirones; acepta otra raíz para comparar con una versión anterior.
 
 ---
 
