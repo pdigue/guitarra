@@ -1,14 +1,14 @@
 # Trasteando — Estado para retomar
 
-**Actualizado:** 15/11/2026, con la app en la `0.6.5` · lo mantiene la conversación que trabaja.
+**Actualizado:** 15/11/2026, con la app en la `0.6.6` · lo mantiene la conversación que trabaja.
 **Documentos:** requisitos v2.3 · matriz v2.3 · roadmap v4.3 (baseline 0.6.2; lo anterior, en `docs/historico/`)
 
 > **Al empezar:** compara este archivo (GitHub) con `claude/ESTADO.md` del proyecto; si difieren, avisa a Pablo (manda GitHub). Las reglas están en `CLAUDE.md`. **Al terminar:** déjalo al día y acaba con «ESTADO actualizado: versión X, siguiente paso Y». Propón tú el cambio de conversación al cerrar el bloque.
 
 ## 1. Dónde estamos
-- **Ramas:** `main` = `0.6.4` (`a187de7`: el 15/11 se fusionaron los PR #18, #19 y #20). `auto/F5.8-acordes` = `0.6.5`, PR #21 abierto contra `main`, a falta de tu «fusiona el #21». `archivo/hasta-0.6.2` (472ff7a): salvavidas, no se borra nunca.
-- **Web de pruebas:** https://pdigue.github.io/guitarra/ (rama `pruebas`, con la `0.6.5`).
-- **Bloque F5.8 #6, Acordes: cerrado** (`0.6.5`, PR #21): se elige con dos filas, nota y tipo, con lo inexistente apagado y el bajo que dice su nota (AC-01); el mástil enseña en grande los trastes 0 a 5, sin pentagrama, zoom ni aviso para girar (AC-07); retirados AC-03 (pentagrama) y AC-06 (buscador); V-01 y P-03, precisados. Auditorías ligeras AT-17 y AR-18, sin críticos ni altos; corregidos el foco de teclado y la prueba del traste 5. Falta tu prueba.
+- **Ramas:** `main` = `0.6.4` (`a187de7`: el 15/11 se fusionaron los PR #18, #19 y #20). `auto/F5.8-acordes` = `0.6.6`, PR #21 abierto contra `main`, a falta de tu «fusiona el #21». `archivo/hasta-0.6.2` (472ff7a): salvavidas, no se borra nunca.
+- **Web de pruebas:** https://pdigue.github.io/guitarra/ (rama `pruebas`, con la `0.6.6`).
+- **Bloque F5.8 #6, Acordes: cerrado** (`0.6.5`, PR #21): se elige con dos filas, nota y tipo, con lo inexistente apagado y el bajo que dice su nota (AC-01); el mástil enseña en grande los trastes 0 a 5, sin pentagrama, zoom ni aviso para girar (AC-07); retirados AC-03 (pentagrama) y AC-06 (buscador); V-01 y P-03, precisados. Auditorías ligeras AT-17 y AR-18, sin críticos ni altos; corregidos el foco de teclado y la prueba del traste 5. `0.6.6`: arranca también en un marco aislado (la vista previa del chat dejaba el mástil vacío). Falta tu prueba.
 - **Bloque F5.8 #5, Escalas: cerrado y fusionado** (`0.6.4`, PR #20): una posición cada vez (E-07: 3 notas por cuerda, 2 en pentatónicas; la 1 en la tónica), «Escuchar» (E-08), tocar la escala (E-09), «Todas» (E-10) y Practicar en orden (E-05b); E-05 retirado (estado nuevo en el generador). Auditorías ligeras AT-16 y AR-17, sin críticos; lo alto de AR-17 eran decisiones de Pablo, respondidas el 15/11. Falta la prueba de Pablo.
 - **Después, una conversación por bloque:** metrónomo (#7: pulso irregular y desfase; sospechosos, 100 ms programados y `outputLatency`), propuestas (#8), F5.9 (cierre, etiqueta `v0.5.x`) y retomar F6.2 (`auto/F6.2-service-worker`, `7692bc5`: código hecho, faltan documentos, auditoría y PR).
 - **Hecho en F5.8:** #1 péndulo (MT-06, `0.6.1`); #2 afinador que sigue la nota y abre en Micrófono, y pantalla encendida (A-02, A-03, G-13, `0.6.2`). #3 y #4 aspecto: temas (V-10), tableta (V-11), pistas grandes en Adivinar (J-01, J-06), `0.6.3`. Todos, a falta de la prueba de Pablo.

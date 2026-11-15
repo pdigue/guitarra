@@ -265,8 +265,8 @@ document.getElementById('app-version').textContent = 'Trasteando ' + APP_VERSION
   svg.appendChild(el('path', { d:CLEF_PATH, fill:'currentColor' }));
   document.getElementById('qb-staff-icon').appendChild(svg);
 })();
-// Al abrir se entra siempre en Libre (L-01), aunque la dirección diga otra área.
-if (canHistory) history.replaceState({ screen:'free' }, '', '#libre');
+// Al abrir se entra siempre en Libre (L-01), aunque la dirección diga otra área:
+// la dirección ya la dejó en #libre la prueba de canHistory (09-navegacion.js).
 aplicarIdioma();               // los textos fijos, en el idioma elegido (G-12)
 buildTuner();
 buildBoard();

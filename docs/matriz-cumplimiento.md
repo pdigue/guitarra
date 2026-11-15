@@ -1,6 +1,6 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 2.3 · **Fecha:** 15 de noviembre de 2026 · **Base:** `requisitos.md` v2.3 · app `0.6.5` · `roadmap.md` v4.3  
+**Versión:** 2.3 · **Fecha:** 15 de noviembre de 2026 · **Base:** `requisitos.md` v2.3 · app `0.6.6` · `roadmap.md` v4.3  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple. El historial hasta la 1.25 está en `docs/historico/matriz-cumplimiento.md`.

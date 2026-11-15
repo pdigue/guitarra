@@ -19,7 +19,7 @@ OUT_MD, OUT_JSON = sys.argv[1], sys.argv[2]
 # histórico y el actual no se contradicen (AR-17 #2). Nunca se reutiliza su ID.
 # Versiones (la prueba «las versiones cuadran» las compara con la app y los demás documentos)
 DOC_V, DOC_FECHA = '2.3', '15 de noviembre de 2026'
-APP_V, ROADMAP_V, MATRIZ_V = '0.6.5', '4.3', '2.3'
+APP_V, ROADMAP_V, MATRIZ_V = '0.6.6', '4.3', '2.3'
 # Control de cambios desde la 2.0 (lo anterior, en docs/historico/requisitos.md).
 # Cada fila: versión, fecha, app, roadmap, resumen, origen y la lista de ID cuyo
 # texto, estado, criterio o evidencia cambian. La prueba «el baseline conserva…»

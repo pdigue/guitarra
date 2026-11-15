@@ -668,6 +668,21 @@ test('sin history, como el caso más pobre, la navegación y Ajustes funcionan (
   assert.deepEqual(sinErrores(B), []);
 });
 
+test('en un marco aislado, donde history existe pero lanza SecurityError, la app arranca y navega sin historial (C-07, PL-04, 0.6.6)', () => {
+  // Como la vista previa de un chat: pushState y replaceState están, pero fallan.
+  const prohibido = () => { const e = new Error('Failed to execute pushState'); e.name = 'SecurityError'; throw e; };
+  const h = { state: null, pushState: prohibido, replaceState: prohibido, back(){} };
+  const B = boot(APP, null, { history: h });
+  assert.equal(B.ev('canHistory'), false);
+  assert.ok(B.doc.querySelectorAll('#board .fret-cell').length > 0, 'el mástil se dibuja');
+  B.doc.querySelector('.tab[data-screen="chords"]').click();
+  assert.equal(B.ev('screen'), 'chords');
+  assert.ok(B.doc.querySelectorAll('#board .finger').length > 0, 'y Acordes también');
+  B.$('btn-settings').click(); B.$('sheet-bg').click();
+  assert.ok(!B.$('sheet').classList.contains('open'));
+  assert.deepEqual(sinErrores(B), []);
+});
+
 // --- F3.4: paleta, contraste y teclado ---
 
 function luminancia(hex){

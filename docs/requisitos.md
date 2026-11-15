@@ -1,7 +1,7 @@
 # Trasteando — Especificación de Requisitos
 
 **Versión del documento:** 2.3 · **Fecha:** 15 de noviembre de 2026  
-**Válido para:** app `0.6.5` · `roadmap.md` v4.3 · `matriz-cumplimiento` v2.3 · fase en curso **F6** (F5 sigue abierta)  
+**Válido para:** app `0.6.6` · `roadmap.md` v4.3 · `matriz-cumplimiento` v2.3 · fase en curso **F6** (F5 sigue abierta)  
 **Repositorio:** github.com/pdigue/guitarra, carpeta `docs/` · **Gestiona:** chat de Desarrollo  
 **Tipo de producto:** aplicación web progresiva (PWA), desarrollada en local y publicada al final del roadmap
 
