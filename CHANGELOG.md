@@ -8,7 +8,8 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.6.5** | 15/11/2026 | F5.8 · #6, Acordes más sencillo | Rama `auto/F5.8-acordes` (PR #21) |
+| **0.6.6** | 15/11/2026 | F5.8 · #6, arranca también en un marco aislado | Rama `auto/F5.8-acordes` (PR #21) |
+| 0.6.5 | 15/11/2026 | F5.8 · #6, Acordes más sencillo | Rama `auto/F5.8-acordes` (PR #21) |
 | 0.6.4 | 15/11/2026 | F5.8 · #5, Escalas por posiciones | `main`, fusionada el 15/11 (PR #20) |
 | 0.6.3 | 15/11/2026 | F5.8 · #3 y #4, temas, iPad y Adivinar | `main`, fusionada el 15/11 (PR #19) |
 | 0.6.2 | 12/11/2026 | F5.8 · #2, el afinador sigue la nota; pantalla encendida | `main`, fusionada el 15/11 (PR #18) |
@@ -20,6 +21,15 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.6.6] — 15/11/2026 · F5.8 · La app arranca también en un marco aislado
+
+Lo viste al abrir el archivo autónomo en la vista previa del chat: el mástil salía vacío.
+
+### Corregido
+- **C-07, PL-04** · En un marco aislado (la vista previa de un chat, un `iframe` con *sandbox*) el historial del navegador existe pero no se deja usar, y el error cortaba el arranque antes de dibujar el mástil. Ahora la app prueba el historial una vez al empezar y, si falla, sigue sin él: todo funciona salvo el botón «atrás» del sistema, como en un navegador que no lo tuviera.
 
 ---
 

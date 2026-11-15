@@ -144,7 +144,17 @@ function openSheet(open){
    se bloquea nada: actúa el sistema. Es un estándar presente en todos los
    navegadores; si faltara, la app funciona igual sin ese paso. */
 const SCREEN_HASH = { free:'libre', guess:'adivinar', tuner:'afinador', scales:'escalas', chords:'acordes', metro:'metronomo' };
-const canHistory = typeof history !== 'undefined' && typeof history.pushState === 'function';
+/* Que exista pushState no basta: en un marco aislado (la vista previa de un
+   chat, un iframe con sandbox) existe, pero usarlo lanza SecurityError, y ese
+   error cortaba el arranque antes de dibujar el mástil (0.6.6). Se prueba de
+   verdad una vez, con lo mismo que hace el arranque (dejar la dirección en
+   #libre, L-01); si falla, la app sigue sin historial, como en un navegador
+   que no lo tuviera. Es detectar la capacidad, no el sistema (PL-04). */
+const canHistory = (() => {
+  if (typeof history === 'undefined' || typeof history.pushState !== 'function') return false;
+  try { history.replaceState({ screen:'free' }, '', '#libre'); return true; }
+  catch (e){ return false; }
+})();
 const sheetIsOpen = () => document.getElementById('sheet').classList.contains('open');
 
 function goTo(next){
