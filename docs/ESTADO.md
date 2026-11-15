@@ -30,7 +30,7 @@
 - **Navegador** (solo lo que toque lo cambiado; salida a /tmp): `comprobar-disposicion.js <salida>`, `comprobar-accesibilidad.js`, `comprobar-en-navegador.js <repo absoluto> index.html <salida>`, `comprobar-autonomo.js dist/trasteando.html <salida>`, `comprobar-afinador.js <salida>`. Scripts sueltos con Playwright: `NODE_PATH=/opt/npm-tools/node_modules`.
 - **Requisitos y matriz:** se cambian en `herramientas/documentos/generar-requisitos.py` (y `generar-matriz.py` para criterios) y se regeneran (órdenes en su cabecera). Cada versión del documento va a `CAMBIOS` con la lista de ID que cambian; las versiones de los documentos, en `DOC_V`, `APP_V`, `ROADMAP_V` y `MATRIZ_V`.
 - **Versión:** `APP_VERSION` en `js/01-teoria.js` y los `?v=` de `index.html`; en cada versión, CHANGELOG y ESTADO.
-- **Git:** PR y fusiones con `gh api repos/pdigue/guitarra/pulls …` (sin GraphQL). Tras cada PR, `git push origin HEAD:pruebas`.
+- **Git:** PR y fusiones con `gh api repos/pdigue/guitarra/pulls …` (sin GraphQL). Tras cada PR, `git push origin HEAD:pruebas`; si no avanza (tras fusionar en `main` va por otra línea), sin forzar: `git fetch --depth=30 origin +refs/heads/pruebas:refs/remotes/origin/pruebas`, un commit con `git commit-tree HEAD^{tree} -p origin/pruebas -p HEAD` y subirlo a `pruebas`.
 - **Trampas:** no usar `pkill -f "node --test"` ni `rev`. Arrays de la app: `JSON.parse(A.ev('JSON.stringify(...)'))`. Un metrónomo arrancado en una prueba se para en `t.after`.
 
 ## 4. Decisiones recientes
