@@ -14,7 +14,9 @@ import json, sys, os
 
 OUT_MD, OUT_JSON = sys.argv[1], sys.argv[2]
 
-# impl: si | parcial | no      valid: si | no      flag: '' | nuevo | mod
+# impl: si | parcial | no | retirado      valid: si | no      flag: '' | nuevo | mod
+# Un requisito retirado conserva su ID y su texto (tachado), con etapa «Retirado»: así el
+# histórico y el actual no se contradicen (AR-17 #2). Nunca se reutiliza su ID.
 # Versiones (la prueba «las versiones cuadran» las compara con la app y los demás documentos)
 DOC_V, DOC_FECHA = '2.2', '15 de noviembre de 2026'
 APP_V, ROADMAP_V, MATRIZ_V = '0.6.4', '4.2', '2.2'
@@ -23,7 +25,7 @@ APP_V, ROADMAP_V, MATRIZ_V = '0.6.4', '4.2', '2.2'
 # texto, estado, criterio o evidencia cambian. La prueba «el baseline conserva…»
 # (tests/documentos.test.js) falla si cambia un requisito que no está en una lista.
 CAMBIOS = [
- ('**2.2**', '15/11/2026', '0.6.4', '4.2', 'F5.8 #5, Escalas: una posición cada vez en vez de todo el mástil (E-07, nuevo), con 3 notas por cuerda en la mayor y la menor y 2 en las pentatónicas; «Escuchar» la posición (E-08, nuevo); **se quita el modo Práctica**: E-05 pasa a «tocar las notas de la posición»; E-03, E-04 y E-06 dejan de hablar de «Mostrar»; el paso a paso recorre la posición; el pentagrama, 8 notas alrededor del paso (P-03); E-01, nota. Con la auditoría AR-17. 2 nuevos y 6 modificados: 115 en total.', 'Tu comentario F5.8 #5', ['E-07', 'E-08', 'E-01', 'E-03', 'E-04', 'E-05', 'E-06', 'P-03']),
+ ('**2.2**', '15/11/2026', '0.6.4', '4.2', 'F5.8 #5, Escalas: una posición cada vez en vez de todo el mástil (E-07, nuevo: 3 notas por cuerda en la mayor y la menor y 2 en las pentatónicas; la 1 es la de la tónica, tu decisión del 15/11); «Escuchar» la posición (E-08, nuevo); tocar una casilla la hace el paso actual (E-09, nuevo); «Todas», la escala en todo el mástil (E-10, nuevo, tu respuesta del 15/11); **se retira E-05** (la Práctica de pertenencia) y **E-05b** pasa a ser la Práctica nueva, tocar la posición en orden (tu respuesta del 15/11); E-03, E-04 y E-06 dejan de hablar de «Mostrar» y recorren la posición; el pentagrama, 8 notas alrededor del paso (P-03); E-02 y E-02b, el alcance de las otras afinaciones; E-01, nota. Con las auditorías AR-17 y AT-16. 4 nuevos, 1 retirado y 9 modificados: 117 en total.', 'Tu comentario F5.8 #5 y tus respuestas del 15/11', ['E-07', 'E-08', 'E-09', 'E-10', 'E-05', 'E-05b', 'E-01', 'E-02', 'E-02b', 'E-03', 'E-04', 'E-06', 'P-03']),
  ('2.1', '15/11/2026', '0.6.3', '4.0', 'F5.8 #3 y #4: temas elegibles (V-10) y disposición para tableta y ordenador (V-11); en Adivinar, las pistas en grande y la nota tocada en pequeño (J-01, J-06); el grupo Aspecto en Ajustes (C-02) y las pestañas en tableta (C-04); el mástil de inicio a 40 px en tableta (V-04); C-08 deja los temas a V-10; notas de PL-03 y G-05. J-06 vuelve a «sin validar» hasta tu prueba. Con las auditorías AR-16 y AT-15. 2 nuevos y 8 modificados: 113 en total.', 'Tus comentarios F5.8 #3 y #4', ['V-10', 'V-11', 'J-01', 'J-06', 'C-02', 'C-04', 'C-08', 'PL-03', 'G-05', 'V-04']),
  ('2.0', '15/11/2026', '0.6.2', '4.0', 'Baseline 0.6.2: mismos ID, textos, criterios, estados e implementación; cada nota se queda en lo vigente y lo pendiente de tu prueba. Corregido: en 13 requisitos la columna *Desde* llevaba la nota de la Sesión 1, que pasa a *Notas*. 111 en total.', 'Tu decisión del 15/11', []),
 ]
@@ -118,15 +120,17 @@ req(C,'J-13','Al fallar en Adivinar, por defecto sigues intentándolo hasta que 
 # ---------- Escalas ----------
 C='E'
 req(C,'E-01','Selección de escala a practicar (tónica + tipo).','Alta','F5.2','si','0.5.0','Mayor, menor natural y las dos pentatónicas, en las 12 tónicas, con la tónica escrita según el tipo. Falta que lo veas. F5.8 #5 (decidido): se quedan las 4, presentadas por posiciones desde la 0.6.4 (E-07).',flag='mod')
-req(C,'E-02','El generador de escalas opera **solo en afinación estándar** en la primera entrega.','Alta','F5.2','si','0.5.0','Las 24 mayores y menores, con siete letras distintas, y 16 comparadas con el libro (banco). Pendiente: las 48 contra una tabla de referencia y en el mástil (AR-12 #4); error claro con una alteración fuera de ±2 (AT-11 #9); confirmar que vale en otras afinaciones (AR-12 #9).')
-req(C,'E-02b','Escalas en afinaciones alternativas y variantes de digitación (por ejemplo, escala en octavas).','Media','Posterior','no','','Fuera del alcance de F5.')
+req(C,'E-02','El generador de escalas opera **solo en afinación estándar** en la primera entrega.','Alta','F5.2','si','0.5.0','Las 24 mayores y menores, con siete letras distintas, y 16 comparadas con el libro (banco). Pendiente: las 48 contra una tabla de referencia y en el mástil (AR-12 #4); error claro con una alteración fuera de ±2 (AT-11 #9); confirmar que vale en otras afinaciones (AR-12 #9). Desde la 0.6.4 las posiciones (E-07) se calculan con alturas y el banco comprueba en todas las afinaciones de fábrica que no salen trastes fuera del mástil ni saltos raros; que suenen bien en ellas, con la guitarra, es E-02b.',flag='mod')
+req(C,'E-02b','Escalas validadas en afinaciones alternativas, y otras digitaciones además de las posiciones de E-07 (por ejemplo, en octavas o CAGED).','Media','Posterior','no','','Fuera del alcance de F5. Las posiciones de E-07 ya salen en cualquier afinación (0.6.4), sin validar con la guitarra (AR-17 #3).',flag='mod')
 req(C,'E-03','La app ilumina en el mástil **una posición de la escala cada vez**, no el mástil entero: las notas de esa posición, con su nombre escrito y la tónica con anillo; el resto del mástil queda limpio.','Alta','F5.3 · F5.8','si','0.5.0','Desde la 0.6.4 (tu comentario F5.8 #5: «no es agradable ver el mástil lleno de notas»), 18 casillas en la mayor y la menor y 12 en las pentatónicas. Falta que lo veas.',flag='mod')
 req(C,'E-04','Se indica el nombre de cada nota y su separación interválica respecto a la anterior.','Alta','F5.3','si','0.5.0','Línea «Do T Re T Mi ST Fa…» de tónica a tónica, con el grado del paso actual resaltado (0.6.4); T½ en las pentatónicas. Falta que lo veas. Pendiente: T, ST y T½ en inglés, y que T½ no se lea como medio tono (AR-12 #8).',flag='mod')
-req(C,'E-05','**Tocar la escala:** al pulsar una casilla de la posición, suena y pasa a ser el paso actual (texto, intervalos y pentagrama la siguen); una casilla de fuera solo suena. No hay modo Práctica ni se evalúa nada.','Alta','F5.4 · F5.8','si','0.6.4','Hasta la 0.6.3 era el submodo Práctica (validar la pertenencia de cada nota); **se quitó en la 0.6.4** por tu comentario F5.8 #5 («no haya tanto de práctica, sino ir pudiendo tocar las notas e ir escuchando la escala»). Falta que lo veas.',flag='mod')
-req(C,'E-05b','Validación del orden de la escala y de patrones de digitación concretos.','Media','Posterior','no','','Fuera del alcance de F5.')
+req(C,'E-05','~~Submodo Práctica: valida **solo la pertenencia** de la nota a la escala; al pulsar una ajena, marca error e ilumina las correctas.~~ **Retirado en la 0.6.4.**','Alta','Retirado','retirado','0.5.0','Se quitó por tu comentario F5.8 #5 («no haya tanto de práctica, sino ir pudiendo tocar las notas e ir escuchando la escala»). Lo sustituyen E-09 (tocar la escala) y E-05b (la Práctica nueva, en orden). Su ID no se reutiliza (AR-17 #2).',flag='mod')
+req(C,'E-05b','**Practicar la posición:** con «Practicar», las casillas de la posición se ven sin nombre ni color y hay que tocarlas **en orden, de grave a agudo**; la buena se queda en verde con su nombre y una que no toca se marca en rojo un momento, con aviso propio si suena igual pero está en otra cuerda. Al completarla, tocar la primera vuelve a empezar; cambiar de posición, de escala o de afinación, también.','Media','F5.8','si','0.6.4','Antes era «validación del orden y de patrones de digitación concretos», para después; tu respuesta del 15/11 la trae ahora, sencilla. El pentagrama escribe solo las notas ya tocadas. Falta que lo veas.',flag='mod')
+req(C,'E-09','**Tocar la escala:** al pulsar una casilla de la posición, suena y pasa a ser el paso actual (texto, intervalos y pentagrama la siguen); una casilla de fuera solo suena.','Alta','F5.8','si','0.6.4','Tu comentario F5.8 #5: «ir pudiendo tocar las notas de la escala». Falta que lo veas.',flag='nuevo')
 req(C,'E-06','Guiado nota a nota por la posición elegida.','Media','F5.3 · F5.8','si','0.5.0','◀ ▶ de la nota más grave de la posición a la más aguda (antes, una octava desde la tónica grave), con sonido, resalte de esa casilla y explicación («Mi, un tono sobre Re»). Falta que lo veas. Pendiente: con afinaciones muy graves el pentagrama cambia de octava a mitad (AT-11 #3).',flag='mod')
-req(C,'E-07','**Una posición cada vez:** cada escala se reparte en posiciones que empiezan en una de sus notas sobre la 6.ª cuerda y suben nota a nota, 3 por cuerda en la mayor y la menor (7 posiciones) y 2 en las pentatónicas (las 5 cajas). Se ordenan de la cejuela al cuerpo y se eligen con ◀ ▶ («Posición 3 de 7 · trastes 5 a 9»); al llegar, la que empieza en la tónica; la vista del mástil va a la posición elegida.','Alta','F5.8','si','0.6.4','Tu comentario F5.8 #5. Se calcula con alturas, no con dibujos de memoria: vale en las otras afinaciones (en Drop D, 4 notas en la 6.ª cuando la 5.ª no llega). Falta que lo veas.',flag='nuevo')
-req(C,'E-08','**Escuchar la posición:** un botón la hace sonar entera, subiendo y bajando, con cada nota resaltada en el mástil y en el pentagrama; otro toque la para, y se calla al salir de Escalas o cambiar de escala.','Media','F5.8','si','0.6.4','Tu comentario F5.8 #5: «ir escuchando la propia escala». Una nota cada 380 ms. Falta que lo oigas.',flag='nuevo')
+req(C,'E-07','**Una posición cada vez:** cada escala se reparte en posiciones que empiezan en una de sus notas sobre la 6.ª cuerda y suben nota a nota, 3 por cuerda en la mayor y la menor (7 posiciones) y 2 en las pentatónicas (las 5 cajas). La **posición 1 es la que empieza en la tónica**; las siguientes van hacia el cuerpo y, pasado el traste 11, siguen desde la cejuela. Se eligen con ◀ ▶ («Posición 1 de 7 · trastes 8 a 13»; en el móvil, «1/7»), al llegar se ve la 1 y la vista del mástil va a la posición elegida.','Alta','F5.8','si','0.6.4','Tu comentario F5.8 #5 y tus respuestas del 15/11 (3 notas por cuerda; la 1 en la tónica). Se calcula con alturas, no con dibujos de memoria: vale en las otras afinaciones (en Drop D, 4 notas en la 6.ª cuando la 5.ª no llega). Falta que lo veas.',flag='nuevo')
+req(C,'E-08','**Escuchar la posición:** un botón la hace sonar entera, subiendo y bajando, con cada nota resaltada en el mástil y en el pentagrama; otro toque la para, y se calla al salir de Escalas, al ocultar la app y al cambiar de escala, de posición o de afinación.','Media','F5.8','si','0.6.4','Tu comentario F5.8 #5: «ir escuchando la propia escala». Una nota cada 380 ms, fija (tu respuesta del 15/11). Falta que lo oigas.',flag='nuevo')
+req(C,'E-10','**Todas:** un botón enseña la escala también en el resto del mástil, más pequeña y apagada, sin perder la posición elegida, que sigue destacada. Apagado al entrar en la app.','Media','F5.8','si','0.6.4','Tu respuesta del 15/11 («ver todo el mástil», apagado por defecto). No se guarda entre sesiones. Falta que lo veas.',flag='nuevo')
 
 # ---------- Afinador ----------
 C='A'
@@ -197,7 +201,7 @@ CATS = [
  ('D','Diapasón'),('S','Sonido'),('P','Pentagrama'),('L','Modo Libre'),('J','Modo Adivinar'),
  ('E','Escalas'),('MT','Metrónomo'),('AC','Acordes'),('A','Afinador'),('V','Visualización'),('C','Configuración y navegación'),('X','Respaldo y publicación')]
 
-ICON_I = {'si':'✅','parcial':'🟡','no':'⬜'}
+ICON_I = {'si':'✅','parcial':'🟡','no':'⬜','retirado':'➖'}
 ICON_V = {'si':'✅','no':'⬜'}
 FLAG = {'nuevo':' 🆕','mod':' ✏️','':''}
 
@@ -240,9 +244,9 @@ w('**Repositorio:** github.com/pdigue/guitarra, carpeta `docs/` · **Gestiona:**
 w('**Tipo de producto:** aplicación web progresiva (PWA), desarrollada en local y publicada al final del roadmap\n')
 w('---\n')
 w('## 1. Estado de un vistazo\n')
-w('| Total | ✅ Implementados | 🟡 Parciales | ⬜ Pendientes | ✅ Validados |')
-w('|:---:|:---:|:---:|:---:|:---:|')
-w('| {} | {} | {} | {} | {} |\n'.format(tot, ci['si'], ci['parcial'], ci['no'], sum(r['valid']=='si' for r in R)))
+w('| Total | ✅ Implementados | 🟡 Parciales | ⬜ Pendientes | ➖ Retirados | ✅ Validados |')
+w('|:---:|:---:|:---:|:---:|:---:|:---:|')
+w('| {} | {} | {} | {} | {} | {} |\n'.format(tot, ci['si'], ci['parcial'], ci['no'], ci['retirado'], sum(r['valid']=='si' for r in R)))
 w('> Un requisito implementado no cuenta como cumplido hasta superar su prueba. El primero validado fue **S-08**, en la 0.2.0. La Sesión 1 (20/10, en tu iPhone y tu PC) validó 35 de golpe; lo que cambió la 0.3.3 y el sonido en el iPhone esperan a la Sesión 2.\n')
 w('| Fase | Objetivo | Requisitos | Implementados |')
 w('|------|----------|:---:|-----------|')
@@ -316,6 +320,7 @@ for r in R:
         by_stage[e].append(r['id'])
 def skey(s):
     if s == 'Posterior': return (99, 0)
+    if s == 'Retirado': return (100, 0)
     a, b = s[1:].split('.')
     return (int(a), int(b))
 w('| Etapa | Requisitos |')

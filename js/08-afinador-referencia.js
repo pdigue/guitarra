@@ -103,6 +103,7 @@ function onTuningChanged(){
   // Con otra afinación, las posiciones son otras: se vuelve a la de la tónica.
   reiniciarEscala();
   renderScales();              // otra afinación: otras casillas para la misma escala
+  requestAnimationFrame(verTrastesPosicion);   // y la vista, a la posición (AT-16 #7)
   renderChords();              // y Acordes avisa si ya no es la estándar (AC-05)
 }
 

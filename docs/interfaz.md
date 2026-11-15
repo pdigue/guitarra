@@ -119,11 +119,12 @@ Selector arriba: **De oído | Micrófono**. Desde la 0.6.2 (tu comentario del 12
 
 **Desde la 0.6.4** (tu comentario F5.8 #5: «no es agradable ver el mástil lleno de notas»): **una posición cada vez y sin modo Práctica.**
 
-Fila superior: tónica y tipo (E-01: mayor, menor natural y pentatónicas mayor y menor) y, en la misma fila, la **posición**: ◀ «Posición 6 de 7 · trastes 8 a 13» ▶ y el botón **▶ Escuchar** (E-07, E-08). En el móvil (vertical, o el panel lateral en horizontal) los textos van en corto, «6/7» y ♪, para no gastar otra fila.
+Fila superior: tónica y tipo (E-01: mayor, menor natural y pentatónicas mayor y menor) y, en la misma fila, la **posición**: ◀ «Posición 1 de 7 · trastes 8 a 13» ▶ y el botón **▶ Escuchar** (E-07, E-08). En el móvil (vertical, o el panel lateral en horizontal) los textos van en corto, «1/7» y ♪, para no gastar otra fila. En la barra de atajos, junto a «Do Re Mi», dos botones solo de Escalas: **Todas** (E-10) y **Practicar** (E-05b).
 
-- **El mástil** (E-03) enseña solo las casillas de la posición: 3 notas por cuerda en la mayor y la menor (7 posiciones) y 2 en las pentatónicas (las 5 cajas), con su nombre escrito y la tónica con anillo. El resto, limpio. Al entrar se ve la posición que empieza en la tónica, y la vista del mástil va sola a la posición elegida.
+- **El mástil** (E-03) enseña solo las casillas de la posición: 3 notas por cuerda en la mayor y la menor (7 posiciones) y 2 en las pentatónicas (las 5 cajas), con su nombre escrito y la tónica con anillo. El resto, limpio. La posición 1 es la que empieza en la tónica (las siguientes van hacia el cuerpo y, pasado el traste 11, siguen desde la cejuela); al entrar se ve la 1, y la vista del mástil va sola a la posición elegida. Con **Todas**, el resto de la escala se ve más pequeño y apagado.
 - **Escuchar** (E-08) toca la posición subiendo y bajando, una nota cada 380 ms, con cada casilla resaltada; mientras suena, el botón dice «■ Parar» en naranja.
-- **Tocar** (E-05): al pulsar una casilla de la posición, suena y pasa a ser el paso actual; una de fuera solo suena.
+- **Tocar** (E-09): al pulsar una casilla de la posición, suena y pasa a ser el paso actual; una de fuera solo suena.
+- **Practicar** (E-05b): las casillas de la posición, sin nombre y con un aro neutro (el color diría la nota); se tocan en orden de grave a agudo. Las buenas, en verde con su nombre; un fallo, en rojo un momento. El texto del paso a paso dice cómo vas («Práctica · 3 de 12…») y el pentagrama escribe solo lo ya tocado.
 - **Bajo el mástil, el paso a paso** (E-04, E-06): la línea «Do T Re T Mi ST Fa…» con el grado del paso resaltado y ◀ «Paso 3 de 18 · Mi, un tono sobre Re» ▶, de la nota más grave de la posición a la más aguda. El pentagrama (P-03) escribe 8 notas de la posición alrededor del paso.
 - **Antes (0.5.0 a 0.6.3):** Mostrar | Práctica; Mostrar iluminaba la escala en todo el mástil y el guiado subía una octava desde la tónica grave; Práctica contaba las notas distintas encontradas («3 de 7»).
 
@@ -148,7 +149,7 @@ La propuesta saca todo eso del alto del mástil: **raíl | mástil | panel**.
 |---|---|
 | Libre (B1) | Do Re Mi y 𝄞 (pentagrama) · pentagrama, si está activado · nota leída · zoom |
 | Adivinar (B2, B6) | Do Re Mi y 𝄞 · ▶ con racha y récord · mensaje del reto · pistas Nombre y Cuerda · pentagrama, si está activado · zoom. *En la 0.3.0, Do Re Mi y 𝄞 van arriba como en Libre, para que nada cambie de sitio entre áreas (principio 3; AR-05 #4).* |
-| Escalas (B3) | tónica y tipo · posición ◀ ▶ y Escuchar · paso a paso ◀ ▶ · **nota del paso y su intervalo**, que se ven aunque el pentagrama esté apagado (E-04) · pentagrama, si está activado · zoom |
+| Escalas (B3) | Todas y Practicar en los atajos · tónica y tipo · posición ◀ ▶ y Escuchar · paso a paso ◀ ▶ · **nota del paso y su intervalo**, que se ven aunque el pentagrama esté apagado (E-04) · pentagrama, si está activado · zoom |
 | Afinador (B4, B5) | Sin mástil ni panel: De oído en rejilla de 3 × 2 cuerdas con el pentagrama debajo; Micrófono con la aguja a la izquierda y cuerda, orden y botón de detener a la derecha |
 
 En horizontal, el botón de pentagrama del panel es el símbolo 𝄞, con su nombre para lectores de pantalla, porque «Pentagrama» no cabe junto a «Do Re Mi». Si el contenido del panel no cabe en el alto, **se desplaza el panel**; el mástil nunca, y el zoom se queda fijo abajo.
@@ -265,7 +266,7 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.17** | 15/11/2026 | F5.8 #5: Escalas, una posición cada vez, con «Escuchar» y sin Práctica (§Escalas, E-03 a E-08, P-03); textos cortos en el móvil. |
+| **1.17** | 15/11/2026 | F5.8 #5: Escalas, una posición cada vez (la 1 en la tónica), con «Escuchar», «Todas» y una Práctica nueva en orden (§Escalas, E-03 a E-10, P-03); textos cortos en el móvil. |
 | 1.16 | 15/11/2026 | F5.8 #3 y #4: disposición «Tableta y ordenador» (§3, V-11; umbral de área útil 700 × 600 tras AR-16 #1, y excepción al principio 1 de §2), temas en Ajustes › Aspecto (§10, V-10; Madera de fábrica, tu decisión del 15/11) y, en Adivinar, la franja de pistas en grande y la nota tocada en pequeño (§6, J-01, J-06). |
 | 1.15 | 12/11/2026 | F5.8 #2: el afinador abre en Micrófono, sostiene la última lectura y mantiene la pantalla encendida (A-02, A-03, G-13). El metrónomo avisa donde no puede mantenerla. |
 | 1.14 | 22/10/2026 | F5.8, tu primer comentario de uso: la barra del metrónomo es un péndulo, con la pesa arriba más lenta (MT-06, nuevo). |

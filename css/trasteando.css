@@ -177,6 +177,11 @@ button { font-family:inherit; color:inherit; }
    con anillo (no depende del color); el paso del guiado, resaltado. */
 .board.scales .fret-cell.scale .dot { opacity:1; transform:scale(.88); }
 .board.scales .fret-cell.scale-tonic .dot { transform:scale(.96); box-shadow:0 0 0 2px #160f07, 0 0 0 4px var(--text); }
+.board.scales .fret-cell.scale-all .dot { opacity:.42; transform:scale(.72); }   /* «Todas»: el resto de la escala, apagado */
+/* Práctica: las casillas de la posición, sin nombre ni color (se sabría la nota)
+   hasta que las tocas en orden; las hechas, en verde con su nombre. */
+.board.scales.practice .fret-cell.scale:not(.correct) .dot { background:rgba(20,14,9,.88); color:transparent;
+  box-shadow:inset 0 0 0 2px rgba(244,236,225,.6); }      /* aro neutro: el color de cada nota la delataría */
 .board.scales .fret-cell.scale-step .dot { transform:scale(1.05); box-shadow:0 0 0 3px var(--amber), 0 2px 8px rgba(0,0,0,.5); }
 .ch-hints { display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
 /* Pista encendida: el chip enseña la respuesta, con etiqueta pequeña y valor

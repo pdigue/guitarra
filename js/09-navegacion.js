@@ -33,6 +33,8 @@ function setScreen(next){
   document.getElementById('scales-card').hidden = !isScales;
   document.getElementById('chords-card').hidden = !isChords;
   document.getElementById('scale-nav').hidden = !isScales;
+  document.getElementById('qb-scale-all').hidden = !isScales;
+  document.getElementById('qb-scale-practice').hidden = !isScales;
   updateRotateHint();
 
   clearMarks(['active','equal','correct','wrong','reveal']);
