@@ -65,6 +65,22 @@ const PANTALLAS = [
   ['iphone-safari-horizontal-acordes',   750, 342, true,  'chords', false],
   ['windows-1280-acordes',              1280, 720, false, 'chords', false],
   ['windows-tableta-acordes',            768, 900, false, 'chords', false],
+  // Tableta y ordenador (F5.8 #3, V-11): el mástil con un alto acotado (cuerdas de
+  // 40 a 80 px) y las pestañas sin pisar el nombre ni Ajustes.
+  ['ipad-vertical-adivinar',             820, 1180, true, 'guess', false],
+  ['ipad-mini-vertical-libre',           744, 1133, true, 'free',  false],
+  ['ipad-horizontal-libre',             1180, 820, true,  'free',  false],
+  ['ipad-1024-horizontal-adivinar',     1024, 768, true,  'guess', false],
+  ['ipad-vertical-metronomo',            820, 1180, true, 'metro', false],
+  ['ipad-vertical-acordes',              820, 1180, true, 'chords', false],
+  ['ordenador-1440-adivinar',           1440, 900, false, 'guess', false],
+  ['ipad-vertical-ajustes',              820, 1180, true, 'free',  false, true],
+  // Con las barras de Safari (AR-16 #1): iPad mini en horizontal y una ventana de
+  // 1280 × 720 en Windows, que deja unos 620 px útiles.
+  ['ipad-mini-horizontal-safari-libre', 1133, 670, true,  'free',  false],
+  ['ipad-mini-horizontal-safari-adivinar', 1133, 670, true, 'guess', false],
+  ['windows-1280-ventana-adivinar',     1280, 620, false, 'guess', false],
+  ['windows-1280-ventana-acordes',      1280, 620, false, 'chords', false],
   // Ajustes abierto: sus controles también miden 40 px (AR-05 #3).
   ['iphone-safari-vertical-ajustes',     390, 664, true,  'free',  true,  true],
   ['iphone-safari-horizontal-ajustes',   750, 342, true,  'free',  false, true],
@@ -106,6 +122,12 @@ const PANTALLAS = [
       }
       const metro = document.getElementById('metro');
       if (vis(metro)) out.metroDesplaza = metro.scrollHeight > metro.clientHeight + 1;
+      // Las pestañas no pueden pisar el nombre ni el botón de Ajustes (F5.8 #3).
+      const choca = (x, y) => { if (!x || !y || !vis(x) || !vis(y)) return false;
+        const a = x.getBoundingClientRect(), b = y.getBoundingClientRect();
+        return a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom; };
+      const barra = document.querySelector('.tabbar');
+      out.pisa = ['.brand', '#btn-settings'].filter(q => choca(barra, document.querySelector(q)));
       out.aviso = !document.getElementById('rotate-hint').hidden && vis(document.getElementById('rotate-hint'));
       const disp = document.getElementById('display');
       if (vis(disp) && !disp.classList.contains('hidden')) out.pentagrama = disp.getBoundingClientRect().height;
@@ -136,6 +158,12 @@ const PANTALLAS = [
       partes.push(`pentagrama ${m.pentagrama.toFixed(0)} px`);
       if (m.pentagrama < 59.5) fallo(nombre, `pentagrama encendido de solo ${m.pentagrama.toFixed(0)} px`);
     }
+    // En pantallas de 700 × 600 o más (tableta, ordenador) el mástil no se estira (V-11).
+    // Con ratón basta con 30 px por cuerda (los 40 px son para el dedo, G-05).
+    const minTab = dedo ? MIN : 30;
+    if (m.cuerda !== undefined && w >= 700 && h >= 600 && (m.cuerda < minTab - 0.5 || m.cuerda > 80.5))
+      fallo(nombre, `cuerda de ${m.cuerda.toFixed(1)} px en tableta u ordenador (de ${minTab} a 80)`);
+    if (m.pisa.length) fallo(nombre, 'las pestañas pisan ' + m.pisa.join(' y '));
     if (m.metroDesplaza !== undefined) partes.push(m.metroDesplaza ? 'metrónomo: hay que desplazar' : 'metrónomo: cabe entero');
     if (dedo !== m.dedo) fallo(nombre, 'la emulación del puntero no coincide');
     if (dedo && m.pequenos.length) fallo(nombre, 'botones de menos de 40 px: ' + m.pequenos.join(', '));

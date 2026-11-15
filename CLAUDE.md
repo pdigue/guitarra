@@ -14,98 +14,86 @@ Idioma: español en todo (código comentado, commits, informes y respuestas).
 3. Con este archivo y ESTADO.md basta para seguir; los demás documentos se leen
    solo cuando la tarea los necesita, y por partes (con grep o por secciones).
 
-## Cuándo se actualiza ESTADO.md (sin que Pablo tenga que vigilarlo)
-- En cada versión nueva de la app, en el mismo commit que sube APP_VERSION. El
-  banco lo exige: una prueba falla si ESTADO.md no menciona la versión actual,
-  y ninguna etapa se cierra con el banco en rojo.
-- Tras cada fusión en main, decisión de Pablo o cambio de pendientes.
-- Al cerrar cada etapa o conversación, como último paso.
-Cada vez: commit y push, y la misma versión al proyecto como claude/ESTADO.md
-(y CLAUDE.md como claude/CLAUDE.md si cambió). El mensaje final a Pablo termina
-con una línea: «ESTADO actualizado: versión X, siguiente paso Y».
+## Bloques de trabajo (desde el 15/11)
+Un **bloque** es una etapa del roadmap o un comentario de Pablo (p. ej. F5.8 #5):
+una conversación, una rama `auto/F<fase>.<etapa>-<tema>`, un PR. Puede tener
+varias versiones de la app.
 
 ## Documentos que mandan
-- docs/ESTADO.md — memoria entre conversaciones: estado, pendientes y comandos.
-- docs/compatibilidad.md — qué capacidades usa la app y qué hace donde faltan.
-- docs/requisitos.md — qué debe hacer el producto. Fuente de verdad del alcance.
-  Se genera con herramientas/documentos/ (junto con la matriz): no se edita a mano.
-- docs/interfaz.md — qué hay en cada pantalla y cómo se navega (C-06, aprobada).
-- docs/roadmap.md — en qué orden se construye y cómo se valida cada etapa.
-- docs/matriz-cumplimiento.md — criterio de aceptación de cada requisito. Es el contrato.
-- docs/automatizacion.md — ciclo de iteración y paradas.
-- CHANGELOG.md — qué cambió en cada versión.
-- CREDITOS.md — origen y licencia de todo lo que no es nuestro.
+- docs/ESTADO.md — memoria entre conversaciones (unas 60 líneas, solo lo vivo).
+- docs/requisitos.md y docs/matriz-cumplimiento.md — qué debe hacer el producto y
+  cómo se demuestra. Se **generan** con herramientas/documentos/ (no se editan a
+  mano); desde la v2.0 son el *baseline 0.6.2*.
+- docs/roadmap.md — lo que queda y en qué orden (las fases hechas, una línea).
+- docs/interfaz.md, docs/compatibilidad.md, docs/automatizacion.md.
+- CHANGELOG.md (solo desde la 0.6.0) y CREDITOS.md.
+- docs/historico/ — todo lo anterior al 15/11, íntegro: requisitos v1.27, matriz
+  v1.25, roadmap v3.26, CHANGELOG hasta la 0.5.7, auditorías, verificaciones e
+  informes. Solo se lee si hace falta; no se toca. La rama `archivo/hasta-0.6.2`
+  guarda el estado de entonces y **no se borra nunca**.
 
 ## Decisiones vigentes
-- Modo acelerado por bloques: F1–F3 sin parar salvo en las paradas, sesión con
-  el móvil, F4–F6, sesión con la guitarra, F7.
-- Audio (S-07): opción A, las muestras actuales alojadas en samples/ con
-  licencia verificada y atribución.
-- Móvil de referencia: iPhone.
-- Explicaciones: un informe didáctico por fase en docs/iteraciones/.
-- Despliegue de pruebas en GitHub Pages, sin anunciar, desde una rama propia,
-  antes de la Sesión 1. La publicación oficial sigue en F7.1.
-- Sin Android de pruebas por ahora: simulador de Chrome hasta tener uno.
-- Service Worker en F6.2, no antes (20/10): en la Sesión 1 el iPhone usa la web
-  con conexión.
-- Agudo de la acústica (hasta 14 semitonos de transporte): limitación conocida
-  aceptada (20/10).
+- Audio (S-07): las muestras de samples/, con licencia verificada y atribución.
+- Móvil de referencia: iPhone. Sin Android de pruebas: simulador de Chrome.
+- Web de pruebas en GitHub Pages (rama `pruebas`), sin anunciar; la publicación
+  oficial es F7.1.
+- Agudo de la acústica (hasta 14 semitonos de transporte): limitación aceptada.
 
 ## Reglas
-1. Nunca trabajes en main. Una rama por etapa: auto/F<fase>.<etapa>-<tema>.
-2. Una etapa está hecha cuando sus requisitos cumplen su criterio de aceptación
-   y `node --test` está en verde.
-3. Auditorías, en dos niveles (decisión de Pablo, 22/10). Siempre los dos
-   auditores de .claude/agents/ en paralelo, auditor-requisitos y
-   auditor-tecnico: ayudantes de solo lectura cuyos informes van a
-   docs/auditorias/ (AR-nn, AT-nn).
-   - Tras cada etapa (F5.6, F5.7…): revisión ligera de lo que cambió en esa
-     etapa, con un número limitado de pasos.
-   - Al cerrar cada fase (punto de control CP-n): revisión a fondo de toda la
-     fase, con atención a lo que indique el roadmap (p. ej. corrección musical).
-   Corrige los hallazgos críticos y altos; anota los demás en la matriz.
-   Máximo dos rondas por etapa o punto de control.
-4. Todo cambio en requisitos.md va a su control de cambios y al informe de
-   iteración, bajo «Cambios en requisitos». El cliente debe poder verlos todos.
-5. Versión de la app: 0.<fase>.<corrección>. Actualiza APP_VERSION y CHANGELOG.md
-   en cada entrega.
-6. Commits en español, en infinitivo y con IDs: «F2.2: reproductor propio (S-01, S-04)».
-7. Cada iteración deja docs/iteraciones/IT-nn.md: qué se hizo, por qué y qué
-   concepto ilustra, para un principiante.
-8. Para y pregunta en las paradas de docs/automatizacion.md §3. No publiques,
-   no fusiones en main, no pagues, no borres historial sin aprobación explícita.
-9. Cero dependencias nuevas sin justificarlo en el informe. La app y el banco de
-   pruebas no instalan nada; las herramientas de herramientas/ pueden necesitar
-   Python, y lo dicen en su cabecera.
+1. Nunca trabajes en main. Una rama por bloque.
+2. Un bloque está hecho cuando sus requisitos cumplen su criterio y `node --test`
+   está en verde.
+3. **Auditorías** (15/11). Los auditores de .claude/agents/ son de solo lectura;
+   sus informes van a docs/auditorias/ (AT-nn, AR-nn).
+   - Técnica (auditor-tecnico), **ligera, una vez por bloque**: entrada, el diff
+     del bloque; como mucho 10 lecturas de archivos.
+   - De requisitos (auditor-requisitos): **solo si cambian requisitos**, con la
+     misma entrada y el mismo límite.
+   - **A fondo** (los dos, en paralelo), al cerrar cada fase (punto de control CP-n).
+   - **Una ronda**, salvo que haya críticos. Corrige lo crítico y lo alto; anota
+     el resto en la matriz.
+4. Todo cambio en requisitos.md va a su control de cambios, con la lista de ID
+   que cambian (lo exige el banco), y se avisa a Pablo de cada uno.
+5. Versión de la app: 0.<fase>.<corrección>. **En cada versión**, solo
+   APP_VERSION, CHANGELOG.md y ESTADO.md (y requisitos y matriz si cambian).
+   **Al cerrar el bloque**: roadmap, interfaz, compatibilidad y el informe
+   didáctico, de **una página**, en docs/iteraciones/IT-nn.md (qué se hizo, por
+   qué y qué concepto ilustra, para un principiante).
+6. Commits en español, en infinitivo y con IDs: «F5.8 #3: temas elegibles (C-08)».
+7. En el navegador, solo las comprobaciones que toquen lo cambiado. Capturas solo
+   si cambia algo visual, y **combinadas en una imagen**.
+8. Para y pregunta en las paradas de docs/automatizacion.md §3. No publiques, no
+   fusiones en main, no pagues, no borres historial sin aprobación explícita.
+9. Cero dependencias nuevas sin justificarlo en el informe. La app y el banco no
+   instalan nada; las herramientas de herramientas/ pueden necesitar Python, y lo
+   dicen en su cabecera.
 10. Diseña para Windows, Android e iPhone a la vez (PL-04): solo estándares web,
     detecta capacidades y no sistemas, y anota cada capacidad nueva con su
     alternativa en docs/compatibilidad.md. El iPhone marca el mínimo.
-11. Aprobación de fusiones: Pablo la da con palabras explícitas («fusiona el #N»).
-    Un «ok» o «sigue» no basta para fusionar en main.
+11. Fusiones: Pablo las aprueba con palabras explícitas («fusiona el #N»). Un
+    «ok» o «sigue» no basta.
+
+## Cuándo se actualiza ESTADO.md
+- En cada versión, en el mismo commit que sube APP_VERSION (el banco lo exige:
+  la línea «Actualizado» cita la versión, y la línea «Documentos» las de
+  requisitos, matriz y roadmap).
+- Tras cada fusión en main, decisión de Pablo o cambio de pendientes.
+Cada vez: commit y push, y la misma versión al proyecto como claude/ESTADO.md
+(y CLAUDE.md como claude/CLAUDE.md si cambió). **En el proyecto de claude.ai solo
+están esos dos**; todo lo demás vive en GitHub.
 
 ## Cambio de conversación (lo propone el agente, no Pablo)
-Cuando se cierre una etapa, pasen un par de días o la conversación se haya
-resumido sola por ser larga, el agente lo dice sin esperar a que se lo pidan:
+Al cerrar un bloque, pasados un par de días o si la conversación se ha resumido
+sola por larga:
 1. «Conviene pasar a una conversación nueva».
-2. Deja ESTADO al día (repositorio y proyecto) y comprueba que el banco está en verde.
+2. Deja ESTADO al día (repositorio y proyecto) con el banco en verde.
 3. Si cambió la forma de trabajar, da el texto nuevo completo de las
    instrucciones del proyecto: Pablo lo pega; el agente no puede editarlas.
-4. Recuerda el mensaje de arranque, que es siempre el mismo («Lee ESTADO y
-   sigue»), y qué puede añadir Pablo (aprobaciones, comentarios).
+4. Recuerda el mensaje de arranque («Lee ESTADO y sigue») y qué puede añadir Pablo.
 5. Termina con «ESTADO actualizado: versión X, siguiente paso Y».
 
-## Continuidad y ahorro de uso
-Pablo tiene un límite de uso. Cada mensaje de una conversación larga vuelve a
-procesar todo lo anterior, así que lo caro es la longitud de la conversación,
-no los documentos en sí.
-- Una conversación por etapa o por un par de días. Al cerrarla, actualiza
-  docs/ESTADO.md (y súbelo al proyecto de claude.ai) para que la siguiente
-  empiece desde ahí.
-- Lee por partes. No vuelques diffs, registros ni documentos enteros al
-  contexto si basta con un grep o con las líneas que fallan.
-- Auditorías: las de la regla 3, ni más ni menos; las ligeras, de verdad ligeras
-  (solo lo cambiado en la etapa).
-- Capturas de pantalla solo cuando cambie algo visual, y combinadas en una imagen.
-- Los documentos del proyecto de claude.ai se suben al cerrar la etapa, no en
-  cada versión.
-
+## Ahorro de uso
+Pablo tiene un límite de uso, y lo caro es la longitud de la conversación.
+- Lee por partes (grep, secciones). No vuelques diffs, registros ni documentos.
+- Auditorías, las de la regla 3, ni más ni menos.
+- El histórico no se relee salvo para una duda concreta.

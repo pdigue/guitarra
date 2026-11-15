@@ -58,10 +58,10 @@ function drawStaffBase(svg, x1, x2){
   }
   // La clave se dibuja a escala y se coloca de modo que su espiral quede
   // sobre la segunda línea, que es donde va el Sol.
-  const clef = el('path',{ d:CLEF_PATH, fill:'#e8a45c',
+  const clef = el('path',{ d:CLEF_PATH, class:'staff-clef',
     transform:'translate(4,'+(STAFF_TOP-16)+') scale(1.15)' });
   svg.appendChild(clef);
-  const eight = el('text',{x:16,y:STAFF_BOTTOM+20,fill:'#e8a45c',
+  const eight = el('text',{x:16,y:STAFF_BOTTOM+20,class:'staff-clef',
     'font-size':11,'font-family':'Georgia, serif','font-style':'italic'});
   eight.textContent = '8';
   svg.appendChild(eight);
@@ -81,8 +81,17 @@ function fitOctave(midi){
   return { drawMidi: midi - shift, mark };
 }
 
+/** Los colores de nota (pastel) están pensados para fondo oscuro. En un tema
+ *  claro (F5.8 #3) el pentagrama se escribe con la tinta del texto: «currentColor»
+ *  toma el color del CSS (.staff-svg { color:var(--text) }), sin poner var() en un
+ *  atributo del SVG, que no todos los navegadores aceptan (AT-15 #2). */
+function tintaNota(color){
+  return document.documentElement.dataset.scheme === 'light' && /^#/.test(color) ? 'currentColor' : color;
+}
+
 /** Dibuja una nota con sus líneas adicionales, su plica y su marca de octava. */
 function drawNote(svg, realMidi, x, color, withStem, esc, accX){
+  color = tintaNota(color);
   const { drawMidi, mark } = fitOctave(realMidi);
   const midi = drawMidi;
   // Con nota escrita (escalas), su letra y su alteración; si no, la de siempre.

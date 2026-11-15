@@ -1,8 +1,8 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 1.15 · **Fecha:** 12 de noviembre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0); la sección 7b (seis áreas, con Metrónomo y Acordes), aprobada el 21/10 y retocada el 22/10 con tu decisión de la pesa del metrónomo; los detalles del péndulo, a falta de tu visto bueno en la web de pruebas. Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
-**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.6.1` · `requisitos.md` v1.26 · `roadmap.md` v3.24
-**Revisión:** auditoría de requisitos AR-04 (`auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
+**Versión:** 1.16 · **Fecha:** 15 de noviembre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0); la sección 7b (seis áreas, con Metrónomo y Acordes), aprobada el 21/10 y retocada el 22/10 con tu decisión de la pesa del metrónomo; los detalles del péndulo, a falta de tu visto bueno en la web de pruebas. Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
+**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.6.3` · `requisitos.md` v2.1 · `roadmap.md` v4.1
+**Revisión:** auditoría de requisitos AR-04 (`historico/auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
 
 Este documento dice **qué hay en cada pantalla, dónde está y cómo se pasa de una a otra**. Desde su aprobación manda sobre el diseño de F3 a F5: lo que se construya después se compara con él. Cambiarlo es posible, sobre todo tras usarlo en la Sesión 1 (F3.3): cada cambio sube la versión y queda en el control de cambios.
@@ -24,7 +24,7 @@ La fuente es [`interfaz/wireframes.html`](interfaz/wireframes.html). La herramie
 
 ## 2. Principios
 
-1. **El mástil manda.** Es lo que se usa cada segundo, así que se lleva el espacio que sobra en cada pantalla y nunca lo tapa nada.
+1. **El mástil manda.** Es lo que se usa cada segundo, así que se lleva el espacio que sobra en cada pantalla y nunca lo tapa nada. **Excepción en tableta y ordenador** (V-11, 0.6.3, pendiente de tu aprobación): allí sobra tanto alto que el mástil se acota (cuerdas de 40 a 80 px) y el resto va al pentagrama y a la lectura.
 2. **Lo frecuente, a un toque; lo raro, en Ajustes.** Tres niveles de controles (sección 5).
 3. **Misma estructura en todas las áreas.** Al cambiar de área nada salta de sitio.
 4. **Igual en todos los sistemas** (PL-04). Solo estándares web. La forma cambia según el tamaño de la pantalla y el tipo de puntero, nunca según el sistema.
@@ -39,8 +39,9 @@ La app elige su disposición por el tamaño de la ventana, no por el aparato. «
 | **Vertical** | Ancho < 600 px y en vertical | Barra de pestañas abajo | Arriba, sobre el mástil | Hoja que sube desde abajo | iPhone en Safari: 390 × 664 |
 | **Horizontal** | Alto ≤ 520 px y en horizontal | Raíl a la izquierda | Panel a la derecha | Panel lateral | iPhone en Safari: 750 × 342 · Android de 360 dp en Chrome: 780 × 280 |
 | **Amplia** | El resto | Pestañas en la cabecera | Arriba, sobre el mástil | Panel lateral | Ventana de Windows de 1280 × 720 |
+| **Tableta y ordenador** (V-11, 0.6.3) | Área útil de 700 × 600 px o más (iPad en las dos orientaciones, también con las barras de Safari; ordenador) | Control segmentado: en la cabecera desde 1100 px de ancho; por debajo, en su propia fila bajo ella | Arriba, más grandes; el mástil con alto acotado (420 px con el dedo, 380 con ratón) y centrado; el pentagrama, hasta 230 px | Panel lateral de 440 px | iPad 820 × 1180, 744 × 1133, 1180 × 820, 1024 × 768 y 1133 × 670 (iPad mini en horizontal con Safari); ordenador 1440 × 900 y 1280 × 620 (ventana de 1280 × 720) |
 
-Una tableta en vertical usa la disposición amplia: tiene sitio de sobra.
+Una tableta usa la disposición **Tableta y ordenador** (F5.8 #3, 15/11): antes usaba la amplia y el mástil se estiraba hasta cuerdas de 150 px.
 
 ## 4. Mapa de la app
 
@@ -92,6 +93,8 @@ Igual que Libre, con la **tarjeta del reto** entre el acceso rápido y el másti
 - **Desde la 0.4.1** (tu comentario del 21/10): encendida, cada pista enseña su respuesta **dentro de su botón, en grande**, con etiqueta pequeña y borde discontinuo de «pista»: «NOTA Sol#3», «CUERDAS 3ª 4ª». Con alguna encendida, sobra el rótulo «Pistas» y las dos caben en una fila. La **lectura grande** de debajo vuelve a ser la nota que tocas: lo que buscas está en las pistas, lo que tocas en la lectura, y no se confunden.
 - **Al fallar** (J-09, J-10): la posición pulsada se rellena en rojo con ✗ y, 1,2 s después, las correctas en verde con su nombre y ✓; el reto siguiente llega 3 s más tarde. **Al acertar**, todas las correctas en verde (J-03).
 - La lectura grande y el pentagrama muestran **la nota que tocas** (desde la 0.4.1; en la 0.3.3 mostraban la buscada y confundían). La buscada solo se ve con la pista de nombre, en su botón, o al responder. El pentagrama no muestra la nota hasta que respondes, y «Ver todas las notas» no se aplica (J-12).
+
+- **Desde la 0.6.3** (F5.8 #4): con una pista encendida, la fila de pistas es **la franja de lo que se busca**: cada pista encendida ocupa su parte, con la respuesta en grande (30 px en el móvil, 44 en tableta; una larga, como «1ª 2ª 3ª 4ª», se reduce para caber). La nota que tocas se lee **en pequeño y en gris** junto al pentagrama, para que no compita con la buscada (J-01, J-06).
 
 ### Afinador — bocetos A3 y A4
 
@@ -203,6 +206,10 @@ Decisión del cliente: «elige tú los colores, para que las notas se distingan 
 - El nombre de la nota se escribe siempre, por el principio 5.
 - El ámbar sigue siendo el color de lo activo, el verde el del acierto y el rojo el del error.
 
+### Temas (V-10, 0.6.3; decidido el 15/11)
+
+En Ajustes › **Aspecto**, tres temas, que se cambian cuando quieras: **Madera** (de fábrica: el de siempre, más limpio), **Automático** (claro u oscuro, como el dispositivo, con los grises y el naranja del sistema de Apple) y **Partitura** (papel, tinta y rojo de imprenta). Cada tema es un juego de fichas de color (`css/trasteando.css`); el mástil es oscuro en todos, así que la paleta por nota y los colores de acierto y fallo no cambian. En un tema claro, la nota leída, las pistas y el pentagrama se escriben con la tinta del texto. Los contrastes de la sección 9 se miden en los cuatro aspectos.
+
 ## 11. Alternativas descartadas
 
 | Alternativa | Por qué no |
@@ -254,7 +261,8 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.15** | 12/11/2026 | F5.8 #2: el afinador abre en Micrófono, sostiene la última lectura y mantiene la pantalla encendida (A-02, A-03, G-13). El metrónomo avisa donde no puede mantenerla. |
+| **1.16** | 15/11/2026 | F5.8 #3 y #4: disposición «Tableta y ordenador» (§3, V-11; umbral de área útil 700 × 600 tras AR-16 #1, y excepción al principio 1 de §2), temas en Ajustes › Aspecto (§10, V-10; Madera de fábrica, tu decisión del 15/11) y, en Adivinar, la franja de pistas en grande y la nota tocada en pequeño (§6, J-01, J-06). |
+| 1.15 | 12/11/2026 | F5.8 #2: el afinador abre en Micrófono, sostiene la última lectura y mantiene la pantalla encendida (A-02, A-03, G-13). El metrónomo avisa donde no puede mantenerla. |
 | 1.14 | 22/10/2026 | F5.8, tu primer comentario de uso: la barra del metrónomo es un péndulo, con la pesa arriba más lenta (MT-06, nuevo). |
 | 1.13 | 21/10/2026 | Auditoría AR-11: seis áreas en el mapa, el raíl y el ordenador; el aviso para girar, también en Acordes y nunca en el Metrónomo. |
 | 1.12 | 21/10/2026 | Acordes, como lo describiste: listado con buscador, populares y los 30 acordes a un lado; el acorde en el mástil al otro. Disposición en vertical, horizontal y amplia. |

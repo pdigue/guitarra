@@ -1,6 +1,6 @@
 # Trasteando — Compatibilidad entre sistemas operativos
 
-**Versión:** 1.8 · **Fecha:** 12 de noviembre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
+**Versión:** 1.9 · **Fecha:** 15 de noviembre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
 
 La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este documento lista cada capacidad del navegador que usa o usará, cómo se comporta en cada sistema y qué hace la app donde falta. Se revisa en cada etapa que añada una capacidad nueva.
 
@@ -48,6 +48,8 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 | CSS `accent-color` y unidad `dvh` | Casilla del acento en ámbar; ventana que cabe con la barra del navegador (0.5.4) | ✅ | ✅ | ✅ Safari 15.4+ | Sin ellos, la casilla sale en el color del sistema y la ventana usa `vh` |
 | Mantener la pantalla encendida (Screen Wake Lock, `navigator.wakeLock`) | Que el móvil no se bloquee solo mientras suena el metrónomo o escucha el afinador (G-13, 0.6.2) | ✅ Chrome, Edge; Firefox 126+ | ✅ | Safari 16.4+ (en la app instalada, desde iOS 18.4). **A verificar** en tu iPhone (V-09, M8b) | Se detecta: sin ella, todo funciona igual y el metrónomo avisa de que, si la pantalla se apaga, se para. El sistema puede negarla (batería baja): se sigue sin ella y el metrónomo da el mismo aviso |
 | Filtros de audio (`BiquadFilterNode`) | Limpiar el sonido del micrófono antes de analizarlo: fuera graves de menos de 60 Hz y agudos de más de 1200 Hz (A-02, 0.6.2) | ✅ | ✅ | ✅ | Parte de Web Audio. Si faltara `createBiquadFilter`, se analiza sin filtrar, como antes |
+| Modo claro u oscuro del sistema (`matchMedia('(prefers-color-scheme: dark)')` y su evento `change`) | El tema «Automático» (V-10, 0.6.3): elegir claro u oscuro y seguir el cambio con la app abierta | ✅ | ✅ | ✅ (el evento, con `addListener` en Safari anterior a 14) | Sin `matchMedia`, «Automático» es oscuro; Madera y Partitura no lo necesitan |
+| `color-scheme` y `meta theme-color` | Que los controles nativos y la barra del navegador vayan con el tema (0.6.3) | ✅ | ✅ | ✅ | Se ignoran: la app se ve igual, solo la barra del sistema no cambia de color |
 | Pantalla completa | Ocultar las barras del navegador | ✅ | ✅ | ❌ en Safari | La app instalada ya abre a pantalla completa |
 
 ✅ funciona · ⚠️ con matices · ❌ no disponible · — no aplica
@@ -56,7 +58,8 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.8** | 12/11/2026 | Screen Wake Lock (G-13) y filtros de audio para el micrófono (A-02), en la 0.6.2 (F5.8 #2). |
+| **1.9** | 15/11/2026 | Temas (V-10, 0.6.3, F5.8 #3): `prefers-color-scheme` con su evento `change`, `color-scheme` y `meta theme-color`. |
+| 1.8 | 12/11/2026 | Screen Wake Lock (G-13) y filtros de audio para el micrófono (A-02), en la 0.6.2 (F5.8 #2). |
 | 1.7 | 21/10/2026 | Metrónomo (F5.6, 0.5.4): reloj de audio con osciladores, `<dialog>`, captura del puntero, `accent-color` y `dvh`; `:has()` también para centrar un solo punto. |
 | 1.6 | 21/10/2026 | Idioma del navegador (G-12, 0.4.2). |
 | 1.5 | 21/10/2026 | Micrófono, sesión «play-and-record», `AnalyserNode` y `Worker` (F4, 0.4.0). |

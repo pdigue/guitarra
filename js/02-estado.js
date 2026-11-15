@@ -34,7 +34,8 @@ const DEFAULTS = {
   onMiss:'retry',         // Adivinar, al fallar: 'retry' seguir intentando (por defecto, 21/10) · 'reveal' ver la respuesta (J-13)
   accidentals:{},         // tecla negra → 'sharp' o 'flat' (N-06); sin dato, sostenido
   metro:{ bpm:80, sig:'4/4', sub:1, accent:true },  // metrónomo (MT-05): tempo, compás, golpes por pulso y acento en el primero
-  chordId:'C'             // acorde elegido en Acordes (F5.7), por su nombre en inglés
+  chordId:'C',            // acorde elegido en Acordes (F5.7), por su nombre en inglés
+  theme:'madera'          // tema (F5.8 #3, C-08): 'madera' · 'auto' (claro u oscuro, como el dispositivo) · 'partitura'
 };
 
 const storage = {
@@ -72,6 +73,7 @@ function sanitize(raw){
   if (!Number.isInteger(s.scalePc) || s.scalePc < 0 || s.scalePc > 11) s.scalePc = DEFAULTS.scalePc;
   if (!['show','practice'].includes(s.scaleMode)) s.scaleMode = DEFAULTS.scaleMode;
   if (!['reveal','retry'].includes(s.onMiss)) s.onMiss = DEFAULTS.onMiss;
+  if (!['madera','auto','partitura'].includes(s.theme)) s.theme = DEFAULTS.theme;
   const alt = {};
   if (s.accidentals && typeof s.accidentals === 'object')
     for (const pc of NEGRAS) if (['sharp','flat'].includes(s.accidentals[pc])) alt[pc] = s.accidentals[pc];
