@@ -224,7 +224,7 @@ document.getElementById('set-reset').addEventListener('click', async () => {
   setTunerMode(tunerModeInicial());   // el afinador vuelve a su modo de fábrica
   // Escalas, ♯/♭ y nomenclatura también vuelven a lo de fábrica: sin esto, los
   // selectores y los botones seguían diciendo lo de antes (AT-09 #1).
-  resetScalePractice(); sc.paso = 0;
+  reiniciarEscala();
   stopMetro(); metro.aviso = ''; refreshMetro();          // el metrónomo vuelve a 80, 4/4 (MT-05)
   document.getElementById('chord-search').value = '';    // y Acordes, sin filtro (AT-10 #7)
   refreshNoteText();

@@ -1,6 +1,6 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 4.1 · **Fecha:** 15 de noviembre de 2026
+**Versión:** 4.2 · **Fecha:** 15 de noviembre de 2026
 **Se actualiza:** al cerrar cada bloque (regla 5 de `CLAUDE.md`). Las versiones vigentes de la app y de los demás documentos están en `docs/ESTADO.md`.
 
 > **Baseline 0.6.2** (tu decisión del 15/11): las fases hechas ocupan una línea; el detalle es solo para lo que queda. El roadmap completo hasta la v3.26, con la teoría de cada etapa, la pista T, el gobierno y los métodos de validación, está en `docs/historico/roadmap.md` (rama `archivo/hasta-0.6.2`).
@@ -9,7 +9,7 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** F5.8 (tus comentarios del 12/11) con F6 empezada. `main` tiene la `0.6.0`; `auto/F5.8-saneamiento` (PR #18), la `0.6.2`; `auto/F5.8-aspecto` (PR #19, contra la anterior), la `0.6.3`.
+📍 **Estás aquí:** F5.8 (tus comentarios del 12/11) con F6 empezada. `main` tiene la `0.6.0`; `auto/F5.8-saneamiento` (PR #18), la `0.6.2`; `auto/F5.8-aspecto` (PR #19, contra la anterior), la `0.6.3`; `auto/F5.8-escalas` (PR #20, contra la anterior), la `0.6.4`.
 
 **Leyenda:** ⬜ pendiente · ⏳ en curso · 🔨 hecha, sin tu prueba · ✅ validada · 📅 en una sesión contigo · ⏸ en pausa
 
@@ -36,7 +36,7 @@ Un bloque de trabajo por comentario, cada uno en su conversación (regla de `CLA
 | Bloque | Qué se hace | Requisitos | Estado |
 |---|---|---|:---:|
 | **#3 y #4** · Aspecto | Temas elegibles en Ajustes › Aspecto (Madera de fábrica, Automático y Partitura), disposición propia para tableta y ordenador, y en Adivinar las pistas en grande con la nota tocada pequeña | V-10, V-11 (nuevos) · J-01, J-06, C-02 | 🔨 `0.6.3`, PR #19 · a falta de tu prueba en el iPhone y el iPad |
-| **#5** · Escalas | Las 4 escalas, una posición cada vez, tocar y escuchar; sin modo Práctica (**cambia requisitos**: avisarte) | E-01 a E-06 | ⬜ |
+| **#5** · Escalas | Las 4 escalas, una posición cada vez (3 notas por cuerda; 2 en las pentatónicas), tocar y escuchar; sin modo Práctica | E-07, E-08 (nuevos) · E-01, E-03 a E-06, P-03 | 🔨 `0.6.4`, PR #20 · a falta de tu prueba |
 | **#6** · Acordes | Menos a la vista; el diagrama como protagonista | AC-01 a AC-06 | ⬜ |
 | **#7** · Metrónomo | Medir el pulso y la sincronía: más golpes programados por adelantado y descontar `outputLatency` | MT-04, MT-06 | ⬜ |
 | **#8** · Propuestas | Las que apruebes (afinador cromático, Adivinar por niveles, reto inverso, rasgueo, arpegio y favoritos) | nuevos | ⬜ espera tu «sí» |
@@ -49,7 +49,7 @@ Un bloque de trabajo por comentario, cada uno en su conversación (regla de `CLA
 | 2 | «El afinador creo que solamente coge como un pico del sonido y no se queda (…) de forma un poquito más constante como hacen los afinadores de otras aplicaciones (…) que mantenga un poco más la escucha y marque si está o no en rango (…) por defecto aparezca la parte de micrófono, no de por oído» | Abrir en Micrófono; la pantalla encendida mientras escucha o suena («Sí», 12/11) | Cómo sigue la nota: filtro, ruido de fondo y lectura sostenida 2,5 s | A-02, A-02-CA, A-03 (mod.) · G-13 (nuevo) | `0.6.2` | 🔨 hecho, a falta de tu prueba |
 | 3 | «coge referencias de aplicaciones actuales para que el looking de la app sea más limpio (…) estética un poco Apple (…) tanto en ordenador como en móvil, como también en iPad, que me he dado cuenta que no está preparado» | Temas elegibles en Ajustes (12/11). **15/11:** Madera de fábrica y los tres elegibles en Ajustes | Base visual por fichas de color y disposición propia para tableta (700 × 700 px o más) | V-10 y V-11 (nuevos) · C-02, C-08, PL-03, G-05 (mod.) | `0.6.3` | 🔨 hecho, a falta de tu prueba |
 | 4 | «en la parte de adivinar, las pistas deberían salir en grande, aprovechando toda la franja (…) si tocamos una nota que es incorrecta, aparece el nombre de la misma (…) al ser este nombre mucho más grande que las pistas, se confunde un poco qué tenemos que buscar y cuál es la que hemos tocado» | — (12/11: recibido); hecho como se te propuso | Cada pista encendida ocupa su parte de la franja, en grande; la nota tocada, pequeña y en gris | J-01 y J-06 (mod.) | `0.6.3` | 🔨 hecho, a falta de tu prueba |
-| 5 | «La parte de escala no me gustaba nada como es. Quiero simplificarla (…) menos escalas (…) no haya tanto de práctica, sino (…) ir pudiendo tocar las notas de la escala e ir escuchando la propia escala (…) No es agradable entrar ahí y ver el traste de la guitarra lleno de notas» | Se quedan las 4 escalas, mejor presentadas (12/11) | Propuesta: una posición cada vez en vez de todo el mástil, sin modo Práctica. **Cambia requisitos de escalas** | E-xx (por anotar) | — | ⬜ recibido el 12/11 |
+| 5 | «La parte de escala no me gustaba nada como es. Quiero simplificarla (…) menos escalas (…) no haya tanto de práctica, sino (…) ir pudiendo tocar las notas de la escala e ir escuchando la propia escala (…) No es agradable entrar ahí y ver el traste de la guitarra lleno de notas» | Se quedan las 4 escalas, mejor presentadas (12/11) | Una posición cada vez en vez de todo el mástil (7 posiciones de 3 notas por cuerda; 5 cajas en las pentatónicas), «Escuchar» y sin modo Práctica | E-07 y E-08 (nuevos) · E-01, E-03 a E-06, P-03 (mod.) | `0.6.4` | 🔨 hecho, a falta de tu prueba |
 | 6 | «En cuanto a la parte de acordes, es igual, parece confuso y engorroso. Simplifícalo y mejora el looking» | — (12/11: recibido) | Propuesta: menos acordes a la vista y el diagrama como protagonista | AC-xx (por anotar) | — | ⬜ recibido el 12/11 |
 | 7 | «el metrónomo no termina de funcionar del todo bien. Analízalo» | La pantalla encendida («Sí», 12/11): hecha en la `0.6.2` (G-13) | Lo que notas (12/11): a veces el pulso suena irregular y lo que se ve no va con el sonido; «no siempre, es una sensación: comprueba». Por analizar | MT-xx (por anotar) | — | ⬜ recibido el 12/11 |
 | 8 | «propongas nuevas mejoras de cara a implementarlas. Quiero ver un cambio claro a mejor en la app, tanto en funcionamiento como en contenido, como en looking, en un corto plazo» | — (12/11: recibido) | Lista de propuestas enviada el 12/11; cada una que apruebes entra como requisito nuevo | — | — | ⬜ recibido el 12/11 |
@@ -126,4 +126,5 @@ El historial hasta la v3.26 está en `docs/historico/roadmap.md`.
 | Versión | Fecha | Cambio |
 |---|---|---|
 | **4.0** | 15/11/2026 | Baseline 0.6.2: fases hechas en una línea; detalle solo de F5.8 #3 a #8, F5.9, F6.2 a F6.4 y F7; la tabla de comentarios de F5.8 se conserva tal cual. |
+| 4.2 | 15/11/2026 | F5.8 #5 hecho (`0.6.4`, PR #20): Escalas por posiciones, con «Escuchar» y sin Práctica. |
 | 4.1 | 15/11/2026 | F5.8 #3 y #4 hechos (`0.6.3`, PR #19): temas (Madera de fábrica, tu decisión del 15/11), tableta y ordenador, y pistas grandes en Adivinar. |

@@ -100,9 +100,8 @@ function onTuningChanged(){
   // Cada afinación tiene su récord (J-11): una racha no pasa de una a otra.
   if (screen === 'guess'){ streak = 0; newChallenge(); }
   updateScore();
-  // La práctica guarda casillas, y con otra afinación cada casilla suena a otra
-  // nota: el progreso empieza de nuevo (AT-09 #3).
-  if (screen === 'scales') resetScalePractice();
+  // Con otra afinación, las posiciones son otras: se vuelve a la de la tónica.
+  reiniciarEscala();
   renderScales();              // otra afinación: otras casillas para la misma escala
   renderChords();              // y Acordes avisa si ya no es la estándar (AC-05)
 }

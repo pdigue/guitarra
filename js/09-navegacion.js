@@ -51,10 +51,11 @@ function setScreen(next){
     renderClues();              // fuera de Adivinar, las pistas no enseñan respuesta
   }
   if (!isChords) leaveChords();
-  if (isScales){ resetScalePractice(); sc.paso = 0; renderScales(); }
+  if (isScales){ pararEscala(); sc.paso = 0; renderScales(); }
   else leaveScales();
   if (isChords) renderChords();     // después de leaveScales: el pentagrama es del acorde
   if (!sinMastil) requestAnimationFrame(applyZoom);
+  if (isScales) requestAnimationFrame(verTrastesPosicion);   // tras el zoom: la vista, en la posición
 }
 
 function syncUI(){
