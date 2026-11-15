@@ -25,7 +25,8 @@ const DEFAULTS = {
   maxChallengeFret:12,    // hasta dónde llegan los retos del modo Adivinar
   records:{},             // récord de racha de cada afinación: { standard: 7, dropd: 3 } (J-11)
   rotateHintClosed:false, // el aviso para girar, una vez cerrado, no vuelve (V-01)
-  tunerMode:'ear',        // afinador: 'ear' de oído · 'mic' por micrófono (F4.3)
+  tunerMode:'mic',        // afinador: 'mic' por micrófono · 'ear' de oído (F4.3; por defecto Micrófono desde F5.8 #2)
+  tunerPick:false,        // true cuando lo has elegido tú: solo entonces se recuerda
   lang:null,              // 'es' o 'en' (G-12); sin elegir, el del navegador
   scaleId:'mayor',        // Escalas (F5): tipo, tónica (clase de altura) y submodo
   scalePc:0,
@@ -64,7 +65,8 @@ function sanitize(raw){
   }
   if (!['latin','anglo'].includes(s.notation)) s.notation = DEFAULTS.notation;
   if (!['nylon','acoustic'].includes(s.timbre)) s.timbre = DEFAULTS.timbre;
-  if (!['ear','mic'].includes(s.tunerMode)) s.tunerMode = DEFAULTS.tunerMode;
+  s.tunerPick = s.tunerPick === true;
+  if (!s.tunerPick || !['ear','mic'].includes(s.tunerMode)) s.tunerMode = DEFAULTS.tunerMode;
   if (!['es','en'].includes(s.lang)) s.lang = idiomaDelNavegador();
   if (!ESCALAS.some(e => e.id === s.scaleId)) s.scaleId = DEFAULTS.scaleId;
   if (!Number.isInteger(s.scalePc) || s.scalePc < 0 || s.scalePc > 11) s.scalePc = DEFAULTS.scalePc;

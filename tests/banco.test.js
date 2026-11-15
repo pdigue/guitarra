@@ -842,9 +842,19 @@ test('afinador por micrófono: no escucha hasta que lo pides, y luego dice cuán
   A.ev('__senal.hz = 349.23');                               // Fa4: 1 semitono sobre la 1ª
   await sleep(400);
   assert.deepEqual(lectura(A), { nota: 'Mi4', detalle: '+100 cents · 1ª cuerda', orden: '▼ Baja' });
+  // Al callar, lo último medido se queda a la vista, atenuado, y luego vuelve a reposo (F5.8 #2).
   A.ev('__senal.hz = 0');
-  await sleep(2000);
+  await sleep(1000);
+  assert.equal(lectura(A).nota, 'Mi4', 'un segundo después sigue a la vista');
+  assert.ok(A.$('mic-live').classList.contains('held'), 'atenuada: ya no se oye');
+  assert.equal(A.$('mic-detail').textContent, 'Última lectura · +100 cents · 1ª cuerda', 'y lo dice con palabras (AR-15 #7)');
+  // Elegir cuerda con una lectura a la vista la repinta con esa cuerda, sin perderla (AT-14 #3).
+  A.doc.querySelector('#mic-string [data-v="2"]').click();
+  assert.equal(lectura(A).nota, 'Si3');
+  assert.match(A.$('mic-detail').textContent, /^Última lectura · .* · 2ª cuerda$/);
+  await sleep(2200);
   assert.match(A.$('mic-detail').textContent, /Toca una cuerda/, 'en silencio la aguja vuelve a reposo');
+  assert.ok(!A.$('mic-live').classList.contains('held'));
   A.doc.querySelector('.tab[data-screen="free"]').click();
   assert.equal(A.ev('__mic.pista.parada'), true, 'al salir del Afinador se apaga el micrófono');
 });
@@ -1340,6 +1350,146 @@ test('metrónomo: cambiar el tempo o la subdivisión mientras suena no adelanta 
   assert.deepEqual(pasos, [1, 1, 1, 0.5, 0.5, 0.5, 0.5, 0.25, 0.25, 0.25]);
 });
 
+// --- F5.8 #1: el péndulo del metrónomo (MT-06, tu comentario del 22/10) ---
+
+test('metrónomo: la barra oscila como un péndulo, un extremo en cada pulso y por el centro entre dos (MT-06, F5.8)', t => {
+  // 60 ppm: un pulso por segundo; en corcheas, para ver que la subdivisión no mueve el péndulo.
+  const A = boot(APP, { metro: { bpm: 60, sig: '4/4', sub: 2, accent: true } });
+  A.ev(metroFalso);
+  A.doc.querySelector('.tab[data-screen="metro"]').click();      // el péndulo se pinta con su área a la vista
+  A.ev('startMetro()');
+  t.after(() => A.ev('stopMetro()'));
+  const angulo = () => parseFloat(A.$('metro-slider').style.getPropertyValue('--ang'));
+  const en = s => { A.ev(`__avanza(${s})`); A.ev('metroDibujar()'); return angulo(); };
+  const inicio = A.ev('metro.inicio');                         // 10,06: el primer pulso
+  assert.equal(en(inicio - 0.05), -30, 'antes del primer pulso, sujeto en el lado de salida');
+  assert.equal(A.ev('metro.amplitud'), 30, '30° a cada lado si cabe');
+  assert.ok(Math.abs(en(inicio) + 30) < 0.2, 'primer pulso: extremo izquierdo');
+  assert.ok(Math.abs(en(inicio + 0.5)) < 2, 'a medio camino, por el centro (y la corchea no cuenta como pulso)');
+  assert.ok(Math.abs(en(inicio + 1) - 30) < 0.2, 'segundo pulso: extremo derecho');
+  assert.ok(Math.abs(en(inicio + 2) + 30) < 0.2, 'tercero: otra vez a la izquierda');
+  assert.equal(A.ev('metro.vistos'), 3, 'tres pulsos, sin contar las corcheas');
+  // Mientras la arrastras, recta; al soltarla, sigue.
+  A.ev('metro.arrastrando = true; metroDibujar()');
+  assert.equal(angulo(), 0);
+  A.ev('metro.arrastrando = false; metroDibujar()');
+  assert.ok(Math.abs(angulo()) > 25);
+  // Parado, descansa recta.
+  A.ev('stopMetro()');
+  assert.equal(angulo(), 0);
+});
+
+test('metrónomo: con «reducir movimiento» el péndulo no oscila (MT-06, G-05, F5.8)', t => {
+  const A = boot(APP, { metro: { bpm: 120, sig: '4/4', sub: 1, accent: true } },
+    { matchMedia: q => ({ matches: /reduce/.test(q), media: q, addEventListener(){}, addListener(){} }) });
+  A.ev(metroFalso);
+  A.doc.querySelector('.tab[data-screen="metro"]').click();      // el péndulo se pinta con su área a la vista
+  A.ev('startMetro()');
+  t.after(() => A.ev('stopMetro()'));
+  for (const s of [10.03, 10.06, 10.3, 10.56]){
+    A.ev(`__avanza(${s}); metroDibujar()`);
+    assert.equal(parseFloat(A.$('metro-slider').style.getPropertyValue('--ang')), 0, s + ' s');
+  }
+});
+
+test('metrónomo: como en uno mecánico, la pesa arriba es lo más lento; el péndulo se abre menos si no cabe (MT-06, F5.8)', () => {
+  const A = boot(APP, { metro: { bpm: 80, sig: '4/4', sub: 1, accent: true } });
+  // La caja del deslizador: arriba en y = 100, 328 px de alto (300 de varilla).
+  A.ev(`document.getElementById('metro-slider').getBoundingClientRect = () => ({ top: 100, bottom: 428, height: 328, left: 0, right: 60, width: 60 })`);
+  assert.equal(A.ev('Math.round(sliderValor(114))'), 30, 'pesa arriba: 30 ppm');
+  assert.equal(A.ev('Math.round(sliderValor(414))'), 250, 'pesa abajo: 250 ppm');
+  assert.equal(A.ev('Math.round(sliderValor(264))'), 140, 'en medio: 140 ppm');
+  const barra = A.$('metro-slider');
+  barra.dispatchEvent({ type: 'pointerdown', clientY: 114, pointerId: 1 });
+  assert.equal(A.ev('state.metro.bpm'), 30);
+  assert.equal(A.ev('metro.arrastrando'), true, 'mientras la arrastras, recta');
+  barra.dispatchEvent({ type: 'pointerup', pointerId: 1 });
+  assert.equal(A.ev('metro.arrastrando'), false);
+  assert.equal(barra.style.getPropertyValue('--p'), '0', 'el CSS pone la pesa arriba con --p = 0');
+  barra.dispatchEvent({ type: 'pointerdown', clientY: 414, clientX: 30, pointerId: 1 });
+  barra.dispatchEvent({ type: 'pointerup', pointerId: 1 });
+  assert.equal(A.ev('state.metro.bpm'), 250, 'pesa abajo, con el dedo: 250 ppm');
+  // Tocar la pesa donde se ve, con la varilla inclinada 30°, no cambia el tempo (AT-13 #1).
+  A.ev('setTempo(80)');
+  const d = 300 * (1 - (80 - 30) / 220), inclinada = Math.PI / 6;   // distancia de la pesa al pie; 30°
+  barra.style.setProperty('--ang', '30deg');
+  barra.dispatchEvent({ type: 'pointerdown', clientX: 30 + d * Math.sin(inclinada), clientY: 414 - d * Math.cos(inclinada), pointerId: 1 });
+  barra.dispatchEvent({ type: 'pointerup', pointerId: 1 });
+  assert.ok(Math.abs(A.ev('state.metro.bpm') - 80) <= 1, A.ev('state.metro.bpm') + ' ppm: tocarla no la mueve');
+  barra.dispatchEvent({ type: 'lostpointercapture', pointerId: 1 });
+  assert.equal(A.ev('metro.arrastrando'), false, 'si se pierde el dedo, no se queda enganchada');
+  // La amplitud: con una varilla de 300 px, una caja de 400 deja los 30°; una de 200, unos 15°.
+  assert.equal(A.ev('amplitudPendulo()'), null, 'con el área oculta no se puede medir');
+  A.doc.querySelector('.tab[data-screen="metro"]').click();      // el péndulo se pinta con su área a la vista
+  A.ev(`document.getElementById('metro-slider').clientHeight = 328`);
+  A.ev(`document.getElementById('metro-pendulo').clientWidth = 400`);
+  assert.equal(A.ev('amplitudPendulo()'), 30);
+  A.ev(`document.getElementById('metro-pendulo').clientWidth = 200`);
+  const a = A.ev('amplitudPendulo()');
+  assert.ok(a > 14 && a < 16, a + '°: la pesa no se sale de la caja');
+});
+
+test('metrónomo: si giras el móvil con el metrónomo sonando en otra área, al volver el péndulo cabe (MT-06, AR-14 #1)', t => {
+  const A = boot(APP, { metro: { bpm: 60, sig: '4/4', sub: 1, accent: true } });
+  A.ev(metroFalso);
+  const tab = n => A.doc.querySelector(`.tab[data-screen="${n}"]`).click();
+  const tamano = ancho => A.ev(`document.getElementById('metro-pendulo').clientWidth = ${ancho}; document.getElementById('metro-slider').clientHeight = 328`);
+  tamano(400); tab('metro');
+  A.ev('startMetro()');
+  t.after(() => A.ev('stopMetro()'));
+  A.ev('__avanza(10.2); metroDibujar()');
+  assert.equal(A.ev('metro.amplitud'), 30, 'en vertical, 30°');
+  tab('free');                                                 // sigue sonando en Libre (MT-05)
+  tamano(200); A.fireWin('resize');                            // giras el móvil
+  A.ev('__avanza(10.5); metroDibujar()');
+  assert.equal(A.ev('metro.amplitud'), null, 'oculta, no se mide');
+  tab('metro');
+  A.ev('__avanza(10.6); metroDibujar()');
+  const a = A.ev('metro.amplitud');
+  assert.ok(a > 14 && a < 16, a + '°: al volver, la que cabe');
+  assert.ok(Math.abs(parseFloat(A.$('metro-slider').style.getPropertyValue('--ang'))) <= a + 1e-9);
+});
+
+test('metrónomo: un cambio grande de tempo en marcha no hace saltar el péndulo, y cambiar de compás no le hace perder pulsos (MT-06, AT-13 #3)', t => {
+  const A = boot(APP, { metro: { bpm: 120, sig: '4/4', sub: 1, accent: true } });
+  A.ev(metroFalso);
+  A.doc.querySelector('.tab[data-screen="metro"]').click();
+  A.ev('startMetro()');
+  t.after(() => A.ev('stopMetro()'));
+  const angulo = () => parseFloat(A.$('metro-slider').style.getPropertyValue('--ang'));
+  const inicio = A.ev('metro.inicio');
+  A.ev(`__avanza(${inicio + 0.75}); metroDibujar()`);         // a medio camino entre el 2.º y el 3.er pulso
+  const antes = angulo();
+  A.ev('setTempo(30); metroDibujar()');                        // Inicio: de 120 a 30 ppm
+  assert.ok(Math.abs(angulo() - antes) < 3, `de ${antes}° a ${angulo()}°: sin salto`);
+  const siguiente = JSON.parse(A.ev('JSON.stringify(proximoPulso())'));
+  A.ev(`__ctx.currentTime = ${siguiente}; metroProgramar(); metroDibujar()`);
+  assert.ok(Math.abs(Math.abs(angulo()) - 30) < 0.2, 'llega al extremo cuando suena el pulso siguiente');
+  // Cambiar de compás con un pulso ya programado: suena, y el péndulo lo cuenta.
+  // (setTempo deja el golpe ya previsto en su sitio: el próximo pulso es el que diga proximoPulso.)
+  const prox = A.ev('proximoPulso()');
+  A.ev(`__avanza(${prox - 0.05})`);                             // programado, pero aún no suena
+  const vistos = A.ev('metro.vistos'), enCola = A.ev('metro.cola.length');
+  assert.ok(enCola >= 1, 'hay un pulso programado');
+  A.ev("setCompas('3/4')");
+  A.ev(`__avanza(${prox + 0.05}); metroDibujar()`);
+  assert.ok(A.ev('metro.vistos') > vistos, 'el pulso que sonó cuenta');
+});
+
+test('metrónomo: en 6/8 el péndulo marca la negra con puntillo, no cada corchea (MT-06, AT-13)', t => {
+  const A = boot(APP, { metro: { bpm: 60, sig: '6/8', sub: 3, accent: true } });
+  A.ev(metroFalso);
+  A.doc.querySelector('.tab[data-screen="metro"]').click();
+  A.ev('startMetro()');
+  t.after(() => A.ev('stopMetro()'));
+  const angulo = () => parseFloat(A.$('metro-slider').style.getPropertyValue('--ang'));
+  const inicio = A.ev('metro.inicio');
+  const lados = [];
+  for (let k = 0; k < 4; k++){ A.ev(`__avanza(${inicio + k}); metroDibujar()`); lados.push(Math.round(angulo())); }
+  assert.deepEqual(lados, [-30, 30, -30, 30], 'un extremo por pulso, alternando');
+  assert.equal(A.ev('metro.vistos'), 4, 'cuatro pulsos; las corcheas no cuentan');
+});
+
 // --- F5.7: librería de acordes (AC-01 a AC-06, tu petición del 21/10) ---
 
 test('acordes: cada digitación suena a su acorde, con la raíz (o el bajo) abajo, y se puede tocar con cuatro dedos (AC-01, AC-02)', () => {
@@ -1535,4 +1685,83 @@ unaVez('docs/ESTADO.md está al día con la versión de la app (memoria entre co
   const estado = fs.readFileSync(path.join(__dirname, '..', 'docs', 'ESTADO.md'), 'utf8');
   const linea = estado.split('\n').find(l => l.startsWith('**Actualizado:**')) || '';
   assert.ok(linea.includes('`' + v + '`'), `ESTADO.md dice «${linea}», pero la app es la ${v}: actualízalo antes de cerrar`);
+});
+
+// --- F5.8 #2 (12/11): el afinador abre en Micrófono, y la pantalla no se apaga mientras se usa ---
+
+test('el afinador abre en Micrófono donde se puede usar, sin escuchar todavía; tu elección se recuerda (A-02, F5.8 #2)', async () => {
+  const A = boot(APP, null, microFalso());
+  A.doc.querySelector('.tab[data-screen="tuner"]').click();
+  assert.equal(A.$('tuner-mic').hidden, false, 'con micrófono disponible, abre en Micrófono');
+  assert.equal(A.$('tuner-ear').hidden, true);
+  assert.equal(A.ev('__mic.pedido'), 0, 'pero no escucha hasta que pulsas «Activar»');
+  // Quien ya usaba la app tenía guardado «De oído» sin haberlo elegido: también le abre en Micrófono.
+  const viejo = boot(APP, { tunerMode: 'ear' }, microFalso());
+  assert.equal(viejo.$('tuner-mic').hidden, false);
+  // Si lo eliges tú, se recuerda.
+  A.doc.querySelector('#tuner-mode [data-v="ear"]').click();
+  const guardado = JSON.parse(A.store.get('trasteando.v1'));
+  assert.deepEqual([guardado.tunerMode, guardado.tunerPick], ['ear', true]);
+  assert.equal(boot(APP, guardado, microFalso()).$('tuner-ear').hidden, false);
+  // «Restablecer» olvida la elección, apaga el micrófono y devuelve la cuerda a «Auto» (AT-14 #12).
+  const R = boot(APP, guardado, microFalso()); R.ev(analizadorFalso);
+  R.doc.querySelector('#tuner-mode [data-v="mic"]').click();
+  R.doc.querySelector('#mic-string [data-v="3"]').click();
+  R.$('set-reset').click();
+  await sleep(50);
+  assert.equal(R.$('tuner-mic').hidden, false);
+  assert.equal(R.ev('mic.string'), 'auto');
+  assert.equal(JSON.parse(R.store.get('trasteando.v1')).tunerPick, false);
+  // Donde el micrófono no se puede usar (sin https, con doble clic), abre en De oído.
+  const sin = boot(APP);
+  assert.equal(sin.$('tuner-ear').hidden, false);
+  assert.equal(sin.$('tuner-mic').hidden, true);
+});
+
+test('la pantalla se mantiene encendida mientras suena el metrónomo o escucha el afinador, y se suelta al parar (G-13)', async t => {
+  const pedidos = [];
+  const wakeLock = { request: async tipo => { const c = { tipo, suelto: false, release: async () => { c.suelto = true; } }; pedidos.push(c); return c; } };
+  const extra = microFalso(); extra.navigator.wakeLock = wakeLock;
+  const A = boot(APP, null, extra);
+  A.ev(analizadorFalso + metroExtra);
+  t.after(() => A.ev('stopMetro(); stopMic()'));
+  A.doc.querySelector('.tab[data-screen="metro"]').click();
+  assert.equal(pedidos.length, 0, 'parado no se pide nada');
+  A.$('metro-play').click(); await sleep(20);
+  assert.deepEqual(pedidos.map(c => [c.tipo, c.suelto]), [['screen', false]]);
+  assert.doesNotMatch(A.$('metro-note').textContent, /pantalla/);
+  A.$('metro-play').click(); await sleep(5);
+  assert.equal(pedidos[0].suelto, true, 'al parar, el móvil vuelve a bloquearse como siempre');
+  // El afinador: mientras escucha.
+  A.doc.querySelector('.tab[data-screen="tuner"]').click();
+  A.$('mic-start').click(); await sleep(20);
+  assert.deepEqual(pedidos.map(c => c.suelto), [true, false]);
+  A.$('mic-stop').click(); await sleep(5);
+  assert.deepEqual(pedidos.map(c => c.suelto), [true, true]);
+  // Donde no existe (PL-04), todo funciona igual y el metrónomo lo avisa.
+  const B = boot(APP); B.ev(metroFalso);
+  t.after(() => B.ev('stopMetro()'));
+  B.doc.querySelector('.tab[data-screen="metro"]').click();
+  B.$('metro-play').click(); await sleep(20);
+  assert.equal(B.ev('metro.sonando'), true);
+  assert.match(B.$('metro-note').textContent, /si se apaga, el metrónomo se para/);
+  assert.deepEqual(sinErrores(B), []);
+  // Existe, pero el sistema lo niega (batería baja): mismo aviso (AT-14 #4).
+  const negado = { navigator: { wakeLock: { request: async () => { throw new Error('NotAllowedError'); } } } };
+  const C = boot(APP, null, negado); C.ev(metroFalso);
+  t.after(() => C.ev('stopMetro()'));
+  C.doc.querySelector('.tab[data-screen="metro"]').click();
+  C.$('metro-play').click(); await sleep(30);
+  assert.equal(C.ev('metro.sonando'), true);
+  assert.match(C.$('metro-note').textContent, /si se apaga, el metrónomo se para/);
+  // Si el sistema suelta el cerrojo con la app a la vista y sigue sonando, se pide otro (AT-14 #10).
+  const dados = [];
+  const conEvento = { navigator: { wakeLock: { request: async () => { const c = { oyentes: [], release: async () => {}, addEventListener(_t, f){ c.oyentes.push(f); } }; dados.push(c); return c; } } } };
+  const D = boot(APP, null, conEvento); D.ev(metroFalso);
+  t.after(() => D.ev('stopMetro()'));
+  D.doc.querySelector('.tab[data-screen="metro"]').click();
+  D.$('metro-play').click(); await sleep(30);
+  assert.equal(dados.length, 1);
+  dados[0].oyentes.forEach(f => f()); await sleep(10);
+  assert.equal(dados.length, 2, 'se vuelve a pedir');
 });

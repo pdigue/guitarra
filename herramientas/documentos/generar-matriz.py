@@ -22,7 +22,7 @@ def plain(s):
     return s.strip()
 
 # id: (método, criterio de aceptación, evidencia, origen)
-C20='Cliente · 20/10 (interfaz.md v1.0)'; CL='Cliente · listado 14/09'; C21='Cliente · 21/10'; AR='AR-01'; DV='Desarrollo · v1.1'; C15='Cliente · 15/09'; C14='Cliente · 14/10'; D12='Desarrollo · v1.2'; RC='Revisión de código 0.1.2'
+C20='Cliente · 20/10 (interfaz.md v1.0)'; CL='Cliente · listado 14/09'; C21='Cliente · 21/10'; C22='Cliente · 22/10 (F5.8 #1)'; C12='Cliente · 12/11 (AR-12 #2, F5.8)'; AR='AR-01'; DV='Desarrollo · v1.1'; C15='Cliente · 15/09'; C14='Cliente · 14/10'; D12='Desarrollo · v1.2'; RC='Revisión de código 0.1.2'
 B='Banco (node --test)'; MF='Desarrollo · medición F2.1'
 V = {
  'G-01':('I','El nombre «Trasteando» aparece en la pantalla de entrada, en la pestaña del navegador y en el manifiesto; en horizontal, arriba del panel.','F1.1 #14 · 0.5.2: comprobar-disposicion, título visible en horizontal',CL),
@@ -36,10 +36,11 @@ V = {
  'G-09':('I','Ficha enviada a revisión en al menos una tienda, o decisión documentada de no hacerlo.','—',C14),
  'G-10':('I','Ajustes muestra la versión; CHANGELOG.md tiene una entrada por versión; existe la etiqueta de Git de cada cierre de fase.',B+' · CHANGELOG.md · F1.1 #12 · etiquetas v0.1.5, v0.2.3 y v0.3.3 (21/10)',C14),
  'G-12':('D','En Ajustes, Español / English cambia todos los textos de la app; la elección se guarda; la primera vez sigue al navegador.',B+': mismas claves en las dos lenguas, cambio y vuelta, primera vez según el navegador · comprobar-disposicion.js con IDIOMA=en-US',CL),
+ 'G-13':('D','Con el bloqueo automático del iPhone en 30 s: con el metrónomo sonando 5 minutos, o el afinador escuchando 2, sin tocar la pantalla, no se bloquea y sigue; al parar, se bloquea solo en ese plazo (V-09, M8b; en Safari y, desde iOS 18.4, en la app instalada). Donde no hay Wake Lock, o el sistema lo niega, funciona igual y el metrónomo lo avisa.',B+': se pide al empezar y se suelta al parar (metrónomo y micrófono); aviso sin la capacidad y cuando el sistema la niega; se vuelve a pedir si el sistema la suelta',C12),
  'G-11':('I','La política de privacidad está publicada y la app no envía ninguna petición con datos del usuario (pestaña Red).','—',D12),
  'PL-01':('D','La lista de F1.1 se supera en Chrome, Edge y Firefox en Windows, y la app se instala como PWA desde Edge.','—',C14),
  'PL-02':('D','La lista de comprobación se supera en Chrome para Android, en web y con la PWA instalada.','—',C14),
- 'PL-04':('I+T','Cada capacidad del navegador que usa la app figura en docs/compatibilidad.md con su comportamiento en Windows, Android e iPhone y su alternativa; el banco arranca la app sin vibración ni audio y funciona.','docs/compatibilidad.md v1.5 · '+B+': sin matchMedia ni history',C14),
+ 'PL-04':('I+T','Cada capacidad del navegador que usa la app figura en docs/compatibilidad.md con su comportamiento en Windows, Android e iPhone y su alternativa; el banco arranca la app sin vibración ni audio y funciona.','docs/compatibilidad.md v1.8 · '+B+': sin matchMedia ni history',C14),
  'PL-03':('D','La lista de comprobación se supera en Safari para iOS, en web y desde la pantalla de inicio.','—',C14),
  'N-01':('D','El chip de nomenclatura alterna todos los nombres entre Do-Re-Mi y C-D-E.','F1.1 #6',CL),
  'N-02':('D','El selector de Ajustes produce el mismo cambio que el chip.','F1.1 #14',CL),
@@ -93,9 +94,9 @@ V = {
  'E-05b':('N/A','Fuera del alcance actual.','—',AR),
  'E-06':('D','El guiado avanza nota a nota por la escala.',B+': pasos que suenan y se resaltan, de la tónica grave a su octava',CL),
  'A-01':('D','Pulsar cada cuerda en el afinador reproduce su nota de referencia.','F1.1 #14',CL),
- 'A-02':('D','Con una guitarra real, el afinador indica subir o bajar hasta dejarla afinada, en estándar y en una alternativa.','comprobar-afinador.js (Chromium, grabación real 12 cents baja → «La2 · −11 cents · Sube un poco»; hilo aparte; se apaga al salir) · '+B+': flujo del permiso',CL),
- 'A-02-CA':('T','Banco de pruebas: error ≤ ±2 cents y latencia < 300 ms sobre muestras desafinadas una cantidad conocida, tomando como referencia su frecuencia medida en samples/afinacion.json.','tests/tono.test.js: 12 grabaciones reales de −45 a +40 cents; peor error 1,86 cents frente a su medida y 1,01 trozo a trozo; aguja en su nota en ≤ 168 ms + 3 ms de cálculo',AR),
- 'A-03':('D','La aguja indica la desviación en cents y marca «afinado» dentro de ±5 cents.',B+': «Sube un poco» a −12, «Afinada» a +3 · comprobar-afinador.js',CL),
+ 'A-02':('D','Con una guitarra real, el afinador indica subir o bajar hasta dejarla afinada, en estándar y en una alternativa. Sigue la nota mientras se apaga (al menos 3 s con una cuerda sintética de 6 s a volumen de móvil y con ruido), sin lecturas a más de 6 cents, y el ruido solo no mueve la aguja. Con las 12 grabaciones reales y ruido: primera lectura en menos de 300 ms y, ya asentada la cuerda, a menos de 5 cents de su medida. Abre en Micrófono donde se puede usar, sin escuchar hasta «Activar». Tu prueba (V-09, M0, M2b y M5): pulsas una vez la 5ª y la aguja la sigue al menos 3 s sin saltar de cuerda; en Drop D, la 4ª releva a la 6ª.','comprobar-afinador.js (Chromium, grabación real 12 cents baja → «La2 · −11 cents · Sube un poco»; hilo aparte; se apaga al salir) · '+B+': flujo del permiso, modo por defecto y su recuerdo · tono.test.js: nota que se apaga, ruido, giro de clavija, relevo de cuerda (también a la octava) y las 12 grabaciones con ruido',CL),
+ 'A-02-CA':('T','Banco de pruebas: error ≤ ±2 cents y latencia < 300 ms sobre muestras desafinadas una cantidad conocida, tomando como referencia su frecuencia medida en samples/afinacion.json.','tests/tono.test.js: 12 grabaciones reales de −45 a +40 cents; peor error 1,84 cents frente a su medida y 0,62 trozo a trozo; aguja en su nota en ≤ 195 ms + unos 5 ms de cálculo (trozos de 4096 valores, desde la 0.6.2)',AR),
+ 'A-03':('D','La aguja indica la desviación en cents y marca «afinado» dentro de ±5 cents. Al callar la nota, lo último medido sigue 2,5 s a la vista, atenuado y con el rótulo «Última lectura», y luego vuelve a reposo.',B+': «Sube un poco» a −12, «Afinada» a +3, «Última lectura» al segundo de callar y en reposo a los 3 s · comprobar-afinador.js',CL),
  'A-04':('T','Con la cuerda a menos de un semitono de su nota, el afinador identifica la cuerda correcta.',B+': las 6 cuerdas a −90 y +90 cents, y la 6ª en Drop D',CL),
  'A-05':('D','Con una cuerda fijada a mano, el afinador la usa como referencia aunque esté muy desafinada.',B+': 6ª elegida con un La2 sonando → +500 cents, y sin confundir la octava',CL),
  'A-06':('I','La afinación estándar es E2 A2 D3 G3 B3 E4.','F1.1 #14',CL),
@@ -127,6 +128,7 @@ V = {
  'MT-03':('T','Cada figura reparte el pulso en 1, 2, 3 o 4 golpes iguales, más suaves que el pulso; cambiarla sonando empieza en el próximo pulso, sin mover el pulso.',B+': separación de las corcheas, volumen menor, cambio sonando',C21),
  'MT-04':('T','Los golpes programados a 30, 120 y 250 ppm se separan exactamente 60/tempo s (±1 ms), nunca se programan más de 100 ms por adelantado y el punto del pulso se ilumina; al ocultar la app se para.',B+': separación a 30, 120 y 250 ppm, cambio de tempo sonando sin adelantar ni repetir, parada al ocultar',C21),
  'MT-05':('D','El metrónomo tiene su pestaña; en marcha, sigue sonando en las demás áreas y su pestaña late con el pulso; al escuchar con el micrófono se para y lo dice; tempo, compás, figura y acento se recuerdan.',B+': sigue en Libre y en el Afinador hasta escuchar con el micrófono, pestaña que late, parada con el micrófono y aviso, datos guardados',C21),
+ 'MT-06':('D','Pesa arriba, 30 ppm, y abajo, 250. Sonando, la barra llega a un extremo en cada pulso, alternando los lados (hasta 30° a cada lado, sin salirse de la pantalla en ninguna disposición), y pasa por el centro entre dos; la subdivisión no la mueve. Recta parada, al arrastrarla y con «reducir movimiento». En el instante de cada pulso está en su extremo (±0,2° en el banco). Tocar la pesa donde se ve, aunque esté inclinada, no cambia el tempo. Con el teclado, ↑ sube el tempo.',B+': extremos alternos en cada pulso, centro a medio camino, la subdivisión no cuenta (4/4 en corcheas y 6/8), recta al arrastrar, al parar, al perder el dedo y con «reducir movimiento», pesa arriba = 30 ppm y abajo = 250, tocar la pesa inclinada no la mueve, amplitud que cabe y que se mide de nuevo tras girar en otra área, sin salto al cambiar de tempo en marcha, cambiar de compás no pierde pulsos; las pruebas fallan con la versión anterior · Chromium: ±30° en iPhone vertical y ordenador, ±12,7° en horizontal, y 12,7° al volver tras girar en otra área, nunca fuera de la pantalla · comprobar-disposicion: ocho pantallas del metrónomo · AR-14 y AT-13',C22),
  'AC-01':('T','A un lado el listado (populares arriba, los 30 acordes debajo) y al otro el mástil; cada digitación suena solo a notas del acorde, con la raíz, la nota que define el tipo (la tercera, o la cuarta en sus4) y la séptima si la lleva (la quinta se puede omitir), y con la raíz o el bajo indicado como nota más grave.',B+': las 30 digitaciones, una a una; populares y listado · comprobar-disposicion: listado y mástil a la vez en seis pantallas',C21),
  'AC-02':('D','Cada dedo tiene su número y su color, iguales en todos los acordes (Okabe-Ito); círculo ≥ 3:1 contra el mástil y número ≥ 4,5:1 contra el círculo; ○ y ✕ junto al nombre de la cuerda; cejilla como barra; el lector de pantalla dice el dedo.',B+': La menor y Fa dibujados, contraste de los cuatro colores · comprobar-accesibilidad: Acordes con Fa',C21),
  'AC-03':('D','El pentagrama escribe las notas del acorde apiladas, escritas como manda el acorde, y se oculta con su ajuste; en el móvil en vertical se aparta y vuelve al girarlo.',B+': cinco notas de La menor; B7 con Re♯ · el ajuste de pentagrama de siempre (F1.1) · comprobar-disposicion: seis pantallas',C21),
@@ -137,7 +139,7 @@ V = {
 }
 BENCH = {'G-10','D-01','D-02','D-04','J-02','J-07','J-08','J-10','J-12','A-10','V-09','C-05','L-02'}
 PARTIAL = {'V-01','V-04','C-07','G-05','G-06','PL-04','G-07','S-01','X-01',
-           'E-01','E-02','E-03','E-04','E-06','P-03','MT-01','MT-05','AC-02','AC-03'}   # F5: banco hecho, falta tu prueba (CP-5, AR-12 #1)   # con evidencia, pero sin cumplir aún todo el criterio
+           'E-01','E-02','E-03','E-04','E-06','P-03','MT-01','MT-05','MT-06','AC-02','AC-03','G-13'}   # F5: banco hecho, falta tu prueba (CP-5, AR-12 #1)   # con evidencia, pero sin cumplir aún todo el criterio
 DECL = {'si':'Cumple','parcial':'Cumple parcialmente','no':'No cumple'}
 WHO = {'I':'Auditor de requisitos','A':'Auditor técnico','D':'Cliente','T':'Banco automático + auditor técnico','I+T':'Auditor técnico','N/A':'—'}
 
@@ -174,10 +176,10 @@ COLS = [('ID',10,'id'),('Categoría',16,'cat'),('Requisito',46,'req'),('Priorida
         ('Fase',9,'fase'),('Etapa',13,'etapa'),('Método',9,'met'),('Criterio de aceptación',48,'crit'),
         ('Declaración del proveedor',20,'decl'),('Desde versión',10,'ver_app'),('Evidencia',34,'ev'),
         ('Estado de verificación',21,'verif'),('Verifica',20,'who'),('Comentario del proveedor',44,'com'),
-        ('Comentario del cliente',32,None),('Cambio en v1.23',12,'flag')]
+        ('Comentario del cliente',32,None),('Cambio en v1.25',12,'flag')]
 ws['A1'] = 'Trasteando — Matriz de cumplimiento de requisitos'
 ws['A1'].font = Font(name=F, size=14, bold=True, color='2A1D13')
-ws['A2'] = 'Versión 1.23. Base: requisitos.md v1.25 · app 0.6.0 · roadmap 3.23 · emitida el 15/10/2026. Cliente: Pablo Díaz Guerra. Proveedor: chat de Desarrollo. Verificación independiente: auditores de requisitos y técnico.'
+ws['A2'] = 'Versión 1.25. Base: requisitos.md v1.27 · app 0.6.2 · roadmap 3.26 · emitida el 15/10/2026. Cliente: Pablo Díaz Guerra. Proveedor: chat de Desarrollo. Verificación independiente: auditores de requisitos y técnico.'
 ws['A2'].font = Font(name=F, size=9, color='6A5947')
 HR = 4
 for c, (h, w, _) in enumerate(COLS, 1):
@@ -297,6 +299,8 @@ for c, (h, w) in enumerate([('Versión',10),('Fecha',12),('Requisitos',12),('App
     cell = cc.cell(row=1, column=c, value=h); cell.font = Font(name=F, size=10, bold=True, color='FFFFFF'); cell.fill = dark
     cc.column_dimensions[get_column_letter(c)].width = w
 CC = [
+ ['1.25','12/11/2026','v1.27','0.6.2','F5.8, tus comentarios del 12/11 (#2): el afinador sigue la nota mientras se apaga y abre en Micrófono (A-02, A-02-CA, A-03); G-13 nuevo, la pantalla encendida mientras suena el metrónomo o escucha el afinador. Verificados parcialmente hasta tu prueba.'],
+ ['1.24','22/10/2026','v1.26','0.6.1','F5.8, tu comentario #1: MT-06 nuevo, el péndulo del metrónomo (la pesa arriba, más lento), con las correcciones de AR-14 y AT-13. Verificado parcialmente hasta la Sesión 2. MT-01 y G-10, anotados.'],
  ['1.23','22/10/2026','v1.25','0.6.0','F6.1: G-08 cumple y queda verificado por el banco, que pasa las pruebas que arrancan la app contra la app de varios archivos y contra el archivo autónomo (AR-13 y AT-12).'],
  ['1.22','22/10/2026','v1.24','0.5.7','Punto de control CP-5 (AR-12 y AT-11): una sola vara para lo que compruebas tú. E-01, E-02, E-03, E-04, E-06, P-03, MT-01, MT-05, AC-02 y AC-03, verificados parcialmente hasta la Sesión 2; MT-04, arranque con el audio en pausa (0.5.7); lo pendiente de CP-5, en el comentario de su requisito.'],
  ['1.21','21/10/2026','v1.23','0.5.6','Auditoría AR-11: G-02, C-04 y V-01 con las seis áreas; criterio de AC-01 preciso (sus4 y tríadas); evidencias completadas en MT-01, MT-05, AC-01, AC-03 y AC-04 (método T).'],
@@ -332,10 +336,12 @@ wb.save(OUT_XLSX)
 L = []
 w = L.append
 w('# Trasteando — Matriz de cumplimiento de requisitos\n')
-w('**Versión:** 1.23 · **Fecha:** 22 de octubre de 2026 · **Base:** `requisitos.md` v1.25 · app `0.6.0` · `roadmap.md` v3.23  ')
+w('**Versión:** 1.25 · **Fecha:** 12 de noviembre de 2026 · **Base:** `requisitos.md` v1.27 · app `0.6.2` · `roadmap.md` v3.26  ')
 w('**Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores\n')
 w('> Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.\n')
 w('**Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.\n')
+w('**Cambios en la 1.25:** F5.8, tus comentarios del 12/11 (#2): el afinador sigue la nota mientras se apaga, sostiene 2,5 s lo último medido y abre en Micrófono (A-02, A-02-CA y A-03, con sus criterios al día); G-13 nuevo, la pantalla encendida mientras suena el metrónomo o escucha el afinador, verificado parcialmente hasta tu prueba en el iPhone.\n')
+w('**Cambios en la 1.24:** F5.8, tu primer comentario de uso (#1): MT-06 nuevo, el péndulo del metrónomo (la pesa arriba, más lento), con las correcciones de AR-14 y AT-13 en su criterio. Verificado parcialmente hasta la Sesión 2. MT-01 remite a MT-06 y G-10 dice cómo se numera una fase reabierta.\n')
 w('**Cambios en la 1.23:** F6.1: G-08 cumple y queda verificado por el banco, que pasa las pruebas que arrancan la app contra la app de varios archivos y contra el archivo autónomo; el autónomo lee de dentro sus grabaciones sin descargar nada. Lo pendiente de AR-13, en su comentario.\n')
 w('**Cambios en la 1.22:** punto de control CP-5 (AR-12 y AT-11): una sola vara; lo que espera tu prueba con el banco ya hecho queda *verificado parcialmente* (E-01, E-02, E-03, E-04, E-06, P-03, MT-01, MT-05, AC-02 y AC-03); MT-04 con el arranque de la 0.5.7; lo pendiente de CP-5, en su comentario.\n')
 w('**Cambios en la 1.21:** auditoría AR-11: seis áreas en G-02, C-04 y V-01; criterio de AC-01 y evidencias del metrónomo y los acordes completadas.\n')

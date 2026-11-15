@@ -9,24 +9,60 @@
    11. AFINADOR POR MICRÓFONO
    ============================================================ */
 
-/* Recorrido del sonido: micrófono → AnalyserNode (guarda los últimos 2048
-   valores) → cada 50 ms copiamos esos valores y se los damos al detector
+/* Recorrido del sonido: micrófono → filtros → AnalyserNode (guarda los últimos
+   4096 valores) → cada 50 ms copiamos esos valores y se los damos al detector
    (10-tono.js), que trabaja en un hilo aparte → con cada frecuencia
    calculamos los cents respecto a la cuerda y movemos la aguja.
    Un cent es la centésima parte de un semitono: cents = 1200 · log2(f / fRef). */
 
+/* Seguir la nota (F5.8 #2). Una cuerda suena fuerte y clara solo al pulsarla;
+   después se apaga durante segundos, cada vez más floja y más mezclada con el
+   ruido de la habitación. Para no quedarse solo con ese primer instante:
+   1. Antes de analizar, se filtra el sonido: fuera lo que queda por debajo de
+      60 Hz (zumbidos) y por encima de 1200 Hz (soplido), donde no hay nada de
+      una cuerda al aire que haga falta para saber su nota.
+   2. Para EMPEZAR a seguir una nota se pide lo de siempre: dos lecturas
+      seguidas, claras y que coincidan. Así un golpe o una voz no mueven la aguja.
+   3. Una vez «enganchada», basta con mucha menos claridad y volumen mientras
+      la lectura siga cerca de las anteriores: la nota se sigue hasta que se
+      hunde en el ruido de fondo. Ese ruido se mide todo el rato (el nivel más
+      bajo oído últimamente), y una lectura solo cuenta si suena bastante por
+      encima: pegada al ruido, la nota «baila» y la aguja engañaría.
+   4. Cuando deja de oírse, lo último medido se queda en pantalla, atenuado,
+      un par de segundos: da tiempo a mirar y girar la clavija. */
 const MIC = {
-  PERIODO_MS: 50,     // un trozo cada 50 ms: 20 lecturas por segundo
-  AFINADA: 5,         // ±5 cents es «afinada» (A-03)
-  SILENCIO_MS: 1500,  // sin lecturas durante este tiempo, la aguja vuelve a reposo
-  CLARIDAD: 0.8       // lecturas menos claras que esto (ruido, golpes) se ignoran
+  PERIODO_MS: 50,        // un trozo cada 50 ms: 20 lecturas por segundo
+  AFINADA: 5,            // ±5 cents es «afinada» (A-03)
+  CLARIDAD: 0.8,         // para empezar a seguir una nota: lecturas menos claras (ruido, golpes) se ignoran
+  CLARIDAD_SEGUIR: 0.5,  // siguiéndola ya, basta con esto…
+  CERCA: 20,             // …si cae a menos de estos cents de las últimas lecturas
+  LECTURAS: 7,           // cuántas lecturas se promedian para la aguja
+  SOBRE_RUIDO: 4,        // una lectura cuenta si suena al menos 4 veces (12 dB) por encima del ruido de fondo
+  RUIDO_INICIAL: 0.0005, // ruido de fondo supuesto al encender, hasta medirlo
+  RUIDO_MINIMO: 0.0002,  // suelo: un instante de silencio total (al arrancar el micrófono) no es «el ruido de la habitación» (AT-14 #2)
+  RUIDO_SUBE: 1.03,      // sin nota, el ruido estimado sube como mucho un 3 % por trozo (se dobla en 1,2 s)…
+  RUIDO_SUBE_NOTA: 1.002, // …y con una nota sonando, un 0,2 % (17 s): la nota no es ruido. Bajar, baja al instante
+  SOLTAR_MS: 600,        // sin lecturas de la nota seguida durante este tiempo, se suelta
+  SOSTEN_MS: 2500,       // lo último medido se queda en pantalla este tiempo, atenuado
+  GRAVES_HZ: 60, AGUDOS_HZ: 1200   // el filtro de antes del análisis
 };
+// Lo que se le pide al detector en cada caso (sustituye a TONO en ese trozo).
+MIC.BUSCAR = Object.assign({}, TONO, { MIN_RMS: 0.002 });
+MIC.SEGUIR = Object.assign({}, TONO, { MIN_RMS: 0.0006, MAX_DPRIMA: 1 - MIC.CLARIDAD_SEGUIR });
 
 const mic = {
-  stream: null, src: null, analyser: null, det: null, timer: null,
+  stream: null, src: null, filtros: [], analyser: null, det: null, timer: null,
   string: 'auto',          // 'auto' o el número de cuerda elegido a mano (A-05)
-  lecturas: [],            // últimas frecuencias coherentes entre sí
+  lecturas: [],            // últimas frecuencias de la nota que se sigue
+  candidatas: [],          // lecturas claras de otra nota: con dos que coincidan, se cambia a ella
+  siguiendo: false,        // hay una nota «enganchada»
   ultima: 0,               // momento de la última lectura válida
+  ultimaHz: 0,             // lo último enseñado, para repintarlo si cambias de cuerda
+  candidataT: 0,           // momento de la última candidata
+  detalle: '',             // el texto de cents y cuerda, sin el «Última lectura»
+  ruido: MIC.RUIDO_INICIAL, // nivel del ruido de fondo: el más bajo oído últimamente
+  nivel: 0,                // nivel (RMS) del último trozo
+  mostrando: false,        // hay una lectura en pantalla (sonando o sostenida)
   orden: '',               // para no repetir el aviso al lector de pantalla
   arrancando: false
 };
@@ -69,25 +105,75 @@ function micTarget(hz){
   return (tal.dist > 100 && mitad.dist < 50) ? mitad : tal;
 }
 
-/** Cada lectura del detector. Se ignoran las sueltas (un golpe, un salto de
- *  octava): solo cuentan cuando dos seguidas coinciden. La aguja muestra la
- *  mediana de las últimas, para que no tiemble. */
-function onMicReading(r){
-  if (!mic.analyser) return;
-  const ahora = Date.now();
-  if (!r || r.claridad < MIC.CLARIDAD){
-    if (ahora - mic.ultima > MIC.SILENCIO_MS) showMicIdle();
-    return;
+/** El centro de unas lecturas: se ordenan, se quitan las de los extremos (con
+ *  cinco o más, las dos más bajas y las dos más altas) y se promedia el resto.
+ *  Una lectura suelta disparatada no lo mueve, y el temblor del ruido se reparte. */
+function centro(v){
+  const o = [...v].sort((x, y) => x - y), quitar = o.length >= 5 ? 2 : o.length >= 3 ? 1 : 0;
+  const medio = o.slice(quitar, o.length - quitar);
+  return medio.reduce((a, b) => a + b, 0) / medio.length;
+}
+
+/**
+ * Decide qué hacer con una lectura del detector (o con su falta) y devuelve
+ * la frecuencia que hay que enseñar, o 0 si esta lectura no cuenta.
+ * Va aparte de la pantalla para poder probarla con grabaciones (tests/tono.test.js).
+ */
+function seguirNota(r, ahora, nivel){
+  // El ruido de fondo: el nivel más bajo oído últimamente. Baja de golpe a
+  // cualquier nivel menor; subir, sube despacio, y casi nada mientras suena una
+  // nota, para que una nota larga no pase por ruido. Sin nivel, no se usa.
+  if (nivel >= 0){
+    const esNota = mic.siguiendo || (r && r.claridad >= MIC.CLARIDAD);
+    mic.ruido = Math.min(Math.max(nivel, MIC.RUIDO_MINIMO), mic.ruido * (esNota ? MIC.RUIDO_SUBE_NOTA : MIC.RUIDO_SUBE));
+    if (r && nivel < mic.ruido * MIC.SOBRE_RUIDO) r = null;   // pegada al ruido: no cuenta
   }
-  const previa = mic.lecturas[mic.lecturas.length - 1];
-  if (previa && Math.abs(centsEntre(r.hz, previa)) > 40) mic.lecturas = [];   // otra nota: se empieza de nuevo
-  mic.lecturas.push(r.hz);
-  if (mic.lecturas.length > 5) mic.lecturas.shift();
-  if (mic.lecturas.length < 2) return;
-  mic.ultima = ahora;
-  const ordenadas = [...mic.lecturas].sort((a, b) => a - b);
-  mic.ultimaHz = ordenadas[ordenadas.length >> 1];
-  showMicReading(mic.ultimaHz);
+  if (mic.siguiendo && !mic.lecturas.length) mic.siguiendo = false;   // sin lecturas no hay con qué comparar (AT-14 #3)
+  if (mic.siguiendo && r && r.claridad >= MIC.CLARIDAD_SEGUIR){
+    // ¿Es la nota que se sigue? Se compara con el centro de las últimas
+    // lecturas, no con la primera: al girar la clavija la nota se desliza, y
+    // hay que ir con ella; y una lectura mala suelta no arrastra a las demás.
+    // Al apagarse la fundamental, el detector puede dar la octava: se pliega,
+    // pero solo si llega floja. Clara y en otra octava es otra cuerda (en Drop D,
+    // la 6ª y la 4ª son Re con una octava de por medio) y va a candidata (AT-14 #1).
+    let c = centsEntre(r.hz, centro(mic.lecturas));
+    const octavas = Math.round(c / 1200);
+    c -= 1200 * octavas;
+    const plegable = octavas === 0 || (Math.abs(octavas) === 1 && r.claridad < MIC.CLARIDAD);
+    if (Math.abs(c) < MIC.CERCA && plegable){
+      mic.lecturas.push(r.hz / Math.pow(2, octavas));
+      if (mic.lecturas.length > MIC.LECTURAS) mic.lecturas.shift();
+      mic.candidatas = [];
+      mic.ultima = ahora;
+      return centro(mic.lecturas);
+    }
+  }
+  if (r && r.claridad >= MIC.CLARIDAD){
+    // Clara, pero no es la que se sigue (o no se sigue ninguna): candidata.
+    const previa = mic.candidatas[mic.candidatas.length - 1];
+    // «Seguidas» de verdad: una candidata de hace más de tres trozos ya no cuenta (AT-14 #5).
+    if (previa && (Math.abs(centsEntre(r.hz, previa)) > 40 || ahora - mic.candidataT > 3 * MIC.PERIODO_MS)) mic.candidatas = [];
+    mic.candidatas.push(r.hz); mic.candidataT = ahora;
+    if (mic.candidatas.length >= 2){          // dos seguidas que coinciden: es otra nota
+      mic.lecturas = mic.candidatas; mic.candidatas = [];
+      mic.siguiendo = true;
+      mic.ultima = ahora;
+      return centro(mic.lecturas);
+    }
+  }
+  if (mic.siguiendo && ahora - mic.ultima > MIC.SOLTAR_MS){ mic.siguiendo = false; mic.lecturas = []; }
+  return 0;
+}
+
+/** Cada lectura del detector: se enseña si cuenta; si no, lo último medido se
+ *  queda un rato atenuado y después la aguja vuelve a reposo. */
+function onMicReading(r, _sr, ahora = Date.now()){
+  if (!mic.analyser) return;
+  const hz = seguirNota(r, ahora, mic.nivel);
+  if (hz){ mic.ultimaHz = hz; showMicReading(hz); return; }
+  if (!mic.mostrando) return;
+  if (ahora - mic.ultima > MIC.SOSTEN_MS) showMicIdle();
+  else if (ahora - mic.ultima > 4 * MIC.PERIODO_MS) setMicHeld(true);   // 200 ms: sin parpadeos al borde del ruido (AT-14 #8)
 }
 
 function showMicReading(hzDetectada){
@@ -101,8 +187,8 @@ function showMicReading(hzDetectada){
   const nota = document.getElementById('mic-note');
   nota.textContent = noteName(s.openMidi) + info.octave;
   const redondo = Math.round(c);
-  document.getElementById('mic-detail').textContent =
-    t('mic.detail', { c: (redondo > 0 ? '+' : redondo < 0 ? '−' : '') + Math.abs(redondo), o: ord(s.number) });
+  mic.detalle = t('mic.detail', { c: (redondo > 0 ? '+' : redondo < 0 ? '−' : '') + Math.abs(redondo), o: ord(s.number) });
+  document.getElementById('mic-detail').textContent = mic.detalle;
   // Se decide con el número que se ve (AT-07 #5). Ya afinada, hace falta
   // pasar de ±7 para dejar de estarlo: así el aviso no parpadea en el borde
   // y el lector de pantalla no lo repite sin parar (AT-07 #4).
@@ -113,10 +199,23 @@ function showMicReading(hzDetectada){
   else { orden = redondo > 50 ? 'baja' : 'baja-poco'; texto = ['▼', t(redondo > 50 ? 'mic.down' : 'mic.downBit')]; }
   setMicOrder(orden, texto);
   setNeedle(c, true);
+  mic.mostrando = true;
+  setMicHeld(false);
+}
+
+/** Sostenida: ya no se oye, pero lo último medido sigue a la vista, atenuado. */
+function setMicHeld(on){
+  const vivo = document.getElementById('mic-live');
+  if (vivo.classList.contains('held') === on) return;
+  vivo.classList.toggle('held', on);
+  // Se dice con palabras, no solo atenuando: que nadie gire la clavija creyendo
+  // que la aguja va en directo (AR-15 #7).
+  if (mic.mostrando) document.getElementById('mic-detail').textContent = on ? t('mic.held') + ' · ' + mic.detalle : mic.detalle;
 }
 
 function showMicIdle(){
-  mic.lecturas = [];
+  mic.lecturas = []; mic.candidatas = []; mic.siguiendo = false; mic.mostrando = false;
+  setMicHeld(false);
   document.getElementById('mic-note').textContent = '—';
   document.getElementById('mic-detail').textContent = t('mic.play');
   setMicOrder('', null);
@@ -212,17 +311,31 @@ async function startMic(){
   try {
     mic.src = audioCtx.createMediaStreamSource(mic.stream);
     mic.analyser = audioCtx.createAnalyser();
-    // El trozo debe abarcar dos periodos del Do2 más grave: 2048 valores a 44,1
-    // o 48 kHz; el doble con tarjetas de 96 kHz (AT-07 #1).
+    // El trozo abarca más de cuatro periodos del Do2 más grave: 4096 valores
+    // (85 ms) a 44,1 o 48 kHz; el doble con tarjetas de 96 kHz (AT-07 #1). Con
+    // el doble que antes, el detector promedia más sonido y el ruido le afecta
+    // menos, que es lo que hace falta para seguir una nota que se apaga.
     let tam = 2048;
-    while (tam < 2.2 * audioCtx.sampleRate / TONO.MIN_HZ && tam < 32768) tam *= 2;
+    while (tam < 4.4 * audioCtx.sampleRate / TONO.MIN_HZ && tam < 32768) tam *= 2;
     mic.analyser.fftSize = tam;
-    mic.src.connect(mic.analyser);          // solo al analizador: no sale por el altavoz
+    // micrófono → filtros → analizador. Solo al analizador: no sale por el altavoz.
+    // Dos pasos de agudos seguidos cortan más limpio que uno. Si el navegador
+    // no tiene filtros, se analiza sin ellos (PL-04).
+    let salida = mic.src;
+    if (audioCtx.createBiquadFilter){
+      for (const [tipo, hz, q] of [['highpass', MIC.GRAVES_HZ, 0.707], ['lowpass', MIC.AGUDOS_HZ, 0.54], ['lowpass', MIC.AGUDOS_HZ, 1.31]]){
+        const f = audioCtx.createBiquadFilter();
+        f.type = tipo; f.frequency.value = hz; f.Q.value = q;
+        salida.connect(f); salida = f; mic.filtros.push(f);
+      }
+    }
+    salida.connect(mic.analyser);
   } catch(e){ console.error(e); stopMic(); showMicPanel(t('mic.analyse')); return; }
   mic.det = crearDetector(onMicReading);
   mic.timer = setInterval(micTick, MIC.PERIODO_MS);
-  mic.ultima = 0;
+  mic.ultima = 0; mic.ruido = MIC.RUIDO_INICIAL; mic.nivel = 0;
   showMicIdle();
+  pantallaDespierta('mic', true);           // que el móvil no se bloquee mientras afinas (G-13)
   const conFoco = document.activeElement && document.activeElement.id === 'mic-start';
   document.getElementById('mic-intro').hidden = true;
   document.getElementById('mic-live').hidden = false;
@@ -233,7 +346,12 @@ function micTick(){
   if (!mic.analyser || !mic.det) return;
   const x = new Float32Array(mic.analyser.fftSize);
   mic.analyser.getFloatTimeDomainData(x);
-  mic.det.analizar(x, audioCtx.sampleRate);
+  // El nivel del trozo, para medir el ruido de fondo (seguirNota). Se calcula
+  // ANTES de dárselo al detector: al pasar al otro hilo, `x` se queda vacío.
+  let suma = 0;
+  for (let i = 0; i < x.length; i++) suma += x[i] * x[i];
+  mic.nivel = Math.sqrt(suma / x.length);
+  mic.det.analizar(x, audioCtx.sampleRate, mic.siguiendo ? MIC.SEGUIR : MIC.BUSCAR);
 }
 
 /** Apaga el micrófono del todo (el indicador del navegador desaparece). */
@@ -242,9 +360,11 @@ function stopMic(){
   clearInterval(mic.timer); mic.timer = null;
   if (mic.det){ mic.det.cerrar(); mic.det = null; }
   if (mic.src){ try { mic.src.disconnect(); } catch(e){} mic.src = null; }
+  mic.filtros.forEach(f => { try { f.disconnect(); } catch(e){} }); mic.filtros = [];
   mic.analyser = null;
+  pantallaDespierta('mic', false);
   if (mic.stream){ mic.stream.getTracks().forEach(pista => pista.stop()); mic.stream = null; restoreAudioSession(); }
-  mic.lecturas = [];
+  mic.lecturas = []; mic.candidatas = []; mic.siguiendo = false; mic.mostrando = false;
   showMicPanel('');
   if (conFoco) document.getElementById('mic-start').focus();
 }
@@ -264,10 +384,13 @@ function showMicPanel(motivo){
 }
 
 /** Cambia entre De oído y Micrófono. El micrófono no se enciende solo: hay que
- *  pulsar «Activar el micrófono», así nunca escucha sin que lo pidas. */
-function setTunerMode(modo){
+ *  pulsar «Activar el micrófono», así nunca escucha sin que lo pidas.
+ *  `elegido`: lo has pulsado tú, y entonces se recuerda. Si nunca has elegido,
+ *  el afinador abre en Micrófono donde se puede usar y en De oído donde no
+ *  (el archivo con doble clic, una web sin https): F5.8 #2. */
+function setTunerMode(modo, elegido){
   state.tunerMode = modo === 'mic' ? 'mic' : 'ear';
-  save();
+  if (elegido){ state.tunerPick = true; save(); }
   document.querySelectorAll('#tuner-mode button').forEach(b => {
     const on = b.dataset.v === state.tunerMode;
     b.classList.toggle('on', on); b.setAttribute('aria-pressed', on);
@@ -277,10 +400,18 @@ function setTunerMode(modo){
   if (state.tunerMode !== 'mic') stopMic();
   else if (!mic.analyser) showMicPanel(micUnavailable());
 }
+/** El modo con el que abre el afinador: el que elegiste o, si nunca elegiste, el que se pueda usar. */
+const tunerModeInicial = () => state.tunerPick ? state.tunerMode : (micUnavailable() ? 'ear' : 'mic');
 
 function setMicString(v){
   mic.string = v;
-  mic.lecturas = [];
+  // La nota que suena es la misma; cambia con qué cuerda se compara. Se repinta
+  // lo último medido con la cuerda nueva, sin soltar la nota (AT-14 #3).
+  if (mic.mostrando && mic.ultimaHz){
+    const sostenida = document.getElementById('mic-live').classList.contains('held');
+    showMicReading(mic.ultimaHz);
+    if (sostenida) setMicHeld(true);
+  }
   document.querySelectorAll('#mic-string button').forEach(b => {
     const on = b.dataset.v === String(v);
     b.classList.toggle('on', on); b.setAttribute('aria-pressed', on);
@@ -297,12 +428,17 @@ function labelMicStrings(){
 function bindMicTuner(){
   drawGauge();
   labelMicStrings();
-  document.querySelectorAll('#tuner-mode button').forEach(b => b.addEventListener('click', () => setTunerMode(b.dataset.v)));
+  document.querySelectorAll('#tuner-mode button').forEach(b => b.addEventListener('click', () => setTunerMode(b.dataset.v, true)));
   document.querySelectorAll('#mic-string button').forEach(b => b.addEventListener('click', () => setMicString(b.dataset.v)));
   document.getElementById('mic-start').addEventListener('click', startMic);
   document.getElementById('mic-stop').addEventListener('click', stopMic);
   setMicString('auto');
-  setTunerMode(state.tunerMode);
+  setTunerMode(tunerModeInicial());
   // Al bloquear el móvil o cambiar de app, el micrófono se apaga (privacidad, y iOS).
-  document.addEventListener('visibilitychange', () => { if (document.hidden) stopMic(); });
+  // Se dice por qué: si no, al volver parece que el afinador se ha reiniciado solo (AR-15 #14).
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden || !mic.analyser) return;
+    stopMic();
+    if (state.tunerMode === 'mic') showMicPanel(t('mic.hidden'));
+  });
 }
