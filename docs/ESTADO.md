@@ -6,7 +6,7 @@
 > **Al empezar:** compara este archivo (GitHub) con `claude/ESTADO.md` del proyecto; si difieren, avisa a Pablo (manda GitHub). Las reglas están en `CLAUDE.md`. **Al terminar:** déjalo al día y acaba con «ESTADO actualizado: versión X, siguiente paso Y». Propón tú el cambio de conversación al cerrar el bloque.
 
 ## 1. Dónde estamos
-- **Ramas:** `main` = `0.6.0`. `auto/F5.8-saneamiento` = `0.6.2` (PR #18: péndulo #1 y afinador #2, espera «fusiona el #18»). `auto/F5.8-aspecto` = `0.6.3` (PR #19, contra la anterior: baseline y F5.8 #3 y #4). `auto/F5.8-escalas` = `0.6.4` (PR #20, contra la anterior: F5.8 #5). `archivo/hasta-0.6.2` (472ff7a): salvavidas, no se borra nunca.
+- **Ramas:** `main` = `0.6.4` (`a187de7`: el 15/11 se fusionaron los PR #18, #19 y #20, sin PR abiertos). `auto/F5.8-acordes`: creada desde `main` para el bloque #6; de momento solo lleva este ESTADO. `archivo/hasta-0.6.2` (472ff7a): salvavidas, no se borra nunca.
 - **Web de pruebas:** https://pdigue.github.io/guitarra/ (rama `pruebas`, con la `0.6.4`).
 - **Bloque F5.8 #5, Escalas: cerrado** (`0.6.4`, PR #20): una posición cada vez (E-07: 3 notas por cuerda, 2 en pentatónicas; la 1 en la tónica), «Escuchar» (E-08), tocar la escala (E-09), «Todas» (E-10) y Practicar en orden (E-05b); E-05 retirado (estado nuevo en el generador). Auditorías ligeras AT-16 y AR-17, sin críticos; lo alto de AR-17 eran decisiones de Pablo, respondidas el 15/11. Falta la prueba de Pablo.
 - **Después, una conversación por bloque:** Acordes (#6), metrónomo (#7: pulso irregular y desfase; sospechosos, 100 ms programados y `outputLatency`), propuestas (#8), F5.9 (cierre, etiqueta `v0.5.x`) y retomar F6.2 (`auto/F6.2-service-worker`, `7692bc5`: código hecho, faltan documentos, auditoría y PR).
@@ -17,7 +17,7 @@
 2. Decir qué propuestas de #8 aprueba (afinador cromático, Adivinar por niveles, reto inverso, rasgueo, arpegio y favoritos).
 3. Péndulo (AR-14 #2, #8): 13° en horizontal o varilla más corta; con el teclado, ↑ sube el tempo o la pesa.
 4. Afinador (AR-15 #8): si elige De oído se recuerda; ¿prefiere que abra siempre en Micrófono?
-5. Git: proteger `main` en GitHub (Settings → Rules: PR obligatorio, sin *force push* ni borrado); y, solo con su «sí», borrar las 19 ramas `auto/…` ya fusionadas.
+5. Git: proteger `main` en GitHub (Settings → Rules: PR obligatorio, sin *force push* ni borrado); y, solo con su «sí», borrar las 22 ramas `auto/…` ya fusionadas (las 19 de antes, más `saneamiento`, `aspecto` y `escalas`).
 6. Pegar el texto nuevo de las instrucciones del proyecto (dado el 15/11).
 7. Probar la `0.6.3` en el iPhone (temas, Adivinar) y en un iPad, y confirmar el mástil acotado en tableta (AR-16 #7; de momento se da por bueno). La nota tocada en pequeño en Adivinar: aprobada el 15/11.
 8. Probar Escalas (`0.6.4`) en el iPhone: posiciones, «Escuchar» (380 ms por nota), «Todas» y Practicar.
@@ -32,10 +32,11 @@
 - **Trampas:** no usar `pkill -f "node --test"` ni `rev`. Arrays de la app: `JSON.parse(A.ev('JSON.stringify(...)'))`. Un metrónomo arrancado en una prueba se para en `t.after`.
 
 ## 4. Decisiones recientes
+- **15/11 · Fusiones:** #18, #19 y #20 a `main` (cada PR, cambiado antes a `main` como destino), para no alargar la cadena de ramas.
 - **15/11 · Escalas (F5.8 #5):** 3 notas por cuerda (2 en pentatónicas), la 1 en la tónica, «Escuchar» a ritmo fijo; recuperar «Todas» y una Práctica sencilla. Aprobada la nota tocada en pequeño (AR-16 #8).
 - **15/11 · Cambio de paradigma para gastar menos:** baseline 0.6.2 (requisitos y matriz v2.0, roadmap v4.0, CHANGELOG desde la 0.6.0, histórico aparte); auditoría técnica ligera una vez por bloque y de requisitos solo si cambian; documentos de cierre al cerrar el bloque; en claude.ai solo ESTADO y CLAUDE; una conversación por bloque.
 - **12/11:** antes de seguir con las fases, sus comentarios (#2 a #8); F6.2 en pausa. Aspecto: temas elegibles. Escalas: las 4, mejor presentadas. Pantalla encendida: sí (G-13).
 - **22/10:** péndulo con la pesa arriba más lenta; F5 queda abierta (F5.8 y F5.9).
 
 ## 5. Para abrir la siguiente conversación
-Dentro del proyecto «APP GUITARRA»: **«Lee ESTADO y sigue.»** Detrás, lo que quiera Pablo ese día (aprobaciones como «fusiona el #18», comentarios, peticiones). **Siguiente paso:** F5.8 #6, Acordes, en una conversación nueva (rama nueva desde `auto/F5.8-escalas`).
+Dentro del proyecto «APP GUITARRA»: **«Lee ESTADO y sigue.»** Detrás, lo que quiera Pablo ese día (aprobaciones como «fusiona el #18», comentarios, peticiones). **Siguiente paso:** F5.8 #6, Acordes, en una conversación nueva, en la rama `auto/F5.8-acordes` (ya creada desde `main`).
