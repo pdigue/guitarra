@@ -8,10 +8,12 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.6.4** | 15/11/2026 | F5.8 · #5, Escalas por posiciones | Rama `auto/F5.8-escalas` |
-| 0.6.3 | 15/11/2026 | F5.8 · #3 y #4, temas, iPad y Adivinar | Rama `auto/F5.8-aspecto` (PR #19) |
-| 0.6.2 | 12/11/2026 | F5.8 · #2, el afinador sigue la nota; pantalla encendida | Rama `auto/F5.8-saneamiento` (PR #18) |
-| 0.6.1 | 22/10/2026 | F5.8 · #1, el péndulo del metrónomo | Rama `auto/F5.8-saneamiento` (PR #18) |
+| **0.6.6** | 15/11/2026 | F5.8 · #6, arranca también en un marco aislado | Rama `auto/F5.8-acordes` (PR #21) |
+| 0.6.5 | 15/11/2026 | F5.8 · #6, Acordes más sencillo | Rama `auto/F5.8-acordes` (PR #21) |
+| 0.6.4 | 15/11/2026 | F5.8 · #5, Escalas por posiciones | `main`, fusionada el 15/11 (PR #20) |
+| 0.6.3 | 15/11/2026 | F5.8 · #3 y #4, temas, iPad y Adivinar | `main`, fusionada el 15/11 (PR #19) |
+| 0.6.2 | 12/11/2026 | F5.8 · #2, el afinador sigue la nota; pantalla encendida | `main`, fusionada el 15/11 (PR #18) |
+| 0.6.1 | 22/10/2026 | F5.8 · #1, el péndulo del metrónomo | `main`, fusionada el 15/11 (PR #18) |
 | 0.6.0 | 22/10/2026 | F6.1 · el archivo autónomo, probado como la app | `main`, fusionada el 22/10 (PR #17) |
 
 ---
@@ -19,6 +21,37 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.6.6] — 15/11/2026 · F5.8 · La app arranca también en un marco aislado
+
+Lo viste al abrir el archivo autónomo en la vista previa del chat: el mástil salía vacío.
+
+### Corregido
+- **C-07, PL-04** · En un marco aislado (la vista previa de un chat, un `iframe` con *sandbox*) el historial del navegador existe pero no se deja usar, y el error cortaba el arranque antes de dibujar el mástil. Ahora la app prueba el historial una vez al empezar y, si falla, sigue sin él: todo funciona salvo el botón «atrás» del sistema, como en un navegador que no lo tuviera.
+
+---
+
+## [0.6.5] — 15/11/2026 · F5.8 · Acordes más sencillo, con el dibujo como protagonista
+
+Tu comentario del 12/11 #6: «En cuanto a la parte de acordes, es igual, parece confuso y engorroso. Simplifícalo y mejora el looking». Tus respuestas del 15/11: el mástil acotado y grande, y elegir por nota y tipo.
+
+### Añadido
+- **AC-07** · **El acorde en grande.** En Acordes, el mástil enseña solo los trastes 0 a 5 (donde caben las 30 digitaciones), estirados a todo el ancho; sin zoom ni desplazamiento. Los dedos, más grandes. Al salir vuelve tu zoom.
+
+### Cambiado
+- **AC-01** · **Se elige con dos filas de botones:** la nota (Do … Si) y el tipo (Mayor, menor, 7, m7, maj7, sus4 y el bajo, que dice su nota: /Sol con Do, /Si con Sol). Un tipo que no existe para esa nota se apaga; al cambiar de nota se conserva el tipo si existe (de Lam a Mim) y, si no, se pasa al mayor.
+- En Acordes ya no salen el aviso para girar el móvil ni el botón «Pentagrama». En el móvil en horizontal, el nombre y «Tocar» van arriba de la columna.
+
+### Retirado
+- **AC-03** · El pentagrama del acorde: en Acordes manda el dibujo. Las notas siguen escritas junto al nombre (B7: Si · Re♯ · Fa♯ · La).
+- **AC-06** · El buscador y el listado de populares y de 30: con las dos filas, cualquier acorde está a dos toques.
+
+### Corregido tras las auditorías AR-18 y AT-17
+- Con el teclado, el foco ya no se va a los trastes ocultos (más allá del 5).
+- Una prueba avisa si algún día entra un acorde que pase del traste 5.
+- V-01 y P-03 dicen ya que en Acordes no salen el aviso para girar ni el pentagrama.
 
 ---
 

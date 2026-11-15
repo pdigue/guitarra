@@ -226,7 +226,6 @@ document.getElementById('set-reset').addEventListener('click', async () => {
   // selectores y los botones seguían diciendo lo de antes (AT-09 #1).
   reiniciarEscala();
   stopMetro(); metro.aviso = ''; refreshMetro();          // el metrónomo vuelve a 80, 4/4 (MT-05)
-  document.getElementById('chord-search').value = '';    // y Acordes, sin filtro (AT-10 #7)
   refreshNoteText();
   hideSettings();
   // El reto anterior puede referirse a una nota que ya no existe en la
@@ -266,8 +265,8 @@ document.getElementById('app-version').textContent = 'Trasteando ' + APP_VERSION
   svg.appendChild(el('path', { d:CLEF_PATH, fill:'currentColor' }));
   document.getElementById('qb-staff-icon').appendChild(svg);
 })();
-// Al abrir se entra siempre en Libre (L-01), aunque la dirección diga otra área.
-if (canHistory) history.replaceState({ screen:'free' }, '', '#libre');
+// Al abrir se entra siempre en Libre (L-01), aunque la dirección diga otra área:
+// la dirección ya la dejó en #libre la prueba de canHistory (09-navegacion.js).
 aplicarIdioma();               // los textos fijos, en el idioma elegido (G-12)
 buildTuner();
 buildBoard();

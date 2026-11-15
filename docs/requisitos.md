@@ -1,7 +1,7 @@
 # Trasteando — Especificación de Requisitos
 
-**Versión del documento:** 2.2 · **Fecha:** 15 de noviembre de 2026  
-**Válido para:** app `0.6.4` · `roadmap.md` v4.2 · `matriz-cumplimiento` v2.2 · fase en curso **F6** (F5 sigue abierta)  
+**Versión del documento:** 2.3 · **Fecha:** 15 de noviembre de 2026  
+**Válido para:** app `0.6.6` · `roadmap.md` v4.3 · `matriz-cumplimiento` v2.3 · fase en curso **F6** (F5 sigue abierta)  
 **Repositorio:** github.com/pdigue/guitarra, carpeta `docs/` · **Gestiona:** chat de Desarrollo  
 **Tipo de producto:** aplicación web progresiva (PWA), desarrollada en local y publicada al final del roadmap
 
@@ -11,7 +11,7 @@
 
 | Total | ✅ Implementados | 🟡 Parciales | ⬜ Pendientes | ➖ Retirados | ✅ Validados |
 |:---:|:---:|:---:|:---:|:---:|:---:|
-| 117 | 102 | 6 | 8 | 1 | 51 |
+| 118 | 101 | 6 | 8 | 3 | 49 |
 
 > Un requisito implementado no cuenta como cumplido hasta superar su prueba. El primero validado fue **S-08**, en la 0.2.0. La Sesión 1 (20/10, en tu iPhone y tu PC) validó 35 de golpe; lo que cambió la 0.3.3 y el sonido en el iPhone esperan a la Sesión 2.
 
@@ -21,7 +21,7 @@
 | **F2** | Sonido propio y archivo autónomo | 9 | `▰▰▰▰▱▱▱▱▱▱` 4/9 |
 | **F3** | Interfaz y adaptación | 6 | `▰▰▰▰▰▰▰▰▱▱` 5/6 |
 | **F4** | Afinador por micrófono | 8 | `▰▰▰▰▰▰▰▰▰▰` 8/8 |
-| **F5** | Escalas, metrónomo y acordes | 31 | `▰▰▰▰▰▰▰▰▰▰` 31/31 |
+| **F5** | Escalas, metrónomo y acordes | 30 | `▰▰▰▰▰▰▰▰▰▰` 30/30 |
 | **F6** | Preparación para distribución | 5 | `▰▰▱▱▱▱▱▱▱▱` 1/5 |
 | **F7** | Publicación y lanzamiento | 9 | `▱▱▱▱▱▱▱▱▱▱` 0/9 |
 | **Posterior** | Fuera del alcance actual | 3 | `▱▱▱▱▱▱▱▱▱▱` 0/3 |
@@ -36,11 +36,12 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 
 | Versión | Fecha | App | Roadmap | Resumen | Origen |
 |---|---|:---:|:---:|---|---|
-| **2.2** | 15/11/2026 | 0.6.4 | 4.2 | F5.8 #5, Escalas: una posición cada vez en vez de todo el mástil (E-07, nuevo: 3 notas por cuerda en la mayor y la menor y 2 en las pentatónicas; la 1 es la de la tónica, tu decisión del 15/11); «Escuchar» la posición (E-08, nuevo); tocar una casilla la hace el paso actual (E-09, nuevo); «Todas», la escala en todo el mástil (E-10, nuevo, tu respuesta del 15/11); **se retira E-05** (la Práctica de pertenencia) y **E-05b** pasa a ser la Práctica nueva, tocar la posición en orden (tu respuesta del 15/11); E-03, E-04 y E-06 dejan de hablar de «Mostrar» y recorren la posición; el pentagrama, 8 notas alrededor del paso (P-03); E-02 y E-02b, el alcance de las otras afinaciones; E-01, nota. Con las auditorías AR-17 y AT-16. 4 nuevos, 1 retirado y 9 modificados: 117 en total. | Tu comentario F5.8 #5 y tus respuestas del 15/11 |
+| **2.3** | 15/11/2026 | 0.6.5 | 4.3 | F5.8 #6, Acordes más sencillo, con el dibujo como protagonista (tus respuestas del 15/11): el acorde se elige con dos filas de botones, la nota y el tipo, y lo que no existe se apaga (AC-01); el mástil enseña en grande los trastes 0 a 5 (AC-07, nuevo), y por eso el aviso para girar ya no sale en Acordes (V-01) ni el pentagrama (P-03); **se retiran AC-03** (el pentagrama del acorde) **y AC-06** (el buscador). Con las auditorías AR-18 y AT-17. 1 nuevo, 2 retirados y 3 modificados: 118 en total. | Tu comentario F5.8 #6 y tus respuestas del 15/11 |
+| 2.2 | 15/11/2026 | 0.6.4 | 4.2 | F5.8 #5, Escalas: una posición cada vez en vez de todo el mástil (E-07, nuevo: 3 notas por cuerda en la mayor y la menor y 2 en las pentatónicas; la 1 es la de la tónica, tu decisión del 15/11); «Escuchar» la posición (E-08, nuevo); tocar una casilla la hace el paso actual (E-09, nuevo); «Todas», la escala en todo el mástil (E-10, nuevo, tu respuesta del 15/11); **se retira E-05** (la Práctica de pertenencia) y **E-05b** pasa a ser la Práctica nueva, tocar la posición en orden (tu respuesta del 15/11); E-03, E-04 y E-06 dejan de hablar de «Mostrar» y recorren la posición; el pentagrama, 8 notas alrededor del paso (P-03); E-02 y E-02b, el alcance de las otras afinaciones; E-01, nota. Con las auditorías AR-17 y AT-16. 4 nuevos, 1 retirado y 9 modificados: 117 en total. | Tu comentario F5.8 #5 y tus respuestas del 15/11 |
 | 2.1 | 15/11/2026 | 0.6.3 | 4.0 | F5.8 #3 y #4: temas elegibles (V-10) y disposición para tableta y ordenador (V-11); en Adivinar, las pistas en grande y la nota tocada en pequeño (J-01, J-06); el grupo Aspecto en Ajustes (C-02) y las pestañas en tableta (C-04); el mástil de inicio a 40 px en tableta (V-04); C-08 deja los temas a V-10; notas de PL-03 y G-05. J-06 vuelve a «sin validar» hasta tu prueba. Con las auditorías AR-16 y AT-15. 2 nuevos y 8 modificados: 113 en total. | Tus comentarios F5.8 #3 y #4 |
 | 2.0 | 15/11/2026 | 0.6.2 | 4.0 | Baseline 0.6.2: mismos ID, textos, criterios, estados e implementación; cada nota se queda en lo vigente y lo pendiente de tu prueba. Corregido: en 13 requisitos la columna *Desde* llevaba la nota de la Sesión 1, que pasa a *Notas*. 111 en total. | Tu decisión del 15/11 |
 
-**En la 2.2:** nuevos 🆕 E-09, E-07, E-08, E-10 · modificados ✏️ P-03, E-01, E-02, E-02b, E-03, E-04, E-05, E-05b, E-06.
+**En la 2.3:** nuevos 🆕 AC-07 · modificados ✏️ P-03, AC-01, AC-03, AC-06, V-01.
 
 ---
 
@@ -166,7 +167,7 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
 | **P-01** | Al pulsar una nota en el mástil, se representa en el pentagrama. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Clave de sol octavada con trazado propio; 8va, 15ma u 8vb en los extremos; la lectura tiene alto fijo. Validado en la Sesión 1 (A05). |
 | **P-02** | El pentagrama se puede mostrar u ocultar. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | En Ajustes y en el acceso rápido. |
-| **P-03** ✏️ | El pentagrama está disponible en todos los modos de aprendizaje. | Media | F5.3 | ✅ | ⬜ | 0.5.0 | Libre, Adivinar y Escalas. En Escalas, desde la 0.6.4, 8 notas seguidas de la posición alrededor del paso actual, con sus alteraciones (la posición tiene 12 o 18 y no caben). |
+| **P-03** ✏️ | El pentagrama está disponible en todos los modos de aprendizaje. | Media | F5.3 | ✅ | ⬜ | 0.5.0 | Libre, Adivinar y Escalas. En Escalas, desde la 0.6.4, 8 notas seguidas de la posición alrededor del paso actual, con sus alteraciones (la posición tiene 12 o 18 y no caben). En Acordes no se ve desde la 0.6.5 (AC-03, retirado; tu elección del 15/11). |
 | **P-04** | En el afinador, la afinación seleccionada se muestra como seis notas en un pentagrama. | Media | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (A13). |
 
 ---
@@ -205,18 +206,18 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 
 | ID | Requisito | Prior. | Etapa | Impl. | Valid. | Desde | Notas |
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
-| **E-01** ✏️ | Selección de escala a practicar (tónica + tipo). | Alta | F5.2 | ✅ | ⬜ | 0.5.0 | Mayor, menor natural y las dos pentatónicas, en las 12 tónicas, con la tónica escrita según el tipo. Falta que lo veas. F5.8 #5 (decidido): se quedan las 4, presentadas por posiciones desde la 0.6.4 (E-07). |
-| **E-02** ✏️ | El generador de escalas opera **solo en afinación estándar** en la primera entrega. | Alta | F5.2 | ✅ | ⬜ | 0.5.0 | Las 24 mayores y menores, con siete letras distintas, y 16 comparadas con el libro (banco). Pendiente: las 48 contra una tabla de referencia y en el mástil (AR-12 #4); error claro con una alteración fuera de ±2 (AT-11 #9); confirmar que vale en otras afinaciones (AR-12 #9). Desde la 0.6.4 las posiciones (E-07) se calculan con alturas y el banco comprueba en todas las afinaciones de fábrica que no salen trastes fuera del mástil ni saltos raros; que suenen bien en ellas, con la guitarra, es E-02b. |
-| **E-02b** ✏️ | Escalas validadas en afinaciones alternativas, y otras digitaciones además de las posiciones de E-07 (por ejemplo, en octavas o CAGED). | Media | Posterior | ⬜ | ⬜ | — | Fuera del alcance de F5. Las posiciones de E-07 ya salen en cualquier afinación (0.6.4), sin validar con la guitarra (AR-17 #3). |
-| **E-03** ✏️ | La app ilumina en el mástil **una posición de la escala cada vez**, no el mástil entero: las notas de esa posición, con su nombre escrito y la tónica con anillo; el resto del mástil queda limpio. | Alta | F5.3 · F5.8 | ✅ | ⬜ | 0.5.0 | Desde la 0.6.4 (tu comentario F5.8 #5: «no es agradable ver el mástil lleno de notas»), 18 casillas en la mayor y la menor y 12 en las pentatónicas. Falta que lo veas. |
-| **E-04** ✏️ | Se indica el nombre de cada nota y su separación interválica respecto a la anterior. | Alta | F5.3 | ✅ | ⬜ | 0.5.0 | Línea «Do T Re T Mi ST Fa…» de tónica a tónica, con el grado del paso actual resaltado (0.6.4); T½ en las pentatónicas. Falta que lo veas. Pendiente: T, ST y T½ en inglés, y que T½ no se lea como medio tono (AR-12 #8). |
-| **E-05** ✏️ | ~~Submodo Práctica: valida **solo la pertenencia** de la nota a la escala; al pulsar una ajena, marca error e ilumina las correctas.~~ **Retirado en la 0.6.4.** | Alta | Retirado | ➖ | ⬜ | 0.5.0 | Se quitó por tu comentario F5.8 #5 («no haya tanto de práctica, sino ir pudiendo tocar las notas e ir escuchando la escala»). Lo sustituyen E-09 (tocar la escala) y E-05b (la Práctica nueva, en orden). Su ID no se reutiliza (AR-17 #2). |
-| **E-05b** ✏️ | **Practicar la posición:** con «Practicar», las casillas de la posición se ven sin nombre ni color y hay que tocarlas **en orden, de grave a agudo**; la buena se queda en verde con su nombre y una que no toca se marca en rojo un momento, con aviso propio si suena igual pero está en otra cuerda. Al completarla, tocar la primera vuelve a empezar; cambiar de posición, de escala o de afinación, también. | Media | F5.8 | ✅ | ⬜ | 0.6.4 | Antes era «validación del orden y de patrones de digitación concretos», para después; tu respuesta del 15/11 la trae ahora, sencilla. El pentagrama escribe solo las notas ya tocadas. Falta que lo veas. |
-| **E-09** 🆕 | **Tocar la escala:** al pulsar una casilla de la posición, suena y pasa a ser el paso actual (texto, intervalos y pentagrama la siguen); una casilla de fuera solo suena. | Alta | F5.8 | ✅ | ⬜ | 0.6.4 | Tu comentario F5.8 #5: «ir pudiendo tocar las notas de la escala». Falta que lo veas. |
-| **E-06** ✏️ | Guiado nota a nota por la posición elegida. | Media | F5.3 · F5.8 | ✅ | ⬜ | 0.5.0 | ◀ ▶ de la nota más grave de la posición a la más aguda (antes, una octava desde la tónica grave), con sonido, resalte de esa casilla y explicación («Mi, un tono sobre Re»). Falta que lo veas. Pendiente: con afinaciones muy graves el pentagrama cambia de octava a mitad (AT-11 #3). |
-| **E-07** 🆕 | **Una posición cada vez:** cada escala se reparte en posiciones que empiezan en una de sus notas sobre la 6.ª cuerda y suben nota a nota, 3 por cuerda en la mayor y la menor (7 posiciones) y 2 en las pentatónicas (las 5 cajas). La **posición 1 es la que empieza en la tónica**; las siguientes van hacia el cuerpo y, pasado el traste 11, siguen desde la cejuela. Se eligen con ◀ ▶ («Posición 1 de 7 · trastes 8 a 13»; en el móvil, «1/7»), al llegar se ve la 1 y la vista del mástil va a la posición elegida. | Alta | F5.8 | ✅ | ⬜ | 0.6.4 | Tu comentario F5.8 #5 y tus respuestas del 15/11 (3 notas por cuerda; la 1 en la tónica). Se calcula con alturas, no con dibujos de memoria: vale en las otras afinaciones (en Drop D, 4 notas en la 6.ª cuando la 5.ª no llega). Falta que lo veas. |
-| **E-08** 🆕 | **Escuchar la posición:** un botón la hace sonar entera, subiendo y bajando, con cada nota resaltada en el mástil y en el pentagrama; otro toque la para, y se calla al salir de Escalas, al ocultar la app y al cambiar de escala, de posición o de afinación. | Media | F5.8 | ✅ | ⬜ | 0.6.4 | Tu comentario F5.8 #5: «ir escuchando la propia escala». Una nota cada 380 ms, fija (tu respuesta del 15/11). Falta que lo oigas. |
-| **E-10** 🆕 | **Todas:** un botón enseña la escala también en el resto del mástil, más pequeña y apagada, sin perder la posición elegida, que sigue destacada. Apagado al entrar en la app. | Media | F5.8 | ✅ | ⬜ | 0.6.4 | Tu respuesta del 15/11 («ver todo el mástil», apagado por defecto). No se guarda entre sesiones. Falta que lo veas. |
+| **E-01** | Selección de escala a practicar (tónica + tipo). | Alta | F5.2 | ✅ | ⬜ | 0.5.0 | Mayor, menor natural y las dos pentatónicas, en las 12 tónicas, con la tónica escrita según el tipo. Falta que lo veas. F5.8 #5 (decidido): se quedan las 4, presentadas por posiciones desde la 0.6.4 (E-07). |
+| **E-02** | El generador de escalas opera **solo en afinación estándar** en la primera entrega. | Alta | F5.2 | ✅ | ⬜ | 0.5.0 | Las 24 mayores y menores, con siete letras distintas, y 16 comparadas con el libro (banco). Pendiente: las 48 contra una tabla de referencia y en el mástil (AR-12 #4); error claro con una alteración fuera de ±2 (AT-11 #9); confirmar que vale en otras afinaciones (AR-12 #9). Desde la 0.6.4 las posiciones (E-07) se calculan con alturas y el banco comprueba en todas las afinaciones de fábrica que no salen trastes fuera del mástil ni saltos raros; que suenen bien en ellas, con la guitarra, es E-02b. |
+| **E-02b** | Escalas validadas en afinaciones alternativas, y otras digitaciones además de las posiciones de E-07 (por ejemplo, en octavas o CAGED). | Media | Posterior | ⬜ | ⬜ | — | Fuera del alcance de F5. Las posiciones de E-07 ya salen en cualquier afinación (0.6.4), sin validar con la guitarra (AR-17 #3). |
+| **E-03** | La app ilumina en el mástil **una posición de la escala cada vez**, no el mástil entero: las notas de esa posición, con su nombre escrito y la tónica con anillo; el resto del mástil queda limpio. | Alta | F5.3 · F5.8 | ✅ | ⬜ | 0.5.0 | Desde la 0.6.4 (tu comentario F5.8 #5: «no es agradable ver el mástil lleno de notas»), 18 casillas en la mayor y la menor y 12 en las pentatónicas. Falta que lo veas. |
+| **E-04** | Se indica el nombre de cada nota y su separación interválica respecto a la anterior. | Alta | F5.3 | ✅ | ⬜ | 0.5.0 | Línea «Do T Re T Mi ST Fa…» de tónica a tónica, con el grado del paso actual resaltado (0.6.4); T½ en las pentatónicas. Falta que lo veas. Pendiente: T, ST y T½ en inglés, y que T½ no se lea como medio tono (AR-12 #8). |
+| **E-05** | ~~Submodo Práctica: valida **solo la pertenencia** de la nota a la escala; al pulsar una ajena, marca error e ilumina las correctas.~~ **Retirado en la 0.6.4.** | Alta | Retirado | ➖ | ⬜ | 0.5.0 | Se quitó por tu comentario F5.8 #5 («no haya tanto de práctica, sino ir pudiendo tocar las notas e ir escuchando la escala»). Lo sustituyen E-09 (tocar la escala) y E-05b (la Práctica nueva, en orden). Su ID no se reutiliza (AR-17 #2). |
+| **E-05b** | **Practicar la posición:** con «Practicar», las casillas de la posición se ven sin nombre ni color y hay que tocarlas **en orden, de grave a agudo**; la buena se queda en verde con su nombre y una que no toca se marca en rojo un momento, con aviso propio si suena igual pero está en otra cuerda. Al completarla, tocar la primera vuelve a empezar; cambiar de posición, de escala o de afinación, también. | Media | F5.8 | ✅ | ⬜ | 0.6.4 | Antes era «validación del orden y de patrones de digitación concretos», para después; tu respuesta del 15/11 la trae ahora, sencilla. El pentagrama escribe solo las notas ya tocadas. Falta que lo veas. |
+| **E-09** | **Tocar la escala:** al pulsar una casilla de la posición, suena y pasa a ser el paso actual (texto, intervalos y pentagrama la siguen); una casilla de fuera solo suena. | Alta | F5.8 | ✅ | ⬜ | 0.6.4 | Tu comentario F5.8 #5: «ir pudiendo tocar las notas de la escala». Falta que lo veas. |
+| **E-06** | Guiado nota a nota por la posición elegida. | Media | F5.3 · F5.8 | ✅ | ⬜ | 0.5.0 | ◀ ▶ de la nota más grave de la posición a la más aguda (antes, una octava desde la tónica grave), con sonido, resalte de esa casilla y explicación («Mi, un tono sobre Re»). Falta que lo veas. Pendiente: con afinaciones muy graves el pentagrama cambia de octava a mitad (AT-11 #3). |
+| **E-07** | **Una posición cada vez:** cada escala se reparte en posiciones que empiezan en una de sus notas sobre la 6.ª cuerda y suben nota a nota, 3 por cuerda en la mayor y la menor (7 posiciones) y 2 en las pentatónicas (las 5 cajas). La **posición 1 es la que empieza en la tónica**; las siguientes van hacia el cuerpo y, pasado el traste 11, siguen desde la cejuela. Se eligen con ◀ ▶ («Posición 1 de 7 · trastes 8 a 13»; en el móvil, «1/7»), al llegar se ve la 1 y la vista del mástil va a la posición elegida. | Alta | F5.8 | ✅ | ⬜ | 0.6.4 | Tu comentario F5.8 #5 y tus respuestas del 15/11 (3 notas por cuerda; la 1 en la tónica). Se calcula con alturas, no con dibujos de memoria: vale en las otras afinaciones (en Drop D, 4 notas en la 6.ª cuando la 5.ª no llega). Falta que lo veas. |
+| **E-08** | **Escuchar la posición:** un botón la hace sonar entera, subiendo y bajando, con cada nota resaltada en el mástil y en el pentagrama; otro toque la para, y se calla al salir de Escalas, al ocultar la app y al cambiar de escala, de posición o de afinación. | Media | F5.8 | ✅ | ⬜ | 0.6.4 | Tu comentario F5.8 #5: «ir escuchando la propia escala». Una nota cada 380 ms, fija (tu respuesta del 15/11). Falta que lo oigas. |
+| **E-10** | **Todas:** un botón enseña la escala también en el resto del mástil, más pequeña y apagada, sin perder la posición elegida, que sigue destacada. Apagado al entrar en la app. | Media | F5.8 | ✅ | ⬜ | 0.6.4 | Tu respuesta del 15/11 («ver todo el mástil», apagado por defecto). No se guarda entre sesiones. Falta que lo veas. |
 
 ---
 
@@ -237,12 +238,13 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 
 | ID | Requisito | Prior. | Etapa | Impl. | Valid. | Desde | Notas |
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
-| **AC-01** | **Librería de acordes**, un área propia: a un lado, el listado de nombres, con una sección de **populares** arriba y debajo los **30 acordes** más habituales; al otro, el acorde dibujado en el mástil. | Media | F5.7 | ✅ | ✅ | 0.5.5 | Populares (C, G, D, A, E, Am, Em, Dm, F) y 30 de uso común. Falta compararlos con tu guitarra (Sesión 2). Pendiente: contrastarlos con un método citado (AR-12 #4); raíz alterada (F♯m, B♭, D/F♯; AT-11 #8); rasgueo con el reloj de audio (AT-11 #7). |
+| **AC-01** ✏️ | **Librería de acordes**, un área propia con los **30 acordes** más habituales: arriba se eligen con **dos filas de botones, la nota** (Do … Si) **y el tipo** (Mayor, menor, 7, m7, maj7, sus4 y el bajo, que dice su nota: /Sol con Do, /Si con Sol); un tipo que no existe para esa nota se apaga, y al cambiar de nota se conserva el tipo si existe (si no, el mayor). Debajo, el acorde dibujado en el mástil. | Media | F5.7 · F5.8 | ✅ | ⬜ | 0.5.5 | Simplificado en la 0.6.5 (F5.8 #6): sustituye a los populares, el listado de 30 y el buscador (AC-06). Con otra nota, el botón del bajo dice «/bajo» y se apaga (AR-18 #6). Pendiente: los tipos apagados salen del orden del tabulador (AT-17 B6); de Do a Lam suenan dos rasgueos, La y Lam (AR-18 #7). Falta tu prueba y compararlos con tu guitarra (Sesión 2). Pendiente: contrastarlos con un método citado (AR-12 #4); raíz alterada (F♯m, B♭, D/F♯; AT-11 #8); rasgueo con el reloj de audio (AT-11 #7). |
 | **AC-02** | En el mástil, cada nota del acorde lleva un círculo del color de su dedo (1 índice, 2 medio, 3 anular, 4 meñique; el mismo color en todos los acordes) con el número del dedo dentro. Junto al nombre de cada cuerda, ○ si suena al aire y ✕ si no suena; la cejilla, como una barra que une sus cuerdas. | Media | F5.7 | ✅ | ⬜ | 0.5.5 | Número y color por dedo (Okabe-Ito, apto para daltonismo), constante entre acordes; círculo a 3:1 y número a 4,5:1. Falta compararlo con tu guitarra (Sesión 2). |
-| **AC-03** | El pentagrama escribe el acorde con sus notas apiladas, escritas como manda el acorde (B7: Re♯); se oculta con el ajuste de pentagrama de siempre. | Baja | F5.7 | ✅ | ⬜ | 0.5.5 | En el móvil en vertical el pentagrama se aparta; se ve al girar o en pantallas amplias. Falta compararlo con tu guitarra (Sesión 2). |
+| **AC-03** ✏️ | ~~El pentagrama escribe el acorde con sus notas apiladas, escritas como manda el acorde (B7: Re♯); se oculta con el ajuste de pentagrama de siempre.~~ **Retirado en la 0.6.5.** | Baja | Retirado | ➖ | ⬜ | 0.5.5 | Se quitó por tu comentario F5.8 #6 (menos a la vista y el dibujo como protagonista; tu elección del 15/11): en Acordes no se ve el pentagrama. Las notas del acorde, escritas como manda (B7: Re♯), siguen junto a su nombre. Su ID no se reutiliza. |
 | **AC-04** | El acorde suena rasgueado, de grave a agudo, al elegirlo y con «Tocar»; cada cuerda se puede tocar suelta. | Media | F5.7 | ✅ | ✅ | 0.5.5 | 35 ms entre cuerdas. Validado por el banco; falta con la guitarra (Sesión 2). |
 | **AC-05** | Las digitaciones son para la afinación estándar en la primera entrega: con otra afinación activa, Acordes lo avisa, no las dibuja y ofrece pasar a la estándar. | Media | F5.7 | ✅ | ✅ | 0.5.5 | Las demás afinaciones, para después. Validado por el banco; falta con la guitarra (Sesión 2). |
-| **AC-06** | Un **buscador** filtra el listado por cómo empieza el nombre: «G» deja G, Gm, G7, G/B…; vale en las dos nomenclaturas («Sol» encuentra lo mismo) y sin distinguir mayúsculas. | Media | F5.7 | ✅ | ✅ | 0.5.5 | Una sola letra busca en inglés («D» no trae los Do); # y b valen por ♯ y ♭. Validado por el banco. |
+| **AC-06** ✏️ | ~~Un **buscador** filtra el listado por cómo empieza el nombre: «G» deja G, Gm, G7, G/B…; vale en las dos nomenclaturas («Sol» encuentra lo mismo) y sin distinguir mayúsculas.~~ **Retirado en la 0.6.5.** | Media | Retirado | ➖ | ⬜ | 0.5.5 | Se quitó por tu comentario F5.8 #6 («confuso y engorroso»; tu elección del 15/11): con dos filas de botones (AC-01) los 30 acordes están a dos toques y no hace falta buscar. Su ID no se reutiliza. |
+| **AC-07** 🆕 | **El acorde en grande:** en Acordes, el mástil enseña solo los **trastes 0 a 5**, donde caben todas las digitaciones, estirados a todo el ancho de la pantalla, sin zoom ni desplazamiento; no se ven el pentagrama ni el aviso para girar. Al salir, vuelve el zoom de siempre. | Media | F5.8 | ✅ | ⬜ | 0.6.5 | Tu comentario F5.8 #6 («el diagrama como protagonista») y tu elección del 15/11: el mismo mástil de la app, acotado, en vez de un diagrama de cancionero. Los dedos, más grandes (36 px; 44 px en pantallas grandes). En horizontal, el nombre y «Tocar» van arriba de la columna. Con el teclado, el foco no pasa del traste 5 (AT-17 M1); una prueba avisa si un acorde nuevo pasa del 5 (AR-18 #1, AT-17 M2). Los trastes a todo el ancho también en pantallas grandes: aceptado por ti el 15/11 (AR-18 #3). Pendiente: el lector de pantalla sigue contando las casillas ocultas (AT-17 B2). Falta tu prueba. |
 
 ---
 
@@ -269,7 +271,7 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 
 | ID | Requisito | Prior. | Etapa | Impl. | Valid. | Desde | Notas |
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
-| **V-01** | En móvil se **sugiere** la orientación horizontal con un aviso discreto; no se fuerza. | Alta | F3.2 | ✅ | ✅ | 0.3.0 | En horizontal, raíl, mástil a todo el alto y panel (52,8 px por cuerda en el iPhone). Aviso para girar solo con el dedo, en vertical y con menos de 600 px de ancho, en Libre, Adivinar, Escalas y Acordes. Validado en la Sesión 1 (C02, C03, D03). |
+| **V-01** ✏️ | En móvil se **sugiere** la orientación horizontal con un aviso discreto; no se fuerza. | Alta | F3.2 | ✅ | ✅ | 0.3.0 | En horizontal, raíl, mástil a todo el alto y panel (52,8 px por cuerda en el iPhone). Aviso para girar solo con el dedo, en vertical y con menos de 600 px de ancho, en Libre, Adivinar y Escalas (desde la 0.6.5, no en Acordes, que enseña siempre los trastes 0 a 5: AC-07). Validado en la Sesión 1 (C02, C03, D03). |
 | **V-02** | El afinador funciona en vertical y en horizontal. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
 | **V-03** | En escritorio el mástil aprovecha el ancho disponible. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Arranca con el mástil completo en pantallas anchas. |
 | **V-04** | Control de zoom que determina qué porción del mástil se ve. | Alta | F1.1 · F3.2 | ✅ | ✅ | 0.1.0 | De 3 a 24 trastes; por defecto de 40 px con el dedo (34 con ratón), hasta 28 px si se pide con «+»; lo guardado se conserva al girar. Desde la 0.6.3, con el dedo y 900 px o más, el mástil de inicio respeta los 40 px (antes, 38 en un iPad de 1024); a quien ya tenía un zoom guardado no le cambia hasta «Restablecer» (AT-15 #7). Validado en la Sesión 1 (A07, A08, C04). |
@@ -335,8 +337,8 @@ Qué requisitos cierra o valida cada etapa del roadmap. Es la misma información
 | **F5.3** | P-03, E-03, E-04, E-06 |
 | **F5.5** | N-06, J-13 |
 | **F5.6** | MT-01, MT-02, MT-03, MT-04, MT-05 |
-| **F5.7** | AC-01, AC-02, AC-03, AC-04, AC-05, AC-06 |
-| **F5.8** | G-13, J-01, J-06, E-03, E-05b, E-09, E-06, E-07, E-08, E-10, MT-06, V-10, V-11, C-02 |
+| **F5.7** | AC-01, AC-02, AC-04, AC-05 |
+| **F5.8** | G-13, J-01, J-06, E-03, E-05b, E-09, E-06, E-07, E-08, E-10, MT-06, AC-01, AC-07, V-10, V-11, C-02 |
 | **F6.1** | G-08 |
 | **F6.2** | G-03 |
 | **F6.3** | G-04 |
@@ -345,7 +347,7 @@ Qué requisitos cierra o valida cada etapa del roadmap. Es la misma información
 | **F7.2** | G-03, G-04, PL-01, PL-02, PL-03, PL-04, X-03 |
 | **F7.4** | G-09 |
 | **Posterior** | S-09, E-02b, C-08 |
-| **Retirado** | E-05 |
+| **Retirado** | E-05, AC-03, AC-06 |
 
 ---
 

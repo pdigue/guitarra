@@ -408,27 +408,21 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 :root { --f1:#56b4e9; --f2:#e69f00; --f3:#cc79a7; --f4:#2bb58a; }
 .chords-card { flex-shrink:0; display:flex; flex-direction:column; gap:6px; padding:6px 12px;
   background:var(--surface); border-bottom:1px solid var(--line); }
-.chord-search { width:100%; min-height:40px; box-sizing:border-box; padding:0 12px; border-radius:10px; font:inherit; font-size:15px;
-  background:var(--bg); border:1px solid var(--line2); color:var(--text); }
-.chord-search::placeholder { color:var(--faint); }
-.chord-list { max-height:132px; overflow-y:auto; display:flex; flex-direction:column; gap:3px; touch-action:pan-y; }
-.cl-head { font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-top:2px; }
-.cl-group { display:flex; flex-wrap:wrap; gap:5px; }
-.chord-chip { min-width:52px; min-height:40px; padding:0 10px; border-radius:10px; cursor:pointer; font:inherit;
-  font-size:14px; font-weight:700; background:var(--surface2); border:1px solid var(--line2); color:var(--text); }
+/* F5.8 #6: dos filas de botones, la nota y el tipo (AC-01). Los botones se
+   estiran para llenar la fila: siete por fila caben en un iPhone en vertical. */
+.chord-pick { display:flex; gap:4px; }
+.chord-chip { flex:1 1 auto; min-width:40px; min-height:40px; padding:0 4px; border-radius:10px; cursor:pointer; font:inherit;
+  font-size:14px; font-weight:700; white-space:nowrap; background:var(--surface2); border:1px solid var(--line2); color:var(--text); }
 .chord-chip.on { background:var(--amber); border-color:var(--amber); color:var(--on-accent); }
-.cl-empty { margin:4px 0; font-size:13px; color:var(--muted); }
-/* En vertical no cabe todo: el listado deja ver dos filas y se desplaza; el
-   pentagrama y el zoom se apartan para que el mástil conserve sus 40 px por
-   cuerda (V-01). El acorde ya se ve entero en el mástil; al girar el móvil,
-   vuelve el pentagrama con el acorde escrito. */
-@media (orientation:portrait) and (max-width:599px){
-  .chords-card { gap:4px; padding:5px 12px; }
-  .chord-list { max-height:92px; }
-  body[data-screen="chords"] .display, body[data-screen="chords"] .zoombar { display:none; }
-}
+.chord-chip:disabled { opacity:.35; cursor:default; }
+/* El dibujo es lo principal (AC-07): en Acordes no hay pentagrama, ni zoom, ni
+   aviso para girar; el mástil enseña los trastes 0 a 5 y no se desplaza. */
+body[data-screen="chords"] .display, body[data-screen="chords"] .zoombar,
+body[data-screen="chords"] #qb-staff { display:none; }
+body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
+.board.chords .finger { width:36px; height:36px; font-size:17px; }
 .chord-info { display:flex; align-items:center; gap:10px; min-height:40px; }
-.chord-name { font-family:Georgia,serif; font-size:24px; font-weight:700; color:var(--amber); }
+.chord-name { font-family:Georgia,serif; font-size:28px; font-weight:700; color:var(--amber); }
 .chord-notes { flex:1; min-width:0; font-size:13px; color:var(--muted); }
 .chord-play { flex-shrink:0; }
 .chord-tuning { margin:0; display:flex; align-items:center; flex-wrap:wrap; gap:6px 10px; font-size:13px; color:var(--ko); }
@@ -676,9 +670,11 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .challenge { padding:0; gap:6px; background:none; border:none; }
   .scales-card { padding:0; gap:6px; background:none; border:none; }
   .chords-card { padding:0; gap:5px; background:none; border:none; }
-  body[data-screen="chords"] .zoombar { display:none; }   /* el acorde ya cabe: diez trastes a la vista */
-  .chord-list { max-height:min(150px, 40vh); }
-  .chord-chip { min-width:44px; padding:0 7px; font-size:13px; }
+  /* En la columna estrecha, tantas columnas como quepan sin bajar de 44 px: los 40 px
+     del dedo (G-05) y algo de margen para «Mayor» y «menor». */
+  .chord-pick { display:grid; grid-template-columns:repeat(auto-fill, minmax(44px, 1fr)); }
+  .chord-chip { min-width:0; padding:0 2px; font-size:12px; }
+  .chord-info { order:-1; }                   /* el nombre y «Tocar», arriba: a la vista sin desplazar */
   .chord-info { flex-wrap:wrap; gap:2px 8px; }
   .chord-name { font-size:20px; }
   .chord-notes { flex-basis:100%; order:3; font-size:12px; }
@@ -813,6 +809,8 @@ body[data-screen="guess"] .note-oct { margin-top:0; }
   .quickbar { padding:6px 20px; gap:8px; }
   .chip { font-size:13.5px; padding:0 16px; }
   .challenge, .scales-card, .chords-card { margin:6px 20px 0; padding:10px 16px; gap:8px; }
+  .chord-chip { flex:0 1 76px; }              /* en pantalla grande, botones de su tamaño, no estirados */
+  .board.chords .finger { width:44px; height:44px; font-size:20px; }
   .challenge-text { font-size:17px; }
   .btn-repeat { width:48px; height:48px; border-radius:12px; font-size:18px; }
   .stats { font-size:13px; } .stats .streak { font-size:16px; }
@@ -843,7 +841,6 @@ body[data-screen="guess"] .note-oct { margin-top:0; }
    el mástil puede bajar a 30 px por cuerda para que Acordes quepa. */
 @media (min-width:700px) and (min-height:600px) and (max-height:699px) and (pointer:fine){
   .board-area { min-height:calc(12px + 17px + 6 * 30px); }
-  .chord-list { max-height:80px; }
   .challenge, .scales-card, .chords-card { padding:6px 16px; gap:4px; }
 }
 /* Tableta en vertical y pantallas medianas (iPad mini y iPad en vertical, iPad
@@ -988,11 +985,10 @@ try {
   </div>
 </div>
 
-<!-- Acordes (F5.7): buscador y listado a un lado; el acorde, en el mástil (AC-01 a AC-06) -->
+<!-- Acordes (F5.7; F5.8 #6): la nota y el tipo, en dos filas; el acorde, en grande en el mástil (AC-01, AC-07) -->
 <div class="chords-card" id="chords-card" hidden>
-  <input type="search" class="chord-search" id="chord-search" placeholder="Buscar: G, Am…" data-t-placeholder="chord.search"
-         aria-label="Buscar acorde por su nombre" data-t-aria="chord.searchAria" autocomplete="off" autocapitalize="off" spellcheck="false">
-  <div class="chord-list" id="chord-list" role="group" aria-label="Acordes" data-t-aria="tab.chords"></div>
+  <div class="chord-pick" id="chord-roots" role="group" aria-label="Nota del acorde" data-t-aria="chord.rootsAria"></div>
+  <div class="chord-pick" id="chord-types" role="group" aria-label="Tipo de acorde" data-t-aria="chord.typesAria"></div>
   <div class="chord-info">
     <span class="chord-name" id="chord-name">C</span>
     <span class="chord-notes" id="chord-notes"></span>
@@ -1417,10 +1413,10 @@ const TEXTOS = {
     'metro.stoppedMic': 'El metrónomo se ha parado: su clic confundiría al afinador.',
     'metro.stoppedHidden': 'Se paró al salir de la app.',
     'metro.running': 'Metrónomo en marcha',
-    // Acordes (F5.7, AC-01 a AC-06)
-    'tab.chords': 'Acordes', 'chord.search': 'Buscar: G, Am…', 'chord.searchAria': 'Buscar acorde por su nombre',
-    'chord.popular': 'Populares', 'chord.all': 'Todos ({n})', 'chord.results': 'Resultados ({n})',
-    'chord.none': 'Ningún acorde empieza por «{q}».', 'chord.play': 'Tocar', 'chord.playAria': 'Tocar el acorde',
+    // Acordes (F5.7; F5.8 #6: nota y tipo, AC-01)
+    'tab.chords': 'Acordes', 'chord.rootsAria': 'Nota del acorde', 'chord.typesAria': 'Tipo de acorde',
+    'chord.major': 'Mayor', 'chord.minor': 'menor', 'chord.bass': '/bajo', 'chord.bassAria': 'Con otra nota en el bajo',
+    'chord.play': 'Tocar', 'chord.playAria': 'Tocar el acorde',
     'chord.tuning': 'Las digitaciones son para la afinación estándar.', 'chord.toStandard': 'Pasar a estándar',
     'chord.finger': 'dedo {n}', 'chord.open': 'al aire', 'chord.muted': 'no suena', 'chord.stringAria': '{o} cuerda: {e}'
   },
@@ -1541,10 +1537,10 @@ const TEXTOS = {
     'metro.stoppedMic': 'The metronome stopped: its click would confuse the tuner.',
     'metro.stoppedHidden': 'It stopped when you left the app.',
     'metro.running': 'Metronome running',
-    // Chords (F5.7, AC-01 to AC-06)
-    'tab.chords': 'Chords', 'chord.search': 'Search: G, Am…', 'chord.searchAria': 'Search a chord by name',
-    'chord.popular': 'Popular', 'chord.all': 'All ({n})', 'chord.results': 'Results ({n})',
-    'chord.none': 'No chord starts with “{q}”.', 'chord.play': 'Play', 'chord.playAria': 'Play the chord',
+    // Chords (F5.7; F5.8 #6: root and type, AC-01)
+    'tab.chords': 'Chords', 'chord.rootsAria': 'Chord root', 'chord.typesAria': 'Chord type',
+    'chord.major': 'Major', 'chord.minor': 'minor', 'chord.bass': '/bass', 'chord.bassAria': 'With another bass note',
+    'chord.play': 'Play', 'chord.playAria': 'Play the chord',
     'chord.tuning': 'These fingerings are for standard tuning.', 'chord.toStandard': 'Switch to standard',
     'chord.finger': 'finger {n}', 'chord.open': 'open', 'chord.muted': 'not played', 'chord.stringAria': '{o} string: {e}'
   }
@@ -1592,7 +1588,7 @@ function aplicarIdioma(){
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.6.4';
+const APP_VERSION = '0.6.6';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -2612,7 +2608,8 @@ function bindBoardKeys(){
     if (!cell) return;
     let row = +cell.dataset.row, fret = +cell.dataset.fret;
     switch (ev.key){
-      case 'ArrowRight': fret = Math.min(NUM_FRETS, fret + 1); break;
+      // En Acordes solo se ven los trastes 0 a 5: el foco no pasa de ahí (AC-07, AT-17 M1).
+      case 'ArrowRight': fret = Math.min(screen === 'chords' ? TRASTES_ACORDE : NUM_FRETS, fret + 1); break;
       case 'ArrowLeft':  fret = Math.max(0, fret - 1); break;
       case 'ArrowDown':  row = Math.min(displayStrings().length - 1, row + 1); break;
       case 'ArrowUp':    row = Math.max(0, row - 1); break;
@@ -2795,6 +2792,15 @@ function maxVisibleFrets(){
 function applyZoom(){
   const scroll = document.getElementById('board-scroll');
   const avail = scroll.clientWidth - LABEL_W - NUT_W;
+
+  // En Acordes, el mástil se acota a los trastes del acorde (del 0 al 5) y los
+  // estira a todo el ancho, para que el dibujo sea lo principal (AC-07): ni
+  // zoom ni desplazamiento. El zoom guardado no se toca: vuelve al salir.
+  if (screen === 'chords'){
+    document.getElementById('board').style.setProperty('--fret-w', (avail / TRASTES_ACORDE) + 'px');
+    scroll.scrollLeft = 0;
+    return;
+  }
 
   // Guardamos qué traste estaba centrado para volver a él tras el cambio:
   // el ancho cambia pero scrollLeft está en píxeles, así que sin esto la
@@ -3223,7 +3229,10 @@ function setScreen(next){
   if (!isChords) leaveChords();
   if (isScales){ pararEscala(); sc.paso = 0; renderScales(); }
   else leaveScales();
-  if (isChords) renderChords();     // después de leaveScales: el pentagrama es del acorde
+  if (isChords){
+    renderChords();                 // después de leaveScales, que limpia el mástil de la escala
+    if (kbPos.fret > TRASTES_ACORDE) setRoving(kbPos.row, 0);   // el foco, en un traste a la vista (AT-17 M1)
+  }
   if (!sinMastil) requestAnimationFrame(applyZoom);
   if (isScales) requestAnimationFrame(verTrastesPosicion);   // tras el zoom: la vista, en la posición
 }
@@ -3309,7 +3318,17 @@ function openSheet(open){
    se bloquea nada: actúa el sistema. Es un estándar presente en todos los
    navegadores; si faltara, la app funciona igual sin ese paso. */
 const SCREEN_HASH = { free:'libre', guess:'adivinar', tuner:'afinador', scales:'escalas', chords:'acordes', metro:'metronomo' };
-const canHistory = typeof history !== 'undefined' && typeof history.pushState === 'function';
+/* Que exista pushState no basta: en un marco aislado (la vista previa de un
+   chat, un iframe con sandbox) existe, pero usarlo lanza SecurityError, y ese
+   error cortaba el arranque antes de dibujar el mástil (0.6.6). Se prueba de
+   verdad una vez, con lo mismo que hace el arranque (dejar la dirección en
+   #libre, L-01); si falla, la app sigue sin historial, como en un navegador
+   que no lo tuviera. Es detectar la capacidad, no el sistema (PL-04). */
+const canHistory = (() => {
+  if (typeof history === 'undefined' || typeof history.pushState !== 'function') return false;
+  try { history.replaceState({ screen:'free' }, '', '#libre'); return true; }
+  catch (e){ return false; }
+})();
 const sheetIsOpen = () => document.getElementById('sheet').classList.contains('open');
 
 function goTo(next){
@@ -3351,11 +3370,12 @@ document.addEventListener('keydown', ev => {
 
 /* --- Aviso para girar el móvil (V-01, interfaz.md §7) ---
    Solo con el dedo, en vertical y en pantallas de menos de 600 px; nunca en
-   el Afinador ni en el Metrónomo, que funcionan igual en las dos orientaciones. Cerrado no vuelve:
+   el Afinador ni en el Metrónomo, que funcionan igual en las dos orientaciones, ni
+   en Acordes, que enseña siempre los trastes 0 a 5 (AC-07). Cerrado no vuelve:
    se guarda con los ajustes, y «Restablecer» lo recupera. */
 function updateRotateHint(){
   const show = coarsePointer() && window.innerHeight > window.innerWidth &&
-               window.innerWidth < 600 && screen !== 'tuner' && screen !== 'metro' && !state.rotateHintClosed;
+               window.innerWidth < 600 && screen !== 'tuner' && screen !== 'metro' && screen !== 'chords' && !state.rotateHintClosed;
   document.getElementById('rotate-hint').hidden = !show;
 }
 
@@ -4992,9 +5012,9 @@ function refreshMetro(){
 </script>
 <script>"use strict";
 
-// 15-acordes.js · Librería de acordes (F5.7, AC-01 a AC-06): un listado con
-// buscador a un lado y, al otro, el acorde dibujado en el mástil, con el número
-// y el color de cada dedo.
+// 15-acordes.js · Librería de acordes (F5.7; simplificada en F5.8 #6): se elige
+// con dos filas de botones, la nota y el tipo, y el acorde se dibuja en grande en
+// los primeros trastes del mástil, con el número y el color de cada dedo.
 // Se carga como <script> clásico, en el orden de index.html: lo declarado aquí
 // (const, let, function) lo ven los archivos que vienen después.
 
@@ -5051,8 +5071,12 @@ const ACORDES = [
   { raiz:6, tipo:'7',    t:'x21202', d:'-213-4' },
   { raiz:6, tipo:'m7',   t:'x24232', d:'-13121', c:[2,5,1] }
 ];
-/** Los más tocados, arriba del listado (tu petición del 21/10). */
-const ACORDES_POPULARES = ['C', 'G', 'D', 'A', 'E', 'Am', 'Em', 'Dm', 'F'];
+/** Los tipos, en el orden de sus botones (AC-01). '/' es «con otra nota en el
+ *  bajo»: Do/Sol y Sol/Si. */
+const TIPOS_BOTON = ['', 'm', '7', 'm7', 'maj7', 'sus4', '/'];
+/** Trastes que enseña el mástil en Acordes (AC-07): del 0 al 5, donde caben
+ *  todas las digitaciones del catálogo (la más alta, Do menor, llega al 5). */
+const TRASTES_ACORDE = 5;
 const AFINACION_ESTANDAR = [40, 45, 50, 55, 59, 64];      // de la 6ª a la 1ª
 
 /** Nombre del acorde: «Am», «G/B»… o «Lam», «Sol/Si». */
@@ -5083,20 +5107,11 @@ function escrituraEnAcorde(a, midi){
   return notasAcorde(a).find(n => pcEscrita(n) === pc) || null;
 }
 
-/* --- Buscador (AC-06) ---
-   «G» deja los acordes que empiezan por G: G, G7, G/B… Vale en las dos
-   nomenclaturas: «Sol» encuentra lo mismo. Una sola letra solo se busca en la
-   inglesa, para que «D» no traiga también los Do. # y b valen por ♯ y ♭. */
-function normalizarBusqueda(q){
-  return String(q || '').trim().replace(/\s+/g, '').replace(/#/g, '♯')
-    .replace(/^([A-Ga-g])b/, '$1♭').toLowerCase();
-}
-function filtrarAcordes(q){
-  const n = normalizarBusqueda(q);
-  if (!n) return ACORDES.slice();
-  return ACORDES.filter(a => nombreAcorde(a, 'anglo').toLowerCase().startsWith(n) ||
-    (n.length >= 2 && nombreAcorde(a, 'latin').toLowerCase().startsWith(n)));
-}
+/** El tipo de un acorde, tal como lo dicen los botones: '/' si lleva otro bajo. */
+const tipoDe = a => a.bajo !== undefined ? '/' : a.tipo;
+/** El acorde de esa nota (0 = Do … 6 = Si) y ese tipo, o undefined si no está
+ *  en el catálogo (no hay Fa7, por ejemplo: su botón se apaga). */
+const acordeDe = (raiz, tipo) => ACORDES.find(a => a.raiz === raiz && tipoDe(a) === tipo);
 
 const cr = { strum: [] };   // temporizadores del rasgueo en marcha
 
@@ -5111,44 +5126,68 @@ function strumChord(a){
   });
 }
 
-/* --- Listado --- */
+/* --- El selector: la nota y el tipo (AC-01) ---
+   Dos filas de botones en lugar de un listado de 30 con buscador (F5.8 #6:
+   «parece confuso y engorroso»). Cada botón dice si está pulsado (aria-pressed),
+   y los tipos que no existen para esa nota se apagan (disabled). */
 
-function chipAcorde(a){
+function etiquetaTipo(tipo){
+  if (tipo === '') return t('chord.major');
+  if (tipo === 'm') return t('chord.minor');
+  if (tipo === '/'){                             // dice qué bajo lleva: «/Sol» con Do, «/Si» con Sol (AR-18 #6)
+    const a = acordeDe(acordeActual().raiz, '/');
+    if (!a) return t('chord.bass');
+    return '/' + (state.notation === 'latin' ? LETRAS_LATIN : LETRAS_ANGLO)[a.bajo];
+  }
+  return tipo;                                   // 7, m7, maj7 y sus4 se dicen igual en todas partes
+}
+function botonSelector(texto, alPulsar){
   const b = document.createElement('button');
   b.className = 'chord-chip';
-  b.dataset.id = idAcorde(a);
-  b.textContent = nombreAcorde(a);
-  b.addEventListener('click', () => selectChord(idAcorde(a), true));
+  b.textContent = texto;
+  b.addEventListener('click', alPulsar);
   return b;
 }
-function seccionAcordes(box, titulo, lista){
-  const h = document.createElement('div'); h.className = 'cl-head'; h.textContent = titulo;
-  const g = document.createElement('div'); g.className = 'cl-group';
-  lista.forEach(a => g.appendChild(chipAcorde(a)));
-  box.appendChild(h); box.appendChild(g);
-}
-function buildChordList(){
-  const box = document.getElementById('chord-list');
-  const q = document.getElementById('chord-search').value;
-  box.innerHTML = '';
-  const hallados = filtrarAcordes(q);
-  if (!normalizarBusqueda(q)){
-    seccionAcordes(box, t('chord.popular'), ACORDES_POPULARES.map(acordePorId));
-    seccionAcordes(box, t('chord.all', { n: ACORDES.length }), ACORDES);
-  } else if (hallados.length){
-    seccionAcordes(box, t('chord.results', { n: hallados.length }), hallados);
-  } else {
-    const p = document.createElement('p'); p.className = 'cl-empty';
-    p.textContent = t('chord.none', { q: q.trim() });
-    box.appendChild(p);
-  }
+/** Crea los botones; se rehacen al cambiar la nomenclatura o el idioma. */
+function buildChordPicker(){
+  const L = state.notation === 'latin' ? LETRAS_LATIN : LETRAS_ANGLO;
+  const raices = document.getElementById('chord-roots');
+  const tipos = document.getElementById('chord-types');
+  raices.innerHTML = ''; tipos.innerHTML = '';
+  L.forEach((letra, raiz) => {
+    const b = botonSelector(letra, () => elegirRaiz(raiz));
+    b.dataset.raiz = String(raiz);
+    raices.appendChild(b);
+  });
+  TIPOS_BOTON.forEach(tipo => {
+    const b = botonSelector(etiquetaTipo(tipo), () => elegirTipo(tipo));
+    b.dataset.tipo = tipo;
+    if (tipo === '/') b.setAttribute('aria-label', t('chord.bassAria'));
+    tipos.appendChild(b);
+  });
   marcarSeleccion();
 }
 function marcarSeleccion(){
-  document.querySelectorAll('#chord-list .chord-chip').forEach(b => {
-    const on = b.dataset.id === state.chordId;
+  const a = acordeActual();
+  document.querySelectorAll('#chord-roots .chord-chip').forEach(b => {
+    const on = +b.dataset.raiz === a.raiz;
     b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
   });
+  document.querySelectorAll('#chord-types .chord-chip').forEach(b => {
+    if (b.dataset.tipo === '/') b.textContent = etiquetaTipo('/');   // cambia con la nota
+    const on = b.dataset.tipo === tipoDe(a);
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+    b.disabled = !acordeDe(a.raiz, b.dataset.tipo);
+  });
+}
+/** Otra nota: se queda el tipo si existe (de Lam a Mim); si no, el mayor. */
+function elegirRaiz(raiz){
+  const nuevo = acordeDe(raiz, tipoDe(acordeActual())) || acordeDe(raiz, '') || ACORDES.find(a => a.raiz === raiz);
+  if (nuevo) selectChord(idAcorde(nuevo), true);   // hoy todas tienen mayor; por si el catálogo crece (AT-17 B3)
+}
+function elegirTipo(tipo){
+  const nuevo = acordeDe(acordeActual().raiz, tipo);
+  if (nuevo) selectChord(idAcorde(nuevo), true);
 }
 
 function selectChord(id, sonar){
@@ -5170,17 +5209,6 @@ function limpiarAcorde(){
   document.querySelectorAll('#board .string-label').forEach(l => {
     delete l.dataset.mark; l.removeAttribute('aria-label');
   });
-}
-
-/** Lleva la vista del mástil a los trastes del acorde. */
-function verTrastesAcorde(a){
-  const scroll = document.getElementById('board-scroll');
-  const fw = parseFloat(getComputedStyle(document.getElementById('board')).getPropertyValue('--fret-w')) || 0;
-  if (!fw || !scroll.clientWidth) return;
-  const trastes = cuerdasAcorde(a).map(c => c.traste).filter(f => f);
-  const lo = Math.min(...trastes), hi = Math.max(...trastes);
-  const visible = scroll.clientWidth - LABEL_W;
-  scroll.scrollLeft = NUT_W + hi * fw <= visible ? 0 : NUT_W + (lo - 1) * fw;
 }
 
 function renderChords(){
@@ -5229,30 +5257,7 @@ function renderChords(){
     }
   }
   labelCells();
-  drawChordStaff(a);
-  requestAnimationFrame(() => verTrastesAcorde(a));
-}
-
-/** El pentagrama escribe el acorde con sus notas apiladas (AC-03). Dos notas
- *  a un paso de distancia no caben una encima de otra: la de arriba va a la derecha. */
-function drawChordStaff(a){
-  const svg = document.getElementById('staff');
-  svg.setAttribute('viewBox', STAFF_CORTO);
-  drawStaffBase(svg, 38, 166);
-  const notas = cuerdasAcorde(a).filter(c => c.midi !== null).map(c => ({ midi: c.midi, esc: escrituraEnAcorde(a, c.midi) }));
-  let anteriorY = null, desplazada = false, altY = null, columna = 0;
-  notas.forEach(n => {
-    const y = staffYEscrita(n.esc, n.midi);
-    desplazada = anteriorY !== null && Math.abs(anteriorY - y) < GAP * 0.75 && !desplazada;
-    // Dos alteraciones a menos de una sexta se pisarían: la segunda, más a la izquierda (AT-10 #8).
-    if (n.esc.alt){
-      columna = altY !== null && Math.abs(altY - y) < GAP * 2.5 ? (columna + 1) % 2 : 0;
-      altY = y;
-    }
-    const x = desplazada ? 124 : 108;
-    drawNote(svg, n.midi, x, 'var(--text)', false, n.esc, (x - 108) + 14 + columna * 12);
-    anteriorY = y;
-  });
+  clearStaff();          // en Acordes el pentagrama no se ve: manda el dibujo (F5.8 #6)
 }
 
 function leaveChords(){
@@ -5262,18 +5267,16 @@ function leaveChords(){
 }
 
 function bindChords(){
-  const q = document.getElementById('chord-search');
-  q.addEventListener('input', buildChordList);
   document.getElementById('chord-play').addEventListener('click', () => strumChord(acordeActual()));
   document.getElementById('chord-standard').addEventListener('click', () => {
     setTuning('standard');
   });
-  buildChordList();
+  buildChordPicker();
 }
 
-/** Nomenclatura o idioma cambiados: los nombres del listado, otra vez. */
+/** Nomenclatura o idioma cambiados: los nombres de los botones, otra vez. */
 function refreshChords(){
-  buildChordList();
+  buildChordPicker();
   renderChords();
 }
 //# sourceURL=js/15-acordes.js
@@ -5506,7 +5509,6 @@ document.getElementById('set-reset').addEventListener('click', async () => {
   // selectores y los botones seguían diciendo lo de antes (AT-09 #1).
   reiniciarEscala();
   stopMetro(); metro.aviso = ''; refreshMetro();          // el metrónomo vuelve a 80, 4/4 (MT-05)
-  document.getElementById('chord-search').value = '';    // y Acordes, sin filtro (AT-10 #7)
   refreshNoteText();
   hideSettings();
   // El reto anterior puede referirse a una nota que ya no existe en la
@@ -5546,8 +5548,8 @@ document.getElementById('app-version').textContent = 'Trasteando ' + APP_VERSION
   svg.appendChild(el('path', { d:CLEF_PATH, fill:'currentColor' }));
   document.getElementById('qb-staff-icon').appendChild(svg);
 })();
-// Al abrir se entra siempre en Libre (L-01), aunque la dirección diga otra área.
-if (canHistory) history.replaceState({ screen:'free' }, '', '#libre');
+// Al abrir se entra siempre en Libre (L-01), aunque la dirección diga otra área:
+// la dirección ya la dejó en #libre la prueba de canHistory (09-navegacion.js).
 aplicarIdioma();               // los textos fijos, en el idioma elegido (G-12)
 buildTuner();
 buildBoard();

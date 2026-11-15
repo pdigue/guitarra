@@ -32,6 +32,15 @@ function applyZoom(){
   const scroll = document.getElementById('board-scroll');
   const avail = scroll.clientWidth - LABEL_W - NUT_W;
 
+  // En Acordes, el mástil se acota a los trastes del acorde (del 0 al 5) y los
+  // estira a todo el ancho, para que el dibujo sea lo principal (AC-07): ni
+  // zoom ni desplazamiento. El zoom guardado no se toca: vuelve al salir.
+  if (screen === 'chords'){
+    document.getElementById('board').style.setProperty('--fret-w', (avail / TRASTES_ACORDE) + 'px');
+    scroll.scrollLeft = 0;
+    return;
+  }
+
   // Guardamos qué traste estaba centrado para volver a él tras el cambio:
   // el ancho cambia pero scrollLeft está en píxeles, así que sin esto la
   // vista saltaba a otra zona del mástil.
