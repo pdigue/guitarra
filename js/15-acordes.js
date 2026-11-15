@@ -1,8 +1,8 @@
 "use strict";
 
-// 15-acordes.js · Librería de acordes (F5.7, AC-01 a AC-06): un listado con
-// buscador a un lado y, al otro, el acorde dibujado en el mástil, con el número
-// y el color de cada dedo.
+// 15-acordes.js · Librería de acordes (F5.7; simplificada en F5.8 #6): se elige
+// con dos filas de botones, la nota y el tipo, y el acorde se dibuja en grande en
+// los primeros trastes del mástil, con el número y el color de cada dedo.
 // Se carga como <script> clásico, en el orden de index.html: lo declarado aquí
 // (const, let, function) lo ven los archivos que vienen después.
 
@@ -59,8 +59,12 @@ const ACORDES = [
   { raiz:6, tipo:'7',    t:'x21202', d:'-213-4' },
   { raiz:6, tipo:'m7',   t:'x24232', d:'-13121', c:[2,5,1] }
 ];
-/** Los más tocados, arriba del listado (tu petición del 21/10). */
-const ACORDES_POPULARES = ['C', 'G', 'D', 'A', 'E', 'Am', 'Em', 'Dm', 'F'];
+/** Los tipos, en el orden de sus botones (AC-01). '/' es «con otra nota en el
+ *  bajo»: Do/Sol y Sol/Si. */
+const TIPOS_BOTON = ['', 'm', '7', 'm7', 'maj7', 'sus4', '/'];
+/** Trastes que enseña el mástil en Acordes (AC-07): del 0 al 5, donde caben
+ *  todas las digitaciones del catálogo (la más alta, Do menor, llega al 5). */
+const TRASTES_ACORDE = 5;
 const AFINACION_ESTANDAR = [40, 45, 50, 55, 59, 64];      // de la 6ª a la 1ª
 
 /** Nombre del acorde: «Am», «G/B»… o «Lam», «Sol/Si». */
@@ -91,20 +95,11 @@ function escrituraEnAcorde(a, midi){
   return notasAcorde(a).find(n => pcEscrita(n) === pc) || null;
 }
 
-/* --- Buscador (AC-06) ---
-   «G» deja los acordes que empiezan por G: G, G7, G/B… Vale en las dos
-   nomenclaturas: «Sol» encuentra lo mismo. Una sola letra solo se busca en la
-   inglesa, para que «D» no traiga también los Do. # y b valen por ♯ y ♭. */
-function normalizarBusqueda(q){
-  return String(q || '').trim().replace(/\s+/g, '').replace(/#/g, '♯')
-    .replace(/^([A-Ga-g])b/, '$1♭').toLowerCase();
-}
-function filtrarAcordes(q){
-  const n = normalizarBusqueda(q);
-  if (!n) return ACORDES.slice();
-  return ACORDES.filter(a => nombreAcorde(a, 'anglo').toLowerCase().startsWith(n) ||
-    (n.length >= 2 && nombreAcorde(a, 'latin').toLowerCase().startsWith(n)));
-}
+/** El tipo de un acorde, tal como lo dicen los botones: '/' si lleva otro bajo. */
+const tipoDe = a => a.bajo !== undefined ? '/' : a.tipo;
+/** El acorde de esa nota (0 = Do … 6 = Si) y ese tipo, o undefined si no está
+ *  en el catálogo (no hay Fa7, por ejemplo: su botón se apaga). */
+const acordeDe = (raiz, tipo) => ACORDES.find(a => a.raiz === raiz && tipoDe(a) === tipo);
 
 const cr = { strum: [] };   // temporizadores del rasgueo en marcha
 
@@ -119,44 +114,68 @@ function strumChord(a){
   });
 }
 
-/* --- Listado --- */
+/* --- El selector: la nota y el tipo (AC-01) ---
+   Dos filas de botones en lugar de un listado de 30 con buscador (F5.8 #6:
+   «parece confuso y engorroso»). Cada botón dice si está pulsado (aria-pressed),
+   y los tipos que no existen para esa nota se apagan (disabled). */
 
-function chipAcorde(a){
+function etiquetaTipo(tipo){
+  if (tipo === '') return t('chord.major');
+  if (tipo === 'm') return t('chord.minor');
+  if (tipo === '/'){                             // dice qué bajo lleva: «/Sol» con Do, «/Si» con Sol (AR-18 #6)
+    const a = acordeDe(acordeActual().raiz, '/');
+    if (!a) return t('chord.bass');
+    return '/' + (state.notation === 'latin' ? LETRAS_LATIN : LETRAS_ANGLO)[a.bajo];
+  }
+  return tipo;                                   // 7, m7, maj7 y sus4 se dicen igual en todas partes
+}
+function botonSelector(texto, alPulsar){
   const b = document.createElement('button');
   b.className = 'chord-chip';
-  b.dataset.id = idAcorde(a);
-  b.textContent = nombreAcorde(a);
-  b.addEventListener('click', () => selectChord(idAcorde(a), true));
+  b.textContent = texto;
+  b.addEventListener('click', alPulsar);
   return b;
 }
-function seccionAcordes(box, titulo, lista){
-  const h = document.createElement('div'); h.className = 'cl-head'; h.textContent = titulo;
-  const g = document.createElement('div'); g.className = 'cl-group';
-  lista.forEach(a => g.appendChild(chipAcorde(a)));
-  box.appendChild(h); box.appendChild(g);
-}
-function buildChordList(){
-  const box = document.getElementById('chord-list');
-  const q = document.getElementById('chord-search').value;
-  box.innerHTML = '';
-  const hallados = filtrarAcordes(q);
-  if (!normalizarBusqueda(q)){
-    seccionAcordes(box, t('chord.popular'), ACORDES_POPULARES.map(acordePorId));
-    seccionAcordes(box, t('chord.all', { n: ACORDES.length }), ACORDES);
-  } else if (hallados.length){
-    seccionAcordes(box, t('chord.results', { n: hallados.length }), hallados);
-  } else {
-    const p = document.createElement('p'); p.className = 'cl-empty';
-    p.textContent = t('chord.none', { q: q.trim() });
-    box.appendChild(p);
-  }
+/** Crea los botones; se rehacen al cambiar la nomenclatura o el idioma. */
+function buildChordPicker(){
+  const L = state.notation === 'latin' ? LETRAS_LATIN : LETRAS_ANGLO;
+  const raices = document.getElementById('chord-roots');
+  const tipos = document.getElementById('chord-types');
+  raices.innerHTML = ''; tipos.innerHTML = '';
+  L.forEach((letra, raiz) => {
+    const b = botonSelector(letra, () => elegirRaiz(raiz));
+    b.dataset.raiz = String(raiz);
+    raices.appendChild(b);
+  });
+  TIPOS_BOTON.forEach(tipo => {
+    const b = botonSelector(etiquetaTipo(tipo), () => elegirTipo(tipo));
+    b.dataset.tipo = tipo;
+    if (tipo === '/') b.setAttribute('aria-label', t('chord.bassAria'));
+    tipos.appendChild(b);
+  });
   marcarSeleccion();
 }
 function marcarSeleccion(){
-  document.querySelectorAll('#chord-list .chord-chip').forEach(b => {
-    const on = b.dataset.id === state.chordId;
+  const a = acordeActual();
+  document.querySelectorAll('#chord-roots .chord-chip').forEach(b => {
+    const on = +b.dataset.raiz === a.raiz;
     b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
   });
+  document.querySelectorAll('#chord-types .chord-chip').forEach(b => {
+    if (b.dataset.tipo === '/') b.textContent = etiquetaTipo('/');   // cambia con la nota
+    const on = b.dataset.tipo === tipoDe(a);
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+    b.disabled = !acordeDe(a.raiz, b.dataset.tipo);
+  });
+}
+/** Otra nota: se queda el tipo si existe (de Lam a Mim); si no, el mayor. */
+function elegirRaiz(raiz){
+  const nuevo = acordeDe(raiz, tipoDe(acordeActual())) || acordeDe(raiz, '') || ACORDES.find(a => a.raiz === raiz);
+  if (nuevo) selectChord(idAcorde(nuevo), true);   // hoy todas tienen mayor; por si el catálogo crece (AT-17 B3)
+}
+function elegirTipo(tipo){
+  const nuevo = acordeDe(acordeActual().raiz, tipo);
+  if (nuevo) selectChord(idAcorde(nuevo), true);
 }
 
 function selectChord(id, sonar){
@@ -178,17 +197,6 @@ function limpiarAcorde(){
   document.querySelectorAll('#board .string-label').forEach(l => {
     delete l.dataset.mark; l.removeAttribute('aria-label');
   });
-}
-
-/** Lleva la vista del mástil a los trastes del acorde. */
-function verTrastesAcorde(a){
-  const scroll = document.getElementById('board-scroll');
-  const fw = parseFloat(getComputedStyle(document.getElementById('board')).getPropertyValue('--fret-w')) || 0;
-  if (!fw || !scroll.clientWidth) return;
-  const trastes = cuerdasAcorde(a).map(c => c.traste).filter(f => f);
-  const lo = Math.min(...trastes), hi = Math.max(...trastes);
-  const visible = scroll.clientWidth - LABEL_W;
-  scroll.scrollLeft = NUT_W + hi * fw <= visible ? 0 : NUT_W + (lo - 1) * fw;
 }
 
 function renderChords(){
@@ -237,30 +245,7 @@ function renderChords(){
     }
   }
   labelCells();
-  drawChordStaff(a);
-  requestAnimationFrame(() => verTrastesAcorde(a));
-}
-
-/** El pentagrama escribe el acorde con sus notas apiladas (AC-03). Dos notas
- *  a un paso de distancia no caben una encima de otra: la de arriba va a la derecha. */
-function drawChordStaff(a){
-  const svg = document.getElementById('staff');
-  svg.setAttribute('viewBox', STAFF_CORTO);
-  drawStaffBase(svg, 38, 166);
-  const notas = cuerdasAcorde(a).filter(c => c.midi !== null).map(c => ({ midi: c.midi, esc: escrituraEnAcorde(a, c.midi) }));
-  let anteriorY = null, desplazada = false, altY = null, columna = 0;
-  notas.forEach(n => {
-    const y = staffYEscrita(n.esc, n.midi);
-    desplazada = anteriorY !== null && Math.abs(anteriorY - y) < GAP * 0.75 && !desplazada;
-    // Dos alteraciones a menos de una sexta se pisarían: la segunda, más a la izquierda (AT-10 #8).
-    if (n.esc.alt){
-      columna = altY !== null && Math.abs(altY - y) < GAP * 2.5 ? (columna + 1) % 2 : 0;
-      altY = y;
-    }
-    const x = desplazada ? 124 : 108;
-    drawNote(svg, n.midi, x, 'var(--text)', false, n.esc, (x - 108) + 14 + columna * 12);
-    anteriorY = y;
-  });
+  clearStaff();          // en Acordes el pentagrama no se ve: manda el dibujo (F5.8 #6)
 }
 
 function leaveChords(){
@@ -270,17 +255,15 @@ function leaveChords(){
 }
 
 function bindChords(){
-  const q = document.getElementById('chord-search');
-  q.addEventListener('input', buildChordList);
   document.getElementById('chord-play').addEventListener('click', () => strumChord(acordeActual()));
   document.getElementById('chord-standard').addEventListener('click', () => {
     setTuning('standard');
   });
-  buildChordList();
+  buildChordPicker();
 }
 
-/** Nomenclatura o idioma cambiados: los nombres del listado, otra vez. */
+/** Nomenclatura o idioma cambiados: los nombres de los botones, otra vez. */
 function refreshChords(){
-  buildChordList();
+  buildChordPicker();
   renderChords();
 }

@@ -393,27 +393,21 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 :root { --f1:#56b4e9; --f2:#e69f00; --f3:#cc79a7; --f4:#2bb58a; }
 .chords-card { flex-shrink:0; display:flex; flex-direction:column; gap:6px; padding:6px 12px;
   background:var(--surface); border-bottom:1px solid var(--line); }
-.chord-search { width:100%; min-height:40px; box-sizing:border-box; padding:0 12px; border-radius:10px; font:inherit; font-size:15px;
-  background:var(--bg); border:1px solid var(--line2); color:var(--text); }
-.chord-search::placeholder { color:var(--faint); }
-.chord-list { max-height:132px; overflow-y:auto; display:flex; flex-direction:column; gap:3px; touch-action:pan-y; }
-.cl-head { font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-top:2px; }
-.cl-group { display:flex; flex-wrap:wrap; gap:5px; }
-.chord-chip { min-width:52px; min-height:40px; padding:0 10px; border-radius:10px; cursor:pointer; font:inherit;
-  font-size:14px; font-weight:700; background:var(--surface2); border:1px solid var(--line2); color:var(--text); }
+/* F5.8 #6: dos filas de botones, la nota y el tipo (AC-01). Los botones se
+   estiran para llenar la fila: siete por fila caben en un iPhone en vertical. */
+.chord-pick { display:flex; gap:4px; }
+.chord-chip { flex:1 1 auto; min-width:40px; min-height:40px; padding:0 4px; border-radius:10px; cursor:pointer; font:inherit;
+  font-size:14px; font-weight:700; white-space:nowrap; background:var(--surface2); border:1px solid var(--line2); color:var(--text); }
 .chord-chip.on { background:var(--amber); border-color:var(--amber); color:var(--on-accent); }
-.cl-empty { margin:4px 0; font-size:13px; color:var(--muted); }
-/* En vertical no cabe todo: el listado deja ver dos filas y se desplaza; el
-   pentagrama y el zoom se apartan para que el mástil conserve sus 40 px por
-   cuerda (V-01). El acorde ya se ve entero en el mástil; al girar el móvil,
-   vuelve el pentagrama con el acorde escrito. */
-@media (orientation:portrait) and (max-width:599px){
-  .chords-card { gap:4px; padding:5px 12px; }
-  .chord-list { max-height:92px; }
-  body[data-screen="chords"] .display, body[data-screen="chords"] .zoombar { display:none; }
-}
+.chord-chip:disabled { opacity:.35; cursor:default; }
+/* El dibujo es lo principal (AC-07): en Acordes no hay pentagrama, ni zoom, ni
+   aviso para girar; el mástil enseña los trastes 0 a 5 y no se desplaza. */
+body[data-screen="chords"] .display, body[data-screen="chords"] .zoombar,
+body[data-screen="chords"] #qb-staff { display:none; }
+body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
+.board.chords .finger { width:36px; height:36px; font-size:17px; }
 .chord-info { display:flex; align-items:center; gap:10px; min-height:40px; }
-.chord-name { font-family:Georgia,serif; font-size:24px; font-weight:700; color:var(--amber); }
+.chord-name { font-family:Georgia,serif; font-size:28px; font-weight:700; color:var(--amber); }
 .chord-notes { flex:1; min-width:0; font-size:13px; color:var(--muted); }
 .chord-play { flex-shrink:0; }
 .chord-tuning { margin:0; display:flex; align-items:center; flex-wrap:wrap; gap:6px 10px; font-size:13px; color:var(--ko); }
@@ -661,9 +655,11 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .challenge { padding:0; gap:6px; background:none; border:none; }
   .scales-card { padding:0; gap:6px; background:none; border:none; }
   .chords-card { padding:0; gap:5px; background:none; border:none; }
-  body[data-screen="chords"] .zoombar { display:none; }   /* el acorde ya cabe: diez trastes a la vista */
-  .chord-list { max-height:min(150px, 40vh); }
-  .chord-chip { min-width:44px; padding:0 7px; font-size:13px; }
+  /* En la columna estrecha, tantas columnas como quepan sin bajar de 44 px: los 40 px
+     del dedo (G-05) y algo de margen para «Mayor» y «menor». */
+  .chord-pick { display:grid; grid-template-columns:repeat(auto-fill, minmax(44px, 1fr)); }
+  .chord-chip { min-width:0; padding:0 2px; font-size:12px; }
+  .chord-info { order:-1; }                   /* el nombre y «Tocar», arriba: a la vista sin desplazar */
   .chord-info { flex-wrap:wrap; gap:2px 8px; }
   .chord-name { font-size:20px; }
   .chord-notes { flex-basis:100%; order:3; font-size:12px; }
@@ -798,6 +794,8 @@ body[data-screen="guess"] .note-oct { margin-top:0; }
   .quickbar { padding:6px 20px; gap:8px; }
   .chip { font-size:13.5px; padding:0 16px; }
   .challenge, .scales-card, .chords-card { margin:6px 20px 0; padding:10px 16px; gap:8px; }
+  .chord-chip { flex:0 1 76px; }              /* en pantalla grande, botones de su tamaño, no estirados */
+  .board.chords .finger { width:44px; height:44px; font-size:20px; }
   .challenge-text { font-size:17px; }
   .btn-repeat { width:48px; height:48px; border-radius:12px; font-size:18px; }
   .stats { font-size:13px; } .stats .streak { font-size:16px; }
@@ -828,7 +826,6 @@ body[data-screen="guess"] .note-oct { margin-top:0; }
    el mástil puede bajar a 30 px por cuerda para que Acordes quepa. */
 @media (min-width:700px) and (min-height:600px) and (max-height:699px) and (pointer:fine){
   .board-area { min-height:calc(12px + 17px + 6 * 30px); }
-  .chord-list { max-height:80px; }
   .challenge, .scales-card, .chords-card { padding:6px 16px; gap:4px; }
 }
 /* Tableta en vertical y pantallas medianas (iPad mini y iPad en vertical, iPad

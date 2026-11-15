@@ -1643,37 +1643,94 @@ test('acordes: cada digitación suena a su acorde, con la raíz (o el bajo) abaj
   assert.equal(A.ev("notasAcorde(acordePorId('Cm')).map(nombreEscrito).join(' ')"), 'Do Mi♭ Sol');
 });
 
-test('acordes: populares arriba y los 30 debajo; el buscador filtra por cómo empieza el nombre, en las dos nomenclaturas (AC-01, AC-06)', () => {
+test('acordes: se eligen con dos filas, la nota y el tipo; lo que no existe se apaga (AC-01, F5.8 #6)', () => {
   const A = boot(APP, { notation: 'anglo' });
   A.doc.querySelector('.tab[data-screen="chords"]').click();
   assert.equal(A.$('chords-card').hidden, false);
-  assert.equal(A.$('board-area').hidden, false, 'a un lado el listado, al otro el mástil');
-  const titulos = () => A.doc.querySelectorAll('#chord-list .cl-head').map(h => h.textContent);
-  const nombres = () => A.doc.querySelectorAll('#chord-list .chord-chip').map(b => b.textContent);
-  assert.deepEqual(titulos(), ['Populares', 'Todos (30)']);
-  assert.deepEqual(nombres().slice(0, 9), ['C', 'G', 'D', 'A', 'E', 'Am', 'Em', 'Dm', 'F']);
-  assert.equal(nombres().length, 39);
-  const busca = q => { const s = A.$('chord-search'); s.value = q; s.dispatchEvent({ type: 'input', target: s }); return nombres(); };
-  assert.deepEqual(busca('G'), ['G', 'Gm', 'G7', 'G/B']);
-  assert.deepEqual(titulos(), ['Resultados (4)']);
-  assert.deepEqual(busca('g'), ['G', 'Gm', 'G7', 'G/B'], 'da igual mayúscula o minúscula');
-  assert.deepEqual(busca('Sol'), ['G', 'Gm', 'G7', 'G/B'], 'también en Do Re Mi');
-  assert.deepEqual(busca('D'), ['D', 'Dm', 'D7', 'Dm7', 'Dmaj7', 'Dsus4'], 'una letra: no trae los Do');
-  assert.deepEqual(busca('Am'), ['Am', 'Am7']);
-  assert.deepEqual(busca('f#'), []);
-  assert.match(A.$('chord-list').textContent, /Ningún acorde empieza por «f#»/);
-  busca('');
-  assert.deepEqual(titulos(), ['Populares', 'Todos (30)']);
+  assert.equal(A.$('board-area').hidden, false, 'arriba la elección, debajo el mástil');
+  const raiz = n => A.doc.querySelectorAll('#chord-roots .chord-chip')[n];
+  const tipos = () => A.doc.querySelectorAll('#chord-types .chord-chip');
+  const tipo = txt => tipos().find(b => b.textContent === txt);
+  assert.deepEqual(A.doc.querySelectorAll('#chord-roots .chord-chip').map(b => b.textContent), ['C', 'D', 'E', 'F', 'G', 'A', 'B']);
+  assert.deepEqual(tipos().map(b => b.textContent), ['Mayor', 'menor', '7', 'm7', 'maj7', 'sus4', '/G']);
+  const pulsados = () => [...A.doc.querySelectorAll('#chord-roots .chord-chip'), ...tipos()]
+    .filter(b => b.getAttribute('aria-pressed') === 'true').map(b => b.textContent);
+  assert.deepEqual(pulsados(), ['C', 'Mayor']);
+  // Con Do, no hay m7 ni sus4 en el catálogo: se apagan; Do/Sol sí existe.
+  assert.deepEqual(tipos().filter(b => b.disabled).map(b => b.textContent), ['m7', 'sus4']);
+  // Otra nota conserva el tipo si existe: de Am a Em…
+  raiz(5).click(); tipo('menor').click();
+  assert.equal(A.$('chord-name').textContent, 'Am');
+  raiz(2).click();
+  assert.equal(A.$('chord-name').textContent, 'Em');
+  // …y si no existe, vuelve al mayor: Dsus4 → (no hay Esus4) E.
+  raiz(1).click(); tipo('sus4').click();
+  assert.equal(A.$('chord-name').textContent, 'Dsus4');
+  raiz(2).click();
+  assert.deepEqual(pulsados(), ['E', 'Mayor']);
+  // Con bajo: Do/Sol y Sol/Si; el botón dice qué bajo lleva (AR-18 #6) y, sin él, «/bajo» apagado.
+  raiz(4).click();
+  assert.equal(tipos()[6].textContent, '/B');
+  tipos()[6].click();
+  assert.equal(A.$('chord-name').textContent, 'G/B');
+  assert.equal(tipos()[6].getAttribute('aria-label'), 'Con otra nota en el bajo');
+  raiz(1).click();
+  assert.equal(tipos()[6].textContent, '/bajo');
+  assert.equal(tipos()[6].disabled, true);
+  // Un tipo apagado no hace nada.
+  raiz(3).click();                                     // Fa: solo mayor, menor y maj7
+  assert.deepEqual(tipos().filter(b => !b.disabled).map(b => b.textContent), ['Mayor', 'menor', 'maj7']);
+  tipo('7').click();
+  assert.equal(A.$('chord-name').textContent, 'F');
+  // Los 30 del catálogo se pueden elegir con los botones, y ninguno sobra.
+  const alcanzables = new Set();
+  const TIPOS = JSON.parse(A.ev('JSON.stringify(TIPOS_BOTON)'));
+  for (let r = 0; r < 7; r++) for (const t of TIPOS){
+    const id = A.ev(`(a => a ? idAcorde(a) : '')(acordeDe(${r}, ${JSON.stringify(t)}))`);
+    if (id) alcanzables.add(id);
+  }
+  assert.equal(alcanzables.size, 30);
+  // En Do Re Mi, las notas cambian de nombre; los tipos, no.
+  A.ev("state.notation = 'latin'; refreshNoteText()");
+  assert.deepEqual(A.doc.querySelectorAll('#chord-roots .chord-chip').map(b => b.textContent), ['Do', 'Re', 'Mi', 'Fa', 'Sol', 'La', 'Si']);
+  assert.equal(A.$('chord-name').textContent, 'Fa');
 });
 
-test('acordes: el elegido se dibuja en el mástil con dedos numerados, ○ y ✕, cejilla, pentagrama y rasgueo (AC-02, AC-03, AC-04)', async () => {
+test('acordes: el mástil enseña los trastes 0 a 5 a todo el ancho, sin zoom; al salir vuelve el zoom guardado (AC-07)', () => {
+  const A = boot(APP, { visibleFrets: 12 });
+  A.$('board-scroll').clientWidth = 1270;               // 1270 − 30 − 40 = 1200 px para trastes
+  A.$('board-scroll').scrollLeft = 300;
+  A.doc.querySelector('.tab[data-screen="chords"]').click();
+  A.ev('applyZoom()');
+  assert.equal(A.ev("document.getElementById('board').style.getPropertyValue('--fret-w')"), '240px', '1200 / 5');
+  assert.equal(A.$('board-scroll').scrollLeft, 0);
+  assert.equal(A.ev('state.visibleFrets'), 12, 'el zoom guardado no se toca');
+  // Las 30 digitaciones caben en esos trastes: si un día se añade una más alta, falla aquí (AR-18 #1).
+  assert.ok(A.ev('Math.max(...ACORDES.flatMap(a => cuerdasAcorde(a).map(c => c.traste || 0)))') <= A.ev('TRASTES_ACORDE'));
+  // Con el teclado, el foco no pasa del traste 5 (AT-17 M1).
+  A.ev('setRoving(0, 5)');
+  A.ev("document.getElementById('strings').dispatchEvent({ type: 'keydown', key: 'ArrowRight', target: cellAt(0, 5), preventDefault(){} })");
+  assert.equal(A.ev('kbPos.fret'), 5);
+  A.ev("document.getElementById('strings').dispatchEvent({ type: 'keydown', key: 'ArrowLeft', target: cellAt(0, 5), preventDefault(){} })");
+  assert.equal(A.ev('kbPos.fret'), 4, 'la tecla llega: ← sí se mueve');
+  A.doc.querySelector('.tab[data-screen="free"]').click();
+  A.ev('applyZoom()');
+  assert.equal(A.ev("document.getElementById('board').style.getPropertyValue('--fret-w')"), '100px', '1200 / 12');
+  // Si en Libre el foco se quedó en el 12, al volver a Acordes pasa al 0.
+  A.ev('setRoving(2, 12)');
+  A.doc.querySelector('.tab[data-screen="chords"]').click();
+  assert.equal(A.ev('kbPos.fret'), 0);
+});
+
+test('acordes: el elegido se dibuja en el mástil con dedos numerados, ○ y ✕, cejilla y rasgueo, sin pentagrama (AC-02, AC-04)', async () => {
   const A = boot(APP);                                             // Do Re Mi
   A.ev('globalThis.__plays = []; playMidi = m => __plays.push(m);');
   A.doc.querySelector('.tab[data-screen="chords"]').click();
-  const chip = id => A.doc.querySelector(`#chord-list .chord-chip[data-id="${id}"]`);
-  assert.equal(chip('Am').textContent, 'Lam');
-  chip('Am').click();
-  assert.equal(chip('Am').getAttribute('aria-pressed'), 'true');
+  // Elegir por nota y tipo: 0 = Do … 6 = Si.
+  const elige = (raiz, tipo) => { A.doc.querySelectorAll('#chord-roots .chord-chip')[raiz].click();
+    A.doc.querySelectorAll('#chord-types .chord-chip').find(b => b.dataset.tipo === tipo).click(); };
+  elige(5, 'm');
+  assert.equal(A.doc.querySelectorAll('#chord-roots .chord-chip')[5].getAttribute('aria-pressed'), 'true');
   assert.equal(A.$('chord-name').textContent, 'Lam');
   assert.equal(A.$('chord-notes').textContent, 'La · Do · Mi');
   const dedos = () => A.doc.querySelectorAll('#board .finger').map(f => {
@@ -1682,11 +1739,11 @@ test('acordes: el elegido se dibuja en el mástil con dedos numerados, ○ y ✕
   const marcas = A.doc.querySelectorAll('#board .string-label').map(l => l.dataset.mark || '');
   assert.deepEqual(marcas, ['○', '', '', '', '○', '✕'], '1ª y 5ª al aire; la 6ª no suena');
   assert.match(A.doc.querySelector('.fret-cell[data-row="1"][data-fret="1"]').getAttribute('aria-label'), /dedo 1/);
-  assert.equal(A.$('staff').querySelectorAll('ellipse').length, 5, 'cinco notas apiladas');
+  assert.equal(A.$('staff').querySelectorAll('ellipse').length, 0, 'el pentagrama no escribe el acorde: manda el dibujo (F5.8 #6)');
   await sleep(250);
   assert.deepEqual(JSON.parse(A.ev('JSON.stringify(__plays)')), [45, 52, 57, 60, 64], 'rasgueado de grave a agudo');
   // Fa: cejilla en el 1, de la 6ª a la 1ª.
-  chip('F').click();
+  elige(3, '');
   const cejilla = A.doc.querySelectorAll('#board .fret-cell.barre');
   assert.equal(cejilla.length, 6);
   assert.ok(cejilla.every(c => c.dataset.fret === '1'));
@@ -1726,7 +1783,7 @@ unaVez('acordes: los cuatro colores de dedo contrastan con el mástil (3:1) y su
   }
 });
 
-test('AT-10: cambiar de compás sonando no mueve el pulso; tras un bloqueo no se amontonan golpes; las figuras no se rehacen; avisos traducidos; Restablecer limpia el buscador', t => {
+test('AT-10: cambiar de compás sonando no mueve el pulso; tras un bloqueo no se amontonan golpes; las figuras no se rehacen; avisos traducidos; Restablecer vuelve a Do', t => {
   const A = boot(APP, { metro: { bpm: 60, sig: '4/4', sub: 2, accent: true } });
   A.ev(metroFalso);
   A.ev('startMetro()');
@@ -1753,12 +1810,12 @@ test('AT-10: cambiar de compás sonando no mueve el pulso; tras un bloqueo no se
   A.ev("stopMetro(); startMetro(); stopMetro('hidden'); setLang('en')");
   assert.equal(A.$('metro-note').textContent, 'It stopped when you left the app.');
   A.ev("setLang('es')");
-  // Restablecer limpia el buscador de acordes.
+  // Restablecer vuelve a Do mayor, también en los botones de Acordes.
   A.doc.querySelector('.tab[data-screen="chords"]').click();
-  const s = A.$('chord-search'); s.value = 'Sol'; s.dispatchEvent({ type: 'input', target: s });
+  A.ev("selectChord('Am', false)");                    // sin sonar: el rasgueo llegaría con la prueba ya acabada
   A.$('set-reset').click();
-  assert.equal(A.$('chord-search').value, '');
-  assert.equal(A.doc.querySelectorAll('#chord-list .cl-head').length, 2, 'populares y todos otra vez');
+  assert.equal(A.ev('state.chordId'), 'C');
+  assert.equal(A.doc.querySelectorAll('#chord-roots .chord-chip')[0].getAttribute('aria-pressed'), 'true');
 });
 
 // --- CP-5 (22/10): AT-11 #1, arrancar con el audio en pausa ---

@@ -55,7 +55,10 @@ function setScreen(next){
   if (!isChords) leaveChords();
   if (isScales){ pararEscala(); sc.paso = 0; renderScales(); }
   else leaveScales();
-  if (isChords) renderChords();     // después de leaveScales: el pentagrama es del acorde
+  if (isChords){
+    renderChords();                 // después de leaveScales, que limpia el mástil de la escala
+    if (kbPos.fret > TRASTES_ACORDE) setRoving(kbPos.row, 0);   // el foco, en un traste a la vista (AT-17 M1)
+  }
   if (!sinMastil) requestAnimationFrame(applyZoom);
   if (isScales) requestAnimationFrame(verTrastesPosicion);   // tras el zoom: la vista, en la posición
 }
@@ -183,11 +186,12 @@ document.addEventListener('keydown', ev => {
 
 /* --- Aviso para girar el móvil (V-01, interfaz.md §7) ---
    Solo con el dedo, en vertical y en pantallas de menos de 600 px; nunca en
-   el Afinador ni en el Metrónomo, que funcionan igual en las dos orientaciones. Cerrado no vuelve:
+   el Afinador ni en el Metrónomo, que funcionan igual en las dos orientaciones, ni
+   en Acordes, que enseña siempre los trastes 0 a 5 (AC-07). Cerrado no vuelve:
    se guarda con los ajustes, y «Restablecer» lo recupera. */
 function updateRotateHint(){
   const show = coarsePointer() && window.innerHeight > window.innerWidth &&
-               window.innerWidth < 600 && screen !== 'tuner' && screen !== 'metro' && !state.rotateHintClosed;
+               window.innerWidth < 600 && screen !== 'tuner' && screen !== 'metro' && screen !== 'chords' && !state.rotateHintClosed;
   document.getElementById('rotate-hint').hidden = !show;
 }
 
