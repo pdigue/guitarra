@@ -17,7 +17,7 @@ CATN = dict(data['cats'])
 VER = data['versiones']   # las escribe generar-requisitos.py: una sola fuente para las versiones
 # Control de cambios desde la 2.0 (lo anterior, en docs/historico/matriz-cumplimiento.md)
 CC = [
- ['2.3','15/11/2026','v2.3','0.6.5','F5.8 #6: AC-07 (el acorde en grande, trastes 0 a 5) nuevo, verificado parcialmente hasta tu prueba; AC-01 pasa a la elección por nota y tipo (criterio y evidencia nuevos, parcial hasta tu prueba); AC-03 y AC-06 retirados (No aplica).'],
+ ['2.3','15/11/2026','v2.3','0.6.5','F5.8 #6: AC-07 (el acorde en grande, trastes 0 a 5) nuevo, verificado parcialmente hasta tu prueba; AC-01 pasa a la elección por nota y tipo (criterio y evidencia nuevos, parcial hasta tu prueba); AC-03 y AC-06 retirados (No aplica); V-01 y P-03, ni el aviso para girar ni el pentagrama salen en Acordes. Con las auditorías AR-18 y AT-17: lo pendiente, en las notas de AC-01 y AC-07.'],
  ['2.2','15/11/2026','v2.2','0.6.4','F5.8 #5: E-07 (posiciones), E-08 (Escuchar), E-09 (tocar la escala) y E-10 (Todas) nuevos, verificados parcialmente hasta tu prueba; E-05 retirado (No aplica); E-05b pasa a la Práctica nueva, en F5.8; criterios de E-03, E-05b y E-06; evidencias de E-02, E-04 y P-03. Con AR-17 y AT-16.'],
  ['2.1','15/11/2026','v2.1','0.6.3','V-10 y V-11 nuevos (temas, tableta y ordenador), verificados parcialmente hasta tu prueba; criterios medibles de J-01 y J-06 (J-06, verificado parcialmente hasta tu prueba) y de C-02 y PL-03 con la 0.6.3; evidencias de G-05 y V-04. Con AR-16 y AT-15.'],
  ['2.0','15/11/2026','v2.0','0.6.2','Baseline 0.6.2: mismos ID, métodos, criterios, evidencias y estados de verificación que la 1.25; el comentario de cada requisito, en lo vigente. Historial 1.0 a 1.25 en docs/historico/.'],
@@ -73,7 +73,7 @@ V = {
  'S-08':('T','Cada nota posible, en los dos timbres, suena a ±5 cents de su frecuencia una vez aplicada la corrección de su grabación; cada grabación es la nota asignada (a menos de 50 cents) y su desviación coincide con samples/afinacion.json.','samples/afinacion.json · '+B+': grabaciones y todas las notas (±0,5 cents) · V-02, V-03 y V-04: notas grabadas en el navegador, a menos de 1 cent',MF),
  'P-01':('A','Toda posición del mástil, en cualquier afinación permitida, se dibuja dentro del pentagrama.','Análisis 15/09: ninguna nota fuera en todo el rango · F1.1 #3 y #4 · 0.5.2: pentagrama de una nota de 152 px de alto en el iPhone en horizontal (comprobar-disposicion)',CL),
  'P-02':('D','El pentagrama se oculta y se muestra desde el chip y desde Ajustes.','F1.1 #14',CL),
- 'P-03':('D','El pentagrama funciona en Libre, Adivinar y Escalas.',B+': en Escalas, 8 notas de la posición alrededor del paso actual (0.6.4)',CL),
+ 'P-03':('D','El pentagrama funciona en Libre, Adivinar y Escalas (en Acordes no se ve desde la 0.6.5).',B+': en Escalas, 8 notas de la posición alrededor del paso actual (0.6.4)',CL),
  'P-04':('D','El afinador muestra en un pentagrama las seis notas de la afinación activa.','F1.1 #14',CL),
  'L-01':('D','Al abrir la app se muestra el modo Libre.','F1.1 #14',CL),
  'L-02':('D','Con «Ver todas las notas» se ven todos los nombres; sin él, solo el de la nota pulsada.',B+' · F1.1 #10',CL),
@@ -119,7 +119,7 @@ V = {
  'A-09':('D','El pentagrama del afinador refleja la afinación seleccionada.','F1.1 #14',CL),
  'A-10':('T','Al cambiar de afinación, el mástil y los retos se rehacen con las nuevas notas.',B+': Drop D',CL),
  'A-11':('D','Tras recargar se mantiene la afinación, incluida la personalizada.','F1.1 #13',CL),
- 'V-01':('D','En horizontal, con un alto útil de 268 px o más, cada cuerda mide al menos 40 px (iPhone en Safari e instalada; simulador de Android). En vertical, en pantallas táctiles de menos de 600 px de ancho y en Libre, Adivinar, Escalas y Acordes, aparece el aviso para girar; nunca en el Afinador ni en el Metrónomo; cerrado, no vuelve y «Restablecer» lo recupera.','V-06: comprobar-disposicion.js en 14 pantallas: 52,8 / 60,8 / 42,5 px · '+B+': aviso para girar',C20),
+ 'V-01':('D','En horizontal, con un alto útil de 268 px o más, cada cuerda mide al menos 40 px (iPhone en Safari e instalada; simulador de Android). En vertical, en pantallas táctiles de menos de 600 px de ancho y en Libre, Adivinar y Escalas, aparece el aviso para girar; nunca en el Afinador, el Metrónomo ni Acordes (desde la 0.6.5); cerrado, no vuelve y «Restablecer» lo recupera.','V-06: comprobar-disposicion.js en 14 pantallas: 52,8 / 60,8 / 42,5 px · '+B+': aviso para girar',C20),
  'V-02':('D','El afinador se usa con comodidad en vertical y en horizontal.','F1.1 #14',CL),
  'V-03':('D','En una pantalla de 1280 px se ven los 24 trastes sin desplazarse.','F1.1 #14',CL),
  'V-04':('D','El zoom cambia los trastes visibles entre 3 y el máximo que cabe, y la etiqueta dice la cifra real; «+» enseña más trastes y «−» menos. Con pointer: coarse, la vista por defecto usa trastes de al menos 40 px y el usuario puede pedir más trastes, de hasta 28 px; si el zoom guardado pide más de los que caben, se muestran los que caben y lo guardado se conserva (V-08).','F1.1 #7 y #8 · V-06 · '+B+': 40 px por defecto, 28 con «+», orden de los botones · 0.6.3: comprobar-disposicion, iPad 1024 × 768 con el dedo a 41,5 px por traste',C20),
@@ -149,7 +149,7 @@ V = {
  'AC-04':('T','El acorde suena rasgueado de grave a agudo al elegirlo y con «Tocar»; cada cuerda se puede tocar suelta.',B+': orden del rasgueo · cada casilla suena suelta como en todo el mástil (F1.1 #2)',C21),
  'AC-05':('T','Con otra afinación, Acordes avisa, no dibuja las digitaciones y «Pasar a estándar» las recupera.',B+': Drop D y vuelta a la estándar',C21),
  'AC-06':('N/A','Retirado en la 0.6.5 (F5.8 #6): lo sustituye la elección por nota y tipo (AC-01).','—',C21),
- 'AC-07':('D','En Acordes se ven los trastes 0 a 5 y ninguno más, a todo el ancho y sin desplazamiento; sin pentagrama, zoom ni aviso para girar; el zoom guardado no cambia y vuelve al salir.',B+': 1200 px / 5 = 240 px por traste y vuelta a 12 trastes al salir · comprobar-disposicion: nueve pantallas, aviso oculto',C12),
+ 'AC-07':('D','En Acordes se ven los trastes 0 a 5 y ninguno más, a todo el ancho y sin desplazamiento; sin pentagrama, zoom ni aviso para girar; el zoom guardado no cambia y vuelve al salir.',B+': 1200 px / 5 = 240 px por traste y vuelta a 12 trastes al salir; ninguna digitación pasa del 5; el teclado no pasa del 5 y el foco vuelve al 0 al entrar · comprobar-disposicion: nueve pantallas, aviso oculto',C12),
  'X-03':('D','La app instalada desde la web funciona en un Android, un iPhone y un Windows reales.','—',DV),
 }
 BENCH = {'G-10','D-01','D-02','D-04','J-02','J-07','J-08','J-10','J-12','A-10','V-09','C-05','L-02'}

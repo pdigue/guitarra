@@ -125,7 +125,7 @@ El historial hasta la v3.26 está en `docs/historico/roadmap.md`.
 
 | Versión | Fecha | Cambio |
 |---|---|---|
-| **4.0** | 15/11/2026 | Baseline 0.6.2: fases hechas en una línea; detalle solo de F5.8 #3 a #8, F5.9, F6.2 a F6.4 y F7; la tabla de comentarios de F5.8 se conserva tal cual. |
-| 4.3 | 15/11/2026 | F5.8 #6 hecho (`0.6.5`, PR #21): Acordes, elegidos por nota y tipo y dibujados en grande en los trastes 0 a 5 (tus respuestas del 15/11). |
+| **4.3** | 15/11/2026 | F5.8 #6 hecho (`0.6.5`, PR #21): Acordes, elegidos por nota y tipo y dibujados en grande en los trastes 0 a 5 (tus respuestas del 15/11). |
 | 4.2 | 15/11/2026 | F5.8 #5 hecho (`0.6.4`, PR #20): Escalas por posiciones, con «Escuchar», «Todas» y una Práctica nueva en orden (tus respuestas del 15/11). |
 | 4.1 | 15/11/2026 | F5.8 #3 y #4 hechos (`0.6.3`, PR #19): temas (Madera de fábrica, tu decisión del 15/11), tableta y ordenador, y pistas grandes en Adivinar. |
+| 4.0 | 15/11/2026 | Baseline 0.6.2: fases hechas en una línea; detalle solo de F5.8 #3 a #8, F5.9, F6.2 a F6.4 y F7; la tabla de comentarios de F5.8 se conserva tal cual. |

@@ -122,7 +122,11 @@ function strumChord(a){
 function etiquetaTipo(tipo){
   if (tipo === '') return t('chord.major');
   if (tipo === 'm') return t('chord.minor');
-  if (tipo === '/') return t('chord.bass');
+  if (tipo === '/'){                             // dice qué bajo lleva: «/Sol» con Do, «/Si» con Sol (AR-18 #6)
+    const a = acordeDe(acordeActual().raiz, '/');
+    if (!a) return t('chord.bass');
+    return '/' + (state.notation === 'latin' ? LETRAS_LATIN : LETRAS_ANGLO)[a.bajo];
+  }
   return tipo;                                   // 7, m7, maj7 y sus4 se dicen igual en todas partes
 }
 function botonSelector(texto, alPulsar){
@@ -158,6 +162,7 @@ function marcarSeleccion(){
     b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
   });
   document.querySelectorAll('#chord-types .chord-chip').forEach(b => {
+    if (b.dataset.tipo === '/') b.textContent = etiquetaTipo('/');   // cambia con la nota
     const on = b.dataset.tipo === tipoDe(a);
     b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
     b.disabled = !acordeDe(a.raiz, b.dataset.tipo);
@@ -165,8 +170,8 @@ function marcarSeleccion(){
 }
 /** Otra nota: se queda el tipo si existe (de Lam a Mim); si no, el mayor. */
 function elegirRaiz(raiz){
-  const nuevo = acordeDe(raiz, tipoDe(acordeActual())) || acordeDe(raiz, '');
-  selectChord(idAcorde(nuevo), true);
+  const nuevo = acordeDe(raiz, tipoDe(acordeActual())) || acordeDe(raiz, '') || ACORDES.find(a => a.raiz === raiz);
+  if (nuevo) selectChord(idAcorde(nuevo), true);   // hoy todas tienen mayor; por si el catálogo crece (AT-17 B3)
 }
 function elegirTipo(tipo){
   const nuevo = acordeDe(acordeActual().raiz, tipo);
@@ -257,7 +262,7 @@ function bindChords(){
   buildChordPicker();
 }
 
-/** Nomenclatura o idioma cambiados: los nombres del listado, otra vez. */
+/** Nomenclatura o idioma cambiados: los nombres de los botones, otra vez. */
 function refreshChords(){
   buildChordPicker();
   renderChords();

@@ -58,7 +58,7 @@ const PANTALLAS = [
   ['iphone-safari-vertical-metronomo-compas',   390, 664, true, 'metro', false],
   ['iphone-se-safari-vertical-metronomo-compas',375, 553, true, 'metro', false],
   ['iphone-safari-horizontal-metronomo-compas', 750, 342, true, 'metro', false],
-  // Acordes (F5.7): buscador, listado y el acorde en el mástil (Fa, con cejilla).
+  // Acordes (F5.7; F5.8 #6): nota y tipo, y el acorde en grande en los trastes 0 a 5 (Fa, con cejilla).
   ['iphone-safari-vertical-acordes',     390, 664, true,  'chords', false],
   ['iphone-se-safari-vertical-acordes',  375, 553, true,  'chords', false],
   ['android-pequeno-vertical-acordes',   360, 560, true,  'chords', false],

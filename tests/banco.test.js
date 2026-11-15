@@ -1652,7 +1652,7 @@ test('acordes: se eligen con dos filas, la nota y el tipo; lo que no existe se a
   const tipos = () => A.doc.querySelectorAll('#chord-types .chord-chip');
   const tipo = txt => tipos().find(b => b.textContent === txt);
   assert.deepEqual(A.doc.querySelectorAll('#chord-roots .chord-chip').map(b => b.textContent), ['C', 'D', 'E', 'F', 'G', 'A', 'B']);
-  assert.deepEqual(tipos().map(b => b.textContent), ['Mayor', 'menor', '7', 'm7', 'maj7', 'sus4', '/bajo']);
+  assert.deepEqual(tipos().map(b => b.textContent), ['Mayor', 'menor', '7', 'm7', 'maj7', 'sus4', '/G']);
   const pulsados = () => [...A.doc.querySelectorAll('#chord-roots .chord-chip'), ...tipos()]
     .filter(b => b.getAttribute('aria-pressed') === 'true').map(b => b.textContent);
   assert.deepEqual(pulsados(), ['C', 'Mayor']);
@@ -1668,10 +1668,15 @@ test('acordes: se eligen con dos filas, la nota y el tipo; lo que no existe se a
   assert.equal(A.$('chord-name').textContent, 'Dsus4');
   raiz(2).click();
   assert.deepEqual(pulsados(), ['E', 'Mayor']);
-  // Con bajo: Do/Sol y Sol/Si.
-  raiz(4).click(); tipo('/bajo').click();
+  // Con bajo: Do/Sol y Sol/Si; el botón dice qué bajo lleva (AR-18 #6) y, sin él, «/bajo» apagado.
+  raiz(4).click();
+  assert.equal(tipos()[6].textContent, '/B');
+  tipos()[6].click();
   assert.equal(A.$('chord-name').textContent, 'G/B');
-  assert.equal(tipo('/bajo').getAttribute('aria-label'), 'Con otra nota en el bajo');
+  assert.equal(tipos()[6].getAttribute('aria-label'), 'Con otra nota en el bajo');
+  raiz(1).click();
+  assert.equal(tipos()[6].textContent, '/bajo');
+  assert.equal(tipos()[6].disabled, true);
   // Un tipo apagado no hace nada.
   raiz(3).click();                                     // Fa: solo mayor, menor y maj7
   assert.deepEqual(tipos().filter(b => !b.disabled).map(b => b.textContent), ['Mayor', 'menor', 'maj7']);
@@ -1700,9 +1705,21 @@ test('acordes: el mástil enseña los trastes 0 a 5 a todo el ancho, sin zoom; a
   assert.equal(A.ev("document.getElementById('board').style.getPropertyValue('--fret-w')"), '240px', '1200 / 5');
   assert.equal(A.$('board-scroll').scrollLeft, 0);
   assert.equal(A.ev('state.visibleFrets'), 12, 'el zoom guardado no se toca');
+  // Las 30 digitaciones caben en esos trastes: si un día se añade una más alta, falla aquí (AR-18 #1).
+  assert.ok(A.ev('Math.max(...ACORDES.flatMap(a => cuerdasAcorde(a).map(c => c.traste || 0)))') <= A.ev('TRASTES_ACORDE'));
+  // Con el teclado, el foco no pasa del traste 5 (AT-17 M1).
+  A.ev('setRoving(0, 5)');
+  A.ev("document.getElementById('strings').dispatchEvent({ type: 'keydown', key: 'ArrowRight', target: cellAt(0, 5), preventDefault(){} })");
+  assert.equal(A.ev('kbPos.fret'), 5);
+  A.ev("document.getElementById('strings').dispatchEvent({ type: 'keydown', key: 'ArrowLeft', target: cellAt(0, 5), preventDefault(){} })");
+  assert.equal(A.ev('kbPos.fret'), 4, 'la tecla llega: ← sí se mueve');
   A.doc.querySelector('.tab[data-screen="free"]').click();
   A.ev('applyZoom()');
   assert.equal(A.ev("document.getElementById('board').style.getPropertyValue('--fret-w')"), '100px', '1200 / 12');
+  // Si en Libre el foco se quedó en el 12, al volver a Acordes pasa al 0.
+  A.ev('setRoving(2, 12)');
+  A.doc.querySelector('.tab[data-screen="chords"]').click();
+  assert.equal(A.ev('kbPos.fret'), 0);
 });
 
 test('acordes: el elegido se dibuja en el mástil con dedos numerados, ○ y ✕, cejilla y rasgueo, sin pentagrama (AC-02, AC-04)', async () => {

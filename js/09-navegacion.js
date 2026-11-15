@@ -55,7 +55,10 @@ function setScreen(next){
   if (!isChords) leaveChords();
   if (isScales){ pararEscala(); sc.paso = 0; renderScales(); }
   else leaveScales();
-  if (isChords) renderChords();     // después de leaveScales: el pentagrama es del acorde
+  if (isChords){
+    renderChords();                 // después de leaveScales, que limpia el mástil de la escala
+    if (kbPos.fret > TRASTES_ACORDE) setRoving(kbPos.row, 0);   // el foco, en un traste a la vista (AT-17 M1)
+  }
   if (!sinMastil) requestAnimationFrame(applyZoom);
   if (isScales) requestAnimationFrame(verTrastesPosicion);   // tras el zoom: la vista, en la posición
 }

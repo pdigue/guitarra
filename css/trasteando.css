@@ -655,7 +655,8 @@ body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
   .challenge { padding:0; gap:6px; background:none; border:none; }
   .scales-card { padding:0; gap:6px; background:none; border:none; }
   .chords-card { padding:0; gap:5px; background:none; border:none; }
-  /* En la columna estrecha, tantas columnas como quepan sin bajar de 44 px (G-05). */
+  /* En la columna estrecha, tantas columnas como quepan sin bajar de 44 px: los 40 px
+     del dedo (G-05) y algo de margen para «Mayor» y «menor». */
   .chord-pick { display:grid; grid-template-columns:repeat(auto-fill, minmax(44px, 1fr)); }
   .chord-chip { min-width:0; padding:0 2px; font-size:12px; }
   .chord-info { order:-1; }                   /* el nombre y «Tocar», arriba: a la vista sin desplazar */

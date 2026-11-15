@@ -31,12 +31,17 @@ Tu comentario del 12/11 #6: «En cuanto a la parte de acordes, es igual, parece 
 - **AC-07** · **El acorde en grande.** En Acordes, el mástil enseña solo los trastes 0 a 5 (donde caben las 30 digitaciones), estirados a todo el ancho; sin zoom ni desplazamiento. Los dedos, más grandes. Al salir vuelve tu zoom.
 
 ### Cambiado
-- **AC-01** · **Se elige con dos filas de botones:** la nota (Do … Si) y el tipo (Mayor, menor, 7, m7, maj7, sus4 y /bajo). Un tipo que no existe para esa nota se apaga; al cambiar de nota se conserva el tipo si existe (de Lam a Mim) y, si no, se pasa al mayor.
+- **AC-01** · **Se elige con dos filas de botones:** la nota (Do … Si) y el tipo (Mayor, menor, 7, m7, maj7, sus4 y el bajo, que dice su nota: /Sol con Do, /Si con Sol). Un tipo que no existe para esa nota se apaga; al cambiar de nota se conserva el tipo si existe (de Lam a Mim) y, si no, se pasa al mayor.
 - En Acordes ya no salen el aviso para girar el móvil ni el botón «Pentagrama». En el móvil en horizontal, el nombre y «Tocar» van arriba de la columna.
 
 ### Retirado
 - **AC-03** · El pentagrama del acorde: en Acordes manda el dibujo. Las notas siguen escritas junto al nombre (B7: Si · Re♯ · Fa♯ · La).
 - **AC-06** · El buscador y el listado de populares y de 30: con las dos filas, cualquier acorde está a dos toques.
+
+### Corregido tras las auditorías AR-18 y AT-17
+- Con el teclado, el foco ya no se va a los trastes ocultos (más allá del 5).
+- Una prueba avisa si algún día entra un acorde que pase del traste 5.
+- V-01 y P-03 dicen ya que en Acordes no salen el aviso para girar ni el pentagrama.
 
 ---
 
