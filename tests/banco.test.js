@@ -1987,6 +1987,30 @@ unaVez('docs/ESTADO.md está al día con la versión de la app (memoria entre co
   assert.ok(linea.includes('`' + v + '`'), `ESTADO.md dice «${linea}», pero la app es la ${v}: actualízalo antes de cerrar`);
 });
 
+// --- Sin conexión desde la web (F6.2, G-03): cuándo se registra el Service Worker ---
+
+test('el Service Worker se registra en la web, nunca en el autónomo ni con doble clic (G-03, PL-04)', () => {
+  const conSW = protocol => {
+    const llamadas = [];
+    const sw = { register: (url, op) => { llamadas.push({ url, op }); return Promise.resolve(); } };
+    const A = boot(APP, null, { navigator: { serviceWorker: sw }, location: { protocol } });
+    A.fireWin('load');   // se registra al terminar de cargar, para no quitarle red a la página
+    return { A, llamadas };
+  };
+  const autonomo = process.env.TRASTEANDO_FORMA === 'autónomo';
+  const web = conSW('https:');
+  if (autonomo) assert.equal(web.llamadas.length, 0, 'el autónomo lleva el audio dentro: no lo necesita');
+  else {
+    assert.deepEqual(web.llamadas.map(l => l.url), ['sw.js'], 'una vez, con la dirección relativa a la app');
+    assert.equal(web.llamadas[0].op.updateViaCache, 'none');
+  }
+  assert.equal(conSW('file:').llamadas.length, 0, 'con doble clic no existe');
+  // Sin Service Worker (como en el banco por defecto) la app arranca igual.
+  const sin = boot(APP);
+  assert.equal(sin.ev('registrarServiceWorker()'), false);
+  assert.deepEqual(sinErrores(sin), []);
+});
+
 // --- F5.8 #2 (12/11): el afinador abre en Micrófono, y la pantalla no se apaga mientras se usa ---
 
 test('el afinador abre en Micrófono donde se puede usar, sin escuchar todavía; tu elección se recuerda (A-02, F5.8 #2)', async () => {

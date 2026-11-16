@@ -1,11 +1,13 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 2.4 · **Fecha:** 15 de noviembre de 2026 · **Base:** `requisitos.md` v2.4 · app `0.6.7` · `roadmap.md` v4.4  
+**Versión:** 2.5 · **Fecha:** 16 de noviembre de 2026 · **Base:** `requisitos.md` v2.5 · app `0.6.8` · `roadmap.md` v4.5  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple. El historial hasta la 1.25 está en `docs/historico/matriz-cumplimiento.md`.
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
+
+**Cambios en la 2.5** (16/11/2026): F6.2: G-03, criterio (carga completa; en F7.2, también el iPhone instalado y tras días sin abrirla) y evidencia nuevos (banco del Service Worker y comprobación sin conexión en Chromium, 9 de 9); verificado parcialmente: falta desde la web publicada (F7.2). PL-04, evidencia (compatibilidad v1.13).
 
 **Cambios en la 2.4** (15/11/2026): F5.8 #7: MT-04, criterio y evidencia nuevos, y MT-06, evidencia (el péndulo, con lo que se oye) (300 ms por adelantado, 60 s a 250 ppm con tirones sin perder golpes, cambios y Parar sobre lo ya programado, la luz cuando se oye; medición en Chromium con herramientas/medir-metronomo.js); parcial hasta tu prueba en el iPhone.
 
@@ -19,13 +21,13 @@
 
 | Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 118 | 101 | 6 | 5 | 6 | 48 | 31 |
+| 118 | 101 | 7 | 4 | 6 | 48 | 32 |
 
 | ID | Etapa | Método | Criterio de aceptación | Declaración | Evidencia | Verificación | Origen |
 |---|---|:---:|---|---|---|---|---|
 | **G-01** | F1.1 | I | El nombre «Trasteando» aparece en la pantalla de entrada, en la pestaña del navegador y en el manifiesto; en horizontal, arriba del panel. | Cumple | F1.1 #14 · 0.5.2: comprobar-disposicion, título visible en horizontal · Sesión 1: A01 | Verificado | Cliente · listado 14/09 |
 | **G-02** | F1.1 | D | La navegación muestra las seis áreas (Libre, Adivinar, Afinador, Escalas, Acordes y Metrónomo) y cada destino abre su vista. | Cumple | F1.1 #1 y #14 · 0.5.5: comprobar-disposicion, seis pestañas en todas las pantallas · Sesión 1: A12 | Verificado | Cliente · listado 14/09 |
-| **G-03** | F6.2 · F7.2 | T | F6.2: tras una primera carga en localhost y sin red, la app abre y suena. F7.2: lo mismo desde la web publicada. | No cumple | — | Pendiente | Cliente · listado 14/09 |
+| **G-03** | F6.2 · F7.2 | T | F6.2: tras una primera carga completa (Service Worker activo) en localhost y sin red, la app abre y suena. F7.2: lo mismo desde la web publicada, y en el iPhone desde Safari y desde la app instalada, también tras varios días sin abrirla. | Cumple parcialmente | Banco (node --test): sw.test.js (precarga igual a lo que carga index.html más las 17 grabaciones; sin red, todo sale de la copia; versión nueva, caché nueva) y cuándo se registra (web sí; autónomo y file:// no) · herramientas/comprobar-sin-conexion.js en Chromium, 0.6.8: 9 de 9 (36 de 36 archivos guardados; sin red abre, se cargan las grabaciones de los dos timbres y se tocan notas sin error, y se recorren las seis áreas sin un fallo; una versión nueva sustituye a la vieja; una página de otra versión no pisa la copia) | Verificado parcialmente | Cliente · listado 14/09 |
 | **G-04** | F6.3 · F7.2 | D | Desde la web publicada, el navegador ofrece instalarla y abre a pantalla completa desde el icono. | Cumple parcialmente | — | Pendiente | Cliente · listado 14/09 |
 | **G-05** | F3.4 | I+T | Todo control es alcanzable con teclado y muestra el foco; contrastes ≥ 4,5:1 medidos; el movimiento se reduce con prefers-reduced-motion; en pantallas táctiles, todo control y toda casilla del mástil mide al menos 40 × 40 px en la vista por defecto, salvo las cuerdas en vertical con menos de 660 px de alto y los trastes que el usuario estreche con «+» (hasta 28 px). Paleta por nota: las 7 naturales a ≥ 7,5 (OKLab × 100) entre sí con visión normal y con protanopía, deuteranopía y tritanopía simuladas, y las 12 a ≥ 8 con visión normal; el nombre de la nota siempre escrito. | Cumple | V-07: comprobar-accesibilidad.js (teclado, contraste, movimiento) · paleta.py · V-06: 40 × 40 px · Banco (node --test): teclado, etiquetas, paleta, grises, fila y asa · 0.6.3: comprobar-accesibilidad en Madera, Automático (oscuro y claro) y Partitura · Sesión 1: A18, C05 y C06 | Verificado | Cliente · 20/10 (interfaz.md v1.0) |
 | **G-06** | F2.1 · F6.4 | I | CREDITOS.md lista cada recurso de terceros con su origen y su licencia, y la app muestra el texto de atribución en Ajustes. | Cumple parcialmente | CREDITOS.md (F2.1). Falta mostrarlo en la app (F6.4) | Verificado parcialmente | Desarrollo · v1.1 |
@@ -39,7 +41,7 @@
 | **PL-01** | F2.5 · F7.2 | D | La lista de F1.1 se supera en Chrome, Edge y Firefox en Windows, y la app se instala como PWA desde Edge. | Cumple parcialmente | — | Pendiente | Cliente · 14/10 |
 | **PL-02** | F2.5 · F7.2 | D | La lista de comprobación se supera en Chrome para Android, en web y con la PWA instalada. | Cumple parcialmente | — | Pendiente | Cliente · 14/10 |
 | **PL-03** | F2.5 · F7.2 | D | La lista de comprobación se supera en Safari para iOS y iPadOS, en web y desde la pantalla de inicio. | Cumple parcialmente | — | Pendiente | Cliente · 14/10 |
-| **PL-04** | F2.2 · F3.2 · F7.2 | I+T | Cada capacidad del navegador que usa la app figura en docs/compatibilidad.md con su comportamiento en Windows, Android e iPhone y su alternativa; el banco arranca la app sin vibración ni audio y funciona. | Cumple parcialmente | docs/compatibilidad.md v1.8 · Banco (node --test): sin matchMedia ni history | Verificado parcialmente | Cliente · 14/10 |
+| **PL-04** | F2.2 · F3.2 · F7.2 | I+T | Cada capacidad del navegador que usa la app figura en docs/compatibilidad.md con su comportamiento en Windows, Android e iPhone y su alternativa; el banco arranca la app sin vibración ni audio y funciona. | Cumple parcialmente | docs/compatibilidad.md v1.13 · Banco (node --test): sin matchMedia ni history; el Service Worker se registra solo donde existe (sw.test.js y banco.test.js) | Verificado parcialmente | Cliente · 14/10 |
 | **N-01** | F1.1 | D | El chip de nomenclatura alterna todos los nombres entre Do-Re-Mi y C-D-E. | Cumple | F1.1 #6 · Sesión 1: A06 | Verificado | Cliente · listado 14/09 |
 | **N-02** | F1.1 | D | El selector de Ajustes produce el mismo cambio que el chip. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
 | **N-03** | F1.1 | D | El chip está visible en la barra de acceso rápido sin abrir ningún menú. | Cumple | F1.1 #14 · Sesión 1: A06 | Verificado | Cliente · listado 14/09 |
