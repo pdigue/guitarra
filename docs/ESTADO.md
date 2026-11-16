@@ -34,8 +34,7 @@
 13. Decidir (AR-21 #1): ¿«pantalla completa» es como ahora (`standalone`: sin barra de direcciones, con la hora y la batería arriba) o quieres que no se vea nada más? Y (AR-21 #8): en Android, la pantalla de arranque es oscura también con el tema claro; ¿te importa?
 14. Probar las pistas (`0.6.11`) en el iPhone: en vertical y en horizontal, en español y en inglés, una nota en 4 cuerdas o más, y girar el móvil y volver.
 15. Probar la `0.6.12` en el iPhone (no bloquea): en horizontal y en vertical, en los dos idiomas, falla con las dos pistas encendidas y una nota en 4 cuerdas o más: «Ver la respuesta» y las pestañas, a la vista. Con «Restablecer» en Ajustes, mira cuántos trastes salen en horizontal (deberían ser 11 en tu Pro Max).
-16. Para F6.4, decidir: la licencia del código (MIT, recomendada; GPL-3.0, que choca con la App Store; o derechos reservados) y el contacto de la política de privacidad (los *issues* de GitHub, recomendado, o tu correo).
-17. Decidir (AR-23): ¿un requisito general, V-12, «en ningún área ni estado un control queda fuera de la pantalla» (#2)? ¿Te parece bien que con pistas se esconda el aviso para girar en vertical, o lo prefieres más compacto (#6)? En el 15 Pro instalado, Adivinar arranca con 9 trastes y los retos llegan al 12: ¿aceptado, o trastes de menos de 40 px solo ahí (#4)?
+16. Decisiones abiertas (16/11, con imágenes de la 2 y la 3 en la conversación): (1) V-12, requisito general de controles a la vista; (2) con pistas en vertical, sin aviso para girar (A, como ahora) o un chip pequeño «⟳ Gira» (B); (3) en el 15 Pro instalado, 9 trastes de 43 px (A) o 12 de 32 (B); (4) repositorio privado: la web de pruebas en GitHub dejaría de funcionar sin GitHub Pro (de pago) o sin moverla a otro servicio; (5) contacto de la privacidad, si no quieres que nadie escriba; (6) licencia: «todos los derechos reservados» (lo que pediste: que no te copien).
 
 ## 3. Cómo se trabaja
 - **Banco:** `node --test` en verde (unos 2 min). Las pruebas que arrancan la app se pasan dos veces (varios archivos y autónomo, `tests/autonomo.test.js`); un archivo nuevo que arranque la app se añade allí. Sueltas: `node --test-name-pattern="texto" tests/banco.test.js`. `tests/documentos.test.js`: baseline y versiones.
@@ -47,6 +46,7 @@
 - **Trampas:** no usar `pkill -f "node --test"` ni `rev`. Arrays de la app: `JSON.parse(A.ev('JSON.stringify(...)'))`. Un metrónomo arrancado en una prueba se para en `t.after`.
 
 ## 4. Decisiones recientes
+- **16/11 · F6.4:** que nadie copie la app (licencia de derechos reservados y, si se puede, código privado); contacto de la privacidad por GitHub, pero sin que nadie empiece a escribir. Pendiente de confirmar, por sus consecuencias (§2, 16).
 - **16/11 · F5.8 #10:** J-14 nuevo (AR-22 #5: «ok, crea el J-14»); al fallar, solo «¡Prueba otra vez!» / «Try again!»; hecho como bloque aparte de F6.4, con su rama y su PR.
 - **16/11:** fusionados el #24 (F6.3) y el #25 (F5.8 #9), a petición tuya en la misma conversación.
 - **16/11 · Pistas (F5.8 #9):** en una sola línea en los dos idiomas, sin bajar de 20 px, quitándole mástil al horizontal de Adivinar (panel de 204 px); frase del reto corta: «Pulsa ▶, escucha y encuéntrala».
@@ -64,4 +64,4 @@
 - **22/10:** péndulo con la pesa arriba más lenta; F5 queda abierta (F5.8 y F5.9).
 
 ## 5. Para abrir la siguiente conversación
-Dentro del proyecto «APP GUITARRA»: **«Lee ESTADO y sigue. Conecta el repositorio con permiso de escritura.»** (decisión del 16/11: sin pedirlo así, el control de la sesión puede negar la escritura y no se puede subir nada). Detrás, lo que quiera Pablo ese día (aprobaciones como «fusiona el #26», comentarios, peticiones). **Siguiente paso:** tus decisiones de AR-23 (§2, 17) y, cuando elijas licencia y contacto, F6.4 (privacidad, `LICENSE` y créditos en la app), en una conversación nueva: «Lee ESTADO y sigue. Conecta el repositorio con permiso de escritura. Empieza F6.4».
+Dentro del proyecto «APP GUITARRA»: **«Lee ESTADO y sigue. Conecta el repositorio con permiso de escritura.»** (decisión del 16/11: sin pedirlo así, el control de la sesión puede negar la escritura y no se puede subir nada). Detrás, lo que quiera Pablo ese día (aprobaciones como «fusiona el #26», comentarios, peticiones). **Siguiente paso:** tus respuestas a las decisiones de §2, 16; después, F6.4 (privacidad, `LICENSE` y créditos en la app), en una conversación nueva: «Lee ESTADO y sigue. Conecta el repositorio con permiso de escritura. Empieza F6.4».
