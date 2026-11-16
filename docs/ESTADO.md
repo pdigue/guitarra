@@ -38,7 +38,7 @@
 ## 4. Decisiones recientes
 - **15/11 · Metrónomo (F5.8 #7):** 300 ms programados por adelantado y rehacer lo apuntado al cambiar algo (en vez de esperar a que se agote); lo que se ve, con lo que se oye.
 - **15/11 · Acordes (F5.8 #6):** el mástil de la app acotado a los trastes 0 a 5 y grande (no un diagrama de cancionero), sin pentagrama; elegir por nota y tipo, sin buscador ni listado. Aceptada la anchura de los trastes en el ordenador, sin tope (AR-18 #3).
-- **15/11 · Fusiones:** #18, #19 y #20 a `main` (cada PR, cambiado antes a `main` como destino), para no alargar la cadena de ramas.
+- **15/11 · Fusiones:** #18, #19, #20 y #21 a `main` (cada PR, cambiado antes a `main` como destino), para no alargar la cadena de ramas.
 - **15/11 · Escalas (F5.8 #5):** 3 notas por cuerda (2 en pentatónicas), la 1 en la tónica, «Escuchar» a ritmo fijo; recuperar «Todas» y una Práctica sencilla. Aprobada la nota tocada en pequeño (AR-16 #8).
 - **15/11 · Cambio de paradigma para gastar menos:** baseline 0.6.2 (requisitos y matriz v2.0, roadmap v4.0, CHANGELOG desde la 0.6.0, histórico aparte); auditoría técnica ligera una vez por bloque y de requisitos solo si cambian; documentos de cierre al cerrar el bloque; en claude.ai solo ESTADO y CLAUDE; una conversación por bloque.
 - **12/11:** antes de seguir con las fases, sus comentarios (#2 a #8); F6.2 en pausa. Aspecto: temas elegibles. Escalas: las 4, mejor presentadas. Pantalla encendida: sí (G-13).
