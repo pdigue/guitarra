@@ -494,7 +494,7 @@ test('en Adivinar nada suena ni puntúa hasta pulsar ▶, y luego cada reto suen
   assert.equal(A.ev('__plays'), 4, 'cada visita vuelve a esperar a ▶');
 });
 
-test('en Adivinar la lectura grande es la nota que tocas; cada pista encendida enseña su respuesta en grande, también antes de ▶ (J-06, comentario del 21/10)', async () => {
+test('en Adivinar la lectura (pequeña desde la 0.6.3) es la nota que tocas; cada pista encendida enseña su respuesta en grande, también antes de ▶ (J-06, comentario del 21/10)', async () => {
   const A = boot(APP);
   A.doc.querySelector('.tab[data-screen="guess"]').click();
   const nota = A.$('qb-hint-note'), cuerda = A.$('qb-hint-string');
@@ -665,6 +665,21 @@ test('sin history, como el caso más pobre, la navegación y Ajustes funcionan (
   B.$('btn-settings').click(); B.$('sheet-bg').click();
   assert.ok(!B.$('sheet').classList.contains('open'));
   assert.equal(B.$('board-area').inert, false);
+  assert.deepEqual(sinErrores(B), []);
+});
+
+test('en un marco aislado, donde history existe pero lanza SecurityError, la app arranca y navega sin historial (C-07, PL-04, 0.6.6)', () => {
+  // Como la vista previa de un chat: pushState y replaceState están, pero fallan.
+  const prohibido = () => { const e = new Error('Failed to execute pushState'); e.name = 'SecurityError'; throw e; };
+  const h = { state: null, pushState: prohibido, replaceState: prohibido, back(){} };
+  const B = boot(APP, null, { history: h });
+  assert.equal(B.ev('canHistory'), false);
+  assert.ok(B.doc.querySelectorAll('#board .fret-cell').length > 0, 'el mástil se dibuja');
+  B.doc.querySelector('.tab[data-screen="chords"]').click();
+  assert.equal(B.ev('screen'), 'chords');
+  assert.ok(B.doc.querySelectorAll('#board .finger').length > 0, 'y Acordes también');
+  B.$('btn-settings').click(); B.$('sheet-bg').click();
+  assert.ok(!B.$('sheet').classList.contains('open'));
   assert.deepEqual(sinErrores(B), []);
 });
 
@@ -842,9 +857,19 @@ test('afinador por micrófono: no escucha hasta que lo pides, y luego dice cuán
   A.ev('__senal.hz = 349.23');                               // Fa4: 1 semitono sobre la 1ª
   await sleep(400);
   assert.deepEqual(lectura(A), { nota: 'Mi4', detalle: '+100 cents · 1ª cuerda', orden: '▼ Baja' });
+  // Al callar, lo último medido se queda a la vista, atenuado, y luego vuelve a reposo (F5.8 #2).
   A.ev('__senal.hz = 0');
-  await sleep(2000);
+  await sleep(1000);
+  assert.equal(lectura(A).nota, 'Mi4', 'un segundo después sigue a la vista');
+  assert.ok(A.$('mic-live').classList.contains('held'), 'atenuada: ya no se oye');
+  assert.equal(A.$('mic-detail').textContent, 'Última lectura · +100 cents · 1ª cuerda', 'y lo dice con palabras (AR-15 #7)');
+  // Elegir cuerda con una lectura a la vista la repinta con esa cuerda, sin perderla (AT-14 #3).
+  A.doc.querySelector('#mic-string [data-v="2"]').click();
+  assert.equal(lectura(A).nota, 'Si3');
+  assert.match(A.$('mic-detail').textContent, /^Última lectura · .* · 2ª cuerda$/);
+  await sleep(2200);
   assert.match(A.$('mic-detail').textContent, /Toca una cuerda/, 'en silencio la aguja vuelve a reposo');
+  assert.ok(!A.$('mic-live').classList.contains('held'));
   A.doc.querySelector('.tab[data-screen="free"]').click();
   assert.equal(A.ev('__mic.pista.parada'), true, 'al salir del Afinador se apaga el micrófono');
 });
@@ -994,17 +1019,17 @@ const escalasA = (preset) => { const A = boot(APP, preset); A.doc.querySelector(
 const celdasEscala = A => A.doc.querySelectorAll('.fret-cell.scale');
 const elegir = (A, id, v) => { const s = A.$(id); s.value = v; s.dispatchEvent({ type: 'change', target: s }); };
 
-test('Escalas › Mostrar: el mástil ilumina la escala con sus nombres escritos y la tónica con anillo; intervalos T y ST (E-01, E-03, E-04)', () => {
+test('Escalas: el mástil ilumina una posición de la escala con sus nombres escritos y la tónica con anillo; intervalos T y ST (E-01, E-03, E-04)', () => {
   const A = escalasA();
   assert.equal(A.$('scales-card').hidden, false);
   assert.ok(A.$('board').classList.contains('scales'));
   const pcs = new Set(celdasEscala(A).map(c => +c.dataset.midi % 12));
   assert.deepEqual([...pcs].sort((a, b) => a - b), [0, 2, 4, 5, 7, 9, 11], 'Do mayor');
+  assert.equal(celdasEscala(A).length, 18, 'una posición: 3 notas en cada cuerda, no todo el mástil');
   assert.ok(A.doc.querySelectorAll('.fret-cell.scale-tonic').every(c => +c.dataset.midi % 12 === 0));
   assert.equal(A.$('scale-line').textContent, 'DoTReTMiSTFaTSolTLaTSiSTDo');
   elegir(A, 'scale-tonic', '5');                                  // Fa mayor: Si♭, no La#
-  const sib = A.doc.querySelector('.fret-cell[data-midi="70"]');
-  assert.ok(sib.classList.contains('scale'));
+  const sib = celdasEscala(A).find(c => +c.dataset.midi % 12 === 10);
   assert.equal(sib.querySelector('.dot').textContent, 'Si♭');
   elegir(A, 'scale-type', 'pentaMenor'); elegir(A, 'scale-tonic', '9');
   assert.equal(A.$('scale-line').textContent, 'LaT½DoTReTMiT½SolTLa');
@@ -1016,45 +1041,170 @@ test('Escalas › Mostrar: el mástil ilumina la escala con sus nombres escritos
   assert.equal(A.doc.querySelector('.fret-cell[data-midi="70"] .dot').textContent, 'La♯');
 });
 
-test('Escalas › Mostrar: el paso a paso sube la escala desde la tónica grave, suena y se resalta (E-06, P-03)', () => {
+test('Escalas: el paso a paso sube la posición desde la nota más grave, suena y se resalta (E-06, P-03)', () => {
   const A = escalasA();
   A.ev('globalThis.__plays = []; playMidi = m => __plays.push(m);');
-  assert.match(A.$('scale-step-text').textContent, /^Paso 1 de 8 · Do, la tónica$/);
+  assert.match(A.$('scale-step-text').textContent, /^Paso 1 de 18 · Do, la tónica$/);
   assert.equal(A.$('scale-prev').disabled, true);
   A.$('scale-next').click(); A.$('scale-next').click();
   assert.deepEqual(A.ev('JSON.stringify(__plays)'), '[50,52]', 'Re3 y Mi3, desde el Do3');
-  assert.equal(A.$('scale-step-text').textContent, 'Paso 3 de 8 · Mi, un tono sobre Re');
-  assert.ok(A.doc.querySelectorAll('.fret-cell.scale-step').every(c => +c.dataset.midi === 52));
-  assert.ok(A.doc.querySelectorAll('.fret-cell.scale-step').length >= 2, 'todas las posiciones de ese Mi');
-  assert.equal(A.$('staff').querySelectorAll('ellipse').length, 8, 'el pentagrama escribe la escala');
-  for (let i = 0; i < 9; i++) A.$('scale-next').click();
-  assert.match(A.$('scale-step-text').textContent, /^Paso 8 de 8 · Do, un semitono sobre Si$/);
+  assert.equal(A.$('scale-step-text').textContent, 'Paso 3 de 18 · Mi, un tono sobre Re');
+  const paso = A.doc.querySelectorAll('.fret-cell.scale-step');
+  assert.equal(paso.length, 1, 'solo la casilla de la posición, no todos los Mi');
+  assert.equal(+paso[0].dataset.midi, 52);
+  assert.equal(A.doc.querySelector('#scale-line .now').textContent, 'Mi', 'los intervalos resaltan el grado');
+  assert.equal(A.$('staff').querySelectorAll('ellipse').length, 8, 'el pentagrama escribe 8 notas de la posición');
+  for (let i = 0; i < 20; i++) A.$('scale-next').click();
+  assert.match(A.$('scale-step-text').textContent, /^Paso 18 de 18 · Fa, un semitono sobre Mi$/);
   assert.equal(A.$('scale-next').disabled, true);
 });
 
-test('Escalas › Práctica: las notas de la escala cuentan una vez cada una; una ajena se marca y enseña las buenas (E-05)', async () => {
+test('Escalas: una posición cada vez; la 1 es la de la tónica y la vista la sigue (E-07, tu decisión del 15/11)', () => {
   const A = escalasA();
-  A.doc.querySelector('#scale-mode [data-v="practice"]').click();
-  assert.ok(A.$('board').classList.contains('practice'), 'las notas no se ven: se buscan');
-  assert.equal(A.$('scale-count').textContent, '0 de 7');
+  const pos = () => A.$('scale-pos').querySelector('.sc-long').textContent;
+  assert.equal(pos(), 'Posición 1 de 7 · trastes 8 a 13', 'Do mayor: la 1 empieza en el Do de la 6.ª, traste 8');
+  assert.equal(A.$('scale-pos').querySelector('.sc-short').textContent, '1/7', 'en corto, para el móvil');
+  assert.equal(A.$('scale-pos-prev').disabled, true);
+  A.$('scale-pos-next').click();
+  assert.equal(pos(), 'Posición 2 de 7 · trastes 10 a 15');
+  assert.match(A.$('scale-step-text').textContent, /^Paso 1 de 18 · Re: aquí empieza la posición$/);
+  A.$('scale-pos-next').click();
+  assert.equal(pos(), 'Posición 3 de 7 · trastes 0 a 5', 'pasado el traste 11, sigue desde la cejuela: la abierta');
+  // Las posiciones, como en los libros: 3 notas por cuerda; 2 en las pentatónicas.
+  const formas = JSON.parse(A.ev(`JSON.stringify(posicionesEscala().map(p => p.map(n => n.traste).join(',')))`));
+  assert.equal(formas[2], '0,1,3,0,2,3,0,2,3,0,2,4,1,3,5,1,3,5');
+  for (let i = 0; i < 9; i++) A.$('scale-pos-next').click();
+  assert.equal(pos(), 'Posición 7 de 7 · trastes 7 a 12');
+  assert.equal(A.$('scale-pos-next').disabled, true);
+  elegir(A, 'scale-type', 'pentaMenor'); elegir(A, 'scale-tonic', '9');
+  assert.equal(pos(), 'Posición 1 de 5 · trastes 5 a 8', 'La menor pentatónica: la «caja 1» de siempre');
+  assert.deepEqual(celdasEscala(A).map(c => +c.dataset.fret).sort((a, b) => a - b), [5,5,5,5,5,5,7,7,7,8,8,8]);
+  // La vista va a la posición (AR-17 #4): un mástil de 300 px con trastes de 50.
+  A.ev("document.getElementById('board').style.setProperty('--fret-w', '50px'); document.getElementById('board-scroll').clientWidth = 300;");
+  A.$('scale-pos-next').click();                                   // caja 2: trastes 7 a 10
+  assert.equal(A.ev("document.getElementById('board-scroll').scrollLeft"), 40 + 6 * 50, 'el traste 6, a la izquierda');
+  // En Drop D, la 6.ª baja un tono: la posición se reparte de otra forma (4 en la grave).
+  elegir(A, 'tuning-select', 'dropd');
+  assert.ok(A.ev('posicionesEscala().every(p => p.every(n => n.traste >= 0))'));
+  assert.equal(pos().startsWith('Posición 1 de 5'), true, 'otra afinación: vuelta a la 1');
+});
+
+test('Escalas: tocar una casilla de la posición la hace el paso actual; una de fuera solo suena (E-09)', () => {
+  const A = escalasA({ scaleId: 'pentaMenor', scalePc: 9 });
+  A.ev('globalThis.__plays = []; playMidi = m => __plays.push(m);');
+  const c = A.doc.querySelector('.fret-cell.scale[data-row="0"][data-fret="8"]');    // Do5 en la 1.ª
+  A.press(c);
+  assert.ok(c.classList.contains('scale-step'));
+  assert.match(A.$('scale-step-text').textContent, /^Paso 12 de 12 · Do, un tono y medio sobre La$/);
+  assert.equal(A.doc.querySelector('#scale-line .now').textContent, 'Do');
+  const fuera = A.doc.querySelector('.fret-cell[data-row="0"][data-fret="1"]');
+  const antes = A.ev('__plays.length');
+  A.press(fuera);
+  assert.equal(A.ev('__plays.length'), antes + 1, 'suena');
+  assert.ok(c.classList.contains('scale-step'), 'pero no cambia el paso');
+});
+
+test('Escalas › Todas: la escala también en el resto del mástil, más apagada; apagado de fábrica (E-10)', () => {
+  const A = escalasA();
+  assert.equal(A.$('qb-scale-all').hidden, false);
+  assert.equal(A.$('qb-scale-all').getAttribute('aria-pressed'), 'false');
+  assert.equal(A.doc.querySelectorAll('.fret-cell.scale-all').length, 0);
+  A.$('qb-scale-all').click();
+  assert.equal(A.$('qb-scale-all').getAttribute('aria-pressed'), 'true');
+  const todas = A.doc.querySelectorAll('.fret-cell.scale-all');
+  assert.ok(todas.length > 60, 'muchas más casillas: ' + todas.length);
+  assert.ok(todas.every(c => [0, 2, 4, 5, 7, 9, 11].includes(+c.dataset.midi % 12)));
+  assert.equal(celdasEscala(A).length, 18, 'la posición sigue destacada aparte');
+  A.doc.querySelector('.tab[data-screen="free"]').click();
+  assert.equal(A.$('qb-scale-all').hidden, true, 'fuera de Escalas no se ve el botón');
+  assert.equal(A.doc.querySelectorAll('.fret-cell.scale-all').length, 0);
+});
+
+test('Escalas › Practicar: tocar la posición en orden, de grave a agudo; un fallo se marca y no avanza (E-05b)', async () => {
+  const A = escalasA({ scaleId: 'pentaMenor', scalePc: 9 });
+  A.ev('playMidi = () => {}');
+  A.$('qb-scale-practice').click();
+  assert.ok(A.$('board').classList.contains('practice'), 'sin nombres: se tocan de memoria');
+  assert.match(A.$('scale-step-text').textContent, /^Práctica · toca la posición de grave a agudo/);
   assert.equal(A.$('staff').querySelectorAll('ellipse').length, 0, 'el pentagrama no da la respuesta');
-  const pulsa = midi => A.press(A.doc.querySelector('.fret-cell[data-midi="' + midi + '"]'));
-  pulsa(48); pulsa(60);                                           // Do3 y Do4: la misma nota
-  assert.equal(A.$('scale-count').textContent, '1 de 7');
-  assert.match(A.$('scale-msg').textContent, /^✓ Do está en Do mayor$/);
-  pulsa(54);                                                      // Fa#3
-  assert.match(A.$('scale-msg').textContent, /^✗ Fa♯ no está en Do mayor$/);
-  assert.ok(A.doc.querySelector('.fret-cell[data-midi="54"]').classList.contains('wrong'));
-  assert.ok(A.$('board').classList.contains('reveal-scale'), 'un momento, se ven las buenas');
-  assert.equal(A.$('scale-count').textContent, '1 de 7');
-  for (const m of [50, 52, 53, 55, 57, 59]) pulsa(m);
-  assert.equal(A.$('scale-count').textContent, '7 de 7');
-  assert.match(A.$('scale-msg').textContent, /Todas/);
-  assert.equal(A.$('staff').querySelectorAll('ellipse').length, 7);
-  A.$('scale-reset').click();
-  assert.equal(A.$('scale-count').textContent, '0 de 7');
-  assert.equal(A.doc.querySelectorAll('.fret-cell.correct').length, 0);
-  await sleep(10);
+  assert.equal(A.$('scale-next').disabled, true);
+  const pasos = JSON.parse(A.ev('JSON.stringify(pasosEscala())'));
+  const celda = k => { const [f, t] = pasos[k].celda.split('-'); return A.doc.querySelector(`.fret-cell[data-row="${f}"][data-fret="${t}"]`); };
+  A.press(celda(0)); A.press(celda(1));
+  assert.match(A.$('scale-step-text').textContent, /^Práctica · 3 de 12/);
+  assert.equal(A.doc.querySelectorAll('.fret-cell.correct').length, 2);
+  A.press(celda(5));                                               // se salta notas
+  assert.match(A.$('scale-step-text').textContent, /^✗ Esa no · 3 de 12/);
+  assert.ok(celda(5).classList.contains('wrong'));
+  // La nota buena, pero en otra cuerda: Re3 en la 6.ª, traste 10, en vez de la 5.ª al aire+5.
+  const otra = A.doc.querySelectorAll(`.fret-cell[data-midi="${pasos[2].midi}"]`).find(c => !c.classList.contains('scale'));
+  A.press(otra);
+  assert.match(A.$('scale-step-text').textContent, /otra cuerda/);
+  for (let k = 2; k < 12; k++) A.press(celda(k));
+  assert.match(A.$('scale-step-text').textContent, /^✓ ¡Completa! Ya tocas la posición 1 de la pentatónica menor de La/);
+  assert.equal(A.$('staff').querySelectorAll('ellipse').length, 8);
+  A.press(celda(0));
+  assert.match(A.$('scale-step-text').textContent, /^Práctica · 2 de 12/, 'la primera vuelve a empezar');
+  A.$('scale-pos-next').click();
+  assert.equal(A.doc.querySelectorAll('.fret-cell.correct').length, 0, 'otra posición, desde cero');
+  A.$('qb-scale-practice').click();
+  assert.ok(!A.$('board').classList.contains('practice'));
+  await sleep(1300);
+  assert.equal(A.doc.querySelectorAll('.fret-cell.wrong').length, 0);
+});
+
+test('Escalas › Escuchar: la posición suena subiendo y bajando, nota a nota; se calla al pararla, al cambiar de escala, de afinación, al ocultar la app y al salir (E-08, AT-16 #2 y #3)', async () => {
+  const A = escalasA({ scaleId: 'pentaMenor', scalePc: 9 });
+  A.ev('globalThis.__plays = []; playMidi = m => __plays.push(m); PAUSA_ESCALA = 2;');
+  A.$('scale-play').click();
+  assert.equal(A.$('scale-play').querySelector('.sc-long').textContent, '■ Parar');
+  assert.equal(A.$('scale-play').getAttribute('aria-pressed'), 'true');
+  assert.equal(A.$('scale-play').getAttribute('aria-label'), 'Escuchar la posición', 'una sola señal: «pulsado»');
+  for (let i = 0; i < 300 && A.ev('sc.sonando') !== null; i++) await sleep(10);   // cada repintado tarda un poco
+  const oidas = JSON.parse(A.ev('JSON.stringify(__plays)'));
+  assert.equal(oidas.length, 23, '12 subiendo y 11 bajando');
+  assert.equal(oidas[0], 45, 'La2, la tónica en el traste 5 de la 6.ª');
+  assert.deepEqual(oidas.slice(12), oidas.slice(0, 11).reverse());
+  assert.equal(A.$('scale-play').querySelector('.sc-long').textContent, '▶ Escuchar', 'al acabar, se apaga sola');
+  A.ev('PAUSA_ESCALA = 50;');
+  const callaCon = async (accion, porque) => {
+    A.$('scale-play').click();
+    assert.notEqual(A.ev('sc.sonando'), null);
+    accion();
+    assert.equal(A.ev('sc.sonando'), null, porque);
+    const n = A.ev('__plays.length'); await sleep(120);
+    assert.equal(A.ev('__plays.length'), n, porque + ': no suena nada más');
+  };
+  await callaCon(() => A.$('scale-play').click(), 'otro toque');
+  await callaCon(() => elegir(A, 'scale-tonic', '2'), 'otra tónica');
+  await callaCon(() => elegir(A, 'scale-type', 'mayor'), 'otro tipo');
+  await callaCon(() => elegir(A, 'tuning-select', 'dropd'), 'otra afinación');
+  await callaCon(() => A.ev("Object.defineProperty(document, 'hidden', { value: true, configurable: true }); onVisibility()"), 'app oculta');
+  A.ev("Object.defineProperty(document, 'hidden', { value: false, configurable: true })");
+  await callaCon(() => A.doc.querySelector('.tab[data-screen="free"]').click(), 'salir de Escalas');
+});
+
+test('Escalas: las posiciones salen bien en todas las afinaciones, escalas y tónicas; el submodo antiguo se olvida (AT-16 #3)', () => {
+  const A = escalasA({ scaleMode: 'practice' });
+  assert.equal(A.ev("'scaleMode' in state"), false, 'se borra al cargar: no vuelve a guardarse');
+  const malas = JSON.parse(A.ev(`JSON.stringify((() => {
+    const malas = [], antes = [state.tuningId, state.scaleId, state.scalePc];
+    const afins = TUNINGS.map(t => t.id);
+    state.customTuning = [38, 45, 50, 55, 59, 62];               // personalizada (Open G grave)
+    for (const af of afins) for (const e of ESCALAS) for (let pc = 0; pc < 12; pc++){
+      state.tuningId = af; state.scaleId = e.id; state.scalePc = pc;
+      const ps = posicionesEscala(), id = af + ' ' + e.id + ' ' + pc;
+      if (ps.length !== e.semitonos.length) malas.push(id + ': ' + ps.length + ' posiciones');
+      for (const p of ps){
+        if (p.length < 6) malas.push(id + ': posición corta');
+        if (p.some(n => n.traste < 0 || n.traste > NUM_FRETS)) malas.push(id + ': traste fuera');
+        for (let k = 1; k < p.length; k++){ const d = p[k].midi - p[k-1].midi; if (d < 1 || d > 3) malas.push(id + ': salto ' + d); }
+      }
+      if (ps[0][0].grado !== 0) malas.push(id + ': la 1 no es la de la tónica');
+    }
+    [state.tuningId, state.scaleId, state.scalePc] = antes;
+    return malas; })())`));
+  assert.deepEqual(malas.slice(0, 5), []);
 });
 
 // --- Adivinar: al fallar, ver la respuesta o seguir intentando (J-13, tu petición del 21/10) ---
@@ -1101,7 +1251,7 @@ test('el ajuste «Al fallar» se guarda; por defecto se sigue intentando (J-13, 
 
 // --- 0.5.3: lo que encontró la auditoría técnica AT-09 ---
 
-test('Escalas queda coherente: lector y lector de pantalla con la escritura de la escala, salir, cambiar de afinación, Restablecer y dos fallos seguidos (AT-09)', async () => {
+test('Escalas queda coherente: lector y lector de pantalla con la escritura de la escala, salir, cambiar de afinación y Restablecer (AT-09)', async () => {
   const A = escalasA({ scaleId: 'mayor', scalePc: 5 });          // Fa mayor
   const celda = m => A.doc.querySelector('.fret-cell[data-midi="' + m + '"]');
   // #5: en Fa mayor, la tecla de La♯/Si♭ se lee Si♭ en todas partes.
@@ -1118,18 +1268,11 @@ test('Escalas queda coherente: lector y lector de pantalla con la escritura de l
   assert.equal(fa.querySelectorAll('ellipse').length, 1);
   assert.equal(A.$('note-name').textContent, 'La♯', 'fuera de la escala, tu preferencia');
   assert.ok(cy(fa) > 0);
-  // #3: cambiar de afinación reinicia la práctica (las casillas suenan a otra nota).
+  // #3: cambiar de afinación vuelve a la posición de la tónica (las casillas suenan a otra nota).
   A.doc.querySelector('.tab[data-screen="scales"]').click();
-  A.doc.querySelector('#scale-mode [data-v="practice"]').click();
-  A.press(celda(53));
-  assert.equal(A.$('scale-count').textContent, '1 de 7');
+  A.$('scale-pos-next').click();
   elegir(A, 'tuning-select', 'dropd');
-  assert.equal(A.$('scale-count').textContent, '0 de 7');
-  assert.equal(A.doc.querySelectorAll('.fret-cell.correct').length, 0);
-  // #4: dos fallos seguidos; ninguna casilla se queda roja.
-  A.press(celda(54)); await sleep(300); A.press(celda(56));
-  await sleep(1700);
-  assert.equal(A.doc.querySelectorAll('.fret-cell.wrong').length, 0, 'ninguna casilla roja pegada');
+  assert.equal(A.ev('posicionActual()[0].grado'), 0, 'la de la tónica');
   // #1: Restablecer devuelve selectores y botones a lo de fábrica.
   A.$('qb-notation').click();                                    // C D E
   elegir(A, 'scale-type', 'menor'); elegir(A, 'scale-tonic', '9');
@@ -1191,8 +1334,10 @@ test('cada tecla negra se escribe con ♯ o con ♭ según Ajustes, igual en tod
 const metroExtra = `
   __ctx.createBuffer = () => ({});
   __ctx.createOscillator = () => { const n = new Nodo('oscilador'); n.frequency = { value: 0 }; n.arranques = [];
-    n.start = t => n.arranques.push(t); n.stop = () => {}; return n; };
-  globalThis.__golpes = () => __nodos.filter(n => n.tipo === 'oscilador').map(n => [n.arranques[0], n.frequency.value]);
+    n.start = t => n.arranques.push(t); n.stop = t => { n.parada = t; }; return n; };
+  // Un golpe retirado (parado antes de arrancar) no llega a sonar: no cuenta.
+  globalThis.__golpes = () => __nodos.filter(n => n.tipo === 'oscilador' && !(n.parada <= n.arranques[0]))
+    .map(n => [n.arranques[0], n.frequency.value]);
   globalThis.__avanza = hasta => { while (__ctx.currentTime < hasta){ __ctx.currentTime += 0.025; metroProgramar(); } };`;
 const metroFalso = audioFalso + metroExtra;
 
@@ -1208,7 +1353,7 @@ test('metrónomo: cada golpe cae a 60/tempo s exactos a 30, 120 y 250 ppm, progr
     for (let i = 1; i < g.length; i++)
       assert.ok(Math.abs(g[i][0] - g[i - 1][0] - 60 / bpm) < 0.001, bpm + ' ppm, golpe ' + i + ': ' + (g[i][0] - g[i - 1][0]));
     assert.deepEqual(g.slice(0, 5).map(x => x[1]), [1760, 1175, 1175, 1175, 1760], 'fuerte, normal, normal, normal, fuerte');
-    assert.ok(g.at(-1)[0] <= A.ev('__ctx.currentTime') + 0.1 + 1e-9, 'nunca más de 100 ms por adelantado');
+    assert.ok(g.at(-1)[0] <= A.ev('__ctx.currentTime') + 0.3 + 1e-9, 'nunca más de 300 ms por adelantado');
     assert.equal(A.ev('stopMetro()'), true);
   }
 });
@@ -1334,10 +1479,118 @@ test('metrónomo: cambiar el tempo o la subdivisión mientras suena no adelanta 
   A.ev('setTempo(120)');                      // el siguiente sigue a 13,06; desde ahí, cada 0,5 s
   A.ev('__avanza(14.6)');
   A.ev('setSubdivision(2)');                  // empieza en el próximo tiempo, 15,06
-  A.ev('__avanza(15.9)');
+  A.ev('__avanza(15.7)');                     // apuntados hasta 16,0 (300 ms por adelantado)
   const g = JSON.parse(A.ev('JSON.stringify(__golpes().map(x => x[0]))'));
   const pasos = g.slice(1).map((x, i) => Math.round((x - g[i]) * 1000) / 1000);
   assert.deepEqual(pasos, [1, 1, 1, 0.5, 0.5, 0.5, 0.5, 0.25, 0.25, 0.25]);
+});
+
+// --- F5.8 #7: el pulso, sin huecos y con lo que se ve a la par de lo que se oye (MT-04) ---
+
+test('metrónomo: 60 s a 250 ppm con tirones del navegador de hasta 0,27 s, sin perder ni mover un golpe (MT-04, AR-12 #3, F5.8 #7)', t => {
+  const A = boot(APP, { metro: { bpm: 250, sig: '4/4', sub: 1, accent: true } });
+  A.ev(metroFalso);
+  A.ev('startMetro()');
+  t.after(() => A.ev('stopMetro()'));
+  // El temporizador se despierta tarde a ratos: entre 5 y 270 ms (siempre los mismos, para repetirlo).
+  A.ev(`(() => { let r = 7; const azar = () => (r = (r * 16807) % 2147483647) / 2147483647;
+    while (__ctx.currentTime < 70){ __ctx.currentTime += 0.005 + 0.265 * azar(); metroProgramar(); } })()`);
+  const g = JSON.parse(A.ev('JSON.stringify(__golpes().map(x => x[0]))'));
+  const inicio = A.ev('metro.inicio');
+  assert.ok(g.at(-1) >= 70, 'llega al final del minuto: ' + g.at(-1));
+  assert.equal(g.length, Math.round((g.at(-1) - inicio) / 0.24) + 1, 'ni un golpe perdido');
+  for (let i = 1; i < g.length; i++)
+    assert.ok(Math.abs(g[i] - g[i - 1] - 0.24) < 1e-6, 'golpe ' + i + ': ' + (g[i] - g[i - 1]));
+});
+
+test('metrónomo: Parar calla lo ya apuntado; cambiar el tempo o el acento rehace lo apuntado sin mover el golpe siguiente (MT-04, F5.8 #7)', t => {
+  const A = boot(APP, { metro: { bpm: 120, sig: '4/4', sub: 1, accent: true } });
+  A.ev(metroFalso);
+  A.ev('startMetro()');
+  t.after(() => A.ev('stopMetro()'));
+  const inicio = A.ev('metro.inicio');
+  const golpes = () => JSON.parse(A.ev('JSON.stringify(__golpes())'));
+  // Tempo: el golpe de inicio+0,5 ya está apuntado; pasa a 60 ppm y sigue ahí, sin repetirse.
+  A.ev(`__avanza(${inicio + 0.3})`);
+  assert.ok(golpes().some(x => Math.abs(x[0] - inicio - 0.5) < 1e-6), 'apuntado por adelantado');
+  A.ev('setTempo(60)');
+  A.ev(`__avanza(${inicio + 1.4})`);
+  assert.deepEqual(golpes().map(x => Math.round((x[0] - inicio) * 1000) / 1000), [0, 0.5, 1.5], 'el siguiente, en su sitio; luego, cada segundo');
+  // Acento: el primer tiempo del compás (inicio+3,5) ya está apuntado con acento; al quitarlo, suena normal.
+  A.ev(`__avanza(${inicio + 3.3})`);
+  assert.equal(golpes().find(x => Math.abs(x[0] - inicio - 3.5) < 1e-6)[1], 1760);
+  A.ev('setAccent(false)');
+  assert.equal(golpes().filter(x => Math.abs(x[0] - inicio - 3.5) < 1e-6).map(x => x[1]).join(), '1175', 'uno solo, sin acento');
+  // Parar: lo apuntado que aún no ha sonado no suena.
+  A.ev(`__avanza(${inicio + 4.3})`);
+  assert.ok(golpes().some(x => x[0] > A.ev('__ctx.currentTime')), 'hay uno apuntado');
+  A.ev('stopMetro()');
+  assert.equal(golpes().filter(x => x[0] > A.ev('__ctx.currentTime')).length, 0, 'tras Parar, ninguno pendiente');
+  assert.equal(A.ev('metro.programados.length'), 0);
+});
+
+test('metrónomo: cambiar compás o figura con el pulso ya apuntado lo rehace una vez; dos cambios seguidos no hacen saltar el contador (MT-03, MT-04, AT-18 A1, AR-19 #3)', t => {
+  const A = boot(APP, { metro: { bpm: 60, sig: '4/4', sub: 2, accent: true } });
+  A.ev(metroFalso);
+  A.ev('startMetro()');
+  t.after(() => A.ev('stopMetro()'));
+  const golpes = () => JSON.parse(A.ev('JSON.stringify(__golpes().map(g => [Math.round(g[0] * 1000) / 1000, g[1]]))'));
+  const en = s => golpes().filter(g => Math.abs(g[0] - s) < 1e-6);
+  // Compás: el pulso de 12,06 ya está apuntado (con la 4/4: normal); pasa a 3/4 y es su primer tiempo.
+  A.ev('__avanza(11.8)');
+  assert.equal(en(12.06).length, 1, 'apuntado por adelantado');
+  A.ev("setCompas('3/4')");
+  A.ev('__avanza(15.3)');
+  assert.deepEqual(en(12.06), [[12.06, 1760]], 'uno solo, con el acento del 3/4');
+  assert.deepEqual([13.06, 14.06, 15.06].map(s => en(s).map(g => g[1]).join()), ['1175', '1175', '1760'], 'compás de tres');
+  // Figura: el pulso de 16,06 ya está apuntado; con semicorcheas, el pulso no se mueve ni se repite.
+  A.ev('__avanza(15.8)');
+  A.ev('setSubdivision(4)');
+  A.ev('__avanza(16.4)');
+  assert.equal(en(16.06).length, 1);
+  assert.deepEqual(en(16.31).map(g => g[1]), [880], 'y la semicorchea, a su cuarto de pulso');
+  // Dos cambios seguidos: la corchea de 18,56 queda apuntada por el cambio de compás
+  // (suena) y el de tempo, justo después, no debe volver a ella con el contador de antes.
+  A.ev('setSubdivision(2)');
+  A.ev('__avanza(18.3)');                         // apuntada la corchea de 18,56; el pulso de 19,06 aún no
+  A.ev("setCompas('4/4'); setTempo(120)");
+  A.ev('__avanza(19.5)');
+  const tras = golpes().filter(g => g[0] > 18.5).map(g => g[0]);
+  assert.deepEqual(tras.slice(0, 3), [18.56, 19.06, 19.31], 'la corchea suena y el pulso sigue en 19,06, ya a 120 ppm');
+});
+
+test('metrónomo: la luz y el péndulo van con lo que se oye, descontando la latencia de salida (MT-04, MT-06, PL-04, F5.8 #7)', t => {
+  const A = boot(APP, { metro: { bpm: 60, sig: '4/4', sub: 1, accent: true } });
+  A.ev(metroFalso);
+  A.doc.querySelector('.tab[data-screen="metro"]').click();
+  A.ev('startMetro()');
+  t.after(() => A.ev('stopMetro()'));
+  const inicio = A.ev('metro.inicio');
+  const vistosEn = s => { A.ev(`__avanza(${s}); metroDibujar()`); return A.ev('metro.vistos'); };
+  // 1. Sin datos de latencia, como antes: el reloj de audio.
+  assert.equal(A.ev('metroOido() === __ctx.currentTime'), true);
+  // 2. Declara 0,2 s de salida (unos auriculares Bluetooth): la luz espera a que se oiga.
+  A.ev('__ctx.outputLatency = 0.2; __ctx.baseLatency = 0.01');
+  assert.equal(vistosEn(inicio + 0.1), 0, 'calculado, pero aún no se oye');
+  assert.equal(vistosEn(inicio + 0.22), 1, 'se oye: el primer pulso se ve');
+  const angulo = parseFloat(A.$('metro-slider').style.getPropertyValue('--ang'));
+  assert.ok(Math.abs(angulo + 30) < 0.5, 'y el péndulo está en su extremo cuando se oye (MT-06): ' + angulo);
+  // 3. Con getOutputTimestamp(), manda la medida del navegador (aquí, 0,15 s de retraso).
+  //    (El banco no trae el reloj performance del navegador: uno fijo basta.)
+  A.ev('globalThis.performance = { now: () => 1000 }');
+  A.ev(`__ctx.getOutputTimestamp = () => ({ contextTime: __ctx.currentTime - 0.15, performanceTime: performance.now() })`);
+  assert.equal(vistosEn(inicio + 1.1), 1, 'el segundo pulso aún no se oye');
+  assert.equal(vistosEn(inicio + 1.16), 2);
+  assert.ok(Math.abs(A.ev('metroOido()') - (A.ev('__ctx.currentTime') - 0.15)) < 0.01);
+  // Lo que pasó desde la medida se suma: 50 ms después, se oye 0,05 s más allá (AT-18 B3).
+  A.ev('globalThis.performance = { now: () => 1050 }');
+  A.ev(`__ctx.getOutputTimestamp = () => ({ contextTime: __ctx.currentTime - 0.15, performanceTime: 1000 })`);
+  assert.ok(Math.abs(A.ev('metroOido()') - (A.ev('__ctx.currentTime') - 0.1)) < 1e-9);
+  // 4. Una medida absurda (o los ceros del arranque) no deja la luz a destiempo.
+  A.ev(`__ctx.getOutputTimestamp = () => ({ contextTime: __ctx.currentTime - 9, performanceTime: performance.now() })`);
+  assert.ok(Math.abs(A.ev('__ctx.currentTime - metroOido()') - 0.5) < 1e-9, 'como mucho, 0,5 s');
+  A.ev(`__ctx.getOutputTimestamp = () => ({ contextTime: 0, performanceTime: 0 })`);
+  assert.ok(Math.abs(A.ev('__ctx.currentTime - metroOido()') - 0.21) < 1e-9, 'sin medida, las latencias declaradas');
 });
 
 // --- F5.8 #1: el péndulo del metrónomo (MT-06, tu comentario del 22/10) ---
@@ -1515,37 +1768,94 @@ test('acordes: cada digitación suena a su acorde, con la raíz (o el bajo) abaj
   assert.equal(A.ev("notasAcorde(acordePorId('Cm')).map(nombreEscrito).join(' ')"), 'Do Mi♭ Sol');
 });
 
-test('acordes: populares arriba y los 30 debajo; el buscador filtra por cómo empieza el nombre, en las dos nomenclaturas (AC-01, AC-06)', () => {
+test('acordes: se eligen con dos filas, la nota y el tipo; lo que no existe se apaga (AC-01, F5.8 #6)', () => {
   const A = boot(APP, { notation: 'anglo' });
   A.doc.querySelector('.tab[data-screen="chords"]').click();
   assert.equal(A.$('chords-card').hidden, false);
-  assert.equal(A.$('board-area').hidden, false, 'a un lado el listado, al otro el mástil');
-  const titulos = () => A.doc.querySelectorAll('#chord-list .cl-head').map(h => h.textContent);
-  const nombres = () => A.doc.querySelectorAll('#chord-list .chord-chip').map(b => b.textContent);
-  assert.deepEqual(titulos(), ['Populares', 'Todos (30)']);
-  assert.deepEqual(nombres().slice(0, 9), ['C', 'G', 'D', 'A', 'E', 'Am', 'Em', 'Dm', 'F']);
-  assert.equal(nombres().length, 39);
-  const busca = q => { const s = A.$('chord-search'); s.value = q; s.dispatchEvent({ type: 'input', target: s }); return nombres(); };
-  assert.deepEqual(busca('G'), ['G', 'Gm', 'G7', 'G/B']);
-  assert.deepEqual(titulos(), ['Resultados (4)']);
-  assert.deepEqual(busca('g'), ['G', 'Gm', 'G7', 'G/B'], 'da igual mayúscula o minúscula');
-  assert.deepEqual(busca('Sol'), ['G', 'Gm', 'G7', 'G/B'], 'también en Do Re Mi');
-  assert.deepEqual(busca('D'), ['D', 'Dm', 'D7', 'Dm7', 'Dmaj7', 'Dsus4'], 'una letra: no trae los Do');
-  assert.deepEqual(busca('Am'), ['Am', 'Am7']);
-  assert.deepEqual(busca('f#'), []);
-  assert.match(A.$('chord-list').textContent, /Ningún acorde empieza por «f#»/);
-  busca('');
-  assert.deepEqual(titulos(), ['Populares', 'Todos (30)']);
+  assert.equal(A.$('board-area').hidden, false, 'arriba la elección, debajo el mástil');
+  const raiz = n => A.doc.querySelectorAll('#chord-roots .chord-chip')[n];
+  const tipos = () => A.doc.querySelectorAll('#chord-types .chord-chip');
+  const tipo = txt => tipos().find(b => b.textContent === txt);
+  assert.deepEqual(A.doc.querySelectorAll('#chord-roots .chord-chip').map(b => b.textContent), ['C', 'D', 'E', 'F', 'G', 'A', 'B']);
+  assert.deepEqual(tipos().map(b => b.textContent), ['Mayor', 'menor', '7', 'm7', 'maj7', 'sus4', '/G']);
+  const pulsados = () => [...A.doc.querySelectorAll('#chord-roots .chord-chip'), ...tipos()]
+    .filter(b => b.getAttribute('aria-pressed') === 'true').map(b => b.textContent);
+  assert.deepEqual(pulsados(), ['C', 'Mayor']);
+  // Con Do, no hay m7 ni sus4 en el catálogo: se apagan; Do/Sol sí existe.
+  assert.deepEqual(tipos().filter(b => b.disabled).map(b => b.textContent), ['m7', 'sus4']);
+  // Otra nota conserva el tipo si existe: de Am a Em…
+  raiz(5).click(); tipo('menor').click();
+  assert.equal(A.$('chord-name').textContent, 'Am');
+  raiz(2).click();
+  assert.equal(A.$('chord-name').textContent, 'Em');
+  // …y si no existe, vuelve al mayor: Dsus4 → (no hay Esus4) E.
+  raiz(1).click(); tipo('sus4').click();
+  assert.equal(A.$('chord-name').textContent, 'Dsus4');
+  raiz(2).click();
+  assert.deepEqual(pulsados(), ['E', 'Mayor']);
+  // Con bajo: Do/Sol y Sol/Si; el botón dice qué bajo lleva (AR-18 #6) y, sin él, «/bajo» apagado.
+  raiz(4).click();
+  assert.equal(tipos()[6].textContent, '/B');
+  tipos()[6].click();
+  assert.equal(A.$('chord-name').textContent, 'G/B');
+  assert.equal(tipos()[6].getAttribute('aria-label'), 'Con otra nota en el bajo');
+  raiz(1).click();
+  assert.equal(tipos()[6].textContent, '/bajo');
+  assert.equal(tipos()[6].disabled, true);
+  // Un tipo apagado no hace nada.
+  raiz(3).click();                                     // Fa: solo mayor, menor y maj7
+  assert.deepEqual(tipos().filter(b => !b.disabled).map(b => b.textContent), ['Mayor', 'menor', 'maj7']);
+  tipo('7').click();
+  assert.equal(A.$('chord-name').textContent, 'F');
+  // Los 30 del catálogo se pueden elegir con los botones, y ninguno sobra.
+  const alcanzables = new Set();
+  const TIPOS = JSON.parse(A.ev('JSON.stringify(TIPOS_BOTON)'));
+  for (let r = 0; r < 7; r++) for (const t of TIPOS){
+    const id = A.ev(`(a => a ? idAcorde(a) : '')(acordeDe(${r}, ${JSON.stringify(t)}))`);
+    if (id) alcanzables.add(id);
+  }
+  assert.equal(alcanzables.size, 30);
+  // En Do Re Mi, las notas cambian de nombre; los tipos, no.
+  A.ev("state.notation = 'latin'; refreshNoteText()");
+  assert.deepEqual(A.doc.querySelectorAll('#chord-roots .chord-chip').map(b => b.textContent), ['Do', 'Re', 'Mi', 'Fa', 'Sol', 'La', 'Si']);
+  assert.equal(A.$('chord-name').textContent, 'Fa');
 });
 
-test('acordes: el elegido se dibuja en el mástil con dedos numerados, ○ y ✕, cejilla, pentagrama y rasgueo (AC-02, AC-03, AC-04)', async () => {
+test('acordes: el mástil enseña los trastes 0 a 5 a todo el ancho, sin zoom; al salir vuelve el zoom guardado (AC-07)', () => {
+  const A = boot(APP, { visibleFrets: 12 });
+  A.$('board-scroll').clientWidth = 1270;               // 1270 − 30 − 40 = 1200 px para trastes
+  A.$('board-scroll').scrollLeft = 300;
+  A.doc.querySelector('.tab[data-screen="chords"]').click();
+  A.ev('applyZoom()');
+  assert.equal(A.ev("document.getElementById('board').style.getPropertyValue('--fret-w')"), '240px', '1200 / 5');
+  assert.equal(A.$('board-scroll').scrollLeft, 0);
+  assert.equal(A.ev('state.visibleFrets'), 12, 'el zoom guardado no se toca');
+  // Las 30 digitaciones caben en esos trastes: si un día se añade una más alta, falla aquí (AR-18 #1).
+  assert.ok(A.ev('Math.max(...ACORDES.flatMap(a => cuerdasAcorde(a).map(c => c.traste || 0)))') <= A.ev('TRASTES_ACORDE'));
+  // Con el teclado, el foco no pasa del traste 5 (AT-17 M1).
+  A.ev('setRoving(0, 5)');
+  A.ev("document.getElementById('strings').dispatchEvent({ type: 'keydown', key: 'ArrowRight', target: cellAt(0, 5), preventDefault(){} })");
+  assert.equal(A.ev('kbPos.fret'), 5);
+  A.ev("document.getElementById('strings').dispatchEvent({ type: 'keydown', key: 'ArrowLeft', target: cellAt(0, 5), preventDefault(){} })");
+  assert.equal(A.ev('kbPos.fret'), 4, 'la tecla llega: ← sí se mueve');
+  A.doc.querySelector('.tab[data-screen="free"]').click();
+  A.ev('applyZoom()');
+  assert.equal(A.ev("document.getElementById('board').style.getPropertyValue('--fret-w')"), '100px', '1200 / 12');
+  // Si en Libre el foco se quedó en el 12, al volver a Acordes pasa al 0.
+  A.ev('setRoving(2, 12)');
+  A.doc.querySelector('.tab[data-screen="chords"]').click();
+  assert.equal(A.ev('kbPos.fret'), 0);
+});
+
+test('acordes: el elegido se dibuja en el mástil con dedos numerados, ○ y ✕, cejilla y rasgueo, sin pentagrama (AC-02, AC-04)', async () => {
   const A = boot(APP);                                             // Do Re Mi
   A.ev('globalThis.__plays = []; playMidi = m => __plays.push(m);');
   A.doc.querySelector('.tab[data-screen="chords"]').click();
-  const chip = id => A.doc.querySelector(`#chord-list .chord-chip[data-id="${id}"]`);
-  assert.equal(chip('Am').textContent, 'Lam');
-  chip('Am').click();
-  assert.equal(chip('Am').getAttribute('aria-pressed'), 'true');
+  // Elegir por nota y tipo: 0 = Do … 6 = Si.
+  const elige = (raiz, tipo) => { A.doc.querySelectorAll('#chord-roots .chord-chip')[raiz].click();
+    A.doc.querySelectorAll('#chord-types .chord-chip').find(b => b.dataset.tipo === tipo).click(); };
+  elige(5, 'm');
+  assert.equal(A.doc.querySelectorAll('#chord-roots .chord-chip')[5].getAttribute('aria-pressed'), 'true');
   assert.equal(A.$('chord-name').textContent, 'Lam');
   assert.equal(A.$('chord-notes').textContent, 'La · Do · Mi');
   const dedos = () => A.doc.querySelectorAll('#board .finger').map(f => {
@@ -1554,11 +1864,11 @@ test('acordes: el elegido se dibuja en el mástil con dedos numerados, ○ y ✕
   const marcas = A.doc.querySelectorAll('#board .string-label').map(l => l.dataset.mark || '');
   assert.deepEqual(marcas, ['○', '', '', '', '○', '✕'], '1ª y 5ª al aire; la 6ª no suena');
   assert.match(A.doc.querySelector('.fret-cell[data-row="1"][data-fret="1"]').getAttribute('aria-label'), /dedo 1/);
-  assert.equal(A.$('staff').querySelectorAll('ellipse').length, 5, 'cinco notas apiladas');
+  assert.equal(A.$('staff').querySelectorAll('ellipse').length, 0, 'el pentagrama no escribe el acorde: manda el dibujo (F5.8 #6)');
   await sleep(250);
   assert.deepEqual(JSON.parse(A.ev('JSON.stringify(__plays)')), [45, 52, 57, 60, 64], 'rasgueado de grave a agudo');
   // Fa: cejilla en el 1, de la 6ª a la 1ª.
-  chip('F').click();
+  elige(3, '');
   const cejilla = A.doc.querySelectorAll('#board .fret-cell.barre');
   assert.equal(cejilla.length, 6);
   assert.ok(cejilla.every(c => c.dataset.fret === '1'));
@@ -1598,7 +1908,7 @@ unaVez('acordes: los cuatro colores de dedo contrastan con el mástil (3:1) y su
   }
 });
 
-test('AT-10: cambiar de compás sonando no mueve el pulso; tras un bloqueo no se amontonan golpes; las figuras no se rehacen; avisos traducidos; Restablecer limpia el buscador', t => {
+test('AT-10: cambiar de compás sonando no mueve el pulso; tras un bloqueo no se amontonan golpes; las figuras no se rehacen; avisos traducidos; Restablecer vuelve a Do', t => {
   const A = boot(APP, { metro: { bpm: 60, sig: '4/4', sub: 2, accent: true } });
   A.ev(metroFalso);
   A.ev('startMetro()');
@@ -1625,12 +1935,12 @@ test('AT-10: cambiar de compás sonando no mueve el pulso; tras un bloqueo no se
   A.ev("stopMetro(); startMetro(); stopMetro('hidden'); setLang('en')");
   assert.equal(A.$('metro-note').textContent, 'It stopped when you left the app.');
   A.ev("setLang('es')");
-  // Restablecer limpia el buscador de acordes.
+  // Restablecer vuelve a Do mayor, también en los botones de Acordes.
   A.doc.querySelector('.tab[data-screen="chords"]').click();
-  const s = A.$('chord-search'); s.value = 'Sol'; s.dispatchEvent({ type: 'input', target: s });
+  A.ev("selectChord('Am', false)");                    // sin sonar: el rasgueo llegaría con la prueba ya acabada
   A.$('set-reset').click();
-  assert.equal(A.$('chord-search').value, '');
-  assert.equal(A.doc.querySelectorAll('#chord-list .cl-head').length, 2, 'populares y todos otra vez');
+  assert.equal(A.ev('state.chordId'), 'C');
+  assert.equal(A.doc.querySelectorAll('#chord-roots .chord-chip')[0].getAttribute('aria-pressed'), 'true');
 });
 
 // --- CP-5 (22/10): AT-11 #1, arrancar con el audio en pausa ---
@@ -1699,4 +2009,137 @@ test('el Service Worker se registra en la web, nunca en el autónomo ni con dobl
   const sin = boot(APP);
   assert.equal(sin.ev('registrarServiceWorker()'), false);
   assert.deepEqual(sinErrores(sin), []);
+});
+
+// --- F5.8 #2 (12/11): el afinador abre en Micrófono, y la pantalla no se apaga mientras se usa ---
+
+test('el afinador abre en Micrófono donde se puede usar, sin escuchar todavía; tu elección se recuerda (A-02, F5.8 #2)', async () => {
+  const A = boot(APP, null, microFalso());
+  A.doc.querySelector('.tab[data-screen="tuner"]').click();
+  assert.equal(A.$('tuner-mic').hidden, false, 'con micrófono disponible, abre en Micrófono');
+  assert.equal(A.$('tuner-ear').hidden, true);
+  assert.equal(A.ev('__mic.pedido'), 0, 'pero no escucha hasta que pulsas «Activar»');
+  // Quien ya usaba la app tenía guardado «De oído» sin haberlo elegido: también le abre en Micrófono.
+  const viejo = boot(APP, { tunerMode: 'ear' }, microFalso());
+  assert.equal(viejo.$('tuner-mic').hidden, false);
+  // Si lo eliges tú, se recuerda.
+  A.doc.querySelector('#tuner-mode [data-v="ear"]').click();
+  const guardado = JSON.parse(A.store.get('trasteando.v1'));
+  assert.deepEqual([guardado.tunerMode, guardado.tunerPick], ['ear', true]);
+  assert.equal(boot(APP, guardado, microFalso()).$('tuner-ear').hidden, false);
+  // «Restablecer» olvida la elección, apaga el micrófono y devuelve la cuerda a «Auto» (AT-14 #12).
+  const R = boot(APP, guardado, microFalso()); R.ev(analizadorFalso);
+  R.doc.querySelector('#tuner-mode [data-v="mic"]').click();
+  R.doc.querySelector('#mic-string [data-v="3"]').click();
+  R.$('set-reset').click();
+  await sleep(50);
+  assert.equal(R.$('tuner-mic').hidden, false);
+  assert.equal(R.ev('mic.string'), 'auto');
+  assert.equal(JSON.parse(R.store.get('trasteando.v1')).tunerPick, false);
+  // Donde el micrófono no se puede usar (sin https, con doble clic), abre en De oído.
+  const sin = boot(APP);
+  assert.equal(sin.$('tuner-ear').hidden, false);
+  assert.equal(sin.$('tuner-mic').hidden, true);
+});
+
+test('la pantalla se mantiene encendida mientras suena el metrónomo o escucha el afinador, y se suelta al parar (G-13)', async t => {
+  const pedidos = [];
+  const wakeLock = { request: async tipo => { const c = { tipo, suelto: false, release: async () => { c.suelto = true; } }; pedidos.push(c); return c; } };
+  const extra = microFalso(); extra.navigator.wakeLock = wakeLock;
+  const A = boot(APP, null, extra);
+  A.ev(analizadorFalso + metroExtra);
+  t.after(() => A.ev('stopMetro(); stopMic()'));
+  A.doc.querySelector('.tab[data-screen="metro"]').click();
+  assert.equal(pedidos.length, 0, 'parado no se pide nada');
+  A.$('metro-play').click(); await sleep(20);
+  assert.deepEqual(pedidos.map(c => [c.tipo, c.suelto]), [['screen', false]]);
+  assert.doesNotMatch(A.$('metro-note').textContent, /pantalla/);
+  A.$('metro-play').click(); await sleep(5);
+  assert.equal(pedidos[0].suelto, true, 'al parar, el móvil vuelve a bloquearse como siempre');
+  // El afinador: mientras escucha.
+  A.doc.querySelector('.tab[data-screen="tuner"]').click();
+  A.$('mic-start').click(); await sleep(20);
+  assert.deepEqual(pedidos.map(c => c.suelto), [true, false]);
+  A.$('mic-stop').click(); await sleep(5);
+  assert.deepEqual(pedidos.map(c => c.suelto), [true, true]);
+  // Donde no existe (PL-04), todo funciona igual y el metrónomo lo avisa.
+  const B = boot(APP); B.ev(metroFalso);
+  t.after(() => B.ev('stopMetro()'));
+  B.doc.querySelector('.tab[data-screen="metro"]').click();
+  B.$('metro-play').click(); await sleep(20);
+  assert.equal(B.ev('metro.sonando'), true);
+  assert.match(B.$('metro-note').textContent, /si se apaga, el metrónomo se para/);
+  assert.deepEqual(sinErrores(B), []);
+  // Existe, pero el sistema lo niega (batería baja): mismo aviso (AT-14 #4).
+  const negado = { navigator: { wakeLock: { request: async () => { throw new Error('NotAllowedError'); } } } };
+  const C = boot(APP, null, negado); C.ev(metroFalso);
+  t.after(() => C.ev('stopMetro()'));
+  C.doc.querySelector('.tab[data-screen="metro"]').click();
+  C.$('metro-play').click(); await sleep(30);
+  assert.equal(C.ev('metro.sonando'), true);
+  assert.match(C.$('metro-note').textContent, /si se apaga, el metrónomo se para/);
+  // Si el sistema suelta el cerrojo con la app a la vista y sigue sonando, se pide otro (AT-14 #10).
+  const dados = [];
+  const conEvento = { navigator: { wakeLock: { request: async () => { const c = { oyentes: [], release: async () => {}, addEventListener(_t, f){ c.oyentes.push(f); } }; dados.push(c); return c; } } } };
+  const D = boot(APP, null, conEvento); D.ev(metroFalso);
+  t.after(() => D.ev('stopMetro()'));
+  D.doc.querySelector('.tab[data-screen="metro"]').click();
+  D.$('metro-play').click(); await sleep(30);
+  assert.equal(dados.length, 1);
+  dados[0].oyentes.forEach(f => f()); await sleep(10);
+  assert.equal(dados.length, 2, 'se vuelve a pedir');
+});
+
+// --- F5.8 #3 y #4 (15/11): temas elegibles, y en Adivinar lo buscado en grande ---
+
+test('el tema de fábrica es Madera; Ajustes › Aspecto lo cambia, lo anuncia y lo guarda; uno desconocido vuelve a Madera (V-10, C-02, C-05)', () => {
+  const A = boot(APP);
+  const html = A.doc.documentElement;
+  assert.equal(html.dataset.theme, 'madera');
+  assert.equal(html.dataset.scheme, 'dark');
+  const boton = v => A.doc.querySelector(`#set-theme [data-v="${v}"]`);
+  assert.equal(boton('madera').getAttribute('aria-pressed'), 'true');
+  boton('partitura').click();
+  assert.equal(html.dataset.theme, 'partitura');
+  assert.equal(html.dataset.scheme, 'light', 'Partitura es un tema claro');
+  assert.equal(boton('partitura').getAttribute('aria-pressed'), 'true');
+  assert.equal(JSON.parse(A.store.get('trasteando.v1')).theme, 'partitura', 'se guarda');
+  assert.equal(boot(APP, { theme: 'partitura' }).doc.documentElement.dataset.theme, 'partitura', 'y vuelve al abrir');
+  assert.equal(boot(APP, { theme: 'neon' }).doc.documentElement.dataset.theme, 'madera', 'un valor desconocido no rompe nada');
+});
+
+test('«Automático» sigue el modo claro u oscuro del dispositivo, también si cambia con la app abierta; sin matchMedia, oscuro (V-10, PL-04)', () => {
+  let oyente = null;
+  const medio = { matches: true, addEventListener: (_, f) => { oyente = f; } };
+  const A = boot(APP, { theme: 'auto' }, { matchMedia: q => /prefers-color-scheme/.test(q) ? medio : { matches: false } });
+  const html = A.doc.documentElement;
+  assert.equal(html.dataset.scheme, 'dark');
+  medio.matches = false; oyente();
+  assert.equal(html.dataset.scheme, 'light', 'el dispositivo pasa a claro y la app lo sigue');
+  assert.equal(boot(APP, { theme: 'auto' }).doc.documentElement.dataset.scheme, 'dark', 'sin matchMedia, el caso más pobre: oscuro');
+});
+
+test('en un tema claro el pentagrama se escribe con la tinta del texto, no con el color pastel de la nota (V-10, G-05)', () => {
+  const A = boot(APP, { theme: 'partitura' });
+  A.press(A.doc.querySelectorAll('.fret-cell')[8]);
+  const cabeza = A.$('staff').querySelector('ellipse');
+  assert.equal(cabeza.getAttribute('fill'), 'currentColor', 'la tinta la pone el CSS, sin var() en el atributo (AT-15 #2)');
+  // Cambiar de tema con una nota en el pentagrama la vuelve a escribir (AT-15 #1).
+  A.doc.querySelector('#set-theme [data-v="madera"]').click();
+  assert.match(A.$('staff').querySelector('ellipse').getAttribute('fill'), /^#/, 'de vuelta en Madera, otra vez su color');
+  A.doc.querySelector('#set-theme [data-v="partitura"]').click();
+  assert.equal(A.$('staff').querySelector('ellipse').getAttribute('fill'), 'currentColor');
+  const B = boot(APP);
+  B.press(B.doc.querySelectorAll('.fret-cell')[8]);
+  assert.match(B.$('staff').querySelector('ellipse').getAttribute('fill'), /^#/, 'en Madera, el color de la nota');
+});
+
+test('en Adivinar una pista larga («1ª 2ª 3ª 4ª») se marca para caber entera en su mitad de la franja (J-06, F5.8 #4)', () => {
+  const A = boot(APP, { hintNote: true, hintString: true });
+  A.doc.querySelector('.tab[data-screen="guess"]').click();
+  assert.ok(A.doc.querySelector('.ch-hints').classList.contains('has-clue'), 'con pistas encendidas, la franja es de pistas');
+  for (const id of ['qb-hint-note', 'qb-hint-string']) {
+    const v = A.$(id).querySelector('.clue-v');
+    assert.equal(v.classList.contains('long'), v.textContent.length > 7, id + ': «' + v.textContent + '»');
+  }
 });

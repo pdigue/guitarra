@@ -16,10 +16,49 @@
    despierta cada 25 ms solo para *programar* los golpes de los próximos 100 ms
    en ese reloj; aunque se despierte tarde, el golpe ya está apuntado para su
    momento exacto. Cada golpe se calcula desde el inicio (inicio + n × intervalo),
-   no sumando intervalos, para que los redondeos no se acumulen. */
+   no sumando intervalos, para que los redondeos no se acumulen.
+
+   Cuánto por adelantado (F5.8 #7). Con 100 ms, si el móvil se entretenía más de
+   unos 75 ms, el golpe siguiente ya había pasado y se saltaba: un hueco en el
+   pulso. Ahora se apuntan 300 ms, que aguantan tirones de hasta 0,25 s. A cambio,
+   lo apuntado tardaría 300 ms en enterarse de un cambio (tempo, compás, Parar):
+   por eso cada golpe se guarda en metro.programados y, al cambiar algo, los que
+   aún no han sonado se retiran y se vuelven a programar (metroRebobinar). */
 
 const METRO_CADA = 0.025;       // s entre repasos del programador
-const METRO_ADELANTO = 0.1;     // s de golpes programados por adelantado
+const METRO_ADELANTO = 0.3;     // s de golpes programados por adelantado
+const METRO_MARGEN = 0.03;      // s: un golpe que suena antes de esto quizá ya esté calculado: no se retira (AT-18 B2)
+const METRO_LATENCIA_MAX = 0.5; // s: más retraso de salida que esto sería un dato erróneo
+
+/* Lo que se oye va por detrás del reloj de audio (MT-04, F5.8 #7).
+   currentTime es la muestra que el navegador está *calculando*; el sonido aún
+   tiene que pasar por el sistema y el altavoz, o por unos auriculares Bluetooth
+   (0,15 a 0,25 s). Si la luz y el péndulo usaran currentTime, se adelantarían al
+   clic. Así que se pregunta qué muestra está saliendo ahora:
+   1. getOutputTimestamp(), si el navegador lo tiene: dice qué instante del reloj
+      de audio salía por el altavoz en cierto momento (performanceTime); se le
+      suma lo que ha pasado desde entonces.
+   2. Si no, currentTime menos las latencias que el navegador declare
+      (baseLatency: su propio proceso; outputLatency: del sistema al altavoz).
+   3. Si no declara nada, currentTime tal cual (como antes).
+   Se detecta qué tiene el navegador, no qué navegador es (PL-04). */
+function metroOido(){
+  const ctx = audioCtx;
+  if (!ctx) return 0;
+  const ahora = ctx.currentTime;
+  const lat = v => (typeof v === 'number' && v > 0 ? v : 0);
+  let oido = ahora - lat(ctx.outputLatency) - lat(ctx.baseLatency);
+  if (typeof ctx.getOutputTimestamp === 'function' && typeof performance !== 'undefined'){
+    try {
+      const m = ctx.getOutputTimestamp();
+      // Recién arrancado, algunos navegadores devuelven ceros: entonces no vale.
+      if (m && m.contextTime > 0 && m.performanceTime > 0)
+        oido = m.contextTime + (performance.now() - m.performanceTime) / 1000;
+    } catch(e){ /* sin medida: se queda la estimación */ }
+  }
+  // Nunca por delante del reloj, ni más atrás de lo razonable.
+  return Math.min(ahora, Math.max(ahora - METRO_LATENCIA_MAX, oido));
+}
 
 const metro = {
   sonando: false,
@@ -29,6 +68,7 @@ const metro = {
   paso: 0,                      // golpe dentro del compás (0 … pulsos × subdivisión − 1)
   timer: null, frame: null,
   cola: [],                     // pulsos programados que aún no se han visto: { t, pulso }
+  programados: [],              // golpes apuntados en el reloj de audio: { t, n, paso, osc, g }
   taps: [], tapPuntero: false,  // marcas de «Marcar» (ms); si el toque llegó con el dedo
   aviso: '',                    // clave del texto que explica por qué se paró, si no lo paraste tú
   // El péndulo (MT-06): cuántos pulsos se han visto, cuándo sonó el último, cuánto
@@ -58,8 +98,39 @@ function metroClic(t, tipo){
   g.gain.linearRampToValueAtTime(vol, t + 0.002);     // entrada de 2 ms: sin chasquido
   g.gain.setTargetAtTime(0, t + 0.002, 0.012);         // y se apaga en unos 50 ms
   osc.connect(g); g.connect(audioOut || ctx.destination);
+  // Al acabar, se suelta de la salida para que el navegador lo pueda liberar (AT-11 #6).
+  osc.onended = () => { try { osc.disconnect(); g.disconnect(); } catch(e){} };
   osc.start(t);
   osc.stop(t + 0.08);
+  return { osc, g };
+}
+
+/** Calla un golpe apuntado que aún no ha sonado: se adelanta su parada a antes
+ *  de su arranque (así no llega a sonar) y, por si acaso, se suelta de la salida. */
+function metroCallar(p){
+  try { p.osc.stop(0); } catch(e){}
+  try { p.g.disconnect(); } catch(e){}
+}
+
+/** Retira los golpes apuntados que aún no han sonado y deja el contador en el
+ *  primero de ellos, para que metroProgramar() los vuelva a apuntar con los
+ *  ajustes nuevos (F5.8 #7). Con `soloPulsos`, respeta las subdivisiones que
+ *  faltan hasta el próximo pulso y retira desde él: el compás o la figura nuevos
+ *  empiezan en el pulso (AT-10 #1). */
+function metroRebobinar(soloPulsos){
+  if (!metro.sonando || !metro.ctx) return;
+  const limite = metro.ctx.currentTime + METRO_MARGEN, sub = state.metro.sub;
+  // Nunca se vuelve a un golpe anterior al inicio vigente: son las subdivisiones
+  // que un cambio de compás o de figura dejó sonar, y su n se contó desde el
+  // inicio de antes. Si se eligieran, el contador saltaría (AT-18 A1).
+  const i = metro.programados.findIndex(p => p.t > limite && p.t >= metro.inicio - 1e-9
+                                            && (!soloPulsos || p.paso % sub === 0));
+  if (i < 0) return;                            // nada que retirar: el contador ya apunta al siguiente
+  const primero = metro.programados[i];
+  metro.programados.slice(i).forEach(metroCallar);
+  metro.programados.length = i;
+  metro.cola = metro.cola.filter(c => c.t < primero.t - 1e-9);
+  metro.n = primero.n; metro.paso = primero.paso;
 }
 
 /** Qué suena en el golpe `paso` del compás. */
@@ -69,7 +140,7 @@ function metroQueSuena(paso){
   return { pulso, tipo: pulso === 0 && state.metro.accent ? 'fuerte' : 'normal' };
 }
 
-/** Programa los golpes que caen en los próximos 100 ms. */
+/** Programa los golpes que caen en los próximos 300 ms. */
 function metroProgramar(){
   // Si el contexto de audio cambió (se rehízo tras una llamada en el iPhone) o
   // se cerró, se para: los golpes irían a un reloj que ya no suena.
@@ -84,18 +155,22 @@ function metroProgramar(){
     // Si el navegador estuvo ocupado y un golpe ya pasó, se salta: sonaría a
     // destiempo, amontonado con los demás (AT-10 #2).
     if (t >= audioCtx.currentTime - 0.005){
-      metroClic(t, golpe.tipo);
+      const nodos = metroClic(t, golpe.tipo);
+      metro.programados.push({ t, n: metro.n, paso: metro.paso, osc: nodos.osc, g: nodos.g });
       if (golpe.tipo !== 'sub') metro.cola.push({ t, pulso: golpe.pulso });
     }
     metro.paso = (metro.paso + 1) % total;
     metro.n++;
   }
+  // Los que ya empezaron no se pueden retirar: fuera de la lista.
+  const ya = audioCtx.currentTime;
+  while (metro.programados.length && metro.programados[0].t < ya) metro.programados.shift();
 }
 
 /** Ilumina el pulso que suena, hace latir la pestaña y mueve el péndulo (MT-04, MT-05, MT-06). */
 function metroDibujar(){
   if (!metro.sonando) return;
-  const ahora = audioCtx ? audioCtx.currentTime : 0;
+  const ahora = metroOido();                    // lo que se oye, no lo que se calcula (F5.8 #7)
   let visto = null;
   while (metro.cola.length && metro.cola[0].t <= ahora){
     visto = metro.cola.shift();
@@ -191,11 +266,11 @@ function startMetro(){
   if (audioCtx.state === 'running'){ metroEnMarcha(); return; }
   const ctx = audioCtx;
   metro.arrancando = true;
-  let espera, despierta;
+  let espera, reanudado;       // (no «despierta»: taparía a la de la pantalla, AT-14 #11)
   // resume() devuelve una promesa que se cumple cuando el audio ya suena.
-  try { despierta = Promise.resolve(ctx.resume()).catch(() => {}); } catch(e){ despierta = Promise.resolve(); }
+  try { reanudado = Promise.resolve(ctx.resume()).catch(() => {}); } catch(e){ reanudado = Promise.resolve(); }
   return Promise.race([
-    despierta,
+    reanudado,
     new Promise(r => { espera = setTimeout(r, 400); })
   ]).then(() => {
     clearTimeout(espera);
@@ -213,10 +288,11 @@ function metroEnMarcha(){
   metro.sonando = true;
   metro.aviso = '';
   metro.inicio = audioCtx.currentTime + 0.06;   // un respiro para que el primer golpe no se corte
-  metro.n = 0; metro.paso = 0; metro.cola = [];
+  metro.n = 0; metro.paso = 0; metro.cola = []; metro.programados = [];
   metro.vistos = 0; metro.ultimo = null; metro.amplitud = null;   // se mide al pintarlo, con el área a la vista
   metroProgramar();
   metro.timer = setInterval(metroProgramar, METRO_CADA * 1000);
+  pantallaDespierta('metro', true);            // que el móvil no se bloquee y lo pare (G-13)
   metro.frame = requestAnimationFrame(metroDibujar);
   renderMetro();
 }
@@ -229,7 +305,13 @@ function stopMetro(motivo){
   metro.arrancando = false;                     // también cancela un arranque en espera
   clearInterval(metro.timer); metro.timer = null;
   cancelAnimationFrame(metro.frame); metro.frame = null;
+  // Lo apuntado que aún no ha sonado se calla: con 300 ms por adelantado, si no,
+  // Parar dejaría sonar uno o dos golpes más (F5.8 #7).
+  const ya = metro.ctx ? metro.ctx.currentTime : 0;
+  metro.programados.forEach(p => { if (p.t > ya) metroCallar(p); });
+  metro.programados = [];
   metro.cola = [];
+  pantallaDespierta('metro', false);
   if (estaba && motivo) metro.aviso = { mic: 'metro.stoppedMic', hidden: 'metro.stoppedHidden', audio: 'metro.stoppedAudio' }[motivo];
   const tab = document.querySelector('.tab[data-screen="metro"]');
   if (tab) tab.classList.remove('beat');
@@ -245,9 +327,12 @@ function setTempo(bpm){
   const antes = metroIntervalo();
   const nuevo = Math.max(METRO_MIN, Math.min(METRO_MAX, Math.round(bpm)));
   if (nuevo === state.metro.bpm) return;
-  if (metro.sonando){ metro.inicio += metro.n * antes; metro.n = 0; }
+  // Sonando: se retiran los golpes apuntados que no han sonado (el contador vuelve
+  // al primero de ellos), y desde él se cuenta con el ritmo nuevo (F5.8 #7).
+  if (metro.sonando){ metroRebobinar(); metro.inicio += metro.n * antes; metro.n = 0; }
   state.metro.bpm = nuevo;
   save();
+  if (metro.sonando) metroProgramar();
   renderMetro();
 }
 
@@ -268,6 +353,7 @@ function tapTempo(ahora){
 function setCompas(id){
   const c = COMPASES.find(x => x.id === id);
   if (!c || c.id === state.metro.sig) return;
+  metroRebobinar(true);                         // las subdivisiones de antes del pulso, se quedan
   state.metro.sig = c.id;
   save();
   if (metro.sonando){
@@ -279,6 +365,7 @@ function setCompas(id){
     // Los pulsos ya programados sonarán: el péndulo los cuenta, pero no encienden
     // ningún punto del compás nuevo (AT-13 #3).
     metro.cola.forEach(c => { c.pulso = -1; });
+    metroProgramar();
   }
   buildMetroDots();
   renderMetro();
@@ -289,6 +376,7 @@ function setCompas(id){
 function setSubdivision(sub){
   if (sub === state.metro.sub) return;
   if (metro.sonando){
+    metroRebobinar(true);
     const viejo = state.metro.sub, intervalo = metroIntervalo();
     const faltan = (viejo - metro.paso % viejo) % viejo;     // golpes hasta el próximo pulso
     metro.inicio += (metro.n + faltan) * intervalo; metro.n = 0;
@@ -297,12 +385,15 @@ function setSubdivision(sub){
   }
   state.metro.sub = sub;
   save();
+  if (metro.sonando) metroProgramar();
   renderMetro();
 }
 
 function setAccent(on){
+  metroRebobinar();                             // el acento nuevo, ya en el próximo compás
   state.metro.accent = !!on;
   save();
+  if (metro.sonando) metroProgramar();
   renderMetro();
 }
 
@@ -472,7 +563,7 @@ function renderMetro(){
   play.textContent = metro.sonando ? t('metro.stop') : t('metro.start');
   play.classList.toggle('on', metro.sonando);   // el texto ya dice Empezar o Parar: sin aria-pressed (AT-10 #9)
   // El aviso se guarda como clave y se traduce al pintarlo: cambia con el idioma (AT-10 #5).
-  document.getElementById('metro-note').textContent = metro.aviso ? t(metro.aviso) : (metro.sonando ? t('metro.playing') : '');
+  document.getElementById('metro-note').textContent = metro.aviso ? t(metro.aviso) : (metro.sonando ? t('metro.playing') + (pantallaSeApagara() ? ' ' + t('metro.noLock') : '') : '');
   // Fuera de su área, la pestaña dice que está en marcha (también al lector de pantalla).
   const tab = document.querySelector('.tab[data-screen="metro"]');
   if (tab){

@@ -62,7 +62,13 @@ const anotar = (ok, que, detalle = '') => { resultados.push({ ok, que, detalle }
     await page.evaluate(() => navigator.serviceWorker.ready);
     await page.waitForFunction(() => !!navigator.serviceWorker.controller, null, { timeout: 15000 });
     const precarga = await page.evaluate(v => caches.open('trasteando-' + v).then(c => c.keys()).then(k => k.length), version);
-    anotar(precarga === 35, 'con conexión, el Service Worker guarda la app entera', `${precarga} archivos en trasteando-${version}, en ${Date.now() - t0} ms`);
+    // Lo esperado se cuenta, no se escribe a mano (con 00-aspecto pasó de 35 a 36):
+    // la página, cada archivo con «?v=» de index.html y cada grabación de samples/.
+    const html = fs.readFileSync(path.join(REPO, 'index.html'), 'utf8');
+    const grabaciones = ['nylon', 'acoustic'].reduce((n, t) =>
+      n + fs.readdirSync(path.join(REPO, 'samples', t)).filter(f => f.endsWith('.mp3')).length, 0);
+    const esperado = 1 + (html.match(/(?:src|href)="[^"]+\?v=/g) || []).length + grabaciones;
+    anotar(precarga === esperado, 'con conexión, el Service Worker guarda la app entera', `${precarga} de ${esperado} archivos en trasteando-${version}, en ${Date.now() - t0} ms`);
 
     // 3. Sin red, como en modo avión, y volver a abrirla.
     await apagar();

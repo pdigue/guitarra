@@ -25,15 +25,16 @@ const DEFAULTS = {
   maxChallengeFret:12,    // hasta dónde llegan los retos del modo Adivinar
   records:{},             // récord de racha de cada afinación: { standard: 7, dropd: 3 } (J-11)
   rotateHintClosed:false, // el aviso para girar, una vez cerrado, no vuelve (V-01)
-  tunerMode:'ear',        // afinador: 'ear' de oído · 'mic' por micrófono (F4.3)
+  tunerMode:'mic',        // afinador: 'mic' por micrófono · 'ear' de oído (F4.3; por defecto Micrófono desde F5.8 #2)
+  tunerPick:false,        // true cuando lo has elegido tú: solo entonces se recuerda
   lang:null,              // 'es' o 'en' (G-12); sin elegir, el del navegador
-  scaleId:'mayor',        // Escalas (F5): tipo, tónica (clase de altura) y submodo
+  scaleId:'mayor',        // Escalas (F5): tipo y tónica (clase de altura)
   scalePc:0,
-  scaleMode:'show',       // 'show' Mostrar · 'practice' Práctica
   onMiss:'retry',         // Adivinar, al fallar: 'retry' seguir intentando (por defecto, 21/10) · 'reveal' ver la respuesta (J-13)
   accidentals:{},         // tecla negra → 'sharp' o 'flat' (N-06); sin dato, sostenido
   metro:{ bpm:80, sig:'4/4', sub:1, accent:true },  // metrónomo (MT-05): tempo, compás, golpes por pulso y acento en el primero
-  chordId:'C'             // acorde elegido en Acordes (F5.7), por su nombre en inglés
+  chordId:'C',            // acorde elegido en Acordes (F5.7), por su nombre en inglés
+  theme:'madera'          // tema (F5.8 #3, C-08): 'madera' · 'auto' (claro u oscuro, como el dispositivo) · 'partitura'
 };
 
 const storage = {
@@ -64,12 +65,14 @@ function sanitize(raw){
   }
   if (!['latin','anglo'].includes(s.notation)) s.notation = DEFAULTS.notation;
   if (!['nylon','acoustic'].includes(s.timbre)) s.timbre = DEFAULTS.timbre;
-  if (!['ear','mic'].includes(s.tunerMode)) s.tunerMode = DEFAULTS.tunerMode;
+  s.tunerPick = s.tunerPick === true;
+  if (!s.tunerPick || !['ear','mic'].includes(s.tunerMode)) s.tunerMode = DEFAULTS.tunerMode;
   if (!['es','en'].includes(s.lang)) s.lang = idiomaDelNavegador();
   if (!ESCALAS.some(e => e.id === s.scaleId)) s.scaleId = DEFAULTS.scaleId;
   if (!Number.isInteger(s.scalePc) || s.scalePc < 0 || s.scalePc > 11) s.scalePc = DEFAULTS.scalePc;
-  if (!['show','practice'].includes(s.scaleMode)) s.scaleMode = DEFAULTS.scaleMode;
+  delete s.scaleMode;     // el submodo Mostrar/Práctica se quitó en la 0.6.4 (F5.8 #5)
   if (!['reveal','retry'].includes(s.onMiss)) s.onMiss = DEFAULTS.onMiss;
+  if (!['madera','auto','partitura'].includes(s.theme)) s.theme = DEFAULTS.theme;
   const alt = {};
   if (s.accidentals && typeof s.accidentals === 'object')
     for (const pc of NEGRAS) if (['sharp','flat'].includes(s.accidentals[pc])) alt[pc] = s.accidentals[pc];

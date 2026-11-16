@@ -92,7 +92,8 @@ function renderClues(){
     b.classList.add('clue');
     const k = document.createElement('span'), v = document.createElement('b');
     k.className = 'clue-k'; k.textContent = etiqueta[1] + ' ';   // el lector lee «Nota Sol#3», no «NotaSol#3»
-    v.className = 'clue-v'; v.textContent = valor;
+    // Una respuesta larga («1ª 2ª 3ª 4ª») baja de tamaño para caber entera en su mitad (F5.8 #4).
+    v.className = 'clue-v' + (valor.length > 7 ? ' long' : ''); v.textContent = valor;
     if (color) v.style.color = color;
     b.appendChild(k); b.appendChild(v);
   };

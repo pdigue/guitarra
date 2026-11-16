@@ -21,14 +21,14 @@
    y eso es lo que hace que el navegador instale el Service Worker nuevo. Una
    prueba del banco exige que coincida con APP_VERSION (js/01-teoria.js). */
 
-const VERSION = '0.6.2';
+const VERSION = '0.6.8';
 const CACHE = 'trasteando-' + VERSION;
 const ESPERA_RED = 3000;   // ms que se espera a la red antes de usar la copia de la página
 
 // Lo que la app necesita para funcionar entera. El banco (tests/sw.test.js)
 // comprueba que coincide con lo que carga index.html y con las grabaciones de
 // js/03-audio.js, y que todo existe.
-const MODULOS = ['00-idioma', '01-teoria', '02-estado', '03-audio', '04-pentagrama',
+const MODULOS = ['00-aspecto', '00-idioma', '01-teoria', '02-estado', '03-audio', '04-pentagrama',
   '05-mastil', '06-zoom', '07-adivinar', '08-afinador-referencia', '09-navegacion',
   '10-tono', '11-afinador-micro', '13-escalas', '14-metronomo', '15-acordes', '99-arranque'];
 const GRABACIONES = {

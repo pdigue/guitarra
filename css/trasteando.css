@@ -8,25 +8,72 @@
    marfil de cejuela para el texto.
    ============================================================ */
 :root {
-  --bg:#140e09;
-  --surface:#211710;
-  --surface2:#2a1d13;
-  --line:#38291a;
-  --line2:#4a3824;
-  --amber:#e8a45c;
+  /* ===== TEMAS (F5.8 #3, C-08) =====
+     Cada tema es un juego de «fichas» (variables de color). El resto del CSS
+     solo usa las fichas, nunca colores sueltos: así cambiar de tema es cambiar
+     un atributo, <html data-theme="…">, que pone la app según Ajustes.
+     «Madera» es el de siempre, más limpio: menos bordes, sin degradados de fondo.
+     El mástil es oscuro en todos los temas (es madera de verdad: palisandro o
+     ébano), para que los colores de las notas se lean igual en cualquiera. */
+  --bg:#15100b;
+  --surface:#1f1812;
+  --surface2:#2a2119;
+  --line:#33281d;
+  --line2:#45372a;
+  --amber:#e8a45c;        /* el acento del tema (en Madera, ámbar de barniz) */
   --amber2:#c9853f;
-  --text:#f2e8da;
-  /* Grises de texto con contraste ≥ 4,5:1 sobre todos los fondos (F3.4, G-05).
-     Antes, --faint se quedaba en 2,5:1. */
-  --muted:#af9e88;
-  --faint:#978670;
+  --on-accent:#1a1006;    /* texto sobre el acento */
+  --text:#f4ece1;
+  /* Grises de texto con contraste ≥ 4,5:1 sobre todos los fondos (G-05). */
+  --muted:#b3a490;
+  --faint:#a08f7a;
   --ok:#58c98a;
   --ko:#e86060;
+  --brand:#f0b06a;
+  --brand-font:Georgia,"Times New Roman",serif;
+  /* El mástil */
+  --board-a:#2e1e10; --board-b:#3d2915;
+  --board-muted:#c4b49e; --board-accent:#f0b06a;
+  --fret:#8a7560; --nut:#f0e0c8; --marker:rgba(232,164,92,.42);
+  --string-a:#a89880; --string-b:#e8d8c0; --string-c:#7a7060;
+  --label-bg:var(--bg);
 
   --label-w:30px;   /* ancho de la etiqueta de cuerda */
   --nut-w:40px;     /* ancho de la cejuela = traste 0; 40 px para el dedo (G-05) */
   --fret-w:64px;    /* ancho de cada traste, controlado por el zoom */
   --r:14px;
+  color-scheme:dark;
+}
+/* Automático, oscuro: el modo oscuro de iOS y macOS (negro puro y grises del
+   sistema), con el naranja del sistema como acento. Mástil de ébano. */
+html[data-theme="auto"] {
+  --bg:#000000; --surface:#1c1c1e; --surface2:#2c2c2e; --line:#2c2c2e; --line2:#3a3a3c;
+  --amber:#ff9f0a; --amber2:#e08900; --on-accent:#1c1000;
+  --text:#ffffff; --muted:#aeaeb2; --faint:#98989f; --ok:#30d158; --ko:#ff6961;
+  --brand:#ffffff; --brand-font:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",sans-serif;
+  --board-a:#18181b; --board-b:#26262b; --board-muted:#b0b0b8; --board-accent:#ffb340;
+  --fret:#6e6e76; --nut:#e5e5ea; --marker:rgba(255,255,255,.28);
+  --string-a:#9a9aa2; --string-b:#e8e8ee; --string-c:#6a6a72;
+}
+/* Automático, claro: el gris agrupado de iOS (#f2f2f7) con tarjetas blancas.
+   El acento es un naranja más oscuro, para pasar 4,5:1 sobre blanco. */
+html[data-theme="auto"][data-scheme="light"] {
+  --bg:#f2f2f7; --surface:#ffffff; --surface2:#e5e5ea; --line:#d8d8dc; --line2:#c7c7cc;
+  --amber:#a34a00; --amber2:#8a3f00; --on-accent:#ffffff;
+  --text:#1c1c1e; --muted:#5c5c61; --faint:#636368; --ok:#1f8a45; --ko:#c9302c;
+  --brand:#1c1c1e; --label-bg:#26262b;
+  color-scheme:light;
+}
+/* Partitura (el tercero, propuesta): papel de método de guitarra, tinta y
+   un rojo de imprenta; títulos con letra de libro. Mástil de palisandro. */
+html[data-theme="partitura"] {
+  --bg:#f5efe3; --surface:#fffbf3; --surface2:#ebe2d1; --line:#e2d7c3; --line2:#cfc1a8;
+  --amber:#9a3412; --amber2:#7c2a0e; --on-accent:#ffffff;
+  --text:#2b2118; --muted:#62543f; --faint:#6b5c47; --ok:#1f7a45; --ko:#b42318;
+  --brand:#2b2118;
+  --board-a:#3a2616; --board-b:#4a321d; --board-muted:#cdbda5; --board-accent:#f4b26b;
+  --label-bg:#3a2616;
+  color-scheme:light;
 }
 * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 /* El navegador aplica display:none a [hidden], pero cualquier regla de autor
@@ -43,10 +90,7 @@ html, body {
 body {
   display:flex; flex-direction:column;
   padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
-  background:
-    radial-gradient(120% 90% at 50% -10%, #241708 0%, transparent 55%),
-    radial-gradient(120% 100% at 50% 115%, #1e1409 0%, transparent 50%),
-    var(--bg);
+  background:var(--bg);
 }
 button { font-family:inherit; color:inherit; }
 :focus-visible { outline:2px solid var(--amber); outline-offset:2px; }
@@ -55,14 +99,14 @@ button { font-family:inherit; color:inherit; }
 /* ===== PUERTA DE AUDIO ===== */
 .gate { position:fixed; inset:0; z-index:1000; display:flex; flex-direction:column;
   align-items:center; justify-content:center; gap:20px; padding:24px; text-align:center;
-  background:radial-gradient(100% 80% at 50% 30%, #23170c, var(--bg) 70%); }
+  background:var(--bg); }
 .gate.hidden { display:none; }
 .gate-logo { width:104px; height:104px; filter:drop-shadow(0 6px 24px rgba(232,164,92,0.22)); }
-.gate-title { font-family:Georgia,"Times New Roman",serif; font-style:italic;
+.gate-title { font-family:var(--brand-font); font-style:italic;
   font-size:46px; color:var(--amber); line-height:1; letter-spacing:0.5px; }
 .gate-sub { font-size:14px; color:var(--muted); max-width:300px; line-height:1.55; }
 .gate-btn { margin-top:4px; background:linear-gradient(180deg,var(--amber),var(--amber2));
-  color:#1a1006; border:none; padding:15px 44px; border-radius:13px; font-size:17px;
+  color:var(--on-accent); border:none; padding:15px 44px; border-radius:13px; font-size:17px;
   font-weight:700; cursor:pointer; box-shadow:0 6px 24px rgba(232,164,92,0.32); }
 .gate-btn:active { transform:scale(0.97); }
 .gate-btn:disabled { opacity:0.55; }
@@ -71,7 +115,7 @@ button { font-family:inherit; color:inherit; }
 .header { flex-shrink:0; display:flex; align-items:center; justify-content:space-between;
   min-height:46px; padding:3px 12px; border-bottom:1px solid var(--line); }
 /* Más nítido en el iPhone (comentario del 21/10): algo más grande y con trazo más firme. */
-.brand, .panel-brand { font-family:Georgia,serif; font-style:italic; font-weight:700; font-size:20px; color:#f0b06a;
+.brand, .panel-brand { font-family:var(--brand-font); font-style:italic; font-weight:700; font-size:20px; color:var(--brand);
   letter-spacing:.01em; -webkit-font-smoothing:antialiased; text-rendering:geometricPrecision; }
 .panel-brand { display:none; }
 .icon-btn { background:var(--surface); border:1px solid var(--line); border-radius:9px;
@@ -93,7 +137,7 @@ button { font-family:inherit; color:inherit; }
    (panel en horizontal), la clave de sol dibujada. */
 .chip .short { display:none; }
 .chip .short svg { display:block; }
-.chip.on { background:var(--amber); border-color:var(--amber); color:#1a1006; }
+.chip.on { background:var(--amber); border-color:var(--amber); color:var(--on-accent); }
 .chip:active { transform:scale(0.95); }
 .qb-sep { flex-shrink:0; width:1px; height:18px; background:var(--line2); }
 .qb-label { flex-shrink:0; font-size:11px; color:var(--faint); margin-right:1px; }
@@ -111,22 +155,34 @@ button { font-family:inherit; color:inherit; }
 .sc-line { display:flex; flex-wrap:wrap; justify-content:center; align-items:baseline; gap:1px 5px; font-size:13px; color:var(--text); }
 .sc-line .sc-gap { font-size:11px; color:var(--amber); }
 .sc-line .sc-note.now { color:var(--amber); font-weight:800; }
-.sc-practice { display:flex; align-items:center; gap:8px; }
-.sc-msg { flex:1; font-size:13.5px; line-height:1.35; min-width:0; }
-.sc-side { display:flex; align-items:center; gap:8px; flex-shrink:0; }
-.sc-count { font-size:13px; font-weight:700; color:var(--amber); }
+.sc-posbar { display:flex; align-items:center; gap:6px; flex:2 1 auto; }
+.sc-posbar .zoom-btn, .sc-posbar .chip { flex-shrink:0; }
+.sc-pos { flex:1; min-width:0; text-align:center; font-size:13px; font-weight:700; color:var(--text); }
+.sc-short { display:none; }
+#scale-play:not(.on) { color:var(--text); }              /* la acción principal de Escalas */
+#scale-play .sc-short { font-size:18px; line-height:1; }
+/* En el móvil (vertical, o el panel lateral en horizontal), la posición en corto
+   («6/7») y «Escuchar» con su icono */
+@media (orientation:portrait) and (max-width:599px), (orientation:landscape) and (max-height:520px){
+  .sc-top { gap:5px; }
+  .sc-posbar { flex:0 0 auto; gap:4px; }
+  .sc-posbar .sc-long { display:none; }
+  .sc-posbar .sc-short { display:inline; }
+  #scale-play { min-width:40px; padding:0 8px; justify-content:center; }
+}
 .sc-nav { flex-shrink:0; display:flex; align-items:center; justify-content:center; gap:10px; padding:2px 10px; }
 .sc-step-text { text-align:center; font-size:12px; color:var(--muted); line-height:1.3; }
 .zoom-btn:disabled { opacity:.35; cursor:default; }
-/* Mástil en Escalas: las notas de la escala con su nombre escrito; la tónica,
+/* Mástil en Escalas: las notas de la posición con su nombre escrito; la tónica,
    con anillo (no depende del color); el paso del guiado, resaltado. */
 .board.scales .fret-cell.scale .dot { opacity:1; transform:scale(.88); }
 .board.scales .fret-cell.scale-tonic .dot { transform:scale(.96); box-shadow:0 0 0 2px #160f07, 0 0 0 4px var(--text); }
+.board.scales .fret-cell.scale-all .dot { opacity:.42; transform:scale(.72); }   /* «Todas»: el resto de la escala, apagado */
+/* Práctica: las casillas de la posición, sin nombre ni color (se sabría la nota)
+   hasta que las tocas en orden; las hechas, en verde con su nombre. */
+.board.scales.practice .fret-cell.scale:not(.correct) .dot { background:rgba(20,14,9,.88); color:transparent;
+  box-shadow:inset 0 0 0 2px rgba(244,236,225,.6); }      /* aro neutro: el color de cada nota la delataría */
 .board.scales .fret-cell.scale-step .dot { transform:scale(1.05); box-shadow:0 0 0 3px var(--amber), 0 2px 8px rgba(0,0,0,.5); }
-/* En Práctica no se ven: se encuentran. Tras un fallo se enseñan un momento. */
-.board.scales.practice .fret-cell.scale:not(.correct) .dot { opacity:0; }
-.board.scales.practice.reveal-scale .fret-cell.scale:not(.correct) .dot { opacity:1; background:rgba(20,14,9,.88);
-  color:var(--dot); box-shadow:inset 0 0 0 2px var(--dot); }
 .ch-hints { display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
 /* Pista encendida: el chip enseña la respuesta, con etiqueta pequeña y valor
    grande y borde discontinuo de «pista», para no confundirla con la nota que
@@ -147,7 +203,7 @@ button { font-family:inherit; color:inherit; }
   color:var(--amber); width:40px; height:40px; border-radius:10px; font-size:15px; cursor:pointer; }
 .btn-repeat:active { background:var(--line); }
 /* Al entrar en Adivinar nada suena hasta pulsar ▶ (Sesión 1, E06). */
-.btn-repeat.ready { background:var(--amber); color:#160f07; border-color:var(--amber); }
+.btn-repeat.ready { background:var(--amber); color:var(--on-accent); border-color:var(--amber); }
 @media (prefers-reduced-motion:no-preference){
   .btn-repeat.ready { animation:invite 1.6s ease-in-out infinite; } }
 @keyframes invite { 0%,100%{ box-shadow:0 0 0 0 rgba(232,168,76,.55); } 50%{ box-shadow:0 0 0 7px rgba(232,168,76,0); } }
@@ -188,7 +244,7 @@ button { font-family:inherit; color:inherit; }
 .board-scroll::-webkit-scrollbar-thumb { background:var(--line2); border-radius:2px; }
 .board { position:relative; display:flex; flex-direction:column; min-width:max-content;
   height:100%; border-radius:10px;
-  background:linear-gradient(180deg,#32200f,#432c16 45%,#32200f);
+  background:linear-gradient(180deg,var(--board-a),var(--board-b) 45%,var(--board-a));
   box-shadow:inset 0 0 40px rgba(0,0,0,.55), 0 4px 18px rgba(0,0,0,.45); }
 
 .fret-nums { display:flex; height:17px; flex-shrink:0; }
@@ -198,30 +254,30 @@ button { font-family:inherit; color:inherit; }
 .fret-nums.guide .fret-num:not(.key) { visibility:hidden; }
 .fn-spacer { width:var(--label-w); flex-shrink:0; }
 .fret-num { flex-shrink:0; width:var(--fret-w); text-align:center; line-height:17px;
-  font-size:10px; font-variant-numeric:tabular-nums; color:var(--muted); }  /* sobre la madera */
+  font-size:10px; font-variant-numeric:tabular-nums; color:var(--board-muted); }  /* sobre la madera */
 .fret-num.nut { width:var(--nut-w); }
-.fret-num.key { color:var(--amber); font-weight:700; }
+.fret-num.key { color:var(--board-accent); font-weight:700; }
 
 .strings { position:relative; display:flex; flex-direction:column; flex:1; min-height:0; }
 .string-row { position:relative; display:flex; align-items:center; flex:1; min-height:0; }
 .string-row::after { content:''; position:absolute; left:var(--label-w); right:0; top:50%;
   height:var(--sth,1.5px); transform:translateY(-50%); pointer-events:none; z-index:1;
-  background:linear-gradient(180deg,#a89880,#e8d8c0 50%,#7a7060);
+  background:linear-gradient(180deg,var(--string-a),var(--string-b) 50%,var(--string-c));
   box-shadow:0 1px 2px rgba(0,0,0,.45); }
 .string-label { width:var(--label-w); flex-shrink:0; height:100%; display:flex;
   align-items:center; justify-content:center; font-size:10px; font-weight:700;
-  color:var(--amber); background:var(--bg); border-right:2px solid var(--amber);
+  color:var(--board-accent); background:var(--label-bg); border-right:2px solid var(--board-accent);
   position:sticky; left:0; z-index:4; }
 .frets-row { display:flex; position:relative; height:100%; flex:1; }
 .fret-cell { position:relative; width:var(--fret-w); height:100%; flex-shrink:0;
-  border-right:2px solid #8a7560; cursor:pointer;
+  border-right:2px solid var(--fret); cursor:pointer;
   display:flex; align-items:center; justify-content:center; }
 .fret-cell:focus { outline:none; }
 .fret-cell:focus-visible { outline:3px dashed #fff; outline-offset:-5px; z-index:5; }
-.fret-cell.nut { width:var(--nut-w); border-right:4px solid #f0e0c8;
+.fret-cell.nut { width:var(--nut-w); border-right:4px solid var(--nut);
   background:rgba(240,224,200,.05); }
 .marker { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-  width:8px; height:8px; border-radius:50%; background:rgba(232,164,92,.42); pointer-events:none; }
+  width:8px; height:8px; border-radius:50%; background:var(--marker); pointer-events:none; }
 
 .dot { position:relative; z-index:3; width:26px; height:26px; max-width:78%; max-height:78%;
   border-radius:50%; background:var(--dot); color:#160f07; display:flex; align-items:center;
@@ -313,12 +369,16 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .mic-why { color:var(--ko) !important; }
 .mic-btn { width:100%; min-height:44px; border-radius:10px; cursor:pointer; font:inherit; font-size:14px; font-weight:600;
   background:var(--surface2); border:1px solid var(--line2); color:var(--text); }
-.mic-btn.primary { background:var(--amber); border-color:var(--amber); color:#160f07; }
+.mic-btn.primary { background:var(--amber); border-color:var(--amber); color:var(--on-accent); }
 .mic-btn:disabled { opacity:.5; cursor:not-allowed; }
 .mic-live { display:flex; flex-direction:column; align-items:center; gap:4px; }
 .mic-gauge { width:100%; max-width:300px; height:auto; display:block; }
 .mic-gauge .needle { transform-origin:120px 120px; transform-box:view-box; transition:transform .12s linear; }
 .mic-gauge.idle .needle { opacity:.25; }
+/* Sostenida (F5.8 #2): ya no se oye; lo último medido sigue a la vista, atenuado. */
+.mic-live.held .needle { opacity:.5; }
+/* Solo la nota grande y la orden; el detalle dice «Última lectura» a pleno contraste (AR-15 #7). */
+.mic-live.held .mic-note, .mic-live.held .mic-order { opacity:.6; }
 .mic-read { width:100%; display:flex; flex-direction:column; align-items:center; gap:4px; }
 .mic-note { font-size:44px; font-weight:800; line-height:1; color:var(--text); }
 .mic-detail { font-size:13px; color:var(--muted); }
@@ -333,27 +393,21 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 :root { --f1:#56b4e9; --f2:#e69f00; --f3:#cc79a7; --f4:#2bb58a; }
 .chords-card { flex-shrink:0; display:flex; flex-direction:column; gap:6px; padding:6px 12px;
   background:var(--surface); border-bottom:1px solid var(--line); }
-.chord-search { width:100%; min-height:40px; box-sizing:border-box; padding:0 12px; border-radius:10px; font:inherit; font-size:15px;
-  background:var(--bg); border:1px solid var(--line2); color:var(--text); }
-.chord-search::placeholder { color:var(--faint); }
-.chord-list { max-height:132px; overflow-y:auto; display:flex; flex-direction:column; gap:3px; touch-action:pan-y; }
-.cl-head { font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-top:2px; }
-.cl-group { display:flex; flex-wrap:wrap; gap:5px; }
-.chord-chip { min-width:52px; min-height:40px; padding:0 10px; border-radius:10px; cursor:pointer; font:inherit;
-  font-size:14px; font-weight:700; background:var(--surface2); border:1px solid var(--line2); color:var(--text); }
-.chord-chip.on { background:var(--amber); border-color:var(--amber); color:#1a1006; }
-.cl-empty { margin:4px 0; font-size:13px; color:var(--muted); }
-/* En vertical no cabe todo: el listado deja ver dos filas y se desplaza; el
-   pentagrama y el zoom se apartan para que el mástil conserve sus 40 px por
-   cuerda (V-01). El acorde ya se ve entero en el mástil; al girar el móvil,
-   vuelve el pentagrama con el acorde escrito. */
-@media (orientation:portrait) and (max-width:599px){
-  .chords-card { gap:4px; padding:5px 12px; }
-  .chord-list { max-height:92px; }
-  body[data-screen="chords"] .display, body[data-screen="chords"] .zoombar { display:none; }
-}
+/* F5.8 #6: dos filas de botones, la nota y el tipo (AC-01). Los botones se
+   estiran para llenar la fila: siete por fila caben en un iPhone en vertical. */
+.chord-pick { display:flex; gap:4px; }
+.chord-chip { flex:1 1 auto; min-width:40px; min-height:40px; padding:0 4px; border-radius:10px; cursor:pointer; font:inherit;
+  font-size:14px; font-weight:700; white-space:nowrap; background:var(--surface2); border:1px solid var(--line2); color:var(--text); }
+.chord-chip.on { background:var(--amber); border-color:var(--amber); color:var(--on-accent); }
+.chord-chip:disabled { opacity:.35; cursor:default; }
+/* El dibujo es lo principal (AC-07): en Acordes no hay pentagrama, ni zoom, ni
+   aviso para girar; el mástil enseña los trastes 0 a 5 y no se desplaza. */
+body[data-screen="chords"] .display, body[data-screen="chords"] .zoombar,
+body[data-screen="chords"] #qb-staff { display:none; }
+body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
+.board.chords .finger { width:36px; height:36px; font-size:17px; }
 .chord-info { display:flex; align-items:center; gap:10px; min-height:40px; }
-.chord-name { font-family:Georgia,serif; font-size:24px; font-weight:700; color:var(--amber); }
+.chord-name { font-family:Georgia,serif; font-size:28px; font-weight:700; color:var(--amber); }
 .chord-notes { flex:1; min-width:0; font-size:13px; color:var(--muted); }
 .chord-play { flex-shrink:0; }
 .chord-tuning { margin:0; display:flex; align-items:center; flex-wrap:wrap; gap:6px 10px; font-size:13px; color:var(--ko); }
@@ -419,7 +473,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .metro-tap { min-height:48px; padding:0 20px; border-radius:24px; cursor:pointer; font:inherit; font-size:14px; font-weight:600;
   background:none; border:1.5px dashed var(--line2); color:var(--text); touch-action:manipulation; }
 .metro-play { min-height:54px; border-radius:14px; cursor:pointer; font:inherit; font-size:16px; font-weight:700;
-  letter-spacing:.06em; text-transform:uppercase; background:var(--amber); border:1.5px solid var(--amber); color:#160f07; }
+  letter-spacing:.06em; text-transform:uppercase; background:var(--amber); border:1.5px solid var(--amber); color:var(--on-accent); }
 .metro-play.on { background:none; color:var(--amber); }
 .metro-note { min-height:17px; margin:0; font-size:12.5px; color:var(--muted); text-align:center; line-height:1.4; }
 
@@ -433,7 +487,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .mp-sigs { display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; justify-items:center; }
 .mp-sig { width:62px; height:62px; border-radius:50%; font-size:22px; border:none;
   background:var(--surface2); color:var(--muted); }
-.mp-sig.on { background:var(--amber); color:#1a1006; }
+.mp-sig.on { background:var(--amber); color:var(--on-accent); }
 .mp-label { display:block; margin:16px 0 8px; font-size:13px; font-weight:600; color:var(--muted); }
 .mp-subs { display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; }
 .mp-fig { height:58px; border-radius:12px; cursor:pointer; background:var(--surface2); border:1px solid var(--line2);
@@ -443,7 +497,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .mp-accent { display:flex; align-items:center; gap:12px; min-height:48px; margin:12px 0 8px; font-size:14px; cursor:pointer; }
 .mp-accent input { width:24px; height:24px; margin:0; accent-color:var(--amber); flex-shrink:0; cursor:pointer; }
 .mp-ok { width:100%; min-height:50px; border-radius:12px; cursor:pointer; font:inherit; font-size:15px; font-weight:700;
-  background:var(--amber); border:none; color:#160f07; }
+  background:var(--amber); border:none; color:var(--on-accent); }
 
 /* Pantallas bajas en vertical (iPhone SE): todo más compacto, para que quepa. */
 @media (orientation:portrait) and (max-height:600px){
@@ -531,7 +585,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   border-radius:9px; overflow:hidden; flex-shrink:0; }
 .seg button { background:none; border:none; min-height:40px; padding:0 12px; font-size:12.5px;
   font-weight:600; color:var(--muted); cursor:pointer; }
-.seg button.on { background:var(--amber); color:#1a1006; }
+.seg button.on { background:var(--amber); color:var(--on-accent); }
 /* El interruptor se dibuja con ::before (la pista) y ::after (la bola), y el
    botón mide 52 × 40 px: así el dedo tiene 40 px aunque se vea más pequeño. */
 .sw { position:relative; width:52px; height:40px; background:none; border:none; cursor:pointer;
@@ -542,7 +596,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .sw::after { content:''; position:absolute; top:9.5px; left:6px; width:21px; height:21px;
   border-radius:50%; background:var(--muted); transition:transform .18s, background .18s; }
 .sw.on::before { background:var(--amber); border-color:var(--amber); }
-.sw.on::after { transform:translateX(19px); background:#1a1006; }
+.sw.on::after { transform:translateX(19px); background:var(--on-accent); }
 .version { text-align:center; font-size:11px; color:var(--faint); margin:14px 0 0;
   font-variant-numeric:tabular-nums; }
 .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
@@ -601,16 +655,17 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .challenge { padding:0; gap:6px; background:none; border:none; }
   .scales-card { padding:0; gap:6px; background:none; border:none; }
   .chords-card { padding:0; gap:5px; background:none; border:none; }
-  body[data-screen="chords"] .zoombar { display:none; }   /* el acorde ya cabe: diez trastes a la vista */
-  .chord-list { max-height:min(150px, 40vh); }
-  .chord-chip { min-width:44px; padding:0 7px; font-size:13px; }
+  /* En la columna estrecha, tantas columnas como quepan sin bajar de 44 px: los 40 px
+     del dedo (G-05) y algo de margen para «Mayor» y «menor». */
+  .chord-pick { display:grid; grid-template-columns:repeat(auto-fill, minmax(44px, 1fr)); }
+  .chord-chip { min-width:0; padding:0 2px; font-size:12px; }
+  .chord-info { order:-1; }                   /* el nombre y «Tocar», arriba: a la vista sin desplazar */
   .chord-info { flex-wrap:wrap; gap:2px 8px; }
   .chord-name { font-size:20px; }
   .chord-notes { flex-basis:100%; order:3; font-size:12px; }
   .sc-top { flex-wrap:wrap; }
-  .sc-top .seg { flex-basis:100%; }
-  .sc-practice { flex-wrap:wrap; }
   .sc-top select { flex:1 1 100%; }           /* tónica y tipo, cada uno en su fila: «Pentatónica mayor» cabe */
+  .sc-posbar { flex:1 1 100%; }               /* y la posición, en la suya */
   .sc-nav { padding:0; gap:6px; flex-wrap:wrap; justify-content:space-between; }
   .sc-center { order:3; flex-basis:100%; align-items:flex-start; }
   .sc-line { justify-content:flex-start; }
@@ -660,7 +715,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .tab { flex:0 0 auto; flex-direction:row; min-height:40px; padding:0 15px; border-radius:20px;
          border:1px solid var(--line); font-size:13px; }
   .tab svg { display:none; }
-  .tab.active { background:var(--amber); border-color:var(--amber); color:#1a1006; }
+  .tab.active { background:var(--amber); border-color:var(--amber); color:var(--on-accent); }
   .tab.metro-on::after { top:-3px; left:auto; right:-2px; }
   .metro { width:100%; max-width:460px; margin:0 auto; padding:20px 20px 12px; }
   .metro-pendulo { max-height:300px; }
@@ -681,4 +736,106 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .sheet.open { transform:none; }
   .grabber { display:none; }
   .sheet-handle { touch-action:auto; cursor:auto; padding-top:0; }
+}
+
+/* ===== F5.8 #3 · TEMAS: lo que no cambia con el tema =====
+   Dentro del mástil (oscuro en todos los temas) los colores de acierto, fallo
+   y texto son siempre los de la madera, para que contrasten con ella. */
+.board { --ok:#58c98a; --ko:#e86060; --text:#f4ece1; --amber:var(--board-accent);
+  --muted:var(--board-muted); --faint:var(--board-muted); }   /* AT-15 #6 */
+.staff-clef { fill:var(--amber); }
+.staff-svg { color:var(--text); }   /* la tinta de las notas en un tema claro (currentColor) */
+/* En un tema claro, los colores de nota (pastel) no se leen sobre el papel:
+   la nota leída y la pista se escriben con la tinta del texto. */
+html[data-scheme="light"] .note-name { color:var(--text); text-shadow:none; }
+html[data-scheme="light"] .chip.clue .clue-v { color:var(--text) !important; }
+html[data-scheme="light"] .tstring-note { color:var(--text); }
+html[data-scheme="light"] .challenge-text b { color:var(--text) !important; }
+/* Más limpio («tipo Apple»): superficies sin bordes, separadores finos y
+   esquinas algo más redondas. */
+.chip { border-color:transparent; background:var(--surface2); }
+.chip.on { border-color:var(--amber); }
+.header, .quickbar { border-bottom-color:transparent; }
+.challenge, .scales-card, .chords-card { border-bottom:none; margin:0 8px; border-radius:var(--r); }
+.display { border-bottom:none; }
+.board { border-radius:12px; }
+.board-scroll { border-radius:12px; }
+
+/* ===== F5.8 #4 · ADIVINAR: lo que se busca, en grande; lo tocado, pequeño =====
+   Encendida, cada pista ocupa su parte de la franja, con la respuesta en
+   grande; la nota que tocas pasa a ser una lectura pequeña y apagada junto al
+   pentagrama, para que no compita con la que buscas. */
+.ch-hints.has-clue { flex-wrap:nowrap; }
+.ch-hints.has-clue .chip.clue { flex:1 1 0; min-width:0; min-height:58px; border-radius:14px;
+  flex-direction:column; align-items:center; justify-content:center; gap:0; padding:4px 10px; }
+.ch-hints.has-clue .chip.clue .clue-k { font-size:10.5px; line-height:13px; }
+.ch-hints.has-clue .chip.clue .clue-v { font-size:30px; line-height:36px; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+.ch-hints.has-clue .chip.clue .clue-v.long { font-size:21px; }
+body[data-screen="guess"] .note-readout { min-width:52px; height:auto; }
+body[data-screen="guess"] .note-name { font-family:inherit; font-style:normal; font-weight:600;
+  font-size:20px; line-height:24px; height:24px; color:var(--muted); text-shadow:none; }
+body[data-screen="guess"] .note-oct { margin-top:0; }
+
+/* ===== F5.8 #3 · TABLETA Y ORDENADOR (700 × 600 px o más de área útil: el iPad en
+   las dos orientaciones, también con las barras de Safari, y el ordenador; AR-16 #1) =====
+   Antes el mástil se estiraba hasta llenar la pantalla (cuerdas de 150 px en un
+   iPad en vertical) y los textos eran los del móvil. Ahora el mástil tiene un
+   alto razonable y se centra; lo que sobra va al pentagrama y a la lectura, y
+   los textos y botones crecen. Las pestañas son un control segmentado. */
+@media (min-width:700px) and (min-height:600px){
+  .header { min-height:58px; padding:8px 20px; }
+  .brand { font-size:24px; }
+  .tabbar { gap:2px; padding:3px; background:var(--surface2); border-radius:12px; }
+  .tab { border:none; border-radius:9px; min-height:40px; padding:0 16px; font-size:14px;
+         font-weight:600; color:var(--muted); }
+  .tab.active { background:var(--surface); color:var(--text); border:none;
+                box-shadow:0 1px 4px rgba(0,0,0,.22); }
+  .quickbar { padding:6px 20px; gap:8px; }
+  .chip { font-size:13.5px; padding:0 16px; }
+  .challenge, .scales-card, .chords-card { margin:6px 20px 0; padding:10px 16px; gap:8px; }
+  .chord-chip { flex:0 1 76px; }              /* en pantalla grande, botones de su tamaño, no estirados */
+  .board.chords .finger { width:44px; height:44px; font-size:20px; }
+  .challenge-text { font-size:17px; }
+  .btn-repeat { width:48px; height:48px; border-radius:12px; font-size:18px; }
+  .stats { font-size:13px; } .stats .streak { font-size:16px; }
+  .ch-hints.has-clue .chip.clue { min-height:84px; border-radius:16px; }
+  .ch-hints.has-clue .chip.clue .clue-k { font-size:12px; line-height:15px; }
+  .ch-hints.has-clue .chip.clue .clue-v { font-size:44px; line-height:52px; }
+  .ch-hints.has-clue .chip.clue .clue-v.long { font-size:34px; }
+  .display:not(.hidden) { flex:0 1 230px; max-height:none; }   /* cede antes que el mástil */
+  .display-inner { padding:10px 24px; gap:24px; justify-content:center; }
+  .staff-wrap { flex:0 1 560px; }
+  .staff-svg { max-width:560px; max-height:210px; }
+  .note-readout { min-width:110px; height:84px; }
+  .note-name { font-size:64px; line-height:64px; height:64px; }
+  .note-oct { font-size:13px; }
+  body[data-screen="guess"] .note-name { font-size:24px; line-height:28px; height:28px; }
+  .board-area { padding:12px 20px 0; justify-content:center; min-height:calc(12px + 17px + 6 * 44px); }
+  .board-scroll { display:flex; align-items:center; }
+  .board { height:min(100%, 420px); }
+  .string-label, .fret-num { font-size:12px; }
+  .sheet { width:min(440px, 92vw); }
+}
+/* El ordenador (ratón), algo más compacto: cuerdas de unos 56 px. */
+@media (min-width:700px) and (min-height:600px) and (pointer:fine){
+  .board { height:min(100%, 380px); }
+  .board-area { min-height:calc(12px + 17px + 6 * 36px); }
+}
+/* Ventanas de ordenador bajas (1280 × 720 deja unos 620 px útiles): con ratón,
+   el mástil puede bajar a 30 px por cuerda para que Acordes quepa. */
+@media (min-width:700px) and (min-height:600px) and (max-height:699px) and (pointer:fine){
+  .board-area { min-height:calc(12px + 17px + 6 * 30px); }
+  .challenge, .scales-card, .chords-card { padding:6px 16px; gap:4px; }
+}
+/* Tableta en vertical y pantallas medianas (iPad mini y iPad en vertical, iPad
+   en horizontal de 1024 px): seis pestañas no caben junto al nombre, así que
+   bajan a su propia fila, centradas, bajo la cabecera. */
+@media (min-width:700px) and (max-width:1099px) and (min-height:600px){
+  .tabbar { position:static; transform:none; order:1; align-self:center; margin:0 auto 4px; right:auto; left:auto; }
+  .tab { padding:0 14px; font-size:14px; }
+}
+/* Pantallas grandes: el control segmentado, centrado en la cabecera. */
+@media (min-width:1100px) and (min-height:600px){
+  .tabbar { left:50%; right:auto; transform:translateX(-50%); top:calc(env(safe-area-inset-top) + 9px); }
 }

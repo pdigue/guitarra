@@ -166,6 +166,9 @@ document.querySelectorAll('#set-onmiss button').forEach(b => {
   b.addEventListener('click', () => { state.onMiss = b.dataset.v; save(); syncUI(); });
 });
 document.getElementById('qb-giveup').addEventListener('click', () => revealAnswer(0));
+document.querySelectorAll('#set-theme button').forEach(b => {
+  b.addEventListener('click', () => { state.theme = b.dataset.v; save(); syncUI(); });
+});
 document.querySelectorAll('#set-lang button').forEach(b => {
   b.addEventListener('click', () => setLang(b.dataset.v));
 });
@@ -217,12 +220,12 @@ document.getElementById('set-reset').addEventListener('click', async () => {
   syncUI();
   applyZoom();
   updateRotateHint();          // «Restablecer» recupera el aviso para girar
-  setTunerMode(state.tunerMode);   // el afinador vuelve a «De oído»
+  stopMic(); setMicString('auto');    // el micrófono se apaga y la cuerda vuelve a «Auto» (AT-14 #12)
+  setTunerMode(tunerModeInicial());   // el afinador vuelve a su modo de fábrica
   // Escalas, ♯/♭ y nomenclatura también vuelven a lo de fábrica: sin esto, los
   // selectores y los botones seguían diciendo lo de antes (AT-09 #1).
-  resetScalePractice(); sc.paso = 0;
+  reiniciarEscala();
   stopMetro(); metro.aviso = ''; refreshMetro();          // el metrónomo vuelve a 80, 4/4 (MT-05)
-  document.getElementById('chord-search').value = '';    // y Acordes, sin filtro (AT-10 #7)
   refreshNoteText();
   hideSettings();
   // El reto anterior puede referirse a una nota que ya no existe en la
@@ -262,8 +265,8 @@ document.getElementById('app-version').textContent = 'Trasteando ' + APP_VERSION
   svg.appendChild(el('path', { d:CLEF_PATH, fill:'currentColor' }));
   document.getElementById('qb-staff-icon').appendChild(svg);
 })();
-// Al abrir se entra siempre en Libre (L-01), aunque la dirección diga otra área.
-if (canHistory) history.replaceState({ screen:'free' }, '', '#libre');
+// Al abrir se entra siempre en Libre (L-01), aunque la dirección diga otra área:
+// la dirección ya la dejó en #libre la prueba de canHistory (09-navegacion.js).
 aplicarIdioma();               // los textos fijos, en el idioma elegido (G-12)
 buildTuner();
 buildBoard();

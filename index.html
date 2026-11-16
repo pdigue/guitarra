@@ -12,7 +12,9 @@
 <link rel="manifest" href='data:application/manifest+json,{"name":"Trasteando","short_name":"Trasteando","start_url":".","display":"standalone","background_color":"%23140e09","theme_color":"%23140e09","orientation":"any"}'>
 <link rel="icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" rx="40" fill="%23140e09"/><circle cx="90" cy="90" r="52" fill="none" stroke="%23e8a45c" stroke-width="5"/><circle cx="90" cy="90" r="40" fill="none" stroke="%236b4f30" stroke-width="3" stroke-dasharray="4 5"/><line x1="38" y1="74" x2="142" y2="74" stroke="%23e8dfd3" stroke-width="1.4"/><line x1="38" y1="82" x2="142" y2="82" stroke="%23e8dfd3" stroke-width="1.8"/><line x1="38" y1="90" x2="142" y2="90" stroke="%23e8dfd3" stroke-width="2.2"/><line x1="38" y1="98" x2="142" y2="98" stroke="%23e8dfd3" stroke-width="2.6"/><line x1="38" y1="106" x2="142" y2="106" stroke="%23e8dfd3" stroke-width="3"/></svg>'>  <!-- sin él, el navegador pide favicon.ico y da 404 (Sesión 1, A16) -->
 <link rel="apple-touch-icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" rx="40" fill="%23140e09"/><circle cx="90" cy="90" r="52" fill="none" stroke="%23e8a45c" stroke-width="5"/><circle cx="90" cy="90" r="40" fill="none" stroke="%236b4f30" stroke-width="3" stroke-dasharray="4 5"/><line x1="38" y1="74" x2="142" y2="74" stroke="%23e8dfd3" stroke-width="1.4"/><line x1="38" y1="82" x2="142" y2="82" stroke="%23e8dfd3" stroke-width="1.8"/><line x1="38" y1="90" x2="142" y2="90" stroke="%23e8dfd3" stroke-width="2.2"/><line x1="38" y1="98" x2="142" y2="98" stroke="%23e8dfd3" stroke-width="2.6"/><line x1="38" y1="106" x2="142" y2="106" stroke="%23e8dfd3" stroke-width="3"/></svg>'>
-<link rel="stylesheet" href="css/trasteando.css?v=0.6.2">
+<link rel="stylesheet" href="css/trasteando.css?v=0.6.8">
+<!-- El tema guardado, antes de pintar nada (AT-15 #3) -->
+<script src="js/00-aspecto.js?v=0.6.8"></script>
 </head>
 <body>
 
@@ -86,6 +88,9 @@
 <!-- Acceso rápido (C-03) -->
 <div class="quickbar" id="quickbar">
   <button class="chip" id="qb-notation">Do Re Mi</button>
+  <!-- Solo en Escalas (F5.8 #5, tus respuestas del 15/11): la escala en todo el mástil y la práctica -->
+  <button class="chip" id="qb-scale-all" aria-pressed="false" hidden data-t="scale.all" data-t-aria="scale.allLabel" aria-label="Ver la escala en todo el mástil">Todas</button>
+  <button class="chip" id="qb-scale-practice" aria-pressed="false" hidden data-t="scale.practice" data-t-aria="scale.practiceLabel" aria-label="Practicar la posición">Practicar</button>
   <button class="chip" id="qb-staff" aria-label="Pentagrama" data-t-aria="staff"><span class="long" data-t="staff">Pentagrama</span><span class="short" id="qb-staff-icon" aria-hidden="true"></span></button>
 </div>
 
@@ -109,30 +114,27 @@
   </div>
 </div>
 
-<!-- Escalas (F5): submodo, tónica y tipo; intervalos y estado de la práctica -->
+<!-- Escalas (F5): tónica y tipo; la posición y «Escuchar» -->
 <div class="scales-card" id="scales-card" hidden>
   <div class="sc-top">
-    <div class="seg" id="scale-mode" role="group" aria-label="Submodo" data-t-aria="scale.mode">
-      <button data-v="show" data-t="scale.show">Mostrar</button>
-      <button data-v="practice" data-t="scale.practice">Práctica</button>
-    </div>
     <select id="scale-tonic" aria-label="Tónica" data-t-aria="scale.tonic"></select>
     <select id="scale-type" aria-label="Tipo de escala" data-t-aria="scale.typeLabel"></select>
-  </div>
-  <div class="sc-practice" id="scale-practice" hidden>
-    <div class="sc-msg" id="scale-msg" aria-live="polite"></div>
-    <div class="sc-side">
-      <span class="sc-count" id="scale-count"></span>
-      <button class="chip" id="scale-reset" data-t="scale.reset">Otra vez</button>
+    <!-- Una posición cada vez (F5.8 #5, E-07): ◀ ▶ para moverte por el mástil y «Escuchar».
+         En la misma fila: en el móvil en vertical no cabe otra. Los textos tienen
+         versión larga y corta («Posición 6 de 7 · trastes 8 a 13» o «6/7»). -->
+    <div class="sc-posbar" role="group" aria-label="Posición" data-t-aria="scale.posLabel">
+      <button class="zoom-btn" id="scale-pos-prev" aria-label="Posición anterior" data-t-aria="scale.posPrev">&#9664;</button>
+      <span class="sc-pos" id="scale-pos" aria-live="polite"></span>
+      <button class="zoom-btn" id="scale-pos-next" aria-label="Posición siguiente" data-t-aria="scale.posNext">&#9654;</button>
+      <button class="chip" id="scale-play" aria-pressed="false"></button>
     </div>
   </div>
 </div>
 
-<!-- Acordes (F5.7): buscador y listado a un lado; el acorde, en el mástil (AC-01 a AC-06) -->
+<!-- Acordes (F5.7; F5.8 #6): la nota y el tipo, en dos filas; el acorde, en grande en el mástil (AC-01, AC-07) -->
 <div class="chords-card" id="chords-card" hidden>
-  <input type="search" class="chord-search" id="chord-search" placeholder="Buscar: G, Am…" data-t-placeholder="chord.search"
-         aria-label="Buscar acorde por su nombre" data-t-aria="chord.searchAria" autocomplete="off" autocapitalize="off" spellcheck="false">
-  <div class="chord-list" id="chord-list" role="group" aria-label="Acordes" data-t-aria="tab.chords"></div>
+  <div class="chord-pick" id="chord-roots" role="group" aria-label="Nota del acorde" data-t-aria="chord.rootsAria"></div>
+  <div class="chord-pick" id="chord-types" role="group" aria-label="Tipo de acorde" data-t-aria="chord.typesAria"></div>
   <div class="chord-info">
     <span class="chord-name" id="chord-name">C</span>
     <span class="chord-notes" id="chord-notes"></span>
@@ -155,7 +157,7 @@
   </div>
 </div>
 
-<!-- Paso a paso de Mostrar (E-06): va bajo el mástil, encima del zoom -->
+<!-- Paso a paso (E-06): va bajo el mástil, encima del zoom -->
 <div class="sc-nav" id="scale-nav" hidden>
   <button class="zoom-btn" id="scale-prev" aria-label="Paso anterior" data-t-aria="scale.prev">&#9664;</button>
   <!-- Las notas con sus intervalos y, debajo, el paso: así cabe en una fila -->
@@ -307,6 +309,19 @@
     </div>
   </div>
 
+  <!-- Aspecto (F5.8 #3, C-08): tres temas; «Automático» sigue al dispositivo -->
+  <div class="set-group">
+    <span data-t="set.look">Aspecto</span>
+    <div class="set-row set-row-wrap">
+      <div class="txt"><span data-t="set.theme">Tema</span><small data-t="set.theme.sub">«Automático» sigue el modo claro u oscuro del dispositivo</small></div>
+      <div class="seg" id="set-theme">
+        <button data-v="madera" data-t="theme.wood">Madera</button>
+        <button data-v="auto" data-t="theme.auto">Automático</button>
+        <button data-v="partitura" data-t="theme.sheet">Partitura</button>
+      </div>
+    </div>
+  </div>
+
   <div class="set-group">
     <span data-t="set.notation">Notación</span>
     <div class="set-row">
@@ -391,21 +406,21 @@
      comparten lo que declaran. herramientas/ensamblar.js los une en un solo archivo
      para dist/trasteando.html (G-08). El «?v=» lleva la versión de la app: así el
      navegador no mezcla archivos de dos versiones guardados en su caché (AT-07 #3). -->
-<script src="js/00-idioma.js?v=0.6.2"></script>
-<script src="js/01-teoria.js?v=0.6.2"></script>
-<script src="js/02-estado.js?v=0.6.2"></script>
-<script src="js/03-audio.js?v=0.6.2"></script>
-<script src="js/04-pentagrama.js?v=0.6.2"></script>
-<script src="js/05-mastil.js?v=0.6.2"></script>
-<script src="js/06-zoom.js?v=0.6.2"></script>
-<script src="js/07-adivinar.js?v=0.6.2"></script>
-<script src="js/08-afinador-referencia.js?v=0.6.2"></script>
-<script src="js/09-navegacion.js?v=0.6.2"></script>
-<script src="js/10-tono.js?v=0.6.2"></script>
-<script src="js/11-afinador-micro.js?v=0.6.2"></script>
-<script src="js/13-escalas.js?v=0.6.2"></script>
-<script src="js/14-metronomo.js?v=0.6.2"></script>
-<script src="js/15-acordes.js?v=0.6.2"></script>
-<script src="js/99-arranque.js?v=0.6.2"></script>
+<script src="js/00-idioma.js?v=0.6.8"></script>
+<script src="js/01-teoria.js?v=0.6.8"></script>
+<script src="js/02-estado.js?v=0.6.8"></script>
+<script src="js/03-audio.js?v=0.6.8"></script>
+<script src="js/04-pentagrama.js?v=0.6.8"></script>
+<script src="js/05-mastil.js?v=0.6.8"></script>
+<script src="js/06-zoom.js?v=0.6.8"></script>
+<script src="js/07-adivinar.js?v=0.6.8"></script>
+<script src="js/08-afinador-referencia.js?v=0.6.8"></script>
+<script src="js/09-navegacion.js?v=0.6.8"></script>
+<script src="js/10-tono.js?v=0.6.8"></script>
+<script src="js/11-afinador-micro.js?v=0.6.8"></script>
+<script src="js/13-escalas.js?v=0.6.8"></script>
+<script src="js/14-metronomo.js?v=0.6.8"></script>
+<script src="js/15-acordes.js?v=0.6.8"></script>
+<script src="js/99-arranque.js?v=0.6.8"></script>
 </body>
 </html>

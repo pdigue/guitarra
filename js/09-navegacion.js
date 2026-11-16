@@ -33,6 +33,8 @@ function setScreen(next){
   document.getElementById('scales-card').hidden = !isScales;
   document.getElementById('chords-card').hidden = !isChords;
   document.getElementById('scale-nav').hidden = !isScales;
+  document.getElementById('qb-scale-all').hidden = !isScales;
+  document.getElementById('qb-scale-practice').hidden = !isScales;
   updateRotateHint();
 
   clearMarks(['active','equal','correct','wrong','reveal']);
@@ -51,13 +53,25 @@ function setScreen(next){
     renderClues();              // fuera de Adivinar, las pistas no enseñan respuesta
   }
   if (!isChords) leaveChords();
-  if (isScales){ resetScalePractice(); sc.paso = 0; renderScales(); }
+  if (isScales){ pararEscala(); sc.paso = 0; renderScales(); }
   else leaveScales();
-  if (isChords) renderChords();     // después de leaveScales: el pentagrama es del acorde
+  if (isChords){
+    renderChords();                 // después de leaveScales, que limpia el mástil de la escala
+    if (kbPos.fret > TRASTES_ACORDE) setRoving(kbPos.row, 0);   // el foco, en un traste a la vista (AT-17 M1)
+  }
   if (!sinMastil) requestAnimationFrame(applyZoom);
+  if (isScales) requestAnimationFrame(verTrastesPosicion);   // tras el zoom: la vista, en la posición
 }
 
 function syncUI(){
+  // F5.8 #3: primero el tema, que decide los colores de todo lo demás. Si cambia
+  // entre claro y oscuro, el pentagrama se vuelve a escribir con su tinta.
+  if (aplicarTema()){
+    if (screen === 'scales') renderScales();
+    else if (screen === 'chords') refreshChords();
+    else if (lastMidi !== null) showOnStaff(lastMidi, noteInfo(lastMidi).color);
+    renderTunerStaff();   // el pentagrama del afinador de referencia, también (AT-15 #1)
+  }
   // Acceso rápido
   const qn = document.getElementById('qb-notation');
   qn.textContent = state.notation === 'latin' ? 'Do Re Mi' : 'C D E';
@@ -72,7 +86,7 @@ function syncUI(){
   // Ajustes. Los selectores segmentados anuncian su opción activa también a
   // los lectores de pantalla (aria-pressed), no solo con el color.
   const segs = { 'set-notation': state.notation, 'set-timbre': state.timbre,
-                 'set-fretnums': state.fretNums, 'set-lang': state.lang, 'set-onmiss': state.onMiss };
+                 'set-fretnums': state.fretNums, 'set-lang': state.lang, 'set-onmiss': state.onMiss, 'set-theme': state.theme };
   for (const id in segs){
     document.querySelectorAll('#'+id+' button').forEach(b => {
       const on = b.dataset.v === segs[id];
@@ -130,7 +144,17 @@ function openSheet(open){
    se bloquea nada: actúa el sistema. Es un estándar presente en todos los
    navegadores; si faltara, la app funciona igual sin ese paso. */
 const SCREEN_HASH = { free:'libre', guess:'adivinar', tuner:'afinador', scales:'escalas', chords:'acordes', metro:'metronomo' };
-const canHistory = typeof history !== 'undefined' && typeof history.pushState === 'function';
+/* Que exista pushState no basta: en un marco aislado (la vista previa de un
+   chat, un iframe con sandbox) existe, pero usarlo lanza SecurityError, y ese
+   error cortaba el arranque antes de dibujar el mástil (0.6.6). Se prueba de
+   verdad una vez, con lo mismo que hace el arranque (dejar la dirección en
+   #libre, L-01); si falla, la app sigue sin historial, como en un navegador
+   que no lo tuviera. Es detectar la capacidad, no el sistema (PL-04). */
+const canHistory = (() => {
+  if (typeof history === 'undefined' || typeof history.pushState !== 'function') return false;
+  try { history.replaceState({ screen:'free' }, '', '#libre'); return true; }
+  catch (e){ return false; }
+})();
 const sheetIsOpen = () => document.getElementById('sheet').classList.contains('open');
 
 function goTo(next){
@@ -172,11 +196,12 @@ document.addEventListener('keydown', ev => {
 
 /* --- Aviso para girar el móvil (V-01, interfaz.md §7) ---
    Solo con el dedo, en vertical y en pantallas de menos de 600 px; nunca en
-   el Afinador ni en el Metrónomo, que funcionan igual en las dos orientaciones. Cerrado no vuelve:
+   el Afinador ni en el Metrónomo, que funcionan igual en las dos orientaciones, ni
+   en Acordes, que enseña siempre los trastes 0 a 5 (AC-07). Cerrado no vuelve:
    se guarda con los ajustes, y «Restablecer» lo recupera. */
 function updateRotateHint(){
   const show = coarsePointer() && window.innerHeight > window.innerWidth &&
-               window.innerWidth < 600 && screen !== 'tuner' && screen !== 'metro' && !state.rotateHintClosed;
+               window.innerWidth < 600 && screen !== 'tuner' && screen !== 'metro' && screen !== 'chords' && !state.rotateHintClosed;
   document.getElementById('rotate-hint').hidden = !show;
 }
 
@@ -225,4 +250,32 @@ async function setTimbre(timbre){
     save(); syncUI();
     note.textContent = t('timbre.failed');
   }
+}
+
+/* ===== TEMA (F5.8 #3, C-08) =====
+   Pone el tema en <html data-theme>, y con «Automático» también si el
+   dispositivo está en claro u oscuro (data-scheme), que el CSS usa para elegir
+   sus colores. Si el navegador no sabe decirlo (sin matchMedia), oscuro (PL-04). */
+const esquemaOscuro = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+function aplicarTema(){
+  const html = document.documentElement;
+  const claro = state.theme === 'partitura' ||
+    (state.theme === 'auto' && !!esquemaOscuro && !esquemaOscuro.matches);
+  const cambia = html.dataset.theme !== state.theme || html.dataset.scheme !== (claro ? 'light' : 'dark');
+  html.dataset.theme = state.theme;
+  html.dataset.scheme = claro ? 'light' : 'dark';
+  // La barra del sistema (Safari, Android) toma el color de fondo del tema. Solo
+  // si algo cambió: leer el estilo calculado obliga al navegador a recalcularlo (AT-15 #4).
+  if (cambia){
+    const meta = document.querySelector('meta[name="theme-color"]');
+    const fondo = window.getComputedStyle ? getComputedStyle(html).getPropertyValue('--bg').trim() : '';
+    if (meta && fondo) meta.setAttribute('content', fondo);
+  }
+  return cambia;
+}
+// Si el dispositivo pasa de claro a oscuro con la app abierta, «Automático» lo sigue.
+if (esquemaOscuro){
+  const alCambiar = () => { if (state.theme === 'auto') syncUI(); };
+  if (esquemaOscuro.addEventListener) esquemaOscuro.addEventListener('change', alCambiar);
+  else if (esquemaOscuro.addListener) esquemaOscuro.addListener(alCambiar);   // Safari antiguo
 }

@@ -135,7 +135,8 @@ function bindBoardKeys(){
     if (!cell) return;
     let row = +cell.dataset.row, fret = +cell.dataset.fret;
     switch (ev.key){
-      case 'ArrowRight': fret = Math.min(NUM_FRETS, fret + 1); break;
+      // En Acordes solo se ven los trastes 0 a 5: el foco no pasa de ahí (AC-07, AT-17 M1).
+      case 'ArrowRight': fret = Math.min(screen === 'chords' ? TRASTES_ACORDE : NUM_FRETS, fret + 1); break;
       case 'ArrowLeft':  fret = Math.max(0, fret - 1); break;
       case 'ArrowDown':  row = Math.min(displayStrings().length - 1, row + 1); break;
       case 'ArrowUp':    row = Math.max(0, row - 1); break;

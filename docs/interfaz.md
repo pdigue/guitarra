@@ -1,8 +1,8 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 1.14 · **Fecha:** 22 de octubre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0); la sección 7b (seis áreas, con Metrónomo y Acordes), aprobada el 21/10 y retocada el 22/10 con tu decisión de la pesa del metrónomo; los detalles del péndulo, a falta de tu visto bueno en la web de pruebas. Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
-**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.6.1` · `requisitos.md` v1.26 · `roadmap.md` v3.24
-**Revisión:** auditoría de requisitos AR-04 (`auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
+**Versión:** 1.19 · **Fecha:** 15 de noviembre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0); la sección 7b (seis áreas, con Metrónomo y Acordes), aprobada el 21/10 y retocada el 22/10 con tu decisión de la pesa del metrónomo; los detalles del péndulo, a falta de tu visto bueno en la web de pruebas. Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
+**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.6.4` · `requisitos.md` v2.2 · `roadmap.md` v4.2
+**Revisión:** auditoría de requisitos AR-04 (`historico/auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
 
 Este documento dice **qué hay en cada pantalla, dónde está y cómo se pasa de una a otra**. Desde su aprobación manda sobre el diseño de F3 a F5: lo que se construya después se compara con él. Cambiarlo es posible, sobre todo tras usarlo en la Sesión 1 (F3.3): cada cambio sube la versión y queda en el control de cambios.
@@ -24,7 +24,7 @@ La fuente es [`interfaz/wireframes.html`](interfaz/wireframes.html). La herramie
 
 ## 2. Principios
 
-1. **El mástil manda.** Es lo que se usa cada segundo, así que se lleva el espacio que sobra en cada pantalla y nunca lo tapa nada.
+1. **El mástil manda.** Es lo que se usa cada segundo, así que se lleva el espacio que sobra en cada pantalla y nunca lo tapa nada. **Excepción en tableta y ordenador** (V-11, 0.6.3, pendiente de tu aprobación): allí sobra tanto alto que el mástil se acota (cuerdas de 40 a 80 px) y el resto va al pentagrama y a la lectura.
 2. **Lo frecuente, a un toque; lo raro, en Ajustes.** Tres niveles de controles (sección 5).
 3. **Misma estructura en todas las áreas.** Al cambiar de área nada salta de sitio.
 4. **Igual en todos los sistemas** (PL-04). Solo estándares web. La forma cambia según el tamaño de la pantalla y el tipo de puntero, nunca según el sistema.
@@ -39,8 +39,9 @@ La app elige su disposición por el tamaño de la ventana, no por el aparato. «
 | **Vertical** | Ancho < 600 px y en vertical | Barra de pestañas abajo | Arriba, sobre el mástil | Hoja que sube desde abajo | iPhone en Safari: 390 × 664 |
 | **Horizontal** | Alto ≤ 520 px y en horizontal | Raíl a la izquierda | Panel a la derecha | Panel lateral | iPhone en Safari: 750 × 342 · Android de 360 dp en Chrome: 780 × 280 |
 | **Amplia** | El resto | Pestañas en la cabecera | Arriba, sobre el mástil | Panel lateral | Ventana de Windows de 1280 × 720 |
+| **Tableta y ordenador** (V-11, 0.6.3) | Área útil de 700 × 600 px o más (iPad en las dos orientaciones, también con las barras de Safari; ordenador) | Control segmentado: en la cabecera desde 1100 px de ancho; por debajo, en su propia fila bajo ella | Arriba, más grandes; el mástil con alto acotado (420 px con el dedo, 380 con ratón) y centrado; el pentagrama, hasta 230 px | Panel lateral de 440 px | iPad 820 × 1180, 744 × 1133, 1180 × 820, 1024 × 768 y 1133 × 670 (iPad mini en horizontal con Safari); ordenador 1440 × 900 y 1280 × 620 (ventana de 1280 × 720) |
 
-Una tableta en vertical usa la disposición amplia: tiene sitio de sobra.
+Una tableta usa la disposición **Tableta y ordenador** (F5.8 #3, 15/11): antes usaba la amplia y el mástil se estiraba hasta cuerdas de 150 px.
 
 ## 4. Mapa de la app
 
@@ -49,7 +50,7 @@ flowchart LR
   P["Puerta<br/>«Empezar»"] --> L["Libre<br/>(al abrir)"]
   L <--> A["Adivinar"]
   L <--> F["Afinador<br/>De oído · Micrófono (F4)"]
-  L <--> E["Escalas (F5)<br/>Mostrar · Práctica"]
+  L <--> E["Escalas (F5)<br/>una posición cada vez"]
   L <--> K["Acordes (F5.7)"]
   L <--> M["Metrónomo (F5.6)"]
   L & A & F & E & K & M -.-> S["Ajustes<br/>(desde cualquier área)"]
@@ -58,7 +59,7 @@ flowchart LR
 
 - **Puerta.** Se queda: en el iPhone el sonido solo puede arrancar con un toque, y es donde aparece el nombre (G-01).
 - **Seis áreas** (G-02), siempre a un toque: Libre, Adivinar, Afinador, Escalas, Acordes y Metrónomo (sección 7b). Al abrir la app se entra siempre en Libre (L-01).
-- **Afinador y Escalas tienen dos modos dentro**, con un selector arriba. No son pestañas nuevas: cada destino es una idea distinta.
+- **El Afinador tiene dos modos dentro**, con un selector arriba (Escalas los tuvo hasta la 0.6.3). No son pestañas nuevas: cada destino es una idea distinta.
 - **Ajustes** se abre desde todas las áreas (C-01) y no cambia de área al cerrarse.
 
 ### Navegación y botón «atrás»
@@ -93,12 +94,15 @@ Igual que Libre, con la **tarjeta del reto** entre el acceso rápido y el másti
 - **Al fallar** (J-09, J-10): la posición pulsada se rellena en rojo con ✗ y, 1,2 s después, las correctas en verde con su nombre y ✓; el reto siguiente llega 3 s más tarde. **Al acertar**, todas las correctas en verde (J-03).
 - La lectura grande y el pentagrama muestran **la nota que tocas** (desde la 0.4.1; en la 0.3.3 mostraban la buscada y confundían). La buscada solo se ve con la pista de nombre, en su botón, o al responder. El pentagrama no muestra la nota hasta que respondes, y «Ver todas las notas» no se aplica (J-12).
 
+- **Desde la 0.6.3** (F5.8 #4): con una pista encendida, la fila de pistas es **la franja de lo que se busca**: cada pista encendida ocupa su parte, con la respuesta en grande (30 px en el móvil, 44 en tableta; una larga, como «1ª 2ª 3ª 4ª», se reduce para caber). La nota que tocas se lee **en pequeño y en gris** junto al pentagrama, para que no compita con la buscada (J-01, J-06).
+
 ### Afinador — bocetos A3 y A4
 
-Selector arriba: **De oído | Micrófono**. Debajo, en los dos modos, la **afinación activa** (A-06, A-07), porque el micrófono también la necesita para saber qué nota corresponde a cada cuerda.
+Selector arriba: **De oído | Micrófono**. Desde la 0.6.2 (tu comentario del 12/11) **abre en Micrófono** donde se puede usar, sin escuchar hasta que pulsas «Activar el micrófono»; donde no se puede, en De oído; y si eliges tú, se recuerda. Debajo, en los dos modos, la **afinación activa** (A-06, A-07), porque el micrófono también la necesita para saber qué nota corresponde a cada cuerda.
 
 - **De oído** (A-01, lo que hay hoy): una fila por cuerda, que suena al pulsarla y tiene − y + para bajarla o subirla un semitono (cualquier cambio la convierte en «Personalizada», A-08), y la afinación en el pentagrama (P-04, A-09).
 - **Micrófono** (F4, A-02…A-05): selector de cuerda **Auto | 6 … 1** (Auto detecta la cuerda según la afinación activa, A-04; elegir una manda sobre la detección, A-05); un indicador de aguja de −50 a +50 cents con la franja de afinado de ±5 en verde (A-03); la nota grande y los cents en número; la orden en texto y flecha, **«▲ Sube un poco» / «▼ Baja un poco» / «✓ Afinada»**; un aviso fijo, «El sonido se analiza solo en tu dispositivo» (G-11), y un botón para detener el micrófono.
+- **Nota sostenida** (0.6.2): la aguja sigue la nota mientras se apaga; cuando deja de oírse, la nota, los cents y la orden se quedan 2,5 s a la vista, atenuados y con el rótulo «Última lectura», y después vuelve a «Toca una cuerda». Mientras escucha, la pantalla no se apaga (G-13).
 - **Flujo del permiso:** la primera vez, una frase explica para qué se usa el micrófono **antes** de que el navegador lo pida. Si lo deniegas, se dice cómo activarlo en ese navegador. El micrófono se apaga al salir del Afinador.
 - **Si no hay micrófono** (archivo abierto con doble clic, navegador sin permiso o sin la capacidad): el modo Micrófono se muestra desactivado con el motivo, y De oído sigue funcionando (PL-04).
 - **Así quedó en la 0.4.0** (diferencias con lo de arriba, revisadas en AR-08):
@@ -113,12 +117,17 @@ Selector arriba: **De oído | Micrófono**. Debajo, en los dos modos, la **afina
 
 ### Escalas — bocetos A5 y A6 (F5)
 
-Fila superior: **Mostrar | Práctica**, tónica y tipo (E-01: mayor, menor natural y pentatónicas mayor y menor, decidido el 21/10).
+**Desde la 0.6.4** (tu comentario F5.8 #5: «no es agradable ver el mástil lleno de notas»): **una posición cada vez y sin modo Práctica.**
 
-- **Mostrar** (E-03, E-04, E-06): el mástil ilumina todas las notas de la escala; la tónica lleva un anillo, para que no dependa del color. El pentagrama escribe la escala y, debajo, los intervalos entre notas con las etiquetas de E-04 (T = tono, ST = semitono). Bajo el mástil, el **paso a paso**: ◀ «Paso 3 de 8 · Mi, un tono sobre Re» ▶, que resalta la nota del paso en el mástil y en el pentagrama; y debajo, el zoom de siempre.
-- **Práctica** (E-05): tocas notas y la tarjeta cuenta las notas distintas encontradas («5 de 7»). Las que vas encontrando quedan en verde. Una nota ajena sale en rojo con ✗, la tarjeta dice cuál era («✗ Fa♯ no está en Do mayor») y se iluminan las posiciones correctas a la vista.
-- El pentagrama está disponible aquí también (P-03). Las escalas usan la afinación estándar en la primera entrega (E-02).
-- **Así quedó en la 0.5.0:** arriba, en una fila, Mostrar | Práctica, la tónica y el tipo (en horizontal, cada selector en su fila). En Mostrar, la línea de notas e intervalos va **dentro del paso a paso**, encima de «Paso 3 de 8 · Mi, un tono sobre Re», para que todo quepa en el iPhone en vertical; el paso resaltado lleva un anillo ámbar en el mástil y un fondo ámbar en el pentagrama. El guiado sube una octava desde la tónica más grave del mástil. En Práctica, la tarjeta dice el resultado de cada nota y la cuenta («3 de 7»), con un botón «Otra vez»; el pentagrama escribe solo las notas ya encontradas. Las casillas salen de la clase de altura, así que Escalas funciona también en las demás afinaciones.
+Fila superior: tónica y tipo (E-01: mayor, menor natural y pentatónicas mayor y menor) y, en la misma fila, la **posición**: ◀ «Posición 1 de 7 · trastes 8 a 13» ▶ y el botón **▶ Escuchar** (E-07, E-08). En el móvil (vertical, o el panel lateral en horizontal) los textos van en corto, «1/7» y ♪, para no gastar otra fila. En la barra de atajos, junto a «Do Re Mi», dos botones solo de Escalas: **Todas** (E-10) y **Practicar** (E-05b).
+
+- **El mástil** (E-03) enseña solo las casillas de la posición: 3 notas por cuerda en la mayor y la menor (7 posiciones) y 2 en las pentatónicas (las 5 cajas), con su nombre escrito y la tónica con anillo. El resto, limpio. La posición 1 es la que empieza en la tónica (las siguientes van hacia el cuerpo y, pasado el traste 11, siguen desde la cejuela); al entrar se ve la 1, y la vista del mástil va sola a la posición elegida. Con **Todas**, el resto de la escala se ve más pequeño y apagado.
+- **Escuchar** (E-08) toca la posición subiendo y bajando, una nota cada 380 ms, con cada casilla resaltada; mientras suena, el botón dice «■ Parar» en naranja.
+- **Tocar** (E-09): al pulsar una casilla de la posición, suena y pasa a ser el paso actual; una de fuera solo suena.
+- **Practicar** (E-05b): las casillas de la posición, sin nombre y con un aro neutro (el color diría la nota); se tocan en orden de grave a agudo. Las buenas, en verde con su nombre; un fallo, en rojo un momento. El texto del paso a paso dice cómo vas («Práctica · 3 de 12…») y el pentagrama escribe solo lo ya tocado.
+- **Bajo el mástil, el paso a paso** (E-04, E-06): la línea «Do T Re T Mi ST Fa…» con el grado del paso resaltado y ◀ «Paso 3 de 18 · Mi, un tono sobre Re» ▶, de la nota más grave de la posición a la más aguda. El pentagrama (P-03) escribe 8 notas de la posición alrededor del paso.
+- **Antes (0.5.0 a 0.6.3):** Mostrar | Práctica; Mostrar iluminaba la escala en todo el mástil y el guiado subía una octava desde la tónica grave; Práctica contaba las notas distintas encontradas («3 de 7»).
+
 
 ### Ajustes — boceto A7
 
@@ -140,7 +149,7 @@ La propuesta saca todo eso del alto del mástil: **raíl | mástil | panel**.
 |---|---|
 | Libre (B1) | Do Re Mi y 𝄞 (pentagrama) · pentagrama, si está activado · nota leída · zoom |
 | Adivinar (B2, B6) | Do Re Mi y 𝄞 · ▶ con racha y récord · mensaje del reto · pistas Nombre y Cuerda · pentagrama, si está activado · zoom. *En la 0.3.0, Do Re Mi y 𝄞 van arriba como en Libre, para que nada cambie de sitio entre áreas (principio 3; AR-05 #4).* |
-| Escalas (B3) | Mostrar \| Práctica · tónica y tipo · paso a paso ◀ ▶ · **nota del paso y su intervalo**, que se ven aunque el pentagrama esté apagado (E-04) · pentagrama, si está activado · zoom |
+| Escalas (B3) | Todas y Practicar en los atajos · tónica y tipo · posición ◀ ▶ y Escuchar · paso a paso ◀ ▶ · **nota del paso y su intervalo**, que se ven aunque el pentagrama esté apagado (E-04) · pentagrama, si está activado · zoom |
 | Afinador (B4, B5) | Sin mástil ni panel: De oído en rejilla de 3 × 2 cuerdas con el pentagrama debajo; Micrófono con la aguja a la izquierda y cuerda, orden y botón de detener a la derecha |
 
 En horizontal, el botón de pentagrama del panel es el símbolo 𝄞, con su nombre para lectores de pantalla, porque «Pentagrama» no cabe junto a «Do Re Mi». Si el contenido del panel no cabe en el alto, **se desplaza el panel**; el mástil nunca, y el zoom se queda fijo abajo.
@@ -157,7 +166,7 @@ En horizontal, el botón de pentagrama del panel es el símbolo 𝄞, con su nom
 
 La cuerda mide (alto útil − 28 px) / 6, así que **cumple los 40 px con un alto útil de 268 px o más**. Por debajo, la cuerda baja de 40 px; ese caso se anota y se recomienda instalar la app, que gana el alto de la barra del navegador. Los 280 px de Android son una estimación: se confirman con el simulador de Chrome en F3.2 y en un Android real cuando lo haya.
 
-**Aviso para girar** (V-01): solo en pantallas táctiles en vertical de menos de 600 px de ancho, en Libre, Adivinar, Escalas y Acordes; nunca en el Afinador ni en el Metrónomo, que funcionan igual en las dos orientaciones. Es una franja discreta sobre el mástil: «⟳ Gira el móvil para ver más trastes ✕». Desaparece al girar. Si la cierras con ✕, no vuelve: se guarda con los ajustes (C-05) y «Restablecer todos los ajustes» la recupera. Nunca sale en el Afinador, que funciona igual en las dos orientaciones (V-02), ni en una ventana estrecha de Windows. No se bloquea la orientación: el iPhone no lo permite.
+**Aviso para girar** (V-01): solo en pantallas táctiles en vertical de menos de 600 px de ancho, en Libre, Adivinar y Escalas; nunca en el Afinador ni en el Metrónomo, que funcionan igual en las dos orientaciones, ni en Acordes, que enseña siempre los trastes 0 a 5 (desde la 0.6.5). Es una franja discreta sobre el mástil: «⟳ Gira el móvil para ver más trastes ✕». Desaparece al girar. Si la cierras con ✕, no vuelve: se guarda con los ajustes (C-05) y «Restablecer todos los ajustes» la recupera. Nunca sale en el Afinador, que funciona igual en las dos orientaciones (V-02), ni en una ventana estrecha de Windows. No se bloquea la orientación: el iPhone no lo permite.
 
 ## 7b. Metrónomo y acordes (F5.6 y F5.7) — aprobada el 21/10
 
@@ -169,10 +178,10 @@ Tu petición del 21/10 y tu decisión del mismo día: **el metrónomo es una fun
   - **Pantalla principal**, de arriba abajo: una **barra vertical** para el tempo, que es un **péndulo** como el de un metrónomo mecánico (MT-06, tu comentario del 22/10): la pesa marca el tempo, arriba más lento y abajo más rápido; mientras suena, la barra oscila sobre su pie y llega a un extremo en cada pulso (hasta 30° a cada lado; menos si no cabe, como en horizontal); se queda recta parada, mientras la arrastras y con «reducir movimiento». También se mueve con las flechas del teclado (↑, más rápido, como cualquier deslizador); el **nombre del tempo** en italiano (Lento, Andante, Allegro…); **− 80 +**; **un punto por pulso**, el primero más grande si lleva acento y relleno el que suena; abajo, el **compás** escrito como en la partitura (4 sobre 4) y «Marcar» (tocas a ritmo y lo calcula), y el botón **Empezar**. En horizontal, la barra a la izquierda, el tempo en medio y los controles a la derecha.
   - **Al tocar el compás** se abre una ventana: los doce compases en círculos (1/4, 2/4, 3/4, 4/4, 5/4, 6/4, 3/8, 5/8, 6/8, 7/8, 9/8, 12/8), las cuatro figuras (solo el pulso, dos, tres o cuatro golpes por pulso), la casilla **Acento en el primer tiempo** y «Listo». En 6/8, 9/8 y 12/8 el pulso es la negra con puntillo: dos, tres o cuatro puntos. «Atrás», Escape o tocar fuera también la cierran. En horizontal, en dos columnas.
   - **Sigue sonando al cambiar de área**, para tocar encima en Libre, Escalas o Acordes. Mientras suena, su pestaña lleva un punto que se enciende con cada pulso; para pararlo, vuelves a ella. Se para al ocultar la app y **al escuchar con el micrófono** en el Afinador, con un aviso: su clic confundiría al detector.
-- **Acordes** (AC-01 a AC-06, hecho en la 0.5.5), como lo describiste el 21/10: **a un lado el listado, al otro el acorde en el mástil**.
-  - **El listado:** un buscador arriba («G» deja G, Gm, G7, G/B…; también en Do Re Mi); debajo, **Populares** (C, G, D, A, E, Am, Em, Dm y F) y **Todos**, los 30 más habituales. Tocar un nombre lo elige y lo hace sonar rasgueado. Bajo el listado, el nombre del acorde, sus notas y «Tocar».
-  - **El mástil:** cada nota del acorde es un círculo **del color de su dedo** —1 azul, 2 naranja, 3 rosa, 4 verde, siempre los mismos— con el número dentro; ○ y ✕ junto al nombre de cada cuerda (al aire o que no suena) y la cejilla como una barra que une sus cuerdas. Los colores son de la paleta Okabe-Ito, que se distingue también con daltonismo, y en Acordes no se ven los colores de nota. La vista se mueve sola a los trastes del acorde.
-  - **En vertical** el listado va arriba (dos filas a la vista, el resto desplazando) y el mástil abajo; el pentagrama y el zoom se apartan para que las cuerdas conserven sus 40 px, y sugiere girar el móvil. **En horizontal**, el listado va en el panel de la derecha, con el pentagrama del acorde debajo. **En pantallas amplias**, todo a la vez.
+- **Acordes** (AC-01 a AC-07; simplificado en la 0.6.5, F5.8 #6, con tus respuestas del 15/11): **arriba se elige, debajo el acorde en grande**.
+  - **Elegir:** dos filas de botones, **la nota** (Do … Si) y **el tipo** (Mayor, menor, 7, m7, maj7, sus4 y el bajo, que dice su nota: /Sol con Do, /Si con Sol; con otra nota, «/bajo» apagado). Un tipo que no existe para esa nota se apaga; al cambiar de nota se conserva el tipo si existe (de Lam a Mim) y, si no, se pasa al mayor. Elegir lo hace sonar rasgueado. Debajo, el nombre del acorde, sus notas y «Tocar». Sin buscador ni listado (AC-06, retirado).
+  - **El mástil:** solo los **trastes 0 a 5**, estirados a todo el ancho, sin zoom ni desplazamiento (AC-07); con el teclado, el foco tampoco pasa del traste 5. Cada nota del acorde es un círculo **del color de su dedo** —1 azul, 2 naranja, 3 rosa, 4 verde, siempre los mismos— con el número dentro (36 px; 44 px en pantallas grandes); ○ y ✕ junto al nombre de cada cuerda (al aire o que no suena) y la cejilla como una barra que une sus cuerdas. Los colores son de la paleta Okabe-Ito, que se distingue también con daltonismo, y en Acordes no se ven los colores de nota.
+  - **Sin pentagrama** (AC-03, retirado) ni botón «Pentagrama», y **sin aviso para girar**: el acorde cabe entero en las dos orientaciones. **En vertical** las dos filas van arriba (siete botones por fila) y el mástil abajo. **En horizontal**, en el panel de la derecha: el nombre y «Tocar» arriba y los botones en rejilla, tantos por fila como quepan sin bajar de 44 px. **En pantallas amplias**, los botones a su tamaño, sin estirarse.
   - Con otra afinación activa, avisa de que las digitaciones son para la estándar y ofrece pasar a ella.
 - **Seis pestañas:** con seis, las pestañas de la cabecera entre 600 y 959 px se estrechan y se alinean a la derecha, para no pisar el nombre.
 - **Con la aprobación cambian:** G-02 y C-04 (seis destinos), el mapa de la sección 4 (con `#acordes` y `#metronomo` para el botón «atrás»), el raíl de la sección 7, las pestañas de la sección 8 y el diagrama del roadmap.
@@ -201,6 +210,10 @@ Decisión del cliente: «elige tú los colores, para que las notas se distingan 
 - La nota pulsada va **rellena**. Las demás posiciones de la misma nota y «Ver todas las notas» van **con contorno**, sin relleno. Con «Ver todas las notas», las del mismo sonido llevan además un anillo claro por fuera (L-03, AR-06).
 - El nombre de la nota se escribe siempre, por el principio 5.
 - El ámbar sigue siendo el color de lo activo, el verde el del acierto y el rojo el del error.
+
+### Temas (V-10, 0.6.3; decidido el 15/11)
+
+En Ajustes › **Aspecto**, tres temas, que se cambian cuando quieras: **Madera** (de fábrica: el de siempre, más limpio), **Automático** (claro u oscuro, como el dispositivo, con los grises y el naranja del sistema de Apple) y **Partitura** (papel, tinta y rojo de imprenta). Cada tema es un juego de fichas de color (`css/trasteando.css`); el mástil es oscuro en todos, así que la paleta por nota y los colores de acierto y fallo no cambian. En un tema claro, la nota leída, las pistas y el pentagrama se escriben con la tinta del texto. Los contrastes de la sección 9 se miden en los cuatro aspectos.
 
 ## 11. Alternativas descartadas
 
@@ -231,7 +244,7 @@ Decisión del cliente: «elige tú los colores, para que las notas se distingan 
 | Requisito | Cambio |
 |---|---|
 | **C-06** | Pasa a implementado, con este documento en su versión 1.0. |
-| **V-01** | Criterio concreto del aviso: solo en pantallas táctiles en vertical (`pointer: coarse`, ancho < 600 px), en Libre, Adivinar, Escalas y Acordes; nunca en el Afinador ni en el Metrónomo; cerrado, se guarda con los ajustes y «Restablecer» lo recupera. |
+| **V-01** | Criterio concreto del aviso: solo en pantallas táctiles en vertical (`pointer: coarse`, ancho < 600 px), en Libre, Adivinar y Escalas; nunca en el Afinador, el Metrónomo ni Acordes; cerrado, se guarda con los ajustes y «Restablecer» lo recupera. |
 | **V-04** | Añadido: con `pointer: coarse` un traste mide al menos 40 px, y el zoom guardado se ajusta a ese límite. Nota corregida: hoy, de 3 a 24 trastes; en el iPhone en vertical quedarán como mucho 7. |
 | **G-05** | Añadido al criterio de la matriz: en pantallas táctiles, todo control y toda casilla del mástil mide al menos 40 × 40 px. |
 | **C-07** (nuevo, F3.2, prioridad media) | «Mientras haya un paso anterior en la sesión, el botón o gesto “atrás” del sistema cierra Ajustes o vuelve al área anterior; desde la primera área actúa el sistema. Al abrir se entra en Libre.» Se verifica a mano en Windows y en el simulador de Android de Chrome. |
@@ -253,7 +266,12 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.14** | 22/10/2026 | F5.8, tu primer comentario de uso: la barra del metrónomo es un péndulo, con la pesa arriba más lenta (MT-06, nuevo). |
+| **1.19** | 15/11/2026 | F5.8 #7: el metrónomo no cambia de aspecto; la luz del pulso y el péndulo llegan cuando el clic se oye, no antes (§7b, MT-04). |
+| 1.18 | 15/11/2026 | F5.8 #6: Acordes por nota y tipo, con el acorde en grande en los trastes 0 a 5; sin pentagrama, buscador ni aviso para girar en Acordes (§7b, AC-01, AC-07, V-01). |
+| 1.17 | 15/11/2026 | F5.8 #5: Escalas, una posición cada vez (la 1 en la tónica), con «Escuchar», «Todas» y una Práctica nueva en orden (§Escalas, E-03 a E-10, P-03); textos cortos en el móvil. |
+| 1.16 | 15/11/2026 | F5.8 #3 y #4: disposición «Tableta y ordenador» (§3, V-11; umbral de área útil 700 × 600 tras AR-16 #1, y excepción al principio 1 de §2), temas en Ajustes › Aspecto (§10, V-10; Madera de fábrica, tu decisión del 15/11) y, en Adivinar, la franja de pistas en grande y la nota tocada en pequeño (§6, J-01, J-06). |
+| 1.15 | 12/11/2026 | F5.8 #2: el afinador abre en Micrófono, sostiene la última lectura y mantiene la pantalla encendida (A-02, A-03, G-13). El metrónomo avisa donde no puede mantenerla. |
+| 1.14 | 22/10/2026 | F5.8, tu primer comentario de uso: la barra del metrónomo es un péndulo, con la pesa arriba más lenta (MT-06, nuevo). |
 | 1.13 | 21/10/2026 | Auditoría AR-11: seis áreas en el mapa, el raíl y el ordenador; el aviso para girar, también en Acordes y nunca en el Metrónomo. |
 | 1.12 | 21/10/2026 | Acordes, como lo describiste: listado con buscador, populares y los 30 acordes a un lado; el acorde en el mástil al otro. Disposición en vertical, horizontal y amplia. |
 | 1.11 | 21/10/2026 | Sección 7b aprobada. El metrónomo, rehecho con tu guía (la app que nos enseñaste): barra vertical, nombre del tempo, un punto por pulso y una ventana con compás, figura y acento en el primer tiempo. |

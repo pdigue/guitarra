@@ -1,0 +1,178 @@
+# Trasteando — Matriz de cumplimiento de requisitos
+
+**Versión:** 1.25 · **Fecha:** 12 de noviembre de 2026 · **Base:** `requisitos.md` v1.27 · app `0.6.2` · `roadmap.md` v3.26  
+**Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
+
+> Versión en texto de `matriz-cumplimiento.xlsx`, para que los chats auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple.
+
+**Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
+
+**Cambios en la 1.25:** F5.8, tus comentarios del 12/11 (#2): el afinador sigue la nota mientras se apaga, sostiene 2,5 s lo último medido y abre en Micrófono (A-02, A-02-CA y A-03, con sus criterios al día); G-13 nuevo, la pantalla encendida mientras suena el metrónomo o escucha el afinador, verificado parcialmente hasta tu prueba en el iPhone.
+
+**Cambios en la 1.24:** F5.8, tu primer comentario de uso (#1): MT-06 nuevo, el péndulo del metrónomo (la pesa arriba, más lento), con las correcciones de AR-14 y AT-13 en su criterio. Verificado parcialmente hasta la Sesión 2. MT-01 remite a MT-06 y G-10 dice cómo se numera una fase reabierta.
+
+**Cambios en la 1.23:** F6.1: G-08 cumple y queda verificado por el banco, que pasa las pruebas que arrancan la app contra la app de varios archivos y contra el archivo autónomo; el autónomo lee de dentro sus grabaciones sin descargar nada. Lo pendiente de AR-13, en su comentario.
+
+**Cambios en la 1.22:** punto de control CP-5 (AR-12 y AT-11): una sola vara; lo que espera tu prueba con el banco ya hecho queda *verificado parcialmente* (E-01, E-02, E-03, E-04, E-06, P-03, MT-01, MT-05, AC-02 y AC-03); MT-04 con el arranque de la 0.5.7; lo pendiente de CP-5, en su comentario.
+
+**Cambios en la 1.21:** auditoría AR-11: seis áreas en G-02, C-04 y V-01; criterio de AC-01 y evidencias del metrónomo y los acordes completadas.
+
+**Cambios en la 1.20:** la librería de acordes (AC-01 a AC-06), hecha y verificada por el banco; G-02 y C-04 con seis áreas.
+
+**Cambios en la 1.19:** el metrónomo (MT-01 a MT-05), hecho y verificado por el banco.
+
+**Cambios en la 1.18:** J-13 con «Reintentar» por defecto; el metrónomo, área propia (MT-05); criterios y evidencias al día tras AR-10 y AT-09.
+
+**Cambios en la 1.17:** J-13 y N-06 nuevos y verificados; criterios del metrónomo y de los acordes.
+
+**Cambios en la 1.16:** F5: escalas; E-02 y E-05 verificados por el banco.
+
+**Cambios en la 1.15:** G-12 nuevo; J-11 verificado por el banco; criterios de J-01, J-06, J-08 y C-02 con la 0.4.1 y la 0.4.2.
+
+**Cambios en la 1.14:** evidencias del afinador por micrófono; A-02-CA, A-04 y G-10 verificados.
+
+**Cambios en la 1.13:** 35 requisitos verificados en la Sesión 1 (informe `V-08`), con su prueba en la evidencia; criterios de J-01, J-08, J-10 y S-02 con la 0.3.3, pendientes de la Sesión 2; evidencia de S-01 y PL-04; C-08 y S-09 nuevos, fuera de alcance.
+
+**Cambios en la 1.12:** criterios de V-04 y G-05 con el zoom nuevo.
+
+**Cambios en la 1.11:** F3.4. G-05 cumple; su criterio añade los umbrales de la paleta.
+
+**Cambios en la 1.10:** F3.2. V-01 y C-07 cumplen; criterios revisados de V-04 y G-05.
+
+**Cambios en la 1.9:** interfaz aprobada. C-06 verificado; C-07 nuevo; criterios revisados de V-01, V-04, G-05 y C-04.
+
+**Cambios en la 1.8:** S-07 cumple y queda verificado (licencia del pack de nylon completa).
+
+**Cambios en la 1.7:** evidencia nueva en S-07 (licencia de nylon en tres sonidos). Criterios sin cambios.
+
+**Cambios en la 1.6:** CP-2: G-07 con límites revisados; X-01 cumple; escucha del cliente en S-01.
+
+**Cambios en la 1.5:** criterio de S-08 según su nueva redacción.
+
+**Cambios en la 1.4:** G-07 y G-08 verificados parcialmente con el archivo autónomo.
+
+**Cambios en la 1.3:** S-08 verificado con la 0.2.0; evidencias nuevas en S-01, S-07 y S-08.
+
+**Cambios en la 1.2:** PL-04 nuevo (adaptabilidad entre sistemas, evidencia en `docs/compatibilidad.md`).
+
+**Cambios en la 1.1:** S-08 nuevo, verificado parcialmente hasta que la app use sus propias muestras (F2.2). Criterios revisados en CP-1: S-01, S-08, G-03, G-06 y A-02-CA. S-07 y G-06 pasan a *Cumple parcialmente* con `CREDITOS.md`. Las evidencias del banco apuntan a `tests/` (`node --test`). Nueva comprobación F1.1 #15.
+
+| Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| 111 | 96 | 6 | 5 | 4 | 53 | 21 |
+
+| ID | Etapa | Método | Criterio de aceptación | Declaración | Evidencia | Verificación | Origen |
+|---|---|:---:|---|---|---|---|---|
+| **G-01** | F1.1 | I | El nombre «Trasteando» aparece en la pantalla de entrada, en la pestaña del navegador y en el manifiesto; en horizontal, arriba del panel. | Cumple | F1.1 #14 · 0.5.2: comprobar-disposicion, título visible en horizontal · Sesión 1: A01 | Verificado | Cliente · listado 14/09 |
+| **G-02** | F1.1 | D | La navegación muestra las seis áreas (Libre, Adivinar, Afinador, Escalas, Acordes y Metrónomo) y cada destino abre su vista. | Cumple | F1.1 #1 y #14 · 0.5.5: comprobar-disposicion, seis pestañas en todas las pantallas · Sesión 1: A12 | Verificado | Cliente · listado 14/09 |
+| **G-03** | F6.2 · F7.2 | T | F6.2: tras una primera carga en localhost y sin red, la app abre y suena. F7.2: lo mismo desde la web publicada. | No cumple | — | Pendiente | Cliente · listado 14/09 |
+| **G-04** | F6.3 · F7.2 | D | Desde la web publicada, el navegador ofrece instalarla y abre a pantalla completa desde el icono. | Cumple parcialmente | — | Pendiente | Cliente · listado 14/09 |
+| **G-05** | F3.4 | I+T | Todo control es alcanzable con teclado y muestra el foco; contrastes ≥ 4,5:1 medidos; el movimiento se reduce con prefers-reduced-motion; en pantallas táctiles, todo control y toda casilla del mástil mide al menos 40 × 40 px en la vista por defecto, salvo las cuerdas en vertical con menos de 660 px de alto y los trastes que el usuario estreche con «+» (hasta 28 px). Paleta por nota: las 7 naturales a ≥ 7,5 (OKLab × 100) entre sí con visión normal y con protanopía, deuteranopía y tritanopía simuladas, y las 12 a ≥ 8 con visión normal; el nombre de la nota siempre escrito. | Cumple | V-07: comprobar-accesibilidad.js (teclado, contraste, movimiento) · paleta.py · V-06: 40 × 40 px · Banco (node --test): teclado, etiquetas, paleta, grises, fila y asa · Sesión 1: A18, C05 y C06 | Verificado | Cliente · 20/10 (interfaz.md v1.0) |
+| **G-06** | F2.1 · F6.4 | I | CREDITOS.md lista cada recurso de terceros con su origen y su licencia, y la app muestra el texto de atribución en Ajustes. | Cumple parcialmente | CREDITOS.md (F2.1). Falta mostrarlo en la app (F6.4) | Verificado parcialmente | Desarrollo · v1.1 |
+| **G-07** | F2.3 · F2.5 | T | En Windows (y Android cuando lo haya), con el ordenador en modo avión, dist/trasteando.html abre con doble clic en ≤ 3 s, suenan las grabaciones y funcionan Libre, Adivinar y el afinador por referencia. Audio ≤ 1,45 MB y archivo ≤ 2 MB. | Cumple | V-03 y V-04: desde disco y sin conexión en Chromium, abre en 0,3 s y suena a menos de 1 cent · Banco (node --test): autónomo al día, con su audio, huellas y límites · Sesión 1: B02, B03, B04 y C09 | Verificado | Cliente · 15/09 |
+| **G-08** | F4.1 · F6.1 | T | El archivo autónomo generado y la web publicada superan el mismo banco de pruebas. | Cumple | Banco (node --test) en dos pasadas: banco.test.js y escalas.test.js contra la app de varios archivos y contra el autónomo (autonomo.test.js), que además lee de dentro sus 17 grabaciones (huellas sha256) sin descargar nada; una sola vez, lo que lee el repositorio o compara las formas · el autónomo es exactamente la app ensamblada más su audio · comprobar-autonomo (Chromium, file:// y sin conexión: 0,15 s, ninguna conexión, error con módulo y línea exactos) · comprobar-en-navegador · CHANGELOG 0.6.0 · IT-04 · AR-13 y AT-12 | Verificado | Cliente · 15/09 |
+| **G-09** | F7.4 | I | Ficha enviada a revisión en al menos una tienda, o decisión documentada de no hacerlo. | No cumple | — | Pendiente | Cliente · 14/10 |
+| **G-10** | F1.3 | I | Ajustes muestra la versión; CHANGELOG.md tiene una entrada por versión; existe la etiqueta de Git de cada cierre de fase. | Cumple | Banco (node --test) · CHANGELOG.md · F1.1 #12 · etiquetas v0.1.5, v0.2.3 y v0.3.3 (21/10) | Verificado | Cliente · 14/10 |
+| **G-11** | F6.4 | I | La política de privacidad está publicada y la app no envía ninguna petición con datos del usuario (pestaña Red). | No cumple | — | Pendiente | Desarrollo · v1.2 |
+| **G-12** | F4.5 | D | En Ajustes, Español / English cambia todos los textos de la app; la elección se guarda; la primera vez sigue al navegador. | Cumple | Banco (node --test): mismas claves en las dos lenguas, cambio y vuelta, primera vez según el navegador · comprobar-disposicion.js con IDIOMA=en-US | Pendiente | Cliente · listado 14/09 |
+| **G-13** | F5.8 | D | Con el bloqueo automático del iPhone en 30 s: con el metrónomo sonando 5 minutos, o el afinador escuchando 2, sin tocar la pantalla, no se bloquea y sigue; al parar, se bloquea solo en ese plazo (V-09, M8b; en Safari y, desde iOS 18.4, en la app instalada). Donde no hay Wake Lock, o el sistema lo niega, funciona igual y el metrónomo lo avisa. | Cumple | Banco (node --test): se pide al empezar y se suelta al parar (metrónomo y micrófono); aviso sin la capacidad y cuando el sistema la niega; se vuelve a pedir si el sistema la suelta | Verificado parcialmente | Cliente · 12/11 (AR-12 #2, F5.8) |
+| **PL-01** | F2.5 · F7.2 | D | La lista de F1.1 se supera en Chrome, Edge y Firefox en Windows, y la app se instala como PWA desde Edge. | Cumple parcialmente | — | Pendiente | Cliente · 14/10 |
+| **PL-02** | F2.5 · F7.2 | D | La lista de comprobación se supera en Chrome para Android, en web y con la PWA instalada. | Cumple parcialmente | — | Pendiente | Cliente · 14/10 |
+| **PL-03** | F2.5 · F7.2 | D | La lista de comprobación se supera en Safari para iOS, en web y desde la pantalla de inicio. | Cumple parcialmente | — | Pendiente | Cliente · 14/10 |
+| **PL-04** | F2.2 · F3.2 · F7.2 | I+T | Cada capacidad del navegador que usa la app figura en docs/compatibilidad.md con su comportamiento en Windows, Android e iPhone y su alternativa; el banco arranca la app sin vibración ni audio y funciona. | Cumple parcialmente | docs/compatibilidad.md v1.8 · Banco (node --test): sin matchMedia ni history | Verificado parcialmente | Cliente · 14/10 |
+| **N-01** | F1.1 | D | El chip de nomenclatura alterna todos los nombres entre Do-Re-Mi y C-D-E. | Cumple | F1.1 #6 · Sesión 1: A06 | Verificado | Cliente · listado 14/09 |
+| **N-02** | F1.1 | D | El selector de Ajustes produce el mismo cambio que el chip. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
+| **N-03** | F1.1 | D | El chip está visible en la barra de acceso rápido sin abrir ningún menú. | Cumple | F1.1 #14 · Sesión 1: A06 | Verificado | Cliente · listado 14/09 |
+| **N-04** | F1.1 | D | Tras cambiar la nomenclatura, mástil, cuerdas, lector de nota, pistas y afinador usan la nueva. | Cumple | F1.1 #6 · Sesión 1: A06 | Verificado | Cliente · listado 14/09 |
+| **N-05** | F1.1 | D | Tras recargar la página se mantiene la nomenclatura elegida. | Cumple | F1.1 #13 | Pendiente | Cliente · listado 14/09 |
+| **N-06** | F5.5 | T | Elegido ♭ para una tecla negra, todas sus notas se escriben así en mástil, lectura, pentagrama y Afinador; las demás no cambian; en una escala manda la escala, también en el lector grande y el de pantalla. | Cumple | Banco (node --test): Sol♭ en todo el mástil, Fa♯ en Sol mayor, botones según la nomenclatura; Si♭ en Fa mayor (AT-09) | Verificado | Cliente · 21/10 |
+| **D-01** | F1.1 | I | Se dibujan 6 cuerdas con 25 posiciones cada una: cejuela y 24 trastes. | Cumple | Banco (node --test): 150 celdas | Verificado parcialmente | Cliente · listado 14/09 |
+| **D-02** | F1.1 | D | La etiqueta de cada cuerda coincide con la afinación activa y cambia al cambiarla. | Cumple | Banco (node --test): Drop D | Verificado parcialmente | Cliente · listado 14/09 |
+| **D-03** | F1.1 | I | Cada número de traste queda centrado sobre su franja con cualquier nivel de zoom. | Cumple | F1.1 #7 | Pendiente | Cliente · listado 14/09 |
+| **D-04** | F1.3 | T | Los modos Todos, Guía y No muestran todos los números, solo los de trastes con marca, o ninguno. | Cumple | Banco (node --test) · F1.1 #11 · Sesión 1: A11 | Verificado | Cliente · listado 14/09 |
+| **D-05** | F1.1 | D | Pulsar una posición reproduce su nota sin retardo perceptible. | Cumple | F1.1 #2 · Sesión 1: A03 y E03 | Verificado | Cliente · listado 14/09 |
+| **D-06** | F1.1 | D | Al pulsar aparece el nombre de la nota sobre la posición. | Cumple | F1.1 #14 · Sesión 1: E03 | Verificado | Cliente · listado 14/09 |
+| **D-07** | F1.1 | I | Marcas simples en los trastes 3, 5, 7, 9, 15, 17, 19 y 21, y dobles en 12 y 24. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
+| **S-01** | F1.1 · F2.2 · F2.4 | D | Al pulsar cualquier posición suena una muestra grabada, no el sintetizador Karplus-Strong. | Cumple | F1.1 #14 y #15 · V-05: escucha del cliente en su iPhone (0.2.0, 19/10) · Sesión 1 (informe V-08): suena en el PC y el iPhone, pero en el iPhone se quedó mudo en C08 y D03; 0.3.3 con recuperación; pendiente de la Sesión 2 | Verificado parcialmente | Cliente · listado 14/09 |
+| **S-02** | F1.1 | D | Elegir Acústica cambia el timbre audible y elegir Clásica lo devuelve, sin hacer sonar ninguna nota al elegir. | Cumple | F1.1 #5 · Banco (node --test): cambiar de guitarra no suena · Sesión 1: A14 | Pendiente | Cliente · listado 14/09 |
+| **S-03** | F1.1 | I | El selector de timbre está en Ajustes. | Cumple | F1.1 #14 · Sesión 1: A14 | Verificado | Cliente · listado 14/09 |
+| **S-04** | F1.1 | T | Sin conexión, la app suena con el sintetizador y lo avisa en la pantalla de entrada. | Cumple | — | Pendiente | Cliente · listado 14/09 |
+| **S-05** | F1.1 | D | No suena nada antes de pulsar «Empezar». | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
+| **S-06** | F1.1 | D | Tras recargar se mantiene el timbre elegido. | Cumple | F1.1 #13 | Pendiente | Cliente · listado 14/09 |
+| **S-07** | F2.1 · F2.3 | I | Ninguna petición de audio sale del dominio propio, y CREDITOS.md documenta origen y licencia. | Cumple | CREDITOS.md y samples/ (F2.1) · Banco (node --test): ninguna dirección externa (0.2.0) · licencia de los 161 sonidos del pack de nylon: CC BY, con filtros de control a 0 (20/10) | Verificado | AR-01 |
+| **S-08** | F2.1 · F2.2 · F2.4 | T | Cada nota posible, en los dos timbres, suena a ±5 cents de su frecuencia una vez aplicada la corrección de su grabación; cada grabación es la nota asignada (a menos de 50 cents) y su desviación coincide con samples/afinacion.json. | Cumple | samples/afinacion.json · Banco (node --test): grabaciones y todas las notas (±0,5 cents) · V-02, V-03 y V-04: notas grabadas en el navegador, a menos de 1 cent | Verificado | Desarrollo · medición F2.1 |
+| **S-09** | Posterior | N/A | Fuera del alcance actual. | No aplica | — | No aplica | Cliente · listado 14/09 |
+| **P-01** | F1.1 | A | Toda posición del mástil, en cualquier afinación permitida, se dibuja dentro del pentagrama. | Cumple | Análisis 15/09: ninguna nota fuera en todo el rango · F1.1 #3 y #4 · 0.5.2: pentagrama de una nota de 152 px de alto en el iPhone en horizontal (comprobar-disposicion) · Sesión 1: A05 | Verificado | Cliente · listado 14/09 |
+| **P-02** | F1.1 | D | El pentagrama se oculta y se muestra desde el chip y desde Ajustes. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
+| **P-03** | F5.3 | D | El pentagrama funciona en Libre, Adivinar y Escalas. | Cumple | Banco (node --test): la escala escrita en el pentagrama (8 notas en Mostrar; las encontradas en Práctica) | Verificado parcialmente | Cliente · listado 14/09 |
+| **P-04** | F1.1 | D | El afinador muestra en un pentagrama las seis notas de la afinación activa. | Cumple | F1.1 #14 · Sesión 1: A13 | Verificado | Cliente · listado 14/09 |
+| **L-01** | F1.1 | D | Al abrir la app se muestra el modo Libre. | Cumple | F1.1 #14 · Sesión 1: A01 | Verificado | Cliente · listado 14/09 |
+| **L-02** | F1.1 | D | Con «Ver todas las notas» se ven todos los nombres; sin él, solo el de la nota pulsada. | Cumple | Banco (node --test) · F1.1 #10 · Sesión 1: A10 | Verificado | Cliente · listado 14/09 |
+| **L-03** | F1.1 | D | Al pulsar una nota se señalan las demás posiciones con el mismo sonido exacto y ninguna de otra octava. | Cumple | F1.1 #14 · Sesión 1: E03 | Verificado | Cliente · listado 14/09 |
+| **J-01** | F1.1 | D | En Adivinar nada suena hasta pulsar ▶ (resaltado); antes de ▶ el mástil suena pero no puntúa; después cada reto suena solo y ▶ lo repite. La lectura grande y el pentagrama muestran la nota que tocas (0.4.1); la buscada, solo con la pista de nombre o al responder. | Cumple | F1.1 #14 · Banco (node --test): ▶, y lectura de la nota tocada con las pistas aparte · Sesión 1: C07 y E04 | Pendiente | Cliente · listado 14/09 |
+| **J-02** | F1.1 | T | Cualquier posición con el mismo sonido cuenta como acierto. | Cumple | Banco (node --test): acierto · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
+| **J-03** | F1.1 | D | Tras acertar se señalan las demás posiciones válidas. | Cumple | F1.1 #14 · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
+| **J-04** | F1.1 | D | La pista «Nombre» muestra el nombre y la octava de la nota que suena. | Cumple | F1.1 #14 · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
+| **J-05** | F1.1 | D | La pista «Cuerda» lista las cuerdas donde puede estar la nota. | Cumple | F1.1 #14 · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
+| **J-06** | F1.1 | D | Las dos pistas se activan con chips visibles en Adivinar, sin abrir Ajustes; encendidas, enseñan su respuesta en grande (0.4.1). | Cumple | F1.1 #14 · Banco (node --test): pistas grandes, también antes de ▶ · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
+| **J-07** | F1.1 | T | La racha sube con cada acierto y vuelve a 0 con cada fallo. | Cumple | Banco (node --test): acierto y fallo · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
+| **J-08** | F1.1 | T | El récord de cada afinación persiste tras recargar y tras «Restablecer todos los ajustes»; solo «Borrar los récords de racha» los pone a cero. | Cumple | Banco (node --test): récords por afinación guardados y restablecer · F1.1 #13 · Sesión 1: A15 | Verificado parcialmente | Cliente · listado 14/09 |
+| **J-09** | F1.1 | D | Acierto y fallo se distinguen al instante por color y destello. | Cumple | F1.1 #9 · Sesión 1: A09 y E04 | Verificado | Cliente · listado 14/09 |
+| **J-10** | F1.3 | T | Tras un fallo se marca la pulsada (relleno rojo y ✗); a los 1,2 s suena la nota buscada y se iluminan todas sus posiciones (relleno verde y ✓); 3 s después llega un reto nuevo limpio. | Cumple | Banco (node --test): 8 comprobaciones · F1.1 #9 · Sesión 1: A09 | Verificado parcialmente | Cliente · listado 14/09 |
+| **J-11** | F4.4 | T | Cada afinación guarda su récord; el récord único de antes pasa a Estándar; cambiar de afinación empieza la racha. | Cumple | Banco (node --test): récord por afinación, migración y cambio de afinación | Verificado | Desarrollo · v1.1 |
+| **J-12** | F1.3 | T | Con «Ver todas las notas» activo, Adivinar no muestra los nombres. | Cumple | Banco (node --test) · F1.1 #10 · Sesión 1: A10 | Verificado | Revisión de código 0.1.2 |
+| **J-13** | F5.5 | T | Por defecto, «Reintentar»: un fallo rompe la racha pero el reto sigue; «Ver la respuesta» la enseña y suena; acertar tras fallar no suma. Con «Ver respuesta», como J-10. | Cumple | Banco (node --test): modo reintentar, ajuste guardado y valor por defecto; dos fallos seguidos no dejan casillas rojas (AT-09) | Verificado | Cliente · 21/10 |
+| **E-01** | F5.2 | D | Se puede elegir tónica y tipo de escala entre el catálogo aprobado (mayor, menor natural, pentatónicas mayor y menor; 21/10). | Cumple | Banco (node --test): selectores de tónica y tipo | Verificado parcialmente | Cliente · listado 14/09 |
+| **E-02** | F5.2 | T | Para cada tónica y tipo, las posiciones generadas coinciden con una referencia externa en afinación estándar. | Cumple | tests/escalas.test.js: las 24 mayores y menores con siete letras, sin mezclar ♯ y ♭ ni dobles alteraciones, y 16 de ellas nota a nota frente al libro; pentatónicas dentro de su escala; casillas por clase de altura | Verificado parcialmente | Cliente · listado 14/09 |
+| **E-02b** | Posterior | N/A | Fuera del alcance actual. | No aplica | — | No aplica | AR-01 |
+| **E-03** | F5.3 | D | Mostrar ilumina únicamente las notas de la escala, con su nombre escrito y la tónica con anillo. | Cumple | Banco (node --test): casillas de Do mayor y de Fa mayor (Si♭) | Verificado parcialmente | Cliente · listado 14/09 |
+| **E-04** | F5.3 | D | Las notas de la escala muestran su nombre y la línea de notas indica el intervalo T, ST o T½ respecto al grado anterior. | Cumple | Banco (node --test): «Do T Re T Mi ST Fa…» y la pentatónica menor | Verificado parcialmente | Cliente · listado 14/09 |
+| **E-05** | F5.4 | T | En Práctica, una nota ajena marca error e ilumina las correctas; una nota de la escala no marca error. | Cumple | Banco (node --test): conteo de notas distintas, fallo, revelado y reinicio; reinicio al cambiar de afinación (AT-09) | Verificado | Cliente · listado 14/09 |
+| **E-05b** | Posterior | N/A | Fuera del alcance actual. | No aplica | — | No aplica | AR-01 |
+| **E-06** | F5.3 | D | El guiado avanza nota a nota por la escala. | Cumple | Banco (node --test): pasos que suenan y se resaltan, de la tónica grave a su octava | Verificado parcialmente | Cliente · listado 14/09 |
+| **A-01** | F1.1 | D | Pulsar cada cuerda en el afinador reproduce su nota de referencia. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
+| **A-02** | F4.3 | D | Con una guitarra real, el afinador indica subir o bajar hasta dejarla afinada, en estándar y en una alternativa. Sigue la nota mientras se apaga (al menos 3 s con una cuerda sintética de 6 s a volumen de móvil y con ruido), sin lecturas a más de 6 cents, y el ruido solo no mueve la aguja. Con las 12 grabaciones reales y ruido: primera lectura en menos de 300 ms y, ya asentada la cuerda, a menos de 5 cents de su medida. Abre en Micrófono donde se puede usar, sin escuchar hasta «Activar». Tu prueba (V-09, M0, M2b y M5): pulsas una vez la 5ª y la aguja la sigue al menos 3 s sin saltar de cuerda; en Drop D, la 4ª releva a la 6ª. | Cumple | comprobar-afinador.js (Chromium, grabación real 12 cents baja → «La2 · −11 cents · Sube un poco»; hilo aparte; se apaga al salir) · Banco (node --test): flujo del permiso, modo por defecto y su recuerdo · tono.test.js: nota que se apaga, ruido, giro de clavija, relevo de cuerda (también a la octava) y las 12 grabaciones con ruido | Pendiente | Cliente · listado 14/09 |
+| **A-02-CA** | F4.2 | T | Banco de pruebas: error ≤ ±2 cents y latencia < 300 ms sobre muestras desafinadas una cantidad conocida, tomando como referencia su frecuencia medida en samples/afinacion.json. | Cumple | tests/tono.test.js: 12 grabaciones reales de −45 a +40 cents; peor error 1,84 cents frente a su medida y 0,62 trozo a trozo; aguja en su nota en ≤ 195 ms + unos 5 ms de cálculo (trozos de 4096 valores, desde la 0.6.2) | Verificado | AR-01 |
+| **A-03** | F4.3 | D | La aguja indica la desviación en cents y marca «afinado» dentro de ±5 cents. Al callar la nota, lo último medido sigue 2,5 s a la vista, atenuado y con el rótulo «Última lectura», y luego vuelve a reposo. | Cumple | Banco (node --test): «Sube un poco» a −12, «Afinada» a +3, «Última lectura» al segundo de callar y en reposo a los 3 s · comprobar-afinador.js | Pendiente | Cliente · listado 14/09 |
+| **A-04** | F4.3 | T | Con la cuerda a menos de un semitono de su nota, el afinador identifica la cuerda correcta. | Cumple | Banco (node --test): las 6 cuerdas a −90 y +90 cents, y la 6ª en Drop D | Verificado | Cliente · listado 14/09 |
+| **A-05** | F4.3 | D | Con una cuerda fijada a mano, el afinador la usa como referencia aunque esté muy desafinada. | Cumple | Banco (node --test): 6ª elegida con un La2 sonando → +500 cents, y sin confundir la octava | Pendiente | Cliente · listado 14/09 |
+| **A-06** | F1.1 | I | La afinación estándar es E2 A2 D3 G3 B3 E4. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
+| **A-07** | F1.1 | I | Existen Drop D, medio tono abajo, Open G, Open D y DADGAD con sus notas correctas. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
+| **A-08** | F1.1 | D | Los botones +/− mueven la cuerda un semitono y pasan a Personalizada sin alterar los presets. | Cumple | F1.1 #4 · Sesión 1: A13 | Verificado | Cliente · listado 14/09 |
+| **A-09** | F1.1 | D | El pentagrama del afinador refleja la afinación seleccionada. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
+| **A-10** | F1.1 | T | Al cambiar de afinación, el mástil y los retos se rehacen con las nuevas notas. | Cumple | Banco (node --test): Drop D | Verificado parcialmente | Cliente · listado 14/09 |
+| **A-11** | F1.1 | D | Tras recargar se mantiene la afinación, incluida la personalizada. | Cumple | F1.1 #13 | Pendiente | Cliente · listado 14/09 |
+| **MT-01** | F5.6 | D | Tempo de 30 a 250 con la barra vertical (también con el teclado), con − y + y marcando a ritmo, con su nombre italiano; arranca y para con un toque; en vertical y en horizontal sin aviso de girar. | Cumple | Banco (node --test): barra con teclado, − y +, «Marcar» (media y reinicio tras 2 s), límites, nombre del tempo, Empezar y Parar · comprobar-disposicion: cinco pantallas | Verificado parcialmente | Cliente · 21/10 |
+| **MT-02** | F5.6 | T | Los doce compases dan su número de pulsos (6/8, 9/8 y 12/8: 2, 3 y 4) y un punto por pulso; con acento, el primer pulso suena más agudo y fuerte, y sin él todos iguales. | Cumple | Banco (node --test): puntos por compás, golpes con y sin acento, ventana que se abre y se cierra, datos guardados y validados | Verificado | Cliente · 21/10 |
+| **MT-03** | F5.6 | T | Cada figura reparte el pulso en 1, 2, 3 o 4 golpes iguales, más suaves que el pulso; cambiarla sonando empieza en el próximo pulso, sin mover el pulso. | Cumple | Banco (node --test): separación de las corcheas, volumen menor, cambio sonando | Verificado | Cliente · 21/10 |
+| **MT-04** | F5.6 | T | Los golpes programados a 30, 120 y 250 ppm se separan exactamente 60/tempo s (±1 ms), nunca se programan más de 100 ms por adelantado y el punto del pulso se ilumina; al ocultar la app se para. | Cumple | Banco (node --test): separación a 30, 120 y 250 ppm, cambio de tempo sonando sin adelantar ni repetir, parada al ocultar | Verificado | Cliente · 21/10 |
+| **MT-05** | F5.6 | D | El metrónomo tiene su pestaña; en marcha, sigue sonando en las demás áreas y su pestaña late con el pulso; al escuchar con el micrófono se para y lo dice; tempo, compás, figura y acento se recuerdan. | Cumple | Banco (node --test): sigue en Libre y en el Afinador hasta escuchar con el micrófono, pestaña que late, parada con el micrófono y aviso, datos guardados | Verificado parcialmente | Cliente · 21/10 |
+| **MT-06** | F5.8 | D | Pesa arriba, 30 ppm, y abajo, 250. Sonando, la barra llega a un extremo en cada pulso, alternando los lados (hasta 30° a cada lado, sin salirse de la pantalla en ninguna disposición), y pasa por el centro entre dos; la subdivisión no la mueve. Recta parada, al arrastrarla y con «reducir movimiento». En el instante de cada pulso está en su extremo (±0,2° en el banco). Tocar la pesa donde se ve, aunque esté inclinada, no cambia el tempo. Con el teclado, ↑ sube el tempo. | Cumple | Banco (node --test): extremos alternos en cada pulso, centro a medio camino, la subdivisión no cuenta (4/4 en corcheas y 6/8), recta al arrastrar, al parar, al perder el dedo y con «reducir movimiento», pesa arriba = 30 ppm y abajo = 250, tocar la pesa inclinada no la mueve, amplitud que cabe y que se mide de nuevo tras girar en otra área, sin salto al cambiar de tempo en marcha, cambiar de compás no pierde pulsos; las pruebas fallan con la versión anterior · Chromium: ±30° en iPhone vertical y ordenador, ±12,7° en horizontal, y 12,7° al volver tras girar en otra área, nunca fuera de la pantalla · comprobar-disposicion: ocho pantallas del metrónomo · AR-14 y AT-13 | Verificado parcialmente | Cliente · 22/10 (F5.8 #1) |
+| **AC-01** | F5.7 | T | A un lado el listado (populares arriba, los 30 acordes debajo) y al otro el mástil; cada digitación suena solo a notas del acorde, con la raíz, la nota que define el tipo (la tercera, o la cuarta en sus4) y la séptima si la lleva (la quinta se puede omitir), y con la raíz o el bajo indicado como nota más grave. | Cumple | Banco (node --test): las 30 digitaciones, una a una; populares y listado · comprobar-disposicion: listado y mástil a la vez en seis pantallas | Verificado | Cliente · 21/10 |
+| **AC-02** | F5.7 | D | Cada dedo tiene su número y su color, iguales en todos los acordes (Okabe-Ito); círculo ≥ 3:1 contra el mástil y número ≥ 4,5:1 contra el círculo; ○ y ✕ junto al nombre de la cuerda; cejilla como barra; el lector de pantalla dice el dedo. | Cumple | Banco (node --test): La menor y Fa dibujados, contraste de los cuatro colores · comprobar-accesibilidad: Acordes con Fa | Verificado parcialmente | Cliente · 21/10 |
+| **AC-03** | F5.7 | D | El pentagrama escribe las notas del acorde apiladas, escritas como manda el acorde, y se oculta con su ajuste; en el móvil en vertical se aparta y vuelve al girarlo. | Cumple | Banco (node --test): cinco notas de La menor; B7 con Re♯ · el ajuste de pentagrama de siempre (F1.1) · comprobar-disposicion: seis pantallas | Verificado parcialmente | Cliente · 21/10 |
+| **AC-04** | F5.7 | T | El acorde suena rasgueado de grave a agudo al elegirlo y con «Tocar»; cada cuerda se puede tocar suelta. | Cumple | Banco (node --test): orden del rasgueo · cada casilla suena suelta como en todo el mástil (F1.1 #2) | Verificado | Cliente · 21/10 |
+| **AC-05** | F5.7 | T | Con otra afinación, Acordes avisa, no dibuja las digitaciones y «Pasar a estándar» las recupera. | Cumple | Banco (node --test): Drop D y vuelta a la estándar | Verificado | Cliente · 21/10 |
+| **AC-06** | F5.7 | T | El buscador deja los acordes que empiezan por lo escrito, sin distinguir mayúsculas y en las dos nomenclaturas; una letra sola, solo en la inglesa. | Cumple | Banco (node --test): G, g, Sol, D, Am, f# y vacío | Verificado | Cliente · 21/10 |
+| **V-01** | F3.2 | D | En horizontal, con un alto útil de 268 px o más, cada cuerda mide al menos 40 px (iPhone en Safari e instalada; simulador de Android). En vertical, en pantallas táctiles de menos de 600 px de ancho y en Libre, Adivinar, Escalas y Acordes, aparece el aviso para girar; nunca en el Afinador ni en el Metrónomo; cerrado, no vuelve y «Restablecer» lo recupera. | Cumple | V-06: comprobar-disposicion.js en 14 pantallas: 52,8 / 60,8 / 42,5 px · Banco (node --test): aviso para girar · Sesión 1: C02, C03 y D03 | Verificado | Cliente · 20/10 (interfaz.md v1.0) |
+| **V-02** | F1.1 | D | El afinador se usa con comodidad en vertical y en horizontal. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
+| **V-03** | F1.1 | D | En una pantalla de 1280 px se ven los 24 trastes sin desplazarse. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
+| **V-04** | F1.1 · F3.2 | D | El zoom cambia los trastes visibles entre 3 y el máximo que cabe, y la etiqueta dice la cifra real; «+» enseña más trastes y «−» menos. Con pointer: coarse, la vista por defecto usa trastes de al menos 40 px y el usuario puede pedir más trastes, de hasta 28 px; si el zoom guardado pide más de los que caben, se muestran los que caben y lo guardado se conserva (V-08). | Cumple | F1.1 #7 y #8 · V-06 · Banco (node --test): 40 px por defecto, 28 con «+», orden de los botones · Sesión 1: A07, A08 y C04 | Verificado | Cliente · 20/10 (interfaz.md v1.0) |
+| **V-05** | F1.1 | D | Con el mástil más ancho que la pantalla se puede desplazar hasta el traste 24. | Cumple | F1.1 #14 · Sesión 1: A08 | Verificado | Cliente · listado 14/09 |
+| **V-06** | F1.1 | D | Desplazarse no cambia el ancho de los trastes. | Cumple | F1.1 #7 · Sesión 1: A07 | Verificado | Cliente · listado 14/09 |
+| **V-07** | F1.1 | D | Al redimensionar la ventana el mástil se reajusta sin perder el tramo visible. | Cumple | F1.1 #7 · Sesión 1: A08 | Verificado | Cliente · listado 14/09 |
+| **V-08** | F1.1 | D | El zoom se mantiene tras recargar y tras girar el móvil. | Cumple | F1.1 #13 | Pendiente | Cliente · listado 14/09 |
+| **V-09** | F1.3 | T | El modo Guía mantiene visibles solo los números de los trastes con marca. | Cumple | Banco (node --test) · F1.1 #11 · Sesión 1: A11 | Verificado | AR-01 |
+| **C-01** | F1.1 | D | El botón de Ajustes abre el panel desde cualquier pantalla y Escape lo cierra. | Cumple | F1.1 #14 · Sesión 1: A19 y C05 | Verificado | Cliente · listado 14/09 |
+| **C-02** | F1.1 | I | El panel contiene todos los ajustes listados, el idioma (0.4.2) y la versión de la app. | Cumple | F1.1 #12 · Banco (node --test): grupo Idioma | Pendiente | Cliente · listado 14/09 |
+| **C-03** | F1.1 | D | Nomenclatura, pentagrama y pistas tienen chips de acceso rápido. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |
+| **C-04** | F1.1 | D | La navegación (barra inferior, raíl o pestañas en la cabecera, según la disposición) lleva a cada área con un toque. | Cumple | F1.1 #14 · 0.5.5: comprobar-disposicion, seis pestañas sin salirse ni pisar el nombre · Sesión 1: A19 | Verificado | Cliente · 20/10 (interfaz.md v1.0) |
+| **C-05** | F1.1 | T | Todos los ajustes persisten tras recargar, y unos ajustes corruptos o antiguos no rompen la app. | Cumple | Banco (node --test): migración · F1.1 #13 · Sesión 1: A14 y A15 | Verificado | Cliente · listado 14/09 |
+| **C-06** | F3.1 | I | interfaz.md aprobado por el cliente y revisado por el auditor de requisitos. | Cumple | interfaz.md v1.0 · AR-04 · aprobación del cliente el 20/10 | Verificado | Cliente · listado 14/09 |
+| **C-07** | F3.2 | D | Con un paso anterior en la sesión, «atrás» cierra Ajustes o vuelve al área anterior; desde la primera área actúa el sistema; al abrir o recargar se entra en Libre. Prueba manual en Windows y en el simulador de Android de Chrome. | Cumple | Banco (node --test): historial simulado con popstate (3 pruebas) · Sesión 1: A17 | Verificado | Cliente · 20/10 (interfaz.md v1.0) |
+| **C-08** | Posterior | N/A | Fuera del alcance actual. | No aplica | — | No aplica | Cliente · listado 14/09 |
+| **X-01** | F1.2 · F1.4 | I | GitHub muestra la última versión en main, entrada por pull request aprobado, y la etiqueta de cierre de fase. | Cumple | PR #1 a #5 fusionados · etiqueta v0.1.5 | Verificado parcialmente | Desarrollo · v1.1 |
+| **X-02** | F7.1 | D | La URL pública carga la app desde un dispositivo ajeno al proyecto. | No cumple | — | Pendiente | Desarrollo · v1.1 |
+| **X-03** | F7.2 | D | La app instalada desde la web funciona en un Android, un iPhone y un Windows reales. | No cumple | — | Pendiente | Desarrollo · v1.1 |
+
+*Gestionada por el chat de Desarrollo. Los auditores la leen y proponen cambios a criterios, métodos o evidencias en sus informes.*

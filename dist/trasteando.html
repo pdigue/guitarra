@@ -23,25 +23,72 @@
    marfil de cejuela para el texto.
    ============================================================ */
 :root {
-  --bg:#140e09;
-  --surface:#211710;
-  --surface2:#2a1d13;
-  --line:#38291a;
-  --line2:#4a3824;
-  --amber:#e8a45c;
+  /* ===== TEMAS (F5.8 #3, C-08) =====
+     Cada tema es un juego de «fichas» (variables de color). El resto del CSS
+     solo usa las fichas, nunca colores sueltos: así cambiar de tema es cambiar
+     un atributo, <html data-theme="…">, que pone la app según Ajustes.
+     «Madera» es el de siempre, más limpio: menos bordes, sin degradados de fondo.
+     El mástil es oscuro en todos los temas (es madera de verdad: palisandro o
+     ébano), para que los colores de las notas se lean igual en cualquiera. */
+  --bg:#15100b;
+  --surface:#1f1812;
+  --surface2:#2a2119;
+  --line:#33281d;
+  --line2:#45372a;
+  --amber:#e8a45c;        /* el acento del tema (en Madera, ámbar de barniz) */
   --amber2:#c9853f;
-  --text:#f2e8da;
-  /* Grises de texto con contraste ≥ 4,5:1 sobre todos los fondos (F3.4, G-05).
-     Antes, --faint se quedaba en 2,5:1. */
-  --muted:#af9e88;
-  --faint:#978670;
+  --on-accent:#1a1006;    /* texto sobre el acento */
+  --text:#f4ece1;
+  /* Grises de texto con contraste ≥ 4,5:1 sobre todos los fondos (G-05). */
+  --muted:#b3a490;
+  --faint:#a08f7a;
   --ok:#58c98a;
   --ko:#e86060;
+  --brand:#f0b06a;
+  --brand-font:Georgia,"Times New Roman",serif;
+  /* El mástil */
+  --board-a:#2e1e10; --board-b:#3d2915;
+  --board-muted:#c4b49e; --board-accent:#f0b06a;
+  --fret:#8a7560; --nut:#f0e0c8; --marker:rgba(232,164,92,.42);
+  --string-a:#a89880; --string-b:#e8d8c0; --string-c:#7a7060;
+  --label-bg:var(--bg);
 
   --label-w:30px;   /* ancho de la etiqueta de cuerda */
   --nut-w:40px;     /* ancho de la cejuela = traste 0; 40 px para el dedo (G-05) */
   --fret-w:64px;    /* ancho de cada traste, controlado por el zoom */
   --r:14px;
+  color-scheme:dark;
+}
+/* Automático, oscuro: el modo oscuro de iOS y macOS (negro puro y grises del
+   sistema), con el naranja del sistema como acento. Mástil de ébano. */
+html[data-theme="auto"] {
+  --bg:#000000; --surface:#1c1c1e; --surface2:#2c2c2e; --line:#2c2c2e; --line2:#3a3a3c;
+  --amber:#ff9f0a; --amber2:#e08900; --on-accent:#1c1000;
+  --text:#ffffff; --muted:#aeaeb2; --faint:#98989f; --ok:#30d158; --ko:#ff6961;
+  --brand:#ffffff; --brand-font:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",sans-serif;
+  --board-a:#18181b; --board-b:#26262b; --board-muted:#b0b0b8; --board-accent:#ffb340;
+  --fret:#6e6e76; --nut:#e5e5ea; --marker:rgba(255,255,255,.28);
+  --string-a:#9a9aa2; --string-b:#e8e8ee; --string-c:#6a6a72;
+}
+/* Automático, claro: el gris agrupado de iOS (#f2f2f7) con tarjetas blancas.
+   El acento es un naranja más oscuro, para pasar 4,5:1 sobre blanco. */
+html[data-theme="auto"][data-scheme="light"] {
+  --bg:#f2f2f7; --surface:#ffffff; --surface2:#e5e5ea; --line:#d8d8dc; --line2:#c7c7cc;
+  --amber:#a34a00; --amber2:#8a3f00; --on-accent:#ffffff;
+  --text:#1c1c1e; --muted:#5c5c61; --faint:#636368; --ok:#1f8a45; --ko:#c9302c;
+  --brand:#1c1c1e; --label-bg:#26262b;
+  color-scheme:light;
+}
+/* Partitura (el tercero, propuesta): papel de método de guitarra, tinta y
+   un rojo de imprenta; títulos con letra de libro. Mástil de palisandro. */
+html[data-theme="partitura"] {
+  --bg:#f5efe3; --surface:#fffbf3; --surface2:#ebe2d1; --line:#e2d7c3; --line2:#cfc1a8;
+  --amber:#9a3412; --amber2:#7c2a0e; --on-accent:#ffffff;
+  --text:#2b2118; --muted:#62543f; --faint:#6b5c47; --ok:#1f7a45; --ko:#b42318;
+  --brand:#2b2118;
+  --board-a:#3a2616; --board-b:#4a321d; --board-muted:#cdbda5; --board-accent:#f4b26b;
+  --label-bg:#3a2616;
+  color-scheme:light;
 }
 * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 /* El navegador aplica display:none a [hidden], pero cualquier regla de autor
@@ -58,10 +105,7 @@ html, body {
 body {
   display:flex; flex-direction:column;
   padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
-  background:
-    radial-gradient(120% 90% at 50% -10%, #241708 0%, transparent 55%),
-    radial-gradient(120% 100% at 50% 115%, #1e1409 0%, transparent 50%),
-    var(--bg);
+  background:var(--bg);
 }
 button { font-family:inherit; color:inherit; }
 :focus-visible { outline:2px solid var(--amber); outline-offset:2px; }
@@ -70,14 +114,14 @@ button { font-family:inherit; color:inherit; }
 /* ===== PUERTA DE AUDIO ===== */
 .gate { position:fixed; inset:0; z-index:1000; display:flex; flex-direction:column;
   align-items:center; justify-content:center; gap:20px; padding:24px; text-align:center;
-  background:radial-gradient(100% 80% at 50% 30%, #23170c, var(--bg) 70%); }
+  background:var(--bg); }
 .gate.hidden { display:none; }
 .gate-logo { width:104px; height:104px; filter:drop-shadow(0 6px 24px rgba(232,164,92,0.22)); }
-.gate-title { font-family:Georgia,"Times New Roman",serif; font-style:italic;
+.gate-title { font-family:var(--brand-font); font-style:italic;
   font-size:46px; color:var(--amber); line-height:1; letter-spacing:0.5px; }
 .gate-sub { font-size:14px; color:var(--muted); max-width:300px; line-height:1.55; }
 .gate-btn { margin-top:4px; background:linear-gradient(180deg,var(--amber),var(--amber2));
-  color:#1a1006; border:none; padding:15px 44px; border-radius:13px; font-size:17px;
+  color:var(--on-accent); border:none; padding:15px 44px; border-radius:13px; font-size:17px;
   font-weight:700; cursor:pointer; box-shadow:0 6px 24px rgba(232,164,92,0.32); }
 .gate-btn:active { transform:scale(0.97); }
 .gate-btn:disabled { opacity:0.55; }
@@ -86,7 +130,7 @@ button { font-family:inherit; color:inherit; }
 .header { flex-shrink:0; display:flex; align-items:center; justify-content:space-between;
   min-height:46px; padding:3px 12px; border-bottom:1px solid var(--line); }
 /* Más nítido en el iPhone (comentario del 21/10): algo más grande y con trazo más firme. */
-.brand, .panel-brand { font-family:Georgia,serif; font-style:italic; font-weight:700; font-size:20px; color:#f0b06a;
+.brand, .panel-brand { font-family:var(--brand-font); font-style:italic; font-weight:700; font-size:20px; color:var(--brand);
   letter-spacing:.01em; -webkit-font-smoothing:antialiased; text-rendering:geometricPrecision; }
 .panel-brand { display:none; }
 .icon-btn { background:var(--surface); border:1px solid var(--line); border-radius:9px;
@@ -108,7 +152,7 @@ button { font-family:inherit; color:inherit; }
    (panel en horizontal), la clave de sol dibujada. */
 .chip .short { display:none; }
 .chip .short svg { display:block; }
-.chip.on { background:var(--amber); border-color:var(--amber); color:#1a1006; }
+.chip.on { background:var(--amber); border-color:var(--amber); color:var(--on-accent); }
 .chip:active { transform:scale(0.95); }
 .qb-sep { flex-shrink:0; width:1px; height:18px; background:var(--line2); }
 .qb-label { flex-shrink:0; font-size:11px; color:var(--faint); margin-right:1px; }
@@ -126,22 +170,34 @@ button { font-family:inherit; color:inherit; }
 .sc-line { display:flex; flex-wrap:wrap; justify-content:center; align-items:baseline; gap:1px 5px; font-size:13px; color:var(--text); }
 .sc-line .sc-gap { font-size:11px; color:var(--amber); }
 .sc-line .sc-note.now { color:var(--amber); font-weight:800; }
-.sc-practice { display:flex; align-items:center; gap:8px; }
-.sc-msg { flex:1; font-size:13.5px; line-height:1.35; min-width:0; }
-.sc-side { display:flex; align-items:center; gap:8px; flex-shrink:0; }
-.sc-count { font-size:13px; font-weight:700; color:var(--amber); }
+.sc-posbar { display:flex; align-items:center; gap:6px; flex:2 1 auto; }
+.sc-posbar .zoom-btn, .sc-posbar .chip { flex-shrink:0; }
+.sc-pos { flex:1; min-width:0; text-align:center; font-size:13px; font-weight:700; color:var(--text); }
+.sc-short { display:none; }
+#scale-play:not(.on) { color:var(--text); }              /* la acción principal de Escalas */
+#scale-play .sc-short { font-size:18px; line-height:1; }
+/* En el móvil (vertical, o el panel lateral en horizontal), la posición en corto
+   («6/7») y «Escuchar» con su icono */
+@media (orientation:portrait) and (max-width:599px), (orientation:landscape) and (max-height:520px){
+  .sc-top { gap:5px; }
+  .sc-posbar { flex:0 0 auto; gap:4px; }
+  .sc-posbar .sc-long { display:none; }
+  .sc-posbar .sc-short { display:inline; }
+  #scale-play { min-width:40px; padding:0 8px; justify-content:center; }
+}
 .sc-nav { flex-shrink:0; display:flex; align-items:center; justify-content:center; gap:10px; padding:2px 10px; }
 .sc-step-text { text-align:center; font-size:12px; color:var(--muted); line-height:1.3; }
 .zoom-btn:disabled { opacity:.35; cursor:default; }
-/* Mástil en Escalas: las notas de la escala con su nombre escrito; la tónica,
+/* Mástil en Escalas: las notas de la posición con su nombre escrito; la tónica,
    con anillo (no depende del color); el paso del guiado, resaltado. */
 .board.scales .fret-cell.scale .dot { opacity:1; transform:scale(.88); }
 .board.scales .fret-cell.scale-tonic .dot { transform:scale(.96); box-shadow:0 0 0 2px #160f07, 0 0 0 4px var(--text); }
+.board.scales .fret-cell.scale-all .dot { opacity:.42; transform:scale(.72); }   /* «Todas»: el resto de la escala, apagado */
+/* Práctica: las casillas de la posición, sin nombre ni color (se sabría la nota)
+   hasta que las tocas en orden; las hechas, en verde con su nombre. */
+.board.scales.practice .fret-cell.scale:not(.correct) .dot { background:rgba(20,14,9,.88); color:transparent;
+  box-shadow:inset 0 0 0 2px rgba(244,236,225,.6); }      /* aro neutro: el color de cada nota la delataría */
 .board.scales .fret-cell.scale-step .dot { transform:scale(1.05); box-shadow:0 0 0 3px var(--amber), 0 2px 8px rgba(0,0,0,.5); }
-/* En Práctica no se ven: se encuentran. Tras un fallo se enseñan un momento. */
-.board.scales.practice .fret-cell.scale:not(.correct) .dot { opacity:0; }
-.board.scales.practice.reveal-scale .fret-cell.scale:not(.correct) .dot { opacity:1; background:rgba(20,14,9,.88);
-  color:var(--dot); box-shadow:inset 0 0 0 2px var(--dot); }
 .ch-hints { display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
 /* Pista encendida: el chip enseña la respuesta, con etiqueta pequeña y valor
    grande y borde discontinuo de «pista», para no confundirla con la nota que
@@ -162,7 +218,7 @@ button { font-family:inherit; color:inherit; }
   color:var(--amber); width:40px; height:40px; border-radius:10px; font-size:15px; cursor:pointer; }
 .btn-repeat:active { background:var(--line); }
 /* Al entrar en Adivinar nada suena hasta pulsar ▶ (Sesión 1, E06). */
-.btn-repeat.ready { background:var(--amber); color:#160f07; border-color:var(--amber); }
+.btn-repeat.ready { background:var(--amber); color:var(--on-accent); border-color:var(--amber); }
 @media (prefers-reduced-motion:no-preference){
   .btn-repeat.ready { animation:invite 1.6s ease-in-out infinite; } }
 @keyframes invite { 0%,100%{ box-shadow:0 0 0 0 rgba(232,168,76,.55); } 50%{ box-shadow:0 0 0 7px rgba(232,168,76,0); } }
@@ -203,7 +259,7 @@ button { font-family:inherit; color:inherit; }
 .board-scroll::-webkit-scrollbar-thumb { background:var(--line2); border-radius:2px; }
 .board { position:relative; display:flex; flex-direction:column; min-width:max-content;
   height:100%; border-radius:10px;
-  background:linear-gradient(180deg,#32200f,#432c16 45%,#32200f);
+  background:linear-gradient(180deg,var(--board-a),var(--board-b) 45%,var(--board-a));
   box-shadow:inset 0 0 40px rgba(0,0,0,.55), 0 4px 18px rgba(0,0,0,.45); }
 
 .fret-nums { display:flex; height:17px; flex-shrink:0; }
@@ -213,30 +269,30 @@ button { font-family:inherit; color:inherit; }
 .fret-nums.guide .fret-num:not(.key) { visibility:hidden; }
 .fn-spacer { width:var(--label-w); flex-shrink:0; }
 .fret-num { flex-shrink:0; width:var(--fret-w); text-align:center; line-height:17px;
-  font-size:10px; font-variant-numeric:tabular-nums; color:var(--muted); }  /* sobre la madera */
+  font-size:10px; font-variant-numeric:tabular-nums; color:var(--board-muted); }  /* sobre la madera */
 .fret-num.nut { width:var(--nut-w); }
-.fret-num.key { color:var(--amber); font-weight:700; }
+.fret-num.key { color:var(--board-accent); font-weight:700; }
 
 .strings { position:relative; display:flex; flex-direction:column; flex:1; min-height:0; }
 .string-row { position:relative; display:flex; align-items:center; flex:1; min-height:0; }
 .string-row::after { content:''; position:absolute; left:var(--label-w); right:0; top:50%;
   height:var(--sth,1.5px); transform:translateY(-50%); pointer-events:none; z-index:1;
-  background:linear-gradient(180deg,#a89880,#e8d8c0 50%,#7a7060);
+  background:linear-gradient(180deg,var(--string-a),var(--string-b) 50%,var(--string-c));
   box-shadow:0 1px 2px rgba(0,0,0,.45); }
 .string-label { width:var(--label-w); flex-shrink:0; height:100%; display:flex;
   align-items:center; justify-content:center; font-size:10px; font-weight:700;
-  color:var(--amber); background:var(--bg); border-right:2px solid var(--amber);
+  color:var(--board-accent); background:var(--label-bg); border-right:2px solid var(--board-accent);
   position:sticky; left:0; z-index:4; }
 .frets-row { display:flex; position:relative; height:100%; flex:1; }
 .fret-cell { position:relative; width:var(--fret-w); height:100%; flex-shrink:0;
-  border-right:2px solid #8a7560; cursor:pointer;
+  border-right:2px solid var(--fret); cursor:pointer;
   display:flex; align-items:center; justify-content:center; }
 .fret-cell:focus { outline:none; }
 .fret-cell:focus-visible { outline:3px dashed #fff; outline-offset:-5px; z-index:5; }
-.fret-cell.nut { width:var(--nut-w); border-right:4px solid #f0e0c8;
+.fret-cell.nut { width:var(--nut-w); border-right:4px solid var(--nut);
   background:rgba(240,224,200,.05); }
 .marker { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-  width:8px; height:8px; border-radius:50%; background:rgba(232,164,92,.42); pointer-events:none; }
+  width:8px; height:8px; border-radius:50%; background:var(--marker); pointer-events:none; }
 
 .dot { position:relative; z-index:3; width:26px; height:26px; max-width:78%; max-height:78%;
   border-radius:50%; background:var(--dot); color:#160f07; display:flex; align-items:center;
@@ -328,12 +384,16 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .mic-why { color:var(--ko) !important; }
 .mic-btn { width:100%; min-height:44px; border-radius:10px; cursor:pointer; font:inherit; font-size:14px; font-weight:600;
   background:var(--surface2); border:1px solid var(--line2); color:var(--text); }
-.mic-btn.primary { background:var(--amber); border-color:var(--amber); color:#160f07; }
+.mic-btn.primary { background:var(--amber); border-color:var(--amber); color:var(--on-accent); }
 .mic-btn:disabled { opacity:.5; cursor:not-allowed; }
 .mic-live { display:flex; flex-direction:column; align-items:center; gap:4px; }
 .mic-gauge { width:100%; max-width:300px; height:auto; display:block; }
 .mic-gauge .needle { transform-origin:120px 120px; transform-box:view-box; transition:transform .12s linear; }
 .mic-gauge.idle .needle { opacity:.25; }
+/* Sostenida (F5.8 #2): ya no se oye; lo último medido sigue a la vista, atenuado. */
+.mic-live.held .needle { opacity:.5; }
+/* Solo la nota grande y la orden; el detalle dice «Última lectura» a pleno contraste (AR-15 #7). */
+.mic-live.held .mic-note, .mic-live.held .mic-order { opacity:.6; }
 .mic-read { width:100%; display:flex; flex-direction:column; align-items:center; gap:4px; }
 .mic-note { font-size:44px; font-weight:800; line-height:1; color:var(--text); }
 .mic-detail { font-size:13px; color:var(--muted); }
@@ -348,27 +408,21 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 :root { --f1:#56b4e9; --f2:#e69f00; --f3:#cc79a7; --f4:#2bb58a; }
 .chords-card { flex-shrink:0; display:flex; flex-direction:column; gap:6px; padding:6px 12px;
   background:var(--surface); border-bottom:1px solid var(--line); }
-.chord-search { width:100%; min-height:40px; box-sizing:border-box; padding:0 12px; border-radius:10px; font:inherit; font-size:15px;
-  background:var(--bg); border:1px solid var(--line2); color:var(--text); }
-.chord-search::placeholder { color:var(--faint); }
-.chord-list { max-height:132px; overflow-y:auto; display:flex; flex-direction:column; gap:3px; touch-action:pan-y; }
-.cl-head { font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-top:2px; }
-.cl-group { display:flex; flex-wrap:wrap; gap:5px; }
-.chord-chip { min-width:52px; min-height:40px; padding:0 10px; border-radius:10px; cursor:pointer; font:inherit;
-  font-size:14px; font-weight:700; background:var(--surface2); border:1px solid var(--line2); color:var(--text); }
-.chord-chip.on { background:var(--amber); border-color:var(--amber); color:#1a1006; }
-.cl-empty { margin:4px 0; font-size:13px; color:var(--muted); }
-/* En vertical no cabe todo: el listado deja ver dos filas y se desplaza; el
-   pentagrama y el zoom se apartan para que el mástil conserve sus 40 px por
-   cuerda (V-01). El acorde ya se ve entero en el mástil; al girar el móvil,
-   vuelve el pentagrama con el acorde escrito. */
-@media (orientation:portrait) and (max-width:599px){
-  .chords-card { gap:4px; padding:5px 12px; }
-  .chord-list { max-height:92px; }
-  body[data-screen="chords"] .display, body[data-screen="chords"] .zoombar { display:none; }
-}
+/* F5.8 #6: dos filas de botones, la nota y el tipo (AC-01). Los botones se
+   estiran para llenar la fila: siete por fila caben en un iPhone en vertical. */
+.chord-pick { display:flex; gap:4px; }
+.chord-chip { flex:1 1 auto; min-width:40px; min-height:40px; padding:0 4px; border-radius:10px; cursor:pointer; font:inherit;
+  font-size:14px; font-weight:700; white-space:nowrap; background:var(--surface2); border:1px solid var(--line2); color:var(--text); }
+.chord-chip.on { background:var(--amber); border-color:var(--amber); color:var(--on-accent); }
+.chord-chip:disabled { opacity:.35; cursor:default; }
+/* El dibujo es lo principal (AC-07): en Acordes no hay pentagrama, ni zoom, ni
+   aviso para girar; el mástil enseña los trastes 0 a 5 y no se desplaza. */
+body[data-screen="chords"] .display, body[data-screen="chords"] .zoombar,
+body[data-screen="chords"] #qb-staff { display:none; }
+body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
+.board.chords .finger { width:36px; height:36px; font-size:17px; }
 .chord-info { display:flex; align-items:center; gap:10px; min-height:40px; }
-.chord-name { font-family:Georgia,serif; font-size:24px; font-weight:700; color:var(--amber); }
+.chord-name { font-family:Georgia,serif; font-size:28px; font-weight:700; color:var(--amber); }
 .chord-notes { flex:1; min-width:0; font-size:13px; color:var(--muted); }
 .chord-play { flex-shrink:0; }
 .chord-tuning { margin:0; display:flex; align-items:center; flex-wrap:wrap; gap:6px 10px; font-size:13px; color:var(--ko); }
@@ -434,7 +488,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .metro-tap { min-height:48px; padding:0 20px; border-radius:24px; cursor:pointer; font:inherit; font-size:14px; font-weight:600;
   background:none; border:1.5px dashed var(--line2); color:var(--text); touch-action:manipulation; }
 .metro-play { min-height:54px; border-radius:14px; cursor:pointer; font:inherit; font-size:16px; font-weight:700;
-  letter-spacing:.06em; text-transform:uppercase; background:var(--amber); border:1.5px solid var(--amber); color:#160f07; }
+  letter-spacing:.06em; text-transform:uppercase; background:var(--amber); border:1.5px solid var(--amber); color:var(--on-accent); }
 .metro-play.on { background:none; color:var(--amber); }
 .metro-note { min-height:17px; margin:0; font-size:12.5px; color:var(--muted); text-align:center; line-height:1.4; }
 
@@ -448,7 +502,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .mp-sigs { display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; justify-items:center; }
 .mp-sig { width:62px; height:62px; border-radius:50%; font-size:22px; border:none;
   background:var(--surface2); color:var(--muted); }
-.mp-sig.on { background:var(--amber); color:#1a1006; }
+.mp-sig.on { background:var(--amber); color:var(--on-accent); }
 .mp-label { display:block; margin:16px 0 8px; font-size:13px; font-weight:600; color:var(--muted); }
 .mp-subs { display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; }
 .mp-fig { height:58px; border-radius:12px; cursor:pointer; background:var(--surface2); border:1px solid var(--line2);
@@ -458,7 +512,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .mp-accent { display:flex; align-items:center; gap:12px; min-height:48px; margin:12px 0 8px; font-size:14px; cursor:pointer; }
 .mp-accent input { width:24px; height:24px; margin:0; accent-color:var(--amber); flex-shrink:0; cursor:pointer; }
 .mp-ok { width:100%; min-height:50px; border-radius:12px; cursor:pointer; font:inherit; font-size:15px; font-weight:700;
-  background:var(--amber); border:none; color:#160f07; }
+  background:var(--amber); border:none; color:var(--on-accent); }
 
 /* Pantallas bajas en vertical (iPhone SE): todo más compacto, para que quepa. */
 @media (orientation:portrait) and (max-height:600px){
@@ -546,7 +600,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   border-radius:9px; overflow:hidden; flex-shrink:0; }
 .seg button { background:none; border:none; min-height:40px; padding:0 12px; font-size:12.5px;
   font-weight:600; color:var(--muted); cursor:pointer; }
-.seg button.on { background:var(--amber); color:#1a1006; }
+.seg button.on { background:var(--amber); color:var(--on-accent); }
 /* El interruptor se dibuja con ::before (la pista) y ::after (la bola), y el
    botón mide 52 × 40 px: así el dedo tiene 40 px aunque se vea más pequeño. */
 .sw { position:relative; width:52px; height:40px; background:none; border:none; cursor:pointer;
@@ -557,7 +611,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 .sw::after { content:''; position:absolute; top:9.5px; left:6px; width:21px; height:21px;
   border-radius:50%; background:var(--muted); transition:transform .18s, background .18s; }
 .sw.on::before { background:var(--amber); border-color:var(--amber); }
-.sw.on::after { transform:translateX(19px); background:#1a1006; }
+.sw.on::after { transform:translateX(19px); background:var(--on-accent); }
 .version { text-align:center; font-size:11px; color:var(--faint); margin:14px 0 0;
   font-variant-numeric:tabular-nums; }
 .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
@@ -616,16 +670,17 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .challenge { padding:0; gap:6px; background:none; border:none; }
   .scales-card { padding:0; gap:6px; background:none; border:none; }
   .chords-card { padding:0; gap:5px; background:none; border:none; }
-  body[data-screen="chords"] .zoombar { display:none; }   /* el acorde ya cabe: diez trastes a la vista */
-  .chord-list { max-height:min(150px, 40vh); }
-  .chord-chip { min-width:44px; padding:0 7px; font-size:13px; }
+  /* En la columna estrecha, tantas columnas como quepan sin bajar de 44 px: los 40 px
+     del dedo (G-05) y algo de margen para «Mayor» y «menor». */
+  .chord-pick { display:grid; grid-template-columns:repeat(auto-fill, minmax(44px, 1fr)); }
+  .chord-chip { min-width:0; padding:0 2px; font-size:12px; }
+  .chord-info { order:-1; }                   /* el nombre y «Tocar», arriba: a la vista sin desplazar */
   .chord-info { flex-wrap:wrap; gap:2px 8px; }
   .chord-name { font-size:20px; }
   .chord-notes { flex-basis:100%; order:3; font-size:12px; }
   .sc-top { flex-wrap:wrap; }
-  .sc-top .seg { flex-basis:100%; }
-  .sc-practice { flex-wrap:wrap; }
   .sc-top select { flex:1 1 100%; }           /* tónica y tipo, cada uno en su fila: «Pentatónica mayor» cabe */
+  .sc-posbar { flex:1 1 100%; }               /* y la posición, en la suya */
   .sc-nav { padding:0; gap:6px; flex-wrap:wrap; justify-content:space-between; }
   .sc-center { order:3; flex-basis:100%; align-items:flex-start; }
   .sc-line { justify-content:flex-start; }
@@ -675,7 +730,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .tab { flex:0 0 auto; flex-direction:row; min-height:40px; padding:0 15px; border-radius:20px;
          border:1px solid var(--line); font-size:13px; }
   .tab svg { display:none; }
-  .tab.active { background:var(--amber); border-color:var(--amber); color:#1a1006; }
+  .tab.active { background:var(--amber); border-color:var(--amber); color:var(--on-accent); }
   .tab.metro-on::after { top:-3px; left:auto; right:-2px; }
   .metro { width:100%; max-width:460px; margin:0 auto; padding:20px 20px 12px; }
   .metro-pendulo { max-height:300px; }
@@ -697,7 +752,123 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   .grabber { display:none; }
   .sheet-handle { touch-action:auto; cursor:auto; padding-top:0; }
 }
+
+/* ===== F5.8 #3 · TEMAS: lo que no cambia con el tema =====
+   Dentro del mástil (oscuro en todos los temas) los colores de acierto, fallo
+   y texto son siempre los de la madera, para que contrasten con ella. */
+.board { --ok:#58c98a; --ko:#e86060; --text:#f4ece1; --amber:var(--board-accent);
+  --muted:var(--board-muted); --faint:var(--board-muted); }   /* AT-15 #6 */
+.staff-clef { fill:var(--amber); }
+.staff-svg { color:var(--text); }   /* la tinta de las notas en un tema claro (currentColor) */
+/* En un tema claro, los colores de nota (pastel) no se leen sobre el papel:
+   la nota leída y la pista se escriben con la tinta del texto. */
+html[data-scheme="light"] .note-name { color:var(--text); text-shadow:none; }
+html[data-scheme="light"] .chip.clue .clue-v { color:var(--text) !important; }
+html[data-scheme="light"] .tstring-note { color:var(--text); }
+html[data-scheme="light"] .challenge-text b { color:var(--text) !important; }
+/* Más limpio («tipo Apple»): superficies sin bordes, separadores finos y
+   esquinas algo más redondas. */
+.chip { border-color:transparent; background:var(--surface2); }
+.chip.on { border-color:var(--amber); }
+.header, .quickbar { border-bottom-color:transparent; }
+.challenge, .scales-card, .chords-card { border-bottom:none; margin:0 8px; border-radius:var(--r); }
+.display { border-bottom:none; }
+.board { border-radius:12px; }
+.board-scroll { border-radius:12px; }
+
+/* ===== F5.8 #4 · ADIVINAR: lo que se busca, en grande; lo tocado, pequeño =====
+   Encendida, cada pista ocupa su parte de la franja, con la respuesta en
+   grande; la nota que tocas pasa a ser una lectura pequeña y apagada junto al
+   pentagrama, para que no compita con la que buscas. */
+.ch-hints.has-clue { flex-wrap:nowrap; }
+.ch-hints.has-clue .chip.clue { flex:1 1 0; min-width:0; min-height:58px; border-radius:14px;
+  flex-direction:column; align-items:center; justify-content:center; gap:0; padding:4px 10px; }
+.ch-hints.has-clue .chip.clue .clue-k { font-size:10.5px; line-height:13px; }
+.ch-hints.has-clue .chip.clue .clue-v { font-size:30px; line-height:36px; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+.ch-hints.has-clue .chip.clue .clue-v.long { font-size:21px; }
+body[data-screen="guess"] .note-readout { min-width:52px; height:auto; }
+body[data-screen="guess"] .note-name { font-family:inherit; font-style:normal; font-weight:600;
+  font-size:20px; line-height:24px; height:24px; color:var(--muted); text-shadow:none; }
+body[data-screen="guess"] .note-oct { margin-top:0; }
+
+/* ===== F5.8 #3 · TABLETA Y ORDENADOR (700 × 600 px o más de área útil: el iPad en
+   las dos orientaciones, también con las barras de Safari, y el ordenador; AR-16 #1) =====
+   Antes el mástil se estiraba hasta llenar la pantalla (cuerdas de 150 px en un
+   iPad en vertical) y los textos eran los del móvil. Ahora el mástil tiene un
+   alto razonable y se centra; lo que sobra va al pentagrama y a la lectura, y
+   los textos y botones crecen. Las pestañas son un control segmentado. */
+@media (min-width:700px) and (min-height:600px){
+  .header { min-height:58px; padding:8px 20px; }
+  .brand { font-size:24px; }
+  .tabbar { gap:2px; padding:3px; background:var(--surface2); border-radius:12px; }
+  .tab { border:none; border-radius:9px; min-height:40px; padding:0 16px; font-size:14px;
+         font-weight:600; color:var(--muted); }
+  .tab.active { background:var(--surface); color:var(--text); border:none;
+                box-shadow:0 1px 4px rgba(0,0,0,.22); }
+  .quickbar { padding:6px 20px; gap:8px; }
+  .chip { font-size:13.5px; padding:0 16px; }
+  .challenge, .scales-card, .chords-card { margin:6px 20px 0; padding:10px 16px; gap:8px; }
+  .chord-chip { flex:0 1 76px; }              /* en pantalla grande, botones de su tamaño, no estirados */
+  .board.chords .finger { width:44px; height:44px; font-size:20px; }
+  .challenge-text { font-size:17px; }
+  .btn-repeat { width:48px; height:48px; border-radius:12px; font-size:18px; }
+  .stats { font-size:13px; } .stats .streak { font-size:16px; }
+  .ch-hints.has-clue .chip.clue { min-height:84px; border-radius:16px; }
+  .ch-hints.has-clue .chip.clue .clue-k { font-size:12px; line-height:15px; }
+  .ch-hints.has-clue .chip.clue .clue-v { font-size:44px; line-height:52px; }
+  .ch-hints.has-clue .chip.clue .clue-v.long { font-size:34px; }
+  .display:not(.hidden) { flex:0 1 230px; max-height:none; }   /* cede antes que el mástil */
+  .display-inner { padding:10px 24px; gap:24px; justify-content:center; }
+  .staff-wrap { flex:0 1 560px; }
+  .staff-svg { max-width:560px; max-height:210px; }
+  .note-readout { min-width:110px; height:84px; }
+  .note-name { font-size:64px; line-height:64px; height:64px; }
+  .note-oct { font-size:13px; }
+  body[data-screen="guess"] .note-name { font-size:24px; line-height:28px; height:28px; }
+  .board-area { padding:12px 20px 0; justify-content:center; min-height:calc(12px + 17px + 6 * 44px); }
+  .board-scroll { display:flex; align-items:center; }
+  .board { height:min(100%, 420px); }
+  .string-label, .fret-num { font-size:12px; }
+  .sheet { width:min(440px, 92vw); }
+}
+/* El ordenador (ratón), algo más compacto: cuerdas de unos 56 px. */
+@media (min-width:700px) and (min-height:600px) and (pointer:fine){
+  .board { height:min(100%, 380px); }
+  .board-area { min-height:calc(12px + 17px + 6 * 36px); }
+}
+/* Ventanas de ordenador bajas (1280 × 720 deja unos 620 px útiles): con ratón,
+   el mástil puede bajar a 30 px por cuerda para que Acordes quepa. */
+@media (min-width:700px) and (min-height:600px) and (max-height:699px) and (pointer:fine){
+  .board-area { min-height:calc(12px + 17px + 6 * 30px); }
+  .challenge, .scales-card, .chords-card { padding:6px 16px; gap:4px; }
+}
+/* Tableta en vertical y pantallas medianas (iPad mini y iPad en vertical, iPad
+   en horizontal de 1024 px): seis pestañas no caben junto al nombre, así que
+   bajan a su propia fila, centradas, bajo la cabecera. */
+@media (min-width:700px) and (max-width:1099px) and (min-height:600px){
+  .tabbar { position:static; transform:none; order:1; align-self:center; margin:0 auto 4px; right:auto; left:auto; }
+  .tab { padding:0 14px; font-size:14px; }
+}
+/* Pantallas grandes: el control segmentado, centrado en la cabecera. */
+@media (min-width:1100px) and (min-height:600px){
+  .tabbar { left:50%; right:auto; transform:translateX(-50%); top:calc(env(safe-area-inset-top) + 9px); }
+}
 </style>
+<!-- El tema guardado, antes de pintar nada (AT-15 #3) -->
+<script>"use strict";
+// 00-aspecto.js · Pone el tema guardado en <html> antes de pintar nada (F5.8 #3, AT-15 #3).
+// Va en el <head>: si esperara a syncUI(), la página saldría un instante con
+// Madera aunque hubieras elegido otro tema. syncUI() lo completa después
+// (data-scheme, la barra del sistema). Si algo falla, se queda Madera.
+(function(){   // dentro de una función: no deja variables sueltas para los demás archivos
+try {
+  var guardado = JSON.parse(localStorage.getItem('trasteando.v1') || '{}');
+  if (guardado && guardado.theme) document.documentElement.setAttribute('data-theme', guardado.theme);
+} catch (e) {}
+})();
+//# sourceURL=js/00-aspecto.js
+</script>
 </head>
 <body>
 
@@ -771,6 +942,9 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
 <!-- Acceso rápido (C-03) -->
 <div class="quickbar" id="quickbar">
   <button class="chip" id="qb-notation">Do Re Mi</button>
+  <!-- Solo en Escalas (F5.8 #5, tus respuestas del 15/11): la escala en todo el mástil y la práctica -->
+  <button class="chip" id="qb-scale-all" aria-pressed="false" hidden data-t="scale.all" data-t-aria="scale.allLabel" aria-label="Ver la escala en todo el mástil">Todas</button>
+  <button class="chip" id="qb-scale-practice" aria-pressed="false" hidden data-t="scale.practice" data-t-aria="scale.practiceLabel" aria-label="Practicar la posición">Practicar</button>
   <button class="chip" id="qb-staff" aria-label="Pentagrama" data-t-aria="staff"><span class="long" data-t="staff">Pentagrama</span><span class="short" id="qb-staff-icon" aria-hidden="true"></span></button>
 </div>
 
@@ -794,30 +968,27 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   </div>
 </div>
 
-<!-- Escalas (F5): submodo, tónica y tipo; intervalos y estado de la práctica -->
+<!-- Escalas (F5): tónica y tipo; la posición y «Escuchar» -->
 <div class="scales-card" id="scales-card" hidden>
   <div class="sc-top">
-    <div class="seg" id="scale-mode" role="group" aria-label="Submodo" data-t-aria="scale.mode">
-      <button data-v="show" data-t="scale.show">Mostrar</button>
-      <button data-v="practice" data-t="scale.practice">Práctica</button>
-    </div>
     <select id="scale-tonic" aria-label="Tónica" data-t-aria="scale.tonic"></select>
     <select id="scale-type" aria-label="Tipo de escala" data-t-aria="scale.typeLabel"></select>
-  </div>
-  <div class="sc-practice" id="scale-practice" hidden>
-    <div class="sc-msg" id="scale-msg" aria-live="polite"></div>
-    <div class="sc-side">
-      <span class="sc-count" id="scale-count"></span>
-      <button class="chip" id="scale-reset" data-t="scale.reset">Otra vez</button>
+    <!-- Una posición cada vez (F5.8 #5, E-07): ◀ ▶ para moverte por el mástil y «Escuchar».
+         En la misma fila: en el móvil en vertical no cabe otra. Los textos tienen
+         versión larga y corta («Posición 6 de 7 · trastes 8 a 13» o «6/7»). -->
+    <div class="sc-posbar" role="group" aria-label="Posición" data-t-aria="scale.posLabel">
+      <button class="zoom-btn" id="scale-pos-prev" aria-label="Posición anterior" data-t-aria="scale.posPrev">&#9664;</button>
+      <span class="sc-pos" id="scale-pos" aria-live="polite"></span>
+      <button class="zoom-btn" id="scale-pos-next" aria-label="Posición siguiente" data-t-aria="scale.posNext">&#9654;</button>
+      <button class="chip" id="scale-play" aria-pressed="false"></button>
     </div>
   </div>
 </div>
 
-<!-- Acordes (F5.7): buscador y listado a un lado; el acorde, en el mástil (AC-01 a AC-06) -->
+<!-- Acordes (F5.7; F5.8 #6): la nota y el tipo, en dos filas; el acorde, en grande en el mástil (AC-01, AC-07) -->
 <div class="chords-card" id="chords-card" hidden>
-  <input type="search" class="chord-search" id="chord-search" placeholder="Buscar: G, Am…" data-t-placeholder="chord.search"
-         aria-label="Buscar acorde por su nombre" data-t-aria="chord.searchAria" autocomplete="off" autocapitalize="off" spellcheck="false">
-  <div class="chord-list" id="chord-list" role="group" aria-label="Acordes" data-t-aria="tab.chords"></div>
+  <div class="chord-pick" id="chord-roots" role="group" aria-label="Nota del acorde" data-t-aria="chord.rootsAria"></div>
+  <div class="chord-pick" id="chord-types" role="group" aria-label="Tipo de acorde" data-t-aria="chord.typesAria"></div>
   <div class="chord-info">
     <span class="chord-name" id="chord-name">C</span>
     <span class="chord-notes" id="chord-notes"></span>
@@ -840,7 +1011,7 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   </div>
 </div>
 
-<!-- Paso a paso de Mostrar (E-06): va bajo el mástil, encima del zoom -->
+<!-- Paso a paso (E-06): va bajo el mástil, encima del zoom -->
 <div class="sc-nav" id="scale-nav" hidden>
   <button class="zoom-btn" id="scale-prev" aria-label="Paso anterior" data-t-aria="scale.prev">&#9664;</button>
   <!-- Las notas con sus intervalos y, debajo, el paso: así cabe en una fila -->
@@ -992,6 +1163,19 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
     </div>
   </div>
 
+  <!-- Aspecto (F5.8 #3, C-08): tres temas; «Automático» sigue al dispositivo -->
+  <div class="set-group">
+    <span data-t="set.look">Aspecto</span>
+    <div class="set-row set-row-wrap">
+      <div class="txt"><span data-t="set.theme">Tema</span><small data-t="set.theme.sub">«Automático» sigue el modo claro u oscuro del dispositivo</small></div>
+      <div class="seg" id="set-theme">
+        <button data-v="madera" data-t="theme.wood">Madera</button>
+        <button data-v="auto" data-t="theme.auto">Automático</button>
+        <button data-v="partitura" data-t="theme.sheet">Partitura</button>
+      </div>
+    </div>
+  </div>
+
   <div class="set-group">
     <span data-t="set.notation">Notación</span>
     <div class="set-row">
@@ -1135,7 +1319,6 @@ const TEXTOS = {
     'record.title': 'Récord de racha en la afinación {afin} (cada afinación tiene el suyo)',
     'hints': 'Pistas', 'hint.name': 'Nombre', 'hint.note': 'Nota', 'hint.string': 'Cuerda', 'hint.strings': 'Cuerdas',
     'reader.play': 'toca', 'octave': 'octava {n}',
-    'scale.mode': 'Submodo', 'scale.show': 'Mostrar', 'scale.practice': 'Práctica',
     'scale.tonic': 'Tónica', 'scale.typeLabel': 'Tipo de escala', 'scale.lineAria': 'Notas e intervalos',
     'scale.type.mayor': 'Mayor', 'scale.type.menor': 'Menor natural',
     'scale.type.pentaMayor': 'Pentatónica mayor', 'scale.type.pentaMenor': 'Pentatónica menor',
@@ -1145,10 +1328,18 @@ const TEXTOS = {
     'scale.step': 'Paso {i} de {total}', 'scale.stepTonic': '{n}, la tónica',
     'scale.stepUp': '{n}, {d} sobre {prev}',
     'scale.gap.T': 'un tono', 'scale.gap.ST': 'un semitono', 'scale.gap.T½': 'un tono y medio',
-    'scale.count': '{n} de {total}', 'scale.reset': 'Otra vez',
-    'scale.practiceHint': 'Toca notas de {e}: cada una distinta cuenta',
-    'scale.yes': '✓ {n} está en {e}', 'scale.no': '✗ {n} no está en {e}',
-    'scale.allFound': '¡Todas! Ya tienes {e} entera',
+    'scale.stepFirst': '{n}: aquí empieza la posición', 'scale.stepUpTonic': '{n}, la tónica, {d} sobre {prev}',
+    'scale.posLabel': 'Posición', 'scale.posPrev': 'Posición anterior', 'scale.posNext': 'Posición siguiente',
+    'scale.pos': 'Posición {i} de {total} · trastes {a} a {b}',
+    'scale.play': '▶ Escuchar', 'scale.stop': '■ Parar', 'scale.posShort': '{i}/{total}',
+    'scale.playLabel': 'Escuchar la posición', 'scale.gapN': '{n} semitonos',
+    'scale.all': 'Todas', 'scale.allLabel': 'Ver la escala en todo el mástil',
+    'scale.practice': 'Practicar', 'scale.practiceLabel': 'Practicar la posición: tocarla en orden',
+    'scale.pr.start': 'Práctica · toca la posición de grave a agudo, desde la 6.ª cuerda',
+    'scale.pr.next': 'Práctica · {i} de {total} · la siguiente, más aguda',
+    'scale.pr.no': '✗ Esa no · {i} de {total} · busca la siguiente de la posición, más aguda',
+    'scale.pr.otherString': '✗ Suena igual, pero en otra cuerda · sigue dentro de la posición',
+    'scale.pr.done': '✓ ¡Completa! Ya tocas la posición {p} de {e}. Toca la primera para repetir',
     'zoom.less': 'Ver menos trastes', 'zoom.more': 'Ver más trastes',
     'zoom.n': '{n} trastes a la vista', 'zoom.all': 'Mástil completo',
     'rotate': 'Gira el móvil para ver más trastes', 'rotate.close': 'Cerrar el aviso',
@@ -1162,7 +1353,8 @@ const TEXTOS = {
     'mic.intro1': 'Toca una cuerda y la app te dirá si está afinada o cuánto subirla o bajarla. Para eso necesita ',
     'mic.intro2': 'escuchar con el micrófono',
     'mic.intro3': '. El sonido se analiza solo en tu dispositivo: no se graba ni se envía a ningún sitio.',
-    'mic.start': 'Activar el micrófono', 'mic.stop': 'Detener el micrófono', 'mic.play': 'Toca una cuerda',
+    'mic.start': 'Activar el micrófono', 'mic.stop': 'Detener el micrófono', 'mic.play': 'Toca una cuerda', 'mic.held': 'Última lectura',
+    'mic.hidden': 'El micrófono se apagó al ocultarse la app. Actívalo otra vez para seguir.',
     'mic.privacy': 'Afinada en la franja verde (±5 cents). El sonido se analiza solo en tu dispositivo.',
     'mic.detail': '{c} cents · {o} cuerda',
     'mic.tuned': 'Afinada', 'mic.up': 'Sube', 'mic.upBit': 'Sube un poco', 'mic.down': 'Baja', 'mic.downBit': 'Baja un poco',
@@ -1187,6 +1379,8 @@ const TEXTOS = {
     'set.audio': 'Estado del sonido', 'set.audio.wake': 'Reactivar sonido',
     'set.tuning.active': 'Afinación activa', 'set.tuning.sub': 'Se aplica al mástil y al afinador',
     'set.lang': 'Idioma', 'set.lang.sub': 'Español o inglés',
+    'set.look': 'Aspecto', 'set.theme': 'Tema', 'set.theme.sub': '«Automático» sigue el modo claro u oscuro del dispositivo',
+    'theme.wood': 'Madera', 'theme.auto': 'Automático', 'theme.sheet': 'Partitura',
     'set.reset': 'Restablecer todos los ajustes', 'set.clear': 'Borrar los récords de racha',
     'confirm.clear': '¿Borrar los récords de racha de todas las afinaciones?',
     'confirm.reset': '¿Restablecer todos los ajustes? Tus récords se conservan.',
@@ -1214,14 +1408,15 @@ const TEXTOS = {
     'metro.stoppedAudio': 'Se paró: el sistema detuvo el sonido. Vuelve a empezar.',
     'metro.start': 'Empezar', 'metro.stop': 'Parar',
     'metro.playing': 'Sonando. Puedes ir a otra área: sigue hasta que lo pares aquí.',
+    'metro.noLock': 'Este navegador no puede mantener la pantalla encendida: si se apaga, el metrónomo se para.',
     'metro.noAudio': 'El sonido aún no está listo. Vuelve a pulsar.',
     'metro.stoppedMic': 'El metrónomo se ha parado: su clic confundiría al afinador.',
     'metro.stoppedHidden': 'Se paró al salir de la app.',
     'metro.running': 'Metrónomo en marcha',
-    // Acordes (F5.7, AC-01 a AC-06)
-    'tab.chords': 'Acordes', 'chord.search': 'Buscar: G, Am…', 'chord.searchAria': 'Buscar acorde por su nombre',
-    'chord.popular': 'Populares', 'chord.all': 'Todos ({n})', 'chord.results': 'Resultados ({n})',
-    'chord.none': 'Ningún acorde empieza por «{q}».', 'chord.play': 'Tocar', 'chord.playAria': 'Tocar el acorde',
+    // Acordes (F5.7; F5.8 #6: nota y tipo, AC-01)
+    'tab.chords': 'Acordes', 'chord.rootsAria': 'Nota del acorde', 'chord.typesAria': 'Tipo de acorde',
+    'chord.major': 'Mayor', 'chord.minor': 'menor', 'chord.bass': '/bajo', 'chord.bassAria': 'Con otra nota en el bajo',
+    'chord.play': 'Tocar', 'chord.playAria': 'Tocar el acorde',
     'chord.tuning': 'Las digitaciones son para la afinación estándar.', 'chord.toStandard': 'Pasar a estándar',
     'chord.finger': 'dedo {n}', 'chord.open': 'al aire', 'chord.muted': 'no suena', 'chord.stringAria': '{o} cuerda: {e}'
   },
@@ -1248,7 +1443,6 @@ const TEXTOS = {
     'record.title': 'Best streak in {afin} tuning (each tuning keeps its own)',
     'hints': 'Hints', 'hint.name': 'Name', 'hint.note': 'Note', 'hint.string': 'String', 'hint.strings': 'Strings',
     'reader.play': 'play', 'octave': 'octave {n}',
-    'scale.mode': 'Submode', 'scale.show': 'Show', 'scale.practice': 'Practice',
     'scale.tonic': 'Root', 'scale.typeLabel': 'Scale type', 'scale.lineAria': 'Notes and intervals',
     'scale.type.mayor': 'Major', 'scale.type.menor': 'Natural minor',
     'scale.type.pentaMayor': 'Major pentatonic', 'scale.type.pentaMenor': 'Minor pentatonic',
@@ -1258,10 +1452,18 @@ const TEXTOS = {
     'scale.step': 'Step {i} of {total}', 'scale.stepTonic': '{n}, the root',
     'scale.stepUp': '{n}, {d} above {prev}',
     'scale.gap.T': 'a whole tone', 'scale.gap.ST': 'a semitone', 'scale.gap.T½': 'a tone and a half',
-    'scale.count': '{n} of {total}', 'scale.reset': 'Again',
-    'scale.practiceHint': 'Play notes of {e}: each different one counts',
-    'scale.yes': '✓ {n} is in {e}', 'scale.no': '✗ {n} is not in {e}',
-    'scale.allFound': 'All of them! You have the whole {e}',
+    'scale.stepFirst': '{n}: the position starts here', 'scale.stepUpTonic': '{n}, the root, {d} above {prev}',
+    'scale.posLabel': 'Position', 'scale.posPrev': 'Previous position', 'scale.posNext': 'Next position',
+    'scale.pos': 'Position {i} of {total} · frets {a} to {b}',
+    'scale.play': '▶ Listen', 'scale.stop': '■ Stop', 'scale.posShort': '{i}/{total}',
+    'scale.playLabel': 'Listen to the position', 'scale.gapN': '{n} semitones',
+    'scale.all': 'All', 'scale.allLabel': 'Show the scale on the whole neck',
+    'scale.practice': 'Practice', 'scale.practiceLabel': 'Practise the position: play it in order',
+    'scale.pr.start': 'Practice · play the position from low to high, from the 6th string',
+    'scale.pr.next': 'Practice · {i} of {total} · the next one, higher',
+    'scale.pr.no': '✗ Not that one · {i} of {total} · find the next one in the position, higher',
+    'scale.pr.otherString': '✗ Same sound, but on another string · stay inside the position',
+    'scale.pr.done': '✓ Done! You can play position {p} of {e}. Play the first one to repeat',
     'zoom.less': 'Show fewer frets', 'zoom.more': 'Show more frets',
     'zoom.n': '{n} frets in view', 'zoom.all': 'Whole neck',
     'rotate': 'Turn your phone to see more frets', 'rotate.close': 'Close this tip',
@@ -1275,7 +1477,8 @@ const TEXTOS = {
     'mic.intro1': 'Play a string and the app will tell you whether it is in tune or how far to raise or lower it. To do that it needs to ',
     'mic.intro2': 'listen through the microphone',
     'mic.intro3': '. The sound is analysed only on your device: it is never recorded or sent anywhere.',
-    'mic.start': 'Turn on the microphone', 'mic.stop': 'Turn off the microphone', 'mic.play': 'Play a string',
+    'mic.start': 'Turn on the microphone', 'mic.stop': 'Turn off the microphone', 'mic.play': 'Play a string', 'mic.held': 'Last reading',
+    'mic.hidden': 'The microphone turned off when the app was hidden. Turn it on again to continue.',
     'mic.privacy': 'In tune within the green band (±5 cents). The sound is analysed only on your device.',
     'mic.detail': '{c} cents · {o} string',
     'mic.tuned': 'In tune', 'mic.up': 'Tune up', 'mic.upBit': 'Up a little', 'mic.down': 'Tune down', 'mic.downBit': 'Down a little',
@@ -1300,6 +1503,8 @@ const TEXTOS = {
     'set.audio': 'Sound status', 'set.audio.wake': 'Restart sound',
     'set.tuning.active': 'Active tuning', 'set.tuning.sub': 'Applies to the fretboard and the tuner',
     'set.lang': 'Language', 'set.lang.sub': 'Spanish or English',
+    'set.look': 'Appearance', 'set.theme': 'Theme', 'set.theme.sub': '“Automatic” follows your device’s light or dark mode',
+    'theme.wood': 'Wood', 'theme.auto': 'Automatic', 'theme.sheet': 'Sheet music',
     'set.reset': 'Reset all settings', 'set.clear': 'Clear best streaks',
     'confirm.clear': 'Clear the best streaks of every tuning?',
     'confirm.reset': 'Reset all settings? Your best streaks are kept.',
@@ -1327,14 +1532,15 @@ const TEXTOS = {
     'metro.stoppedAudio': 'It stopped: the system halted the sound. Start again.',
     'metro.start': 'Start', 'metro.stop': 'Stop',
     'metro.playing': 'Playing. You can go to another area: it keeps going until you stop it here.',
+    'metro.noLock': 'This browser can\'t keep the screen on: if it turns off, the metronome stops.',
     'metro.noAudio': 'Sound is not ready yet. Tap again.',
     'metro.stoppedMic': 'The metronome stopped: its click would confuse the tuner.',
     'metro.stoppedHidden': 'It stopped when you left the app.',
     'metro.running': 'Metronome running',
-    // Chords (F5.7, AC-01 to AC-06)
-    'tab.chords': 'Chords', 'chord.search': 'Search: G, Am…', 'chord.searchAria': 'Search a chord by name',
-    'chord.popular': 'Popular', 'chord.all': 'All ({n})', 'chord.results': 'Results ({n})',
-    'chord.none': 'No chord starts with “{q}”.', 'chord.play': 'Play', 'chord.playAria': 'Play the chord',
+    // Chords (F5.7; F5.8 #6: root and type, AC-01)
+    'tab.chords': 'Chords', 'chord.rootsAria': 'Chord root', 'chord.typesAria': 'Chord type',
+    'chord.major': 'Major', 'chord.minor': 'minor', 'chord.bass': '/bass', 'chord.bassAria': 'With another bass note',
+    'chord.play': 'Play', 'chord.playAria': 'Play the chord',
     'chord.tuning': 'These fingerings are for standard tuning.', 'chord.toStandard': 'Switch to standard',
     'chord.finger': 'finger {n}', 'chord.open': 'open', 'chord.muted': 'not played', 'chord.stringAria': '{o} string: {e}'
   }
@@ -1382,7 +1588,7 @@ function aplicarIdioma(){
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.6.2';
+const APP_VERSION = '0.6.8';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -1587,15 +1793,16 @@ const DEFAULTS = {
   maxChallengeFret:12,    // hasta dónde llegan los retos del modo Adivinar
   records:{},             // récord de racha de cada afinación: { standard: 7, dropd: 3 } (J-11)
   rotateHintClosed:false, // el aviso para girar, una vez cerrado, no vuelve (V-01)
-  tunerMode:'ear',        // afinador: 'ear' de oído · 'mic' por micrófono (F4.3)
+  tunerMode:'mic',        // afinador: 'mic' por micrófono · 'ear' de oído (F4.3; por defecto Micrófono desde F5.8 #2)
+  tunerPick:false,        // true cuando lo has elegido tú: solo entonces se recuerda
   lang:null,              // 'es' o 'en' (G-12); sin elegir, el del navegador
-  scaleId:'mayor',        // Escalas (F5): tipo, tónica (clase de altura) y submodo
+  scaleId:'mayor',        // Escalas (F5): tipo y tónica (clase de altura)
   scalePc:0,
-  scaleMode:'show',       // 'show' Mostrar · 'practice' Práctica
   onMiss:'retry',         // Adivinar, al fallar: 'retry' seguir intentando (por defecto, 21/10) · 'reveal' ver la respuesta (J-13)
   accidentals:{},         // tecla negra → 'sharp' o 'flat' (N-06); sin dato, sostenido
   metro:{ bpm:80, sig:'4/4', sub:1, accent:true },  // metrónomo (MT-05): tempo, compás, golpes por pulso y acento en el primero
-  chordId:'C'             // acorde elegido en Acordes (F5.7), por su nombre en inglés
+  chordId:'C',            // acorde elegido en Acordes (F5.7), por su nombre en inglés
+  theme:'madera'          // tema (F5.8 #3, C-08): 'madera' · 'auto' (claro u oscuro, como el dispositivo) · 'partitura'
 };
 
 const storage = {
@@ -1626,12 +1833,14 @@ function sanitize(raw){
   }
   if (!['latin','anglo'].includes(s.notation)) s.notation = DEFAULTS.notation;
   if (!['nylon','acoustic'].includes(s.timbre)) s.timbre = DEFAULTS.timbre;
-  if (!['ear','mic'].includes(s.tunerMode)) s.tunerMode = DEFAULTS.tunerMode;
+  s.tunerPick = s.tunerPick === true;
+  if (!s.tunerPick || !['ear','mic'].includes(s.tunerMode)) s.tunerMode = DEFAULTS.tunerMode;
   if (!['es','en'].includes(s.lang)) s.lang = idiomaDelNavegador();
   if (!ESCALAS.some(e => e.id === s.scaleId)) s.scaleId = DEFAULTS.scaleId;
   if (!Number.isInteger(s.scalePc) || s.scalePc < 0 || s.scalePc > 11) s.scalePc = DEFAULTS.scalePc;
-  if (!['show','practice'].includes(s.scaleMode)) s.scaleMode = DEFAULTS.scaleMode;
+  delete s.scaleMode;     // el submodo Mostrar/Práctica se quitó en la 0.6.4 (F5.8 #5)
   if (!['reveal','retry'].includes(s.onMiss)) s.onMiss = DEFAULTS.onMiss;
+  if (!['madera','auto','partitura'].includes(s.theme)) s.theme = DEFAULTS.theme;
   const alt = {};
   if (s.accidentals && typeof s.accidentals === 'object')
     for (const pc of NEGRAS) if (['sharp','flat'].includes(s.accidentals[pc])) alt[pc] = s.accidentals[pc];
@@ -1968,17 +2177,58 @@ function updateAudioStatus(){
     (rebuildOnNextGesture ? t('audio.rebuild') : '');
 }
 
+/* Pantalla despierta (G-13, F5.8). Si nadie toca la pantalla, el móvil se
+   bloquea solo, y con la app oculta el metrónomo y el micrófono se paran. Con
+   Screen Wake Lock se le pide al sistema que no la apague MIENTRAS suena el
+   metrónomo o escucha el afinador; al parar, se suelta y el móvil vuelve a
+   bloquearse como siempre. Se detecta la capacidad (PL-04): donde no existe,
+   no se hace nada y el metrónomo lo avisa. El sistema suelta el cerrojo por su
+   cuenta al ocultar la app; al volver, se pide otra vez si sigue haciendo falta. */
+const despierta = { motivos: new Set(), cerrojo: null, pidiendo: false, negado: false };
+const puedeDespierta = () => typeof navigator !== 'undefined' && !!navigator.wakeLock && typeof navigator.wakeLock.request === 'function';
+/** ¿Puede apagarse la pantalla mientras suena? Sí, si no hay cerrojo o el sistema lo ha negado (AT-14 #4). */
+const pantallaSeApagara = () => !puedeDespierta() || despierta.negado;
+
+/** `motivo` ('metro' o 'mic') empieza o deja de necesitar la pantalla encendida. */
+function pantallaDespierta(motivo, on){
+  if (on) despierta.motivos.add(motivo); else despierta.motivos.delete(motivo);
+  if (despierta.motivos.size) pedirCerrojo();
+  else if (despierta.cerrojo){ const c = despierta.cerrojo; despierta.cerrojo = null; try { c.release().catch(() => {}); } catch(e){} }
+}
+
+async function pedirCerrojo(){
+  if (!puedeDespierta() || despierta.cerrojo || despierta.pidiendo || document.hidden) return;
+  despierta.pidiendo = true;
+  let c = null;
+  // Puede negarse (batería baja, o la app instalada en un iPhone antiguo): se
+  // sigue sin él, y el metrónomo lo avisa.
+  try { c = await navigator.wakeLock.request('screen'); despierta.negado = false; } catch(e){ despierta.negado = true; }
+  despierta.pidiendo = false;
+  if (!c){ if (typeof renderMetro === 'function') renderMetro(); return; }
+  if (!despierta.motivos.size){ try { c.release().catch(() => {}); } catch(e){} return; }   // paraste mientras se pedía
+  despierta.cerrojo = c;
+  // Si lo suelta el sistema con la app a la vista y algo sigue sonando, se pide otro (AT-14 #10).
+  if (c.addEventListener) c.addEventListener('release', () => {
+    if (despierta.cerrojo !== c) return;
+    despierta.cerrojo = null;
+    if (despierta.motivos.size) pedirCerrojo();
+  });
+}
+
 function onVisibility(){
   if (document.hidden){
     clearTimeout(playTimer);
     if (screen === 'guess' && locked) clearTimeout(nextTimer);   // ni corrección ni reto con la pantalla apagada
     silenceAll();
     if (typeof stopMetro === 'function') stopMetro('hidden');   // MT-04: con la app oculta no suena
+    // «Escuchar» de Escalas, también: si no, sus notas se acumularían y sonarían juntas al volver (AT-16 #2).
+    if (typeof pararEscala === 'function' && sc.sonando !== null){ pararEscala(); renderScales(); }
     try { if (audioCtx && audioCtx.state === 'running') audioCtx.suspend().catch(() => {}); } catch(e){}
   } else {
     // resume() siempre, no wakeAudio(): si el suspend() de hace un instante aún
     // no ha terminado, el estado dice 'running' y wakeAudio no haría nada (AT-06 #4).
     try { if (audioCtx && audioCtx.state !== 'closed') audioCtx.resume().catch(() => {}); } catch(e){}
+    if (despierta.motivos.size) pedirCerrojo();
     if (screen === 'guess'){
       // Se retoma esperando a ▶: ese toque es el que iOS exige para
       // reactivar el sonido, y no suena nada sin que lo pidas.
@@ -2136,10 +2386,10 @@ function drawStaffBase(svg, x1, x2){
   }
   // La clave se dibuja a escala y se coloca de modo que su espiral quede
   // sobre la segunda línea, que es donde va el Sol.
-  const clef = el('path',{ d:CLEF_PATH, fill:'#e8a45c',
+  const clef = el('path',{ d:CLEF_PATH, class:'staff-clef',
     transform:'translate(4,'+(STAFF_TOP-16)+') scale(1.15)' });
   svg.appendChild(clef);
-  const eight = el('text',{x:16,y:STAFF_BOTTOM+20,fill:'#e8a45c',
+  const eight = el('text',{x:16,y:STAFF_BOTTOM+20,class:'staff-clef',
     'font-size':11,'font-family':'Georgia, serif','font-style':'italic'});
   eight.textContent = '8';
   svg.appendChild(eight);
@@ -2159,8 +2409,17 @@ function fitOctave(midi){
   return { drawMidi: midi - shift, mark };
 }
 
+/** Los colores de nota (pastel) están pensados para fondo oscuro. En un tema
+ *  claro (F5.8 #3) el pentagrama se escribe con la tinta del texto: «currentColor»
+ *  toma el color del CSS (.staff-svg { color:var(--text) }), sin poner var() en un
+ *  atributo del SVG, que no todos los navegadores aceptan (AT-15 #2). */
+function tintaNota(color){
+  return document.documentElement.dataset.scheme === 'light' && /^#/.test(color) ? 'currentColor' : color;
+}
+
 /** Dibuja una nota con sus líneas adicionales, su plica y su marca de octava. */
 function drawNote(svg, realMidi, x, color, withStem, esc, accX){
+  color = tintaNota(color);
   const { drawMidi, mark } = fitOctave(realMidi);
   const midi = drawMidi;
   // Con nota escrita (escalas), su letra y su alteración; si no, la de siempre.
@@ -2349,7 +2608,8 @@ function bindBoardKeys(){
     if (!cell) return;
     let row = +cell.dataset.row, fret = +cell.dataset.fret;
     switch (ev.key){
-      case 'ArrowRight': fret = Math.min(NUM_FRETS, fret + 1); break;
+      // En Acordes solo se ven los trastes 0 a 5: el foco no pasa de ahí (AC-07, AT-17 M1).
+      case 'ArrowRight': fret = Math.min(screen === 'chords' ? TRASTES_ACORDE : NUM_FRETS, fret + 1); break;
       case 'ArrowLeft':  fret = Math.max(0, fret - 1); break;
       case 'ArrowDown':  row = Math.min(displayStrings().length - 1, row + 1); break;
       case 'ArrowUp':    row = Math.max(0, row - 1); break;
@@ -2512,12 +2772,15 @@ function clearMarks(classes){
 function defaultVisibleFrets(){
   const w = window.innerWidth;
   const landscape = w > window.innerHeight;
-  if (w >= 900) return NUM_FRETS;   // escritorio: mástil entero
+  // Escritorio: mástil entero. Con el dedo (un iPad en horizontal), los que
+  // caben a 40 px (G-05, V-04): el mástil entero los dejaría en 38 px a 1024.
+  if (w >= 900) return coarsePointer() ? Math.min(NUM_FRETS, Math.floor((w - LABEL_W - NUT_W - BOARD_PAD_X) / 40)) : NUM_FRETS;
   if (landscape) return 10;          // con 40 px por traste caben 10 en un iPhone con Safari
   return 5;                          // móvil vertical: pocos y anchos
 }
 
 const LABEL_W = 30, NUT_W = 40;   // deben coincidir con --label-w y --nut-w
+const BOARD_PAD_X = 40;           // relleno lateral de .board-area en tableta (20 + 20 px, css/trasteando.css)
 
 /** Cuántos trastes caben de verdad sin bajar del ancho mínimo cómodo. */
 function maxVisibleFrets(){
@@ -2529,6 +2792,15 @@ function maxVisibleFrets(){
 function applyZoom(){
   const scroll = document.getElementById('board-scroll');
   const avail = scroll.clientWidth - LABEL_W - NUT_W;
+
+  // En Acordes, el mástil se acota a los trastes del acorde (del 0 al 5) y los
+  // estira a todo el ancho, para que el dibujo sea lo principal (AC-07): ni
+  // zoom ni desplazamiento. El zoom guardado no se toca: vuelve al salir.
+  if (screen === 'chords'){
+    document.getElementById('board').style.setProperty('--fret-w', (avail / TRASTES_ACORDE) + 'px');
+    scroll.scrollLeft = 0;
+    return;
+  }
 
   // Guardamos qué traste estaba centrado para volver a él tras el cambio:
   // el ancho cambia pero scrollLeft está en píxeles, así que sin esto la
@@ -2663,7 +2935,8 @@ function renderClues(){
     b.classList.add('clue');
     const k = document.createElement('span'), v = document.createElement('b');
     k.className = 'clue-k'; k.textContent = etiqueta[1] + ' ';   // el lector lee «Nota Sol#3», no «NotaSol#3»
-    v.className = 'clue-v'; v.textContent = valor;
+    // Una respuesta larga («1ª 2ª 3ª 4ª») baja de tamaño para caber entera en su mitad (F5.8 #4).
+    v.className = 'clue-v' + (valor.length > 7 ? ' long' : ''); v.textContent = valor;
     if (color) v.style.color = color;
     b.appendChild(k); b.appendChild(v);
   };
@@ -2884,10 +3157,10 @@ function onTuningChanged(){
   // Cada afinación tiene su récord (J-11): una racha no pasa de una a otra.
   if (screen === 'guess'){ streak = 0; newChallenge(); }
   updateScore();
-  // La práctica guarda casillas, y con otra afinación cada casilla suena a otra
-  // nota: el progreso empieza de nuevo (AT-09 #3).
-  if (screen === 'scales') resetScalePractice();
+  // Con otra afinación, las posiciones son otras: se vuelve a la de la tónica.
+  reiniciarEscala();
   renderScales();              // otra afinación: otras casillas para la misma escala
+  requestAnimationFrame(verTrastesPosicion);   // y la vista, a la posición (AT-16 #7)
   renderChords();              // y Acordes avisa si ya no es la estándar (AC-05)
 }
 
@@ -2934,6 +3207,8 @@ function setScreen(next){
   document.getElementById('scales-card').hidden = !isScales;
   document.getElementById('chords-card').hidden = !isChords;
   document.getElementById('scale-nav').hidden = !isScales;
+  document.getElementById('qb-scale-all').hidden = !isScales;
+  document.getElementById('qb-scale-practice').hidden = !isScales;
   updateRotateHint();
 
   clearMarks(['active','equal','correct','wrong','reveal']);
@@ -2952,13 +3227,25 @@ function setScreen(next){
     renderClues();              // fuera de Adivinar, las pistas no enseñan respuesta
   }
   if (!isChords) leaveChords();
-  if (isScales){ resetScalePractice(); sc.paso = 0; renderScales(); }
+  if (isScales){ pararEscala(); sc.paso = 0; renderScales(); }
   else leaveScales();
-  if (isChords) renderChords();     // después de leaveScales: el pentagrama es del acorde
+  if (isChords){
+    renderChords();                 // después de leaveScales, que limpia el mástil de la escala
+    if (kbPos.fret > TRASTES_ACORDE) setRoving(kbPos.row, 0);   // el foco, en un traste a la vista (AT-17 M1)
+  }
   if (!sinMastil) requestAnimationFrame(applyZoom);
+  if (isScales) requestAnimationFrame(verTrastesPosicion);   // tras el zoom: la vista, en la posición
 }
 
 function syncUI(){
+  // F5.8 #3: primero el tema, que decide los colores de todo lo demás. Si cambia
+  // entre claro y oscuro, el pentagrama se vuelve a escribir con su tinta.
+  if (aplicarTema()){
+    if (screen === 'scales') renderScales();
+    else if (screen === 'chords') refreshChords();
+    else if (lastMidi !== null) showOnStaff(lastMidi, noteInfo(lastMidi).color);
+    renderTunerStaff();   // el pentagrama del afinador de referencia, también (AT-15 #1)
+  }
   // Acceso rápido
   const qn = document.getElementById('qb-notation');
   qn.textContent = state.notation === 'latin' ? 'Do Re Mi' : 'C D E';
@@ -2973,7 +3260,7 @@ function syncUI(){
   // Ajustes. Los selectores segmentados anuncian su opción activa también a
   // los lectores de pantalla (aria-pressed), no solo con el color.
   const segs = { 'set-notation': state.notation, 'set-timbre': state.timbre,
-                 'set-fretnums': state.fretNums, 'set-lang': state.lang, 'set-onmiss': state.onMiss };
+                 'set-fretnums': state.fretNums, 'set-lang': state.lang, 'set-onmiss': state.onMiss, 'set-theme': state.theme };
   for (const id in segs){
     document.querySelectorAll('#'+id+' button').forEach(b => {
       const on = b.dataset.v === segs[id];
@@ -3031,7 +3318,17 @@ function openSheet(open){
    se bloquea nada: actúa el sistema. Es un estándar presente en todos los
    navegadores; si faltara, la app funciona igual sin ese paso. */
 const SCREEN_HASH = { free:'libre', guess:'adivinar', tuner:'afinador', scales:'escalas', chords:'acordes', metro:'metronomo' };
-const canHistory = typeof history !== 'undefined' && typeof history.pushState === 'function';
+/* Que exista pushState no basta: en un marco aislado (la vista previa de un
+   chat, un iframe con sandbox) existe, pero usarlo lanza SecurityError, y ese
+   error cortaba el arranque antes de dibujar el mástil (0.6.6). Se prueba de
+   verdad una vez, con lo mismo que hace el arranque (dejar la dirección en
+   #libre, L-01); si falla, la app sigue sin historial, como en un navegador
+   que no lo tuviera. Es detectar la capacidad, no el sistema (PL-04). */
+const canHistory = (() => {
+  if (typeof history === 'undefined' || typeof history.pushState !== 'function') return false;
+  try { history.replaceState({ screen:'free' }, '', '#libre'); return true; }
+  catch (e){ return false; }
+})();
 const sheetIsOpen = () => document.getElementById('sheet').classList.contains('open');
 
 function goTo(next){
@@ -3073,11 +3370,12 @@ document.addEventListener('keydown', ev => {
 
 /* --- Aviso para girar el móvil (V-01, interfaz.md §7) ---
    Solo con el dedo, en vertical y en pantallas de menos de 600 px; nunca en
-   el Afinador ni en el Metrónomo, que funcionan igual en las dos orientaciones. Cerrado no vuelve:
+   el Afinador ni en el Metrónomo, que funcionan igual en las dos orientaciones, ni
+   en Acordes, que enseña siempre los trastes 0 a 5 (AC-07). Cerrado no vuelve:
    se guarda con los ajustes, y «Restablecer» lo recupera. */
 function updateRotateHint(){
   const show = coarsePointer() && window.innerHeight > window.innerWidth &&
-               window.innerWidth < 600 && screen !== 'tuner' && screen !== 'metro' && !state.rotateHintClosed;
+               window.innerWidth < 600 && screen !== 'tuner' && screen !== 'metro' && screen !== 'chords' && !state.rotateHintClosed;
   document.getElementById('rotate-hint').hidden = !show;
 }
 
@@ -3126,6 +3424,34 @@ async function setTimbre(timbre){
     save(); syncUI();
     note.textContent = t('timbre.failed');
   }
+}
+
+/* ===== TEMA (F5.8 #3, C-08) =====
+   Pone el tema en <html data-theme>, y con «Automático» también si el
+   dispositivo está en claro u oscuro (data-scheme), que el CSS usa para elegir
+   sus colores. Si el navegador no sabe decirlo (sin matchMedia), oscuro (PL-04). */
+const esquemaOscuro = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+function aplicarTema(){
+  const html = document.documentElement;
+  const claro = state.theme === 'partitura' ||
+    (state.theme === 'auto' && !!esquemaOscuro && !esquemaOscuro.matches);
+  const cambia = html.dataset.theme !== state.theme || html.dataset.scheme !== (claro ? 'light' : 'dark');
+  html.dataset.theme = state.theme;
+  html.dataset.scheme = claro ? 'light' : 'dark';
+  // La barra del sistema (Safari, Android) toma el color de fondo del tema. Solo
+  // si algo cambió: leer el estilo calculado obliga al navegador a recalcularlo (AT-15 #4).
+  if (cambia){
+    const meta = document.querySelector('meta[name="theme-color"]');
+    const fondo = window.getComputedStyle ? getComputedStyle(html).getPropertyValue('--bg').trim() : '';
+    if (meta && fondo) meta.setAttribute('content', fondo);
+  }
+  return cambia;
+}
+// Si el dispositivo pasa de claro a oscuro con la app abierta, «Automático» lo sigue.
+if (esquemaOscuro){
+  const alCambiar = () => { if (state.theme === 'auto') syncUI(); };
+  if (esquemaOscuro.addEventListener) esquemaOscuro.addEventListener('change', alCambiar);
+  else if (esquemaOscuro.addListener) esquemaOscuro.addListener(alCambiar);   // Safari antiguo
 }
 //# sourceURL=js/09-navegacion.js
 </script>
@@ -3228,19 +3554,21 @@ function detectarTono(x, sr, ajustes){
  * autónomo. Si el navegador no deja crear el hilo, analiza en el principal
  * (PL-04): va igual, solo que comparte tiempo con la interfaz.
  *   alResultado(r, sr)  recibe lo que devuelve detectarTono
- * Devuelve { analizar(x, sr), cerrar(), hilo } (hilo: true si hay Worker).
+ * Devuelve { analizar(x, sr, ajustes), cerrar(), hilo } (hilo: true si hay Worker).
+ * `ajustes` (opcional) sustituye a TONO en ese trozo: el afinador es más
+ * tolerante con una nota que ya está siguiendo que al buscar una nueva.
  */
 function crearDetector(alResultado){
   const enPrincipal = {
     hilo: false,
-    analizar(x, sr){ alResultado(detectarTono(x, sr), sr); },
+    analizar(x, sr, ajustes){ alResultado(detectarTono(x, sr, ajustes), sr); },
     cerrar(){}
   };
   if (typeof Worker === 'undefined' || typeof Blob === 'undefined' || typeof URL === 'undefined') return enPrincipal;
   let url = null, w = null;
   try {
     const codigo = '"use strict";\nconst TONO = ' + JSON.stringify(TONO) + ';\n' + detectarTono.toString() +
-      '\nonmessage = e => postMessage({ r: detectarTono(e.data.x, e.data.sr), sr: e.data.sr });\n';
+      '\nonmessage = e => postMessage({ r: detectarTono(e.data.x, e.data.sr, e.data.a), sr: e.data.sr });\n';
     url = URL.createObjectURL(new Blob([codigo], { type: 'text/javascript' }));
     w = new Worker(url);
   } catch(e){
@@ -3251,15 +3579,15 @@ function crearDetector(alResultado){
     hilo: true,
     ocupado: false,
     desde: 0,
-    analizar(x, sr){
-      if (!det.hilo) return enPrincipal.analizar(x, sr);
+    analizar(x, sr, ajustes){
+      if (!det.hilo) return enPrincipal.analizar(x, sr, ajustes);
       if (det.ocupado){
         // Si el hilo lleva más de 1 s sin contestar, se da por perdido (AT-07 #9).
-        if (Date.now() - det.desde > 1000){ det.hilo = false; det.ocupado = false; det.cerrar(); return enPrincipal.analizar(x, sr); }
+        if (Date.now() - det.desde > 1000){ det.hilo = false; det.ocupado = false; det.cerrar(); return enPrincipal.analizar(x, sr, ajustes); }
         return;                               // si va con retraso, se salta un trozo
       }
       det.ocupado = true; det.desde = Date.now();
-      w.postMessage({ x, sr }, [x.buffer]);   // se pasa el trozo sin copiarlo
+      w.postMessage({ x, sr, a: ajustes }, [x.buffer]);   // se pasa el trozo sin copiarlo
     },
     cerrar(){ try { w.terminate(); URL.revokeObjectURL(url); } catch(e){} }
   };
@@ -3282,24 +3610,60 @@ function crearDetector(alResultado){
    11. AFINADOR POR MICRÓFONO
    ============================================================ */
 
-/* Recorrido del sonido: micrófono → AnalyserNode (guarda los últimos 2048
-   valores) → cada 50 ms copiamos esos valores y se los damos al detector
+/* Recorrido del sonido: micrófono → filtros → AnalyserNode (guarda los últimos
+   4096 valores) → cada 50 ms copiamos esos valores y se los damos al detector
    (10-tono.js), que trabaja en un hilo aparte → con cada frecuencia
    calculamos los cents respecto a la cuerda y movemos la aguja.
    Un cent es la centésima parte de un semitono: cents = 1200 · log2(f / fRef). */
 
+/* Seguir la nota (F5.8 #2). Una cuerda suena fuerte y clara solo al pulsarla;
+   después se apaga durante segundos, cada vez más floja y más mezclada con el
+   ruido de la habitación. Para no quedarse solo con ese primer instante:
+   1. Antes de analizar, se filtra el sonido: fuera lo que queda por debajo de
+      60 Hz (zumbidos) y por encima de 1200 Hz (soplido), donde no hay nada de
+      una cuerda al aire que haga falta para saber su nota.
+   2. Para EMPEZAR a seguir una nota se pide lo de siempre: dos lecturas
+      seguidas, claras y que coincidan. Así un golpe o una voz no mueven la aguja.
+   3. Una vez «enganchada», basta con mucha menos claridad y volumen mientras
+      la lectura siga cerca de las anteriores: la nota se sigue hasta que se
+      hunde en el ruido de fondo. Ese ruido se mide todo el rato (el nivel más
+      bajo oído últimamente), y una lectura solo cuenta si suena bastante por
+      encima: pegada al ruido, la nota «baila» y la aguja engañaría.
+   4. Cuando deja de oírse, lo último medido se queda en pantalla, atenuado,
+      un par de segundos: da tiempo a mirar y girar la clavija. */
 const MIC = {
-  PERIODO_MS: 50,     // un trozo cada 50 ms: 20 lecturas por segundo
-  AFINADA: 5,         // ±5 cents es «afinada» (A-03)
-  SILENCIO_MS: 1500,  // sin lecturas durante este tiempo, la aguja vuelve a reposo
-  CLARIDAD: 0.8       // lecturas menos claras que esto (ruido, golpes) se ignoran
+  PERIODO_MS: 50,        // un trozo cada 50 ms: 20 lecturas por segundo
+  AFINADA: 5,            // ±5 cents es «afinada» (A-03)
+  CLARIDAD: 0.8,         // para empezar a seguir una nota: lecturas menos claras (ruido, golpes) se ignoran
+  CLARIDAD_SEGUIR: 0.5,  // siguiéndola ya, basta con esto…
+  CERCA: 20,             // …si cae a menos de estos cents de las últimas lecturas
+  LECTURAS: 7,           // cuántas lecturas se promedian para la aguja
+  SOBRE_RUIDO: 4,        // una lectura cuenta si suena al menos 4 veces (12 dB) por encima del ruido de fondo
+  RUIDO_INICIAL: 0.0005, // ruido de fondo supuesto al encender, hasta medirlo
+  RUIDO_MINIMO: 0.0002,  // suelo: un instante de silencio total (al arrancar el micrófono) no es «el ruido de la habitación» (AT-14 #2)
+  RUIDO_SUBE: 1.03,      // sin nota, el ruido estimado sube como mucho un 3 % por trozo (se dobla en 1,2 s)…
+  RUIDO_SUBE_NOTA: 1.002, // …y con una nota sonando, un 0,2 % (17 s): la nota no es ruido. Bajar, baja al instante
+  SOLTAR_MS: 600,        // sin lecturas de la nota seguida durante este tiempo, se suelta
+  SOSTEN_MS: 2500,       // lo último medido se queda en pantalla este tiempo, atenuado
+  GRAVES_HZ: 60, AGUDOS_HZ: 1200   // el filtro de antes del análisis
 };
+// Lo que se le pide al detector en cada caso (sustituye a TONO en ese trozo).
+MIC.BUSCAR = Object.assign({}, TONO, { MIN_RMS: 0.002 });
+MIC.SEGUIR = Object.assign({}, TONO, { MIN_RMS: 0.0006, MAX_DPRIMA: 1 - MIC.CLARIDAD_SEGUIR });
 
 const mic = {
-  stream: null, src: null, analyser: null, det: null, timer: null,
+  stream: null, src: null, filtros: [], analyser: null, det: null, timer: null,
   string: 'auto',          // 'auto' o el número de cuerda elegido a mano (A-05)
-  lecturas: [],            // últimas frecuencias coherentes entre sí
+  lecturas: [],            // últimas frecuencias de la nota que se sigue
+  candidatas: [],          // lecturas claras de otra nota: con dos que coincidan, se cambia a ella
+  siguiendo: false,        // hay una nota «enganchada»
   ultima: 0,               // momento de la última lectura válida
+  ultimaHz: 0,             // lo último enseñado, para repintarlo si cambias de cuerda
+  candidataT: 0,           // momento de la última candidata
+  detalle: '',             // el texto de cents y cuerda, sin el «Última lectura»
+  ruido: MIC.RUIDO_INICIAL, // nivel del ruido de fondo: el más bajo oído últimamente
+  nivel: 0,                // nivel (RMS) del último trozo
+  mostrando: false,        // hay una lectura en pantalla (sonando o sostenida)
   orden: '',               // para no repetir el aviso al lector de pantalla
   arrancando: false
 };
@@ -3342,25 +3706,75 @@ function micTarget(hz){
   return (tal.dist > 100 && mitad.dist < 50) ? mitad : tal;
 }
 
-/** Cada lectura del detector. Se ignoran las sueltas (un golpe, un salto de
- *  octava): solo cuentan cuando dos seguidas coinciden. La aguja muestra la
- *  mediana de las últimas, para que no tiemble. */
-function onMicReading(r){
-  if (!mic.analyser) return;
-  const ahora = Date.now();
-  if (!r || r.claridad < MIC.CLARIDAD){
-    if (ahora - mic.ultima > MIC.SILENCIO_MS) showMicIdle();
-    return;
+/** El centro de unas lecturas: se ordenan, se quitan las de los extremos (con
+ *  cinco o más, las dos más bajas y las dos más altas) y se promedia el resto.
+ *  Una lectura suelta disparatada no lo mueve, y el temblor del ruido se reparte. */
+function centro(v){
+  const o = [...v].sort((x, y) => x - y), quitar = o.length >= 5 ? 2 : o.length >= 3 ? 1 : 0;
+  const medio = o.slice(quitar, o.length - quitar);
+  return medio.reduce((a, b) => a + b, 0) / medio.length;
+}
+
+/**
+ * Decide qué hacer con una lectura del detector (o con su falta) y devuelve
+ * la frecuencia que hay que enseñar, o 0 si esta lectura no cuenta.
+ * Va aparte de la pantalla para poder probarla con grabaciones (tests/tono.test.js).
+ */
+function seguirNota(r, ahora, nivel){
+  // El ruido de fondo: el nivel más bajo oído últimamente. Baja de golpe a
+  // cualquier nivel menor; subir, sube despacio, y casi nada mientras suena una
+  // nota, para que una nota larga no pase por ruido. Sin nivel, no se usa.
+  if (nivel >= 0){
+    const esNota = mic.siguiendo || (r && r.claridad >= MIC.CLARIDAD);
+    mic.ruido = Math.min(Math.max(nivel, MIC.RUIDO_MINIMO), mic.ruido * (esNota ? MIC.RUIDO_SUBE_NOTA : MIC.RUIDO_SUBE));
+    if (r && nivel < mic.ruido * MIC.SOBRE_RUIDO) r = null;   // pegada al ruido: no cuenta
   }
-  const previa = mic.lecturas[mic.lecturas.length - 1];
-  if (previa && Math.abs(centsEntre(r.hz, previa)) > 40) mic.lecturas = [];   // otra nota: se empieza de nuevo
-  mic.lecturas.push(r.hz);
-  if (mic.lecturas.length > 5) mic.lecturas.shift();
-  if (mic.lecturas.length < 2) return;
-  mic.ultima = ahora;
-  const ordenadas = [...mic.lecturas].sort((a, b) => a - b);
-  mic.ultimaHz = ordenadas[ordenadas.length >> 1];
-  showMicReading(mic.ultimaHz);
+  if (mic.siguiendo && !mic.lecturas.length) mic.siguiendo = false;   // sin lecturas no hay con qué comparar (AT-14 #3)
+  if (mic.siguiendo && r && r.claridad >= MIC.CLARIDAD_SEGUIR){
+    // ¿Es la nota que se sigue? Se compara con el centro de las últimas
+    // lecturas, no con la primera: al girar la clavija la nota se desliza, y
+    // hay que ir con ella; y una lectura mala suelta no arrastra a las demás.
+    // Al apagarse la fundamental, el detector puede dar la octava: se pliega,
+    // pero solo si llega floja. Clara y en otra octava es otra cuerda (en Drop D,
+    // la 6ª y la 4ª son Re con una octava de por medio) y va a candidata (AT-14 #1).
+    let c = centsEntre(r.hz, centro(mic.lecturas));
+    const octavas = Math.round(c / 1200);
+    c -= 1200 * octavas;
+    const plegable = octavas === 0 || (Math.abs(octavas) === 1 && r.claridad < MIC.CLARIDAD);
+    if (Math.abs(c) < MIC.CERCA && plegable){
+      mic.lecturas.push(r.hz / Math.pow(2, octavas));
+      if (mic.lecturas.length > MIC.LECTURAS) mic.lecturas.shift();
+      mic.candidatas = [];
+      mic.ultima = ahora;
+      return centro(mic.lecturas);
+    }
+  }
+  if (r && r.claridad >= MIC.CLARIDAD){
+    // Clara, pero no es la que se sigue (o no se sigue ninguna): candidata.
+    const previa = mic.candidatas[mic.candidatas.length - 1];
+    // «Seguidas» de verdad: una candidata de hace más de tres trozos ya no cuenta (AT-14 #5).
+    if (previa && (Math.abs(centsEntre(r.hz, previa)) > 40 || ahora - mic.candidataT > 3 * MIC.PERIODO_MS)) mic.candidatas = [];
+    mic.candidatas.push(r.hz); mic.candidataT = ahora;
+    if (mic.candidatas.length >= 2){          // dos seguidas que coinciden: es otra nota
+      mic.lecturas = mic.candidatas; mic.candidatas = [];
+      mic.siguiendo = true;
+      mic.ultima = ahora;
+      return centro(mic.lecturas);
+    }
+  }
+  if (mic.siguiendo && ahora - mic.ultima > MIC.SOLTAR_MS){ mic.siguiendo = false; mic.lecturas = []; }
+  return 0;
+}
+
+/** Cada lectura del detector: se enseña si cuenta; si no, lo último medido se
+ *  queda un rato atenuado y después la aguja vuelve a reposo. */
+function onMicReading(r, _sr, ahora = Date.now()){
+  if (!mic.analyser) return;
+  const hz = seguirNota(r, ahora, mic.nivel);
+  if (hz){ mic.ultimaHz = hz; showMicReading(hz); return; }
+  if (!mic.mostrando) return;
+  if (ahora - mic.ultima > MIC.SOSTEN_MS) showMicIdle();
+  else if (ahora - mic.ultima > 4 * MIC.PERIODO_MS) setMicHeld(true);   // 200 ms: sin parpadeos al borde del ruido (AT-14 #8)
 }
 
 function showMicReading(hzDetectada){
@@ -3374,8 +3788,8 @@ function showMicReading(hzDetectada){
   const nota = document.getElementById('mic-note');
   nota.textContent = noteName(s.openMidi) + info.octave;
   const redondo = Math.round(c);
-  document.getElementById('mic-detail').textContent =
-    t('mic.detail', { c: (redondo > 0 ? '+' : redondo < 0 ? '−' : '') + Math.abs(redondo), o: ord(s.number) });
+  mic.detalle = t('mic.detail', { c: (redondo > 0 ? '+' : redondo < 0 ? '−' : '') + Math.abs(redondo), o: ord(s.number) });
+  document.getElementById('mic-detail').textContent = mic.detalle;
   // Se decide con el número que se ve (AT-07 #5). Ya afinada, hace falta
   // pasar de ±7 para dejar de estarlo: así el aviso no parpadea en el borde
   // y el lector de pantalla no lo repite sin parar (AT-07 #4).
@@ -3386,10 +3800,23 @@ function showMicReading(hzDetectada){
   else { orden = redondo > 50 ? 'baja' : 'baja-poco'; texto = ['▼', t(redondo > 50 ? 'mic.down' : 'mic.downBit')]; }
   setMicOrder(orden, texto);
   setNeedle(c, true);
+  mic.mostrando = true;
+  setMicHeld(false);
+}
+
+/** Sostenida: ya no se oye, pero lo último medido sigue a la vista, atenuado. */
+function setMicHeld(on){
+  const vivo = document.getElementById('mic-live');
+  if (vivo.classList.contains('held') === on) return;
+  vivo.classList.toggle('held', on);
+  // Se dice con palabras, no solo atenuando: que nadie gire la clavija creyendo
+  // que la aguja va en directo (AR-15 #7).
+  if (mic.mostrando) document.getElementById('mic-detail').textContent = on ? t('mic.held') + ' · ' + mic.detalle : mic.detalle;
 }
 
 function showMicIdle(){
-  mic.lecturas = [];
+  mic.lecturas = []; mic.candidatas = []; mic.siguiendo = false; mic.mostrando = false;
+  setMicHeld(false);
   document.getElementById('mic-note').textContent = '—';
   document.getElementById('mic-detail').textContent = t('mic.play');
   setMicOrder('', null);
@@ -3485,17 +3912,31 @@ async function startMic(){
   try {
     mic.src = audioCtx.createMediaStreamSource(mic.stream);
     mic.analyser = audioCtx.createAnalyser();
-    // El trozo debe abarcar dos periodos del Do2 más grave: 2048 valores a 44,1
-    // o 48 kHz; el doble con tarjetas de 96 kHz (AT-07 #1).
+    // El trozo abarca más de cuatro periodos del Do2 más grave: 4096 valores
+    // (85 ms) a 44,1 o 48 kHz; el doble con tarjetas de 96 kHz (AT-07 #1). Con
+    // el doble que antes, el detector promedia más sonido y el ruido le afecta
+    // menos, que es lo que hace falta para seguir una nota que se apaga.
     let tam = 2048;
-    while (tam < 2.2 * audioCtx.sampleRate / TONO.MIN_HZ && tam < 32768) tam *= 2;
+    while (tam < 4.4 * audioCtx.sampleRate / TONO.MIN_HZ && tam < 32768) tam *= 2;
     mic.analyser.fftSize = tam;
-    mic.src.connect(mic.analyser);          // solo al analizador: no sale por el altavoz
+    // micrófono → filtros → analizador. Solo al analizador: no sale por el altavoz.
+    // Dos pasos de agudos seguidos cortan más limpio que uno. Si el navegador
+    // no tiene filtros, se analiza sin ellos (PL-04).
+    let salida = mic.src;
+    if (audioCtx.createBiquadFilter){
+      for (const [tipo, hz, q] of [['highpass', MIC.GRAVES_HZ, 0.707], ['lowpass', MIC.AGUDOS_HZ, 0.54], ['lowpass', MIC.AGUDOS_HZ, 1.31]]){
+        const f = audioCtx.createBiquadFilter();
+        f.type = tipo; f.frequency.value = hz; f.Q.value = q;
+        salida.connect(f); salida = f; mic.filtros.push(f);
+      }
+    }
+    salida.connect(mic.analyser);
   } catch(e){ console.error(e); stopMic(); showMicPanel(t('mic.analyse')); return; }
   mic.det = crearDetector(onMicReading);
   mic.timer = setInterval(micTick, MIC.PERIODO_MS);
-  mic.ultima = 0;
+  mic.ultima = 0; mic.ruido = MIC.RUIDO_INICIAL; mic.nivel = 0;
   showMicIdle();
+  pantallaDespierta('mic', true);           // que el móvil no se bloquee mientras afinas (G-13)
   const conFoco = document.activeElement && document.activeElement.id === 'mic-start';
   document.getElementById('mic-intro').hidden = true;
   document.getElementById('mic-live').hidden = false;
@@ -3506,7 +3947,12 @@ function micTick(){
   if (!mic.analyser || !mic.det) return;
   const x = new Float32Array(mic.analyser.fftSize);
   mic.analyser.getFloatTimeDomainData(x);
-  mic.det.analizar(x, audioCtx.sampleRate);
+  // El nivel del trozo, para medir el ruido de fondo (seguirNota). Se calcula
+  // ANTES de dárselo al detector: al pasar al otro hilo, `x` se queda vacío.
+  let suma = 0;
+  for (let i = 0; i < x.length; i++) suma += x[i] * x[i];
+  mic.nivel = Math.sqrt(suma / x.length);
+  mic.det.analizar(x, audioCtx.sampleRate, mic.siguiendo ? MIC.SEGUIR : MIC.BUSCAR);
 }
 
 /** Apaga el micrófono del todo (el indicador del navegador desaparece). */
@@ -3515,9 +3961,11 @@ function stopMic(){
   clearInterval(mic.timer); mic.timer = null;
   if (mic.det){ mic.det.cerrar(); mic.det = null; }
   if (mic.src){ try { mic.src.disconnect(); } catch(e){} mic.src = null; }
+  mic.filtros.forEach(f => { try { f.disconnect(); } catch(e){} }); mic.filtros = [];
   mic.analyser = null;
+  pantallaDespierta('mic', false);
   if (mic.stream){ mic.stream.getTracks().forEach(pista => pista.stop()); mic.stream = null; restoreAudioSession(); }
-  mic.lecturas = [];
+  mic.lecturas = []; mic.candidatas = []; mic.siguiendo = false; mic.mostrando = false;
   showMicPanel('');
   if (conFoco) document.getElementById('mic-start').focus();
 }
@@ -3537,10 +3985,13 @@ function showMicPanel(motivo){
 }
 
 /** Cambia entre De oído y Micrófono. El micrófono no se enciende solo: hay que
- *  pulsar «Activar el micrófono», así nunca escucha sin que lo pidas. */
-function setTunerMode(modo){
+ *  pulsar «Activar el micrófono», así nunca escucha sin que lo pidas.
+ *  `elegido`: lo has pulsado tú, y entonces se recuerda. Si nunca has elegido,
+ *  el afinador abre en Micrófono donde se puede usar y en De oído donde no
+ *  (el archivo con doble clic, una web sin https): F5.8 #2. */
+function setTunerMode(modo, elegido){
   state.tunerMode = modo === 'mic' ? 'mic' : 'ear';
-  save();
+  if (elegido){ state.tunerPick = true; save(); }
   document.querySelectorAll('#tuner-mode button').forEach(b => {
     const on = b.dataset.v === state.tunerMode;
     b.classList.toggle('on', on); b.setAttribute('aria-pressed', on);
@@ -3550,10 +4001,18 @@ function setTunerMode(modo){
   if (state.tunerMode !== 'mic') stopMic();
   else if (!mic.analyser) showMicPanel(micUnavailable());
 }
+/** El modo con el que abre el afinador: el que elegiste o, si nunca elegiste, el que se pueda usar. */
+const tunerModeInicial = () => state.tunerPick ? state.tunerMode : (micUnavailable() ? 'ear' : 'mic');
 
 function setMicString(v){
   mic.string = v;
-  mic.lecturas = [];
+  // La nota que suena es la misma; cambia con qué cuerda se compara. Se repinta
+  // lo último medido con la cuerda nueva, sin soltar la nota (AT-14 #3).
+  if (mic.mostrando && mic.ultimaHz){
+    const sostenida = document.getElementById('mic-live').classList.contains('held');
+    showMicReading(mic.ultimaHz);
+    if (sostenida) setMicHeld(true);
+  }
   document.querySelectorAll('#mic-string button').forEach(b => {
     const on = b.dataset.v === String(v);
     b.classList.toggle('on', on); b.setAttribute('aria-pressed', on);
@@ -3570,21 +4029,27 @@ function labelMicStrings(){
 function bindMicTuner(){
   drawGauge();
   labelMicStrings();
-  document.querySelectorAll('#tuner-mode button').forEach(b => b.addEventListener('click', () => setTunerMode(b.dataset.v)));
+  document.querySelectorAll('#tuner-mode button').forEach(b => b.addEventListener('click', () => setTunerMode(b.dataset.v, true)));
   document.querySelectorAll('#mic-string button').forEach(b => b.addEventListener('click', () => setMicString(b.dataset.v)));
   document.getElementById('mic-start').addEventListener('click', startMic);
   document.getElementById('mic-stop').addEventListener('click', stopMic);
   setMicString('auto');
-  setTunerMode(state.tunerMode);
+  setTunerMode(tunerModeInicial());
   // Al bloquear el móvil o cambiar de app, el micrófono se apaga (privacidad, y iOS).
-  document.addEventListener('visibilitychange', () => { if (document.hidden) stopMic(); });
+  // Se dice por qué: si no, al volver parece que el afinador se ha reiniciado solo (AR-15 #14).
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden || !mic.analyser) return;
+    stopMic();
+    if (state.tunerMode === 'mic') showMicPanel(t('mic.hidden'));
+  });
 }
 //# sourceURL=js/11-afinador-micro.js
 </script>
 <script>"use strict";
 
-// 13-escalas.js · Escalas (F5.3 y F5.4): Mostrar, con intervalos y paso a paso,
-// y Práctica, que comprueba si cada nota que tocas pertenece a la escala.
+// 13-escalas.js · Escalas (F5.3 y F5.8 #5): una posición cada vez, con sus
+// intervalos, el paso a paso, «Escuchar», «Todas» y una Práctica sencilla
+// (tocar la posición en orden). La Práctica de antes (pertenencia) se quitó en la 0.6.4.
 // Se carga como <script> clásico, en el orden de index.html: lo declarado aquí
 // (const, let, function) lo ven los archivos que vienen después.
 
@@ -3593,16 +4058,18 @@ function bindMicTuner(){
    ============================================================ */
 
 /* La teoría (qué notas tiene cada escala y cómo se escriben) está en
-   01-teoria.js; aquí solo se enseña. Una nota del mástil pertenece a la
-   escala si su clase de altura (Do, Do♯…, sin octava) es una de las suyas, así
-   que funciona igual en cualquier afinación. */
+   01-teoria.js; aquí solo se enseña. Desde la 0.6.4 (F5.8 #5) la escala no
+   llena el mástil: se enseña **una posición cada vez**, un trozo de pocos
+   trastes donde la mano no se mueve, y se puede escuchar entera. */
 
 const sc = {
-  paso: 0,                  // paso del guiado (E-06)
-  encontradas: new Set(),   // clases de altura encontradas en Práctica
-  celdas: new Set(),        // casillas acertadas en Práctica ('fila-traste')
-  aviso: null,              // { clave, vars } del último aviso de Práctica
-  revelar: null             // temporizador del «enseñar las buenas» tras un fallo
+  pos: 0,         // posición elegida (índice en posicionesEscala(); la 0 es la de la tónica)
+  paso: 0,        // paso del guiado dentro de la posición (E-06)
+  sonando: null,  // temporizador de «Escuchar» (null = en silencio)
+  todas: false,   // «Todas»: la escala también en el resto del mástil, más apagada (E-10)
+  practica: false,// «Practicar»: tocar la posición de grave a agudo (E-05b)
+  hechas: 0,      // en Práctica, cuántas notas de la posición llevas en orden
+  fallo: null     // en Práctica, la casilla del último fallo (para el aviso)
 };
 
 function escalaActual(){ return ESCALAS.find(e => e.id === state.scaleId) || ESCALAS[0]; }
@@ -3630,15 +4097,86 @@ function nombreEscala(){
   return t('scale.name.' + e.id, { t: nombreEscrito(tonicaEscrita(state.scalePc, e.modo)) });
 }
 
-/** El guiado (E-06): la escala subiendo una octava desde la tónica más grave
- *  que tiene el mástil. Cada paso es un sonido concreto, con su nota escrita. */
+/** Las posiciones de la escala (E-07). Cada una empieza en una nota de la
+ *  escala sobre la 6.ª cuerda y va subiendo nota a nota: 3 notas en cada
+ *  cuerda en la mayor y la menor (7 posiciones) y 2 en las pentatónicas (las 5
+ *  «cajas» de siempre). Se calcula con alturas, no con dibujos aprendidos de
+ *  memoria, así que vale en cualquier afinación.
+ *  Devuelve listas de notas { cuerda (0 = la 6.ª), traste, midi, grado (0 =
+ *  tónica) }. La primera es la que empieza en la tónica, como en los libros
+ *  (tu decisión del 15/11); las siguientes van hacia el cuerpo de la guitarra
+ *  y, al pasar del traste 11, siguen desde la cejuela. */
+function posicionesEscala(){
+  const afin = activeTuning(), e = escalaActual();
+  const porCuerda = e.semitonos.length >= 7 ? 3 : 2;
+  const grave = afin[0];
+  // Todas las alturas de la escala, de la más grave a la más aguda del mástil.
+  const alturas = [];
+  for (let m = grave; m <= Math.max(...afin) + NUM_FRETS; m++){
+    const g = e.semitonos.indexOf(((m - state.scalePc) % 12 + 12) % 12);
+    if (g >= 0) alturas.push({ midi: m, grado: g });
+  }
+  const posiciones = e.semitonos.map((_, g) => {
+    // Empieza en el grado g, lo más cerca de la cejuela (trastes 0 a 11).
+    let i = alturas.findIndex(a => a.grado === g);
+    const notas = [];
+    for (let c = 0; c < afin.length && i < alturas.length; c++){
+      let enEsta = 0;
+      while (i < alturas.length){
+        const a = alturas[i], siguiente = afin[c + 1];
+        // Pasa a la cuerda siguiente al llegar a las de cada cuerda… salvo que
+        // la nota no exista allí (más grave que la cuerda al aire: pasa con
+        // afinaciones como Drop D, donde las dos graves están más separadas).
+        if (enEsta >= porCuerda && c < afin.length - 1 && a.midi >= siguiente) break;
+        if (enEsta >= porCuerda && c === afin.length - 1) break;
+        // Con una afinación personalizada muy abierta, la nota podría quedar más
+        // allá del último traste: entonces se pasa a la cuerda siguiente (AT-16 #4).
+        if (a.midi - afin[c] > NUM_FRETS){ if (c < afin.length - 1) break; i = alturas.length; break; }
+        notas.push({ cuerda: c, traste: a.midi - afin[c], midi: a.midi, grado: a.grado });
+        enEsta++; i++;
+      }
+    }
+    return notas.filter(n => n.traste >= 0 && n.traste <= NUM_FRETS);
+  });
+  posiciones.sort((a, b) => a[0].traste - b[0].traste);         // de la cejuela al cuerpo…
+  const t0 = Math.max(0, posiciones.findIndex(p => p[0].grado === 0));
+  return posiciones.slice(t0).concat(posiciones.slice(0, t0));    // …empezando por la de la tónica
+}
+
+/** La posición que se enseña: la elegida (al llegar, la 1, la de la tónica). */
+function posicionActual(){
+  const todas = posicionesEscala();
+  if (sc.pos >= todas.length) sc.pos = 0;
+  return todas[sc.pos];
+}
+
+/** El guiado (E-06): las notas de la posición, de la más grave a la más aguda.
+ *  Cada paso es un sonido concreto en una casilla concreta, con su nota escrita. */
 function pasosEscala(){
-  const grave = Math.min(...activeTuning());
-  const base = grave + ((state.scalePc - grave) % 12 + 12) % 12;
-  const e = escalaActual(), notas = notasEscala();
-  const pasos = e.semitonos.map((s, i) => ({ midi: base + s, esc: notas[i] }));
-  pasos.push({ midi: base + 12, esc: notas[0] });
-  return pasos;
+  const notas = notasEscala(), filas = activeTuning().length;
+  return posicionActual().map(n => ({ midi: n.midi, esc: notas[n.grado], grado: n.grado,
+    celda: (filas - 1 - n.cuerda) + '-' + n.traste }));     // fila 0 = la cuerda de arriba, la aguda
+}
+
+/** Escribe un texto en versión larga y corta; el CSS decide cuál se ve
+ *  (la corta, en el móvil). El lector de pantalla lee la larga. Si no cambia,
+ *  no se toca: así una zona `aria-live` no se anuncia en cada repintado (AT-16 #1). */
+function conLargoYCorto(nodo, largo, corto){
+  if (nodo.dataset.txt === largo + '|' + corto) return;
+  nodo.dataset.txt = largo + '|' + corto;
+  nodo.textContent = '';
+  const l = document.createElement('span'); l.className = 'sc-long'; l.textContent = largo;
+  const c = document.createElement('span'); c.className = 'sc-short'; c.textContent = corto;
+  c.setAttribute('aria-hidden', 'true');
+  nodo.appendChild(l); nodo.appendChild(c);
+}
+
+/** Intervalo entre dos sonidos seguidos de la escala, como texto: «un tono»,
+ *  «un semitono», «un tono y medio». Con una afinación personalizada rara
+ *  podría haber otro salto: entonces se dicen los semitonos (AT-16 #4). */
+function textoSalto(semitonos){
+  const k = { 1: 'ST', 2: 'T', 3: 'T½' }[semitonos];
+  return k ? t('scale.gap.' + k) : t('scale.gapN', { n: semitonos });
 }
 
 /** Rellena los selectores de tónica y tipo (la tónica se escribe según el tipo:
@@ -3658,124 +4196,238 @@ function buildScaleSelects(){
   ton.value = String(state.scalePc);
 }
 
-/** Pinta todo lo de Escalas: mástil, pentagrama, intervalos y el paso a paso
- *  o el estado de la práctica. Solo actúa en el área de Escalas. */
+/** Pinta todo lo de Escalas: posición, mástil, pentagrama, intervalos y paso a
+ *  paso (o la práctica). Solo actúa en el área de Escalas. */
 function renderScales(){
   if (screen !== 'scales') return;
-  const practica = state.scaleMode === 'practice';
-  document.querySelectorAll('#scale-mode button').forEach(b => {
-    const on = b.dataset.v === state.scaleMode;
-    b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
-  });
-  document.getElementById('scale-line').hidden = practica;
-  document.getElementById('scale-nav').hidden = practica;
-  document.getElementById('scale-practice').hidden = !practica;
+  const todas = posicionesEscala(), pos = posicionActual(), pasos = pasosEscala();
+  sc.paso = Math.min(sc.paso, pasos.length - 1);
+  sc.hechas = Math.min(sc.hechas, pasos.length);
+  const practica = sc.practica, total = pasos.length;
 
-  // Mástil: casillas de la escala, tónica con anillo, nombres escritos.
-  const pcs = pcsEscala(), notas = notasEscala(), pasos = pasosEscala();
+  // Posición: «Posición 1 de 7 · trastes 8 a 13» (en el móvil, «1/7»).
+  const trastes = pos.map(n => n.traste);
+  const v = { i: sc.pos + 1, total: todas.length, a: Math.min(...trastes), b: Math.max(...trastes) };
+  conLargoYCorto(document.getElementById('scale-pos'), t('scale.pos', v), t('scale.posShort', v));
+  document.getElementById('scale-pos-prev').disabled = sc.pos === 0;
+  document.getElementById('scale-pos-next').disabled = sc.pos === todas.length - 1;
+  // «Escuchar»: una sola señal para el lector, «pulsado» mientras suena (AT-16 #6).
+  const play = document.getElementById('scale-play');
+  conLargoYCorto(play, t(sc.sonando ? 'scale.stop' : 'scale.play'), sc.sonando ? '■' : '♪');
+  play.setAttribute('aria-label', t('scale.playLabel'));
+  play.setAttribute('aria-pressed', String(!!sc.sonando));
+  play.classList.toggle('on', !!sc.sonando);                  // naranja mientras suena
+  for (const [id, on] of [['qb-scale-all', sc.todas], ['qb-scale-practice', practica]]){
+    const b = document.getElementById(id);
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+  }
+
+  // Mástil: las casillas de la posición, con su nombre escrito y la tónica con
+  // anillo; el paso del guiado, resaltado. Con «Todas», el resto de la escala,
+  // más apagado. En Práctica, las de la posición sin nombre hasta que las tocas.
+  const notas = notasEscala(), pcs = pcsEscala();
+  const enPos = new Map(pasos.map((p, k) => [p.celda, k]));
+  const pasoCelda = (!practica || sc.sonando) ? pasos[sc.paso].celda : null;
   const board = document.getElementById('board');
   board.classList.add('scales');
   board.classList.toggle('practice', practica);
-  const pasoMidi = practica ? null : pasos[sc.paso].midi;
   document.querySelectorAll('.fret-cell').forEach(c => {
-    const midi = +c.dataset.midi, pc = ((midi % 12) + 12) % 12, i = pcs.indexOf(pc);
-    c.classList.toggle('scale', i >= 0);
-    c.classList.toggle('scale-tonic', i === 0);
-    c.classList.toggle('scale-step', midi === pasoMidi);
+    const clave = c.dataset.row + '-' + c.dataset.fret, k = enPos.get(clave);
+    const midi = +c.dataset.midi, i = pcs.indexOf(((midi % 12) + 12) % 12);
+    const en = k !== undefined;
+    c.classList.toggle('scale', en);
+    c.classList.toggle('scale-all', !en && sc.todas && i >= 0);
+    c.classList.toggle('scale-tonic', i === 0 && (en || sc.todas));
+    c.classList.toggle('scale-step', clave === pasoCelda);
+    c.classList.toggle('correct', practica && en && k < sc.hechas);
     c.querySelector('.dot').textContent = i >= 0 ? nombreEscrito(notas[i]) : noteName(midi);
   });
 
-  // Intervalos (E-04): «Do T Re T Mi ST Fa…».
+  // Intervalos (E-04): la escala de tónica a tónica, «Do T Re T Mi ST Fa…»,
+  // con el grado del paso actual (o de la última nota acertada) resaltado.
+  const ultimo = practica ? sc.hechas - 1 : sc.paso;
   const line = document.getElementById('scale-line');
   line.textContent = '';
-  const iv = intervalosEscala(escalaActual());
-  pasos.forEach((p, i) => {
-    const n = document.createElement('span'); n.className = 'sc-note' + (i === sc.paso ? ' now' : '');
-    n.textContent = nombreEscrito(p.esc); line.appendChild(n);
+  const iv = intervalosEscala(escalaActual()), gradoAhora = ultimo >= 0 ? pasos[ultimo].grado : -1;
+  notas.concat([notas[0]]).forEach((n, i) => {
+    const s = document.createElement('span'); s.className = 'sc-note' + (i === gradoAhora ? ' now' : '');
+    s.textContent = nombreEscrito(n); line.appendChild(s);
     if (i < iv.length){ const g = document.createElement('b'); g.className = 'sc-gap'; g.textContent = iv[i]; line.appendChild(g); }
   });
 
-  // Paso a paso (E-06).
-  const p = pasos[sc.paso], total = pasos.length;
-  let que;
-  if (sc.paso === 0) que = t('scale.stepTonic', { n: nombreEscrito(p.esc) });
-  else que = t('scale.stepUp', { n: nombreEscrito(p.esc), d: t('scale.gap.' + iv[sc.paso - 1]), prev: nombreEscrito(pasos[sc.paso - 1].esc) });
-  document.getElementById('scale-step-text').textContent = t('scale.step', { i: sc.paso + 1, total }) + ' · ' + que;
-  document.getElementById('scale-prev').disabled = sc.paso === 0;
-  document.getElementById('scale-next').disabled = sc.paso === total - 1;
+  // Paso a paso (E-06) o, en Práctica, cómo vas (E-05b).
+  let texto;
+  if (practica && !sc.sonando){
+    if (sc.hechas === total) texto = t('scale.pr.done', { p: sc.pos + 1, e: nombreEscala() });
+    else if (sc.fallo) texto = t(sc.fallo, { i: sc.hechas + 1, total });
+    else if (sc.hechas === 0) texto = t('scale.pr.start');
+    else texto = t('scale.pr.next', { i: sc.hechas + 1, total });
+  } else {
+    const p = pasos[sc.paso];
+    let que;
+    if (sc.paso === 0) que = t(p.grado === 0 ? 'scale.stepTonic' : 'scale.stepFirst', { n: nombreEscrito(p.esc) });
+    else {
+      const ant = pasos[sc.paso - 1];
+      que = t(p.grado === 0 ? 'scale.stepUpTonic' : 'scale.stepUp', { n: nombreEscrito(p.esc),
+        d: textoSalto(p.midi - ant.midi), prev: nombreEscrito(ant.esc) });
+    }
+    texto = t('scale.step', { i: sc.paso + 1, total }) + ' · ' + que;
+  }
+  document.getElementById('scale-step-text').textContent = texto;
+  document.getElementById('scale-prev').disabled = practica || sc.paso === 0;
+  document.getElementById('scale-next').disabled = practica || sc.paso === total - 1;
 
-  // Práctica (E-05).
-  document.getElementById('scale-count').textContent = t('scale.count', { n: sc.encontradas.size, total: pcs.length });
-  document.getElementById('scale-msg').textContent = sc.aviso ? t(sc.aviso.clave, sc.aviso.vars()) : t('scale.practiceHint', { e: nombreEscala() });
-  document.querySelectorAll('.fret-cell').forEach(c => c.classList.toggle('correct', practica && sc.celdas.has(c.dataset.row + '-' + c.dataset.fret)));
-
-  drawScaleStaff(pasos, practica);
+  drawScaleStaff(pasos, practica && !sc.sonando ? sc.hechas : null);
   labelCells();                  // el lector de pantalla también nombra como la escala
   refrescarLector();
 }
 
-/** El pentagrama escribe la escala (P-03). En Práctica, solo las notas que ya
- *  has encontrado: si estuvieran todas, sería darte la respuesta. */
-function drawScaleStaff(pasos, practica){
+/** El pentagrama escribe la posición (P-03): como no caben sus 12 o 18 notas,
+ *  enseña 8 seguidas alrededor del paso actual, que va resaltado. En Práctica,
+ *  solo las que ya has tocado (`hechas`): si no, sería darte la respuesta. */
+function drawScaleStaff(pasos, hechas){
   const svg = document.getElementById('staff');
   svg.setAttribute('viewBox', '0 0 340 132');      // la escala necesita todo el ancho
   drawStaffBase(svg, 38, 320);
-  const visibles = practica ? pasos.filter((p, i) => i < pasos.length - 1 && sc.encontradas.has(pcEscrita(p.esc))) : pasos;
-  const n = visibles.length;
+  const lista = hechas === null ? pasos : pasos.slice(0, hechas);
+  const foco = hechas === null ? sc.paso : hechas - 1;
+  const desde = Math.max(0, Math.min(foco - 3, lista.length - 8));
+  const visibles = lista.slice(desde, desde + 8), n = visibles.length;
   visibles.forEach((p, i) => {
     const x = 78 + i * (n > 1 ? Math.min(34, 236 / (n - 1)) : 0);
-    const ahora = !practica && p === pasos[sc.paso];
+    const ahora = p === lista[foco];
     if (ahora) svg.appendChild(el('rect', { x: x - 14, y: STAFF_TOP - 26, width: 28, height: 4 * GAP + 52, rx: 6, fill: 'rgba(232,164,92,.18)' }));
     drawNote(svg, p.midi, x, ahora ? 'var(--amber)' : noteInfo(p.midi).color, false, p.esc);
   });
 }
 
+/** Lleva la vista del mástil a los trastes de la posición. */
+function verTrastesPosicion(){
+  if (screen !== 'scales') return;
+  const scroll = document.getElementById('board-scroll');
+  const fw = parseFloat(getComputedStyle(document.getElementById('board')).getPropertyValue('--fret-w')) || 0;
+  if (!fw || !scroll.clientWidth) return;
+  const trastes = posicionActual().map(n => n.traste);
+  const lo = Math.min(...trastes), hi = Math.max(...trastes);
+  const visible = scroll.clientWidth - LABEL_W;
+  scroll.scrollLeft = NUT_W + hi * fw <= visible ? 0 : NUT_W + Math.max(0, lo - 1) * fw;
+}
+
 /** ◀ ▶ del paso a paso: suena la nota del paso y se resalta. */
 function scaleStep(delta){
+  pararEscala();
   const pasos = pasosEscala();
   sc.paso = Math.max(0, Math.min(pasos.length - 1, sc.paso + delta));
   playMidi(pasos[sc.paso].midi);
   renderScales();
+  fococontrario('scale-prev', 'scale-next', delta);
 }
 
-/** Práctica: cada nota que tocas, ¿es de la escala? (E-05, solo pertenencia). */
-function onScalePress(cell, midi){
-  if (screen !== 'scales' || state.scaleMode !== 'practice') return;
-  const pc = ((midi % 12) + 12) % 12, i = pcsEscala().indexOf(pc);
-  if (i >= 0){
-    sc.encontradas.add(pc);
-    sc.celdas.add(cell.dataset.row + '-' + cell.dataset.fret);
-    // El nombre se calcula al pintar el aviso, no ahora: si cambias Do Re Mi
-    // por C D E, el aviso también cambia (AT-09 #6).
-    sc.aviso = sc.encontradas.size === pcsEscala().length
-      ? { clave: 'scale.allFound', vars: () => ({ e: nombreEscala() }) }
-      : { clave: 'scale.yes', vars: () => ({ n: nombreEscrito(notasEscala()[i]), e: nombreEscala() }) };
+/** ◀ ▶ de la posición: la anterior o la siguiente (la 1 es la de la tónica). */
+function cambiarPosicion(delta){
+  pararEscala();
+  const total = posicionesEscala().length;
+  sc.pos = Math.max(0, Math.min(total - 1, sc.pos + delta));
+  sc.paso = 0; empezarPractica();
+  renderScales();
+  verTrastesPosicion();
+  fococontrario('scale-pos-prev', 'scale-pos-next', delta);
+}
+
+/** Si ◀ o ▶ se desactiva al llegar al extremo, el foco del teclado pasa al
+ *  otro, en vez de perderse (AT-16 #6). */
+function fococontrario(idPrev, idNext, delta){
+  const yo = document.getElementById(delta < 0 ? idPrev : idNext);
+  if (yo.disabled && document.activeElement === yo) document.getElementById(delta < 0 ? idNext : idPrev).focus();
+}
+
+/** «Escuchar»: la posición entera, subiendo y bajando, con cada nota resaltada
+ *  (tu comentario #5: ir escuchando la propia escala). Otro toque la para. */
+let PAUSA_ESCALA = 380;   // ms entre nota y nota (tu decisión del 15/11: fijo). Es `let` para que el banco lo acorte.
+function escucharEscala(){
+  if (sc.sonando){ pararEscala(); renderScales(); return; }
+  const n = pasosEscala().length;
+  const orden = [...Array(n).keys()];
+  orden.push(...orden.slice(0, -1).reverse());      // sube y vuelve a bajar, sin repetir la de arriba
+  let k = 0;
+  const siguiente = () => {
+    try {
+      if (k >= orden.length || screen !== 'scales'){ pararEscala(); renderScales(); return; }
+      sc.paso = orden[k++];
+      playMidi(pasosEscala()[sc.paso].midi);
+      renderScales();
+      sc.sonando = setTimeout(siguiente, PAUSA_ESCALA);
+    } catch (e){                                    // que un fallo no deje el botón en «Parar» (AT-16 #8)
+      console.error(e); pararEscala(); renderScales();
+    }
+  };
+  sc.sonando = -1;                                  // ya suena (antes del primer temporizador)
+  siguiente();
+}
+
+function pararEscala(){
+  if (sc.sonando !== null && sc.sonando !== -1) clearTimeout(sc.sonando);
+  sc.sonando = null;
+}
+
+/** La práctica empieza de nuevo: ninguna nota hecha. */
+function empezarPractica(){ sc.hechas = 0; sc.fallo = null; }
+
+/** Tocar una casilla. Sin Práctica (E-09): si es de la posición, pasa a ser el
+ *  paso actual (el texto, los intervalos y el pentagrama la siguen); las de
+ *  fuera solo suenan. En Práctica (E-05b): hay que tocar la posición en orden,
+ *  de grave a agudo; la buena se queda en verde con su nombre y una que no toca
+ *  se marca en rojo un momento. */
+function onScalePress(cell){
+  if (screen !== 'scales') return;
+  const pasos = pasosEscala(), clave = cell.dataset.row + '-' + cell.dataset.fret;
+  const i = pasos.findIndex(p => p.celda === clave);
+  if (!sc.practica){
+    if (i < 0) return;
+    pararEscala();
+    sc.paso = i;
+    renderScales();
+    return;
+  }
+  pararEscala();
+  if (sc.hechas === pasos.length){                 // completa: tocar la primera vuelve a empezar
+    if (i !== 0){ renderScales(); return; }
+    empezarPractica();
+  }
+  if (i === sc.hechas){
+    sc.hechas++; sc.paso = i; sc.fallo = null;
   } else {
-    // Se marca en rojo y, un momento, se enseñan las casillas que sí son.
-    marcarUnMomento(cell, 'wrong', 1500);
-    sc.aviso = { clave: 'scale.no', vars: () => ({ n: noteName(midi), e: nombreEscala() }) };
+    marcarUnMomento(cell, 'wrong', 1200);
     buzz([12, 60, 12]);
-    const board = document.getElementById('board');
-    board.classList.add('reveal-scale');
-    clearTimeout(sc.revelar);
-    sc.revelar = setTimeout(() => board.classList.remove('reveal-scale'), 2000);
+    sc.fallo = +cell.dataset.midi === pasos[sc.hechas].midi ? 'scale.pr.otherString' : 'scale.pr.no';
   }
   renderScales();
 }
 
-function resetScalePractice(){
-  sc.encontradas.clear(); sc.celdas.clear(); sc.aviso = null;
-  clearTimeout(sc.revelar);
-  document.getElementById('board').classList.remove('reveal-scale');
+/** «Todas» (E-10): la escala también en el resto del mástil, más apagada. */
+function alternarTodas(){ sc.todas = !sc.todas; renderScales(); }
+
+/** «Practicar» (E-05b): entra o sale de la práctica, siempre desde el principio. */
+function alternarPractica(){
+  pararEscala();
+  sc.practica = !sc.practica; sc.paso = 0; empezarPractica();
   clearMarks(['wrong']);
+  renderScales();
+}
+
+/** Otra escala, otra afinación o Restablecer: vuelve a la posición 1, la de la tónica. */
+function reiniciarEscala(){
+  pararEscala();
+  sc.pos = 0; sc.paso = 0; empezarPractica();
 }
 
 /** Al salir de Escalas, el mástil, el lector y el pentagrama vuelven a ser los
  *  de siempre: el pentagrama ya no enseña la escala (AT-09 #2). */
 function leaveScales(){
+  pararEscala();
   const board = document.getElementById('board');
-  board.classList.remove('scales', 'practice', 'reveal-scale');
-  clearMarks(['scale', 'scale-tonic', 'scale-step', 'correct', 'wrong']);
+  board.classList.remove('scales', 'practice');
+  clearMarks(['scale', 'scale-all', 'scale-tonic', 'scale-step', 'correct', 'wrong']);
   refreshNoteNames();
   refrescarLector();
   if (pantallaConPentagramaPropio()) return;   // Acordes dibuja el suyo
@@ -3788,20 +4440,19 @@ function bindScales(){
   document.getElementById('scale-type').addEventListener('change', ev => {
     state.scaleId = ev.target.value; save();
     buildScaleSelects();                     // la tónica se escribe según el tipo
-    sc.paso = 0; resetScalePractice(); renderScales();
+    reiniciarEscala(); renderScales(); verTrastesPosicion();
   });
   document.getElementById('scale-tonic').addEventListener('change', ev => {
     state.scalePc = +ev.target.value; save();
-    sc.paso = 0; resetScalePractice(); renderScales();
+    reiniciarEscala(); renderScales(); verTrastesPosicion();
   });
-  document.querySelectorAll('#scale-mode button').forEach(b => b.addEventListener('click', () => {
-    if (state.scaleMode === b.dataset.v) return;
-    state.scaleMode = b.dataset.v; save();
-    resetScalePractice(); renderScales();
-  }));
+  document.getElementById('scale-pos-prev').addEventListener('click', () => cambiarPosicion(-1));
+  document.getElementById('scale-pos-next').addEventListener('click', () => cambiarPosicion(1));
+  document.getElementById('scale-play').addEventListener('click', escucharEscala);
   document.getElementById('scale-prev').addEventListener('click', () => scaleStep(-1));
   document.getElementById('scale-next').addEventListener('click', () => scaleStep(1));
-  document.getElementById('scale-reset').addEventListener('click', () => { resetScalePractice(); renderScales(); });
+  document.getElementById('qb-scale-all').addEventListener('click', alternarTodas);
+  document.getElementById('qb-scale-practice').addEventListener('click', alternarPractica);
 }
 //# sourceURL=js/13-escalas.js
 </script>
@@ -3823,10 +4474,49 @@ function bindScales(){
    despierta cada 25 ms solo para *programar* los golpes de los próximos 100 ms
    en ese reloj; aunque se despierte tarde, el golpe ya está apuntado para su
    momento exacto. Cada golpe se calcula desde el inicio (inicio + n × intervalo),
-   no sumando intervalos, para que los redondeos no se acumulen. */
+   no sumando intervalos, para que los redondeos no se acumulen.
+
+   Cuánto por adelantado (F5.8 #7). Con 100 ms, si el móvil se entretenía más de
+   unos 75 ms, el golpe siguiente ya había pasado y se saltaba: un hueco en el
+   pulso. Ahora se apuntan 300 ms, que aguantan tirones de hasta 0,25 s. A cambio,
+   lo apuntado tardaría 300 ms en enterarse de un cambio (tempo, compás, Parar):
+   por eso cada golpe se guarda en metro.programados y, al cambiar algo, los que
+   aún no han sonado se retiran y se vuelven a programar (metroRebobinar). */
 
 const METRO_CADA = 0.025;       // s entre repasos del programador
-const METRO_ADELANTO = 0.1;     // s de golpes programados por adelantado
+const METRO_ADELANTO = 0.3;     // s de golpes programados por adelantado
+const METRO_MARGEN = 0.03;      // s: un golpe que suena antes de esto quizá ya esté calculado: no se retira (AT-18 B2)
+const METRO_LATENCIA_MAX = 0.5; // s: más retraso de salida que esto sería un dato erróneo
+
+/* Lo que se oye va por detrás del reloj de audio (MT-04, F5.8 #7).
+   currentTime es la muestra que el navegador está *calculando*; el sonido aún
+   tiene que pasar por el sistema y el altavoz, o por unos auriculares Bluetooth
+   (0,15 a 0,25 s). Si la luz y el péndulo usaran currentTime, se adelantarían al
+   clic. Así que se pregunta qué muestra está saliendo ahora:
+   1. getOutputTimestamp(), si el navegador lo tiene: dice qué instante del reloj
+      de audio salía por el altavoz en cierto momento (performanceTime); se le
+      suma lo que ha pasado desde entonces.
+   2. Si no, currentTime menos las latencias que el navegador declare
+      (baseLatency: su propio proceso; outputLatency: del sistema al altavoz).
+   3. Si no declara nada, currentTime tal cual (como antes).
+   Se detecta qué tiene el navegador, no qué navegador es (PL-04). */
+function metroOido(){
+  const ctx = audioCtx;
+  if (!ctx) return 0;
+  const ahora = ctx.currentTime;
+  const lat = v => (typeof v === 'number' && v > 0 ? v : 0);
+  let oido = ahora - lat(ctx.outputLatency) - lat(ctx.baseLatency);
+  if (typeof ctx.getOutputTimestamp === 'function' && typeof performance !== 'undefined'){
+    try {
+      const m = ctx.getOutputTimestamp();
+      // Recién arrancado, algunos navegadores devuelven ceros: entonces no vale.
+      if (m && m.contextTime > 0 && m.performanceTime > 0)
+        oido = m.contextTime + (performance.now() - m.performanceTime) / 1000;
+    } catch(e){ /* sin medida: se queda la estimación */ }
+  }
+  // Nunca por delante del reloj, ni más atrás de lo razonable.
+  return Math.min(ahora, Math.max(ahora - METRO_LATENCIA_MAX, oido));
+}
 
 const metro = {
   sonando: false,
@@ -3836,6 +4526,7 @@ const metro = {
   paso: 0,                      // golpe dentro del compás (0 … pulsos × subdivisión − 1)
   timer: null, frame: null,
   cola: [],                     // pulsos programados que aún no se han visto: { t, pulso }
+  programados: [],              // golpes apuntados en el reloj de audio: { t, n, paso, osc, g }
   taps: [], tapPuntero: false,  // marcas de «Marcar» (ms); si el toque llegó con el dedo
   aviso: '',                    // clave del texto que explica por qué se paró, si no lo paraste tú
   // El péndulo (MT-06): cuántos pulsos se han visto, cuándo sonó el último, cuánto
@@ -3865,8 +4556,39 @@ function metroClic(t, tipo){
   g.gain.linearRampToValueAtTime(vol, t + 0.002);     // entrada de 2 ms: sin chasquido
   g.gain.setTargetAtTime(0, t + 0.002, 0.012);         // y se apaga en unos 50 ms
   osc.connect(g); g.connect(audioOut || ctx.destination);
+  // Al acabar, se suelta de la salida para que el navegador lo pueda liberar (AT-11 #6).
+  osc.onended = () => { try { osc.disconnect(); g.disconnect(); } catch(e){} };
   osc.start(t);
   osc.stop(t + 0.08);
+  return { osc, g };
+}
+
+/** Calla un golpe apuntado que aún no ha sonado: se adelanta su parada a antes
+ *  de su arranque (así no llega a sonar) y, por si acaso, se suelta de la salida. */
+function metroCallar(p){
+  try { p.osc.stop(0); } catch(e){}
+  try { p.g.disconnect(); } catch(e){}
+}
+
+/** Retira los golpes apuntados que aún no han sonado y deja el contador en el
+ *  primero de ellos, para que metroProgramar() los vuelva a apuntar con los
+ *  ajustes nuevos (F5.8 #7). Con `soloPulsos`, respeta las subdivisiones que
+ *  faltan hasta el próximo pulso y retira desde él: el compás o la figura nuevos
+ *  empiezan en el pulso (AT-10 #1). */
+function metroRebobinar(soloPulsos){
+  if (!metro.sonando || !metro.ctx) return;
+  const limite = metro.ctx.currentTime + METRO_MARGEN, sub = state.metro.sub;
+  // Nunca se vuelve a un golpe anterior al inicio vigente: son las subdivisiones
+  // que un cambio de compás o de figura dejó sonar, y su n se contó desde el
+  // inicio de antes. Si se eligieran, el contador saltaría (AT-18 A1).
+  const i = metro.programados.findIndex(p => p.t > limite && p.t >= metro.inicio - 1e-9
+                                            && (!soloPulsos || p.paso % sub === 0));
+  if (i < 0) return;                            // nada que retirar: el contador ya apunta al siguiente
+  const primero = metro.programados[i];
+  metro.programados.slice(i).forEach(metroCallar);
+  metro.programados.length = i;
+  metro.cola = metro.cola.filter(c => c.t < primero.t - 1e-9);
+  metro.n = primero.n; metro.paso = primero.paso;
 }
 
 /** Qué suena en el golpe `paso` del compás. */
@@ -3876,7 +4598,7 @@ function metroQueSuena(paso){
   return { pulso, tipo: pulso === 0 && state.metro.accent ? 'fuerte' : 'normal' };
 }
 
-/** Programa los golpes que caen en los próximos 100 ms. */
+/** Programa los golpes que caen en los próximos 300 ms. */
 function metroProgramar(){
   // Si el contexto de audio cambió (se rehízo tras una llamada en el iPhone) o
   // se cerró, se para: los golpes irían a un reloj que ya no suena.
@@ -3891,18 +4613,22 @@ function metroProgramar(){
     // Si el navegador estuvo ocupado y un golpe ya pasó, se salta: sonaría a
     // destiempo, amontonado con los demás (AT-10 #2).
     if (t >= audioCtx.currentTime - 0.005){
-      metroClic(t, golpe.tipo);
+      const nodos = metroClic(t, golpe.tipo);
+      metro.programados.push({ t, n: metro.n, paso: metro.paso, osc: nodos.osc, g: nodos.g });
       if (golpe.tipo !== 'sub') metro.cola.push({ t, pulso: golpe.pulso });
     }
     metro.paso = (metro.paso + 1) % total;
     metro.n++;
   }
+  // Los que ya empezaron no se pueden retirar: fuera de la lista.
+  const ya = audioCtx.currentTime;
+  while (metro.programados.length && metro.programados[0].t < ya) metro.programados.shift();
 }
 
 /** Ilumina el pulso que suena, hace latir la pestaña y mueve el péndulo (MT-04, MT-05, MT-06). */
 function metroDibujar(){
   if (!metro.sonando) return;
-  const ahora = audioCtx ? audioCtx.currentTime : 0;
+  const ahora = metroOido();                    // lo que se oye, no lo que se calcula (F5.8 #7)
   let visto = null;
   while (metro.cola.length && metro.cola[0].t <= ahora){
     visto = metro.cola.shift();
@@ -3998,11 +4724,11 @@ function startMetro(){
   if (audioCtx.state === 'running'){ metroEnMarcha(); return; }
   const ctx = audioCtx;
   metro.arrancando = true;
-  let espera, despierta;
+  let espera, reanudado;       // (no «despierta»: taparía a la de la pantalla, AT-14 #11)
   // resume() devuelve una promesa que se cumple cuando el audio ya suena.
-  try { despierta = Promise.resolve(ctx.resume()).catch(() => {}); } catch(e){ despierta = Promise.resolve(); }
+  try { reanudado = Promise.resolve(ctx.resume()).catch(() => {}); } catch(e){ reanudado = Promise.resolve(); }
   return Promise.race([
-    despierta,
+    reanudado,
     new Promise(r => { espera = setTimeout(r, 400); })
   ]).then(() => {
     clearTimeout(espera);
@@ -4020,10 +4746,11 @@ function metroEnMarcha(){
   metro.sonando = true;
   metro.aviso = '';
   metro.inicio = audioCtx.currentTime + 0.06;   // un respiro para que el primer golpe no se corte
-  metro.n = 0; metro.paso = 0; metro.cola = [];
+  metro.n = 0; metro.paso = 0; metro.cola = []; metro.programados = [];
   metro.vistos = 0; metro.ultimo = null; metro.amplitud = null;   // se mide al pintarlo, con el área a la vista
   metroProgramar();
   metro.timer = setInterval(metroProgramar, METRO_CADA * 1000);
+  pantallaDespierta('metro', true);            // que el móvil no se bloquee y lo pare (G-13)
   metro.frame = requestAnimationFrame(metroDibujar);
   renderMetro();
 }
@@ -4036,7 +4763,13 @@ function stopMetro(motivo){
   metro.arrancando = false;                     // también cancela un arranque en espera
   clearInterval(metro.timer); metro.timer = null;
   cancelAnimationFrame(metro.frame); metro.frame = null;
+  // Lo apuntado que aún no ha sonado se calla: con 300 ms por adelantado, si no,
+  // Parar dejaría sonar uno o dos golpes más (F5.8 #7).
+  const ya = metro.ctx ? metro.ctx.currentTime : 0;
+  metro.programados.forEach(p => { if (p.t > ya) metroCallar(p); });
+  metro.programados = [];
   metro.cola = [];
+  pantallaDespierta('metro', false);
   if (estaba && motivo) metro.aviso = { mic: 'metro.stoppedMic', hidden: 'metro.stoppedHidden', audio: 'metro.stoppedAudio' }[motivo];
   const tab = document.querySelector('.tab[data-screen="metro"]');
   if (tab) tab.classList.remove('beat');
@@ -4052,9 +4785,12 @@ function setTempo(bpm){
   const antes = metroIntervalo();
   const nuevo = Math.max(METRO_MIN, Math.min(METRO_MAX, Math.round(bpm)));
   if (nuevo === state.metro.bpm) return;
-  if (metro.sonando){ metro.inicio += metro.n * antes; metro.n = 0; }
+  // Sonando: se retiran los golpes apuntados que no han sonado (el contador vuelve
+  // al primero de ellos), y desde él se cuenta con el ritmo nuevo (F5.8 #7).
+  if (metro.sonando){ metroRebobinar(); metro.inicio += metro.n * antes; metro.n = 0; }
   state.metro.bpm = nuevo;
   save();
+  if (metro.sonando) metroProgramar();
   renderMetro();
 }
 
@@ -4075,6 +4811,7 @@ function tapTempo(ahora){
 function setCompas(id){
   const c = COMPASES.find(x => x.id === id);
   if (!c || c.id === state.metro.sig) return;
+  metroRebobinar(true);                         // las subdivisiones de antes del pulso, se quedan
   state.metro.sig = c.id;
   save();
   if (metro.sonando){
@@ -4086,6 +4823,7 @@ function setCompas(id){
     // Los pulsos ya programados sonarán: el péndulo los cuenta, pero no encienden
     // ningún punto del compás nuevo (AT-13 #3).
     metro.cola.forEach(c => { c.pulso = -1; });
+    metroProgramar();
   }
   buildMetroDots();
   renderMetro();
@@ -4096,6 +4834,7 @@ function setCompas(id){
 function setSubdivision(sub){
   if (sub === state.metro.sub) return;
   if (metro.sonando){
+    metroRebobinar(true);
     const viejo = state.metro.sub, intervalo = metroIntervalo();
     const faltan = (viejo - metro.paso % viejo) % viejo;     // golpes hasta el próximo pulso
     metro.inicio += (metro.n + faltan) * intervalo; metro.n = 0;
@@ -4104,12 +4843,15 @@ function setSubdivision(sub){
   }
   state.metro.sub = sub;
   save();
+  if (metro.sonando) metroProgramar();
   renderMetro();
 }
 
 function setAccent(on){
+  metroRebobinar();                             // el acento nuevo, ya en el próximo compás
   state.metro.accent = !!on;
   save();
+  if (metro.sonando) metroProgramar();
   renderMetro();
 }
 
@@ -4279,7 +5021,7 @@ function renderMetro(){
   play.textContent = metro.sonando ? t('metro.stop') : t('metro.start');
   play.classList.toggle('on', metro.sonando);   // el texto ya dice Empezar o Parar: sin aria-pressed (AT-10 #9)
   // El aviso se guarda como clave y se traduce al pintarlo: cambia con el idioma (AT-10 #5).
-  document.getElementById('metro-note').textContent = metro.aviso ? t(metro.aviso) : (metro.sonando ? t('metro.playing') : '');
+  document.getElementById('metro-note').textContent = metro.aviso ? t(metro.aviso) : (metro.sonando ? t('metro.playing') + (pantallaSeApagara() ? ' ' + t('metro.noLock') : '') : '');
   // Fuera de su área, la pestaña dice que está en marcha (también al lector de pantalla).
   const tab = document.querySelector('.tab[data-screen="metro"]');
   if (tab){
@@ -4359,9 +5101,9 @@ function refreshMetro(){
 </script>
 <script>"use strict";
 
-// 15-acordes.js · Librería de acordes (F5.7, AC-01 a AC-06): un listado con
-// buscador a un lado y, al otro, el acorde dibujado en el mástil, con el número
-// y el color de cada dedo.
+// 15-acordes.js · Librería de acordes (F5.7; simplificada en F5.8 #6): se elige
+// con dos filas de botones, la nota y el tipo, y el acorde se dibuja en grande en
+// los primeros trastes del mástil, con el número y el color de cada dedo.
 // Se carga como <script> clásico, en el orden de index.html: lo declarado aquí
 // (const, let, function) lo ven los archivos que vienen después.
 
@@ -4418,8 +5160,12 @@ const ACORDES = [
   { raiz:6, tipo:'7',    t:'x21202', d:'-213-4' },
   { raiz:6, tipo:'m7',   t:'x24232', d:'-13121', c:[2,5,1] }
 ];
-/** Los más tocados, arriba del listado (tu petición del 21/10). */
-const ACORDES_POPULARES = ['C', 'G', 'D', 'A', 'E', 'Am', 'Em', 'Dm', 'F'];
+/** Los tipos, en el orden de sus botones (AC-01). '/' es «con otra nota en el
+ *  bajo»: Do/Sol y Sol/Si. */
+const TIPOS_BOTON = ['', 'm', '7', 'm7', 'maj7', 'sus4', '/'];
+/** Trastes que enseña el mástil en Acordes (AC-07): del 0 al 5, donde caben
+ *  todas las digitaciones del catálogo (la más alta, Do menor, llega al 5). */
+const TRASTES_ACORDE = 5;
 const AFINACION_ESTANDAR = [40, 45, 50, 55, 59, 64];      // de la 6ª a la 1ª
 
 /** Nombre del acorde: «Am», «G/B»… o «Lam», «Sol/Si». */
@@ -4450,20 +5196,11 @@ function escrituraEnAcorde(a, midi){
   return notasAcorde(a).find(n => pcEscrita(n) === pc) || null;
 }
 
-/* --- Buscador (AC-06) ---
-   «G» deja los acordes que empiezan por G: G, G7, G/B… Vale en las dos
-   nomenclaturas: «Sol» encuentra lo mismo. Una sola letra solo se busca en la
-   inglesa, para que «D» no traiga también los Do. # y b valen por ♯ y ♭. */
-function normalizarBusqueda(q){
-  return String(q || '').trim().replace(/\s+/g, '').replace(/#/g, '♯')
-    .replace(/^([A-Ga-g])b/, '$1♭').toLowerCase();
-}
-function filtrarAcordes(q){
-  const n = normalizarBusqueda(q);
-  if (!n) return ACORDES.slice();
-  return ACORDES.filter(a => nombreAcorde(a, 'anglo').toLowerCase().startsWith(n) ||
-    (n.length >= 2 && nombreAcorde(a, 'latin').toLowerCase().startsWith(n)));
-}
+/** El tipo de un acorde, tal como lo dicen los botones: '/' si lleva otro bajo. */
+const tipoDe = a => a.bajo !== undefined ? '/' : a.tipo;
+/** El acorde de esa nota (0 = Do … 6 = Si) y ese tipo, o undefined si no está
+ *  en el catálogo (no hay Fa7, por ejemplo: su botón se apaga). */
+const acordeDe = (raiz, tipo) => ACORDES.find(a => a.raiz === raiz && tipoDe(a) === tipo);
 
 const cr = { strum: [] };   // temporizadores del rasgueo en marcha
 
@@ -4478,44 +5215,68 @@ function strumChord(a){
   });
 }
 
-/* --- Listado --- */
+/* --- El selector: la nota y el tipo (AC-01) ---
+   Dos filas de botones en lugar de un listado de 30 con buscador (F5.8 #6:
+   «parece confuso y engorroso»). Cada botón dice si está pulsado (aria-pressed),
+   y los tipos que no existen para esa nota se apagan (disabled). */
 
-function chipAcorde(a){
+function etiquetaTipo(tipo){
+  if (tipo === '') return t('chord.major');
+  if (tipo === 'm') return t('chord.minor');
+  if (tipo === '/'){                             // dice qué bajo lleva: «/Sol» con Do, «/Si» con Sol (AR-18 #6)
+    const a = acordeDe(acordeActual().raiz, '/');
+    if (!a) return t('chord.bass');
+    return '/' + (state.notation === 'latin' ? LETRAS_LATIN : LETRAS_ANGLO)[a.bajo];
+  }
+  return tipo;                                   // 7, m7, maj7 y sus4 se dicen igual en todas partes
+}
+function botonSelector(texto, alPulsar){
   const b = document.createElement('button');
   b.className = 'chord-chip';
-  b.dataset.id = idAcorde(a);
-  b.textContent = nombreAcorde(a);
-  b.addEventListener('click', () => selectChord(idAcorde(a), true));
+  b.textContent = texto;
+  b.addEventListener('click', alPulsar);
   return b;
 }
-function seccionAcordes(box, titulo, lista){
-  const h = document.createElement('div'); h.className = 'cl-head'; h.textContent = titulo;
-  const g = document.createElement('div'); g.className = 'cl-group';
-  lista.forEach(a => g.appendChild(chipAcorde(a)));
-  box.appendChild(h); box.appendChild(g);
-}
-function buildChordList(){
-  const box = document.getElementById('chord-list');
-  const q = document.getElementById('chord-search').value;
-  box.innerHTML = '';
-  const hallados = filtrarAcordes(q);
-  if (!normalizarBusqueda(q)){
-    seccionAcordes(box, t('chord.popular'), ACORDES_POPULARES.map(acordePorId));
-    seccionAcordes(box, t('chord.all', { n: ACORDES.length }), ACORDES);
-  } else if (hallados.length){
-    seccionAcordes(box, t('chord.results', { n: hallados.length }), hallados);
-  } else {
-    const p = document.createElement('p'); p.className = 'cl-empty';
-    p.textContent = t('chord.none', { q: q.trim() });
-    box.appendChild(p);
-  }
+/** Crea los botones; se rehacen al cambiar la nomenclatura o el idioma. */
+function buildChordPicker(){
+  const L = state.notation === 'latin' ? LETRAS_LATIN : LETRAS_ANGLO;
+  const raices = document.getElementById('chord-roots');
+  const tipos = document.getElementById('chord-types');
+  raices.innerHTML = ''; tipos.innerHTML = '';
+  L.forEach((letra, raiz) => {
+    const b = botonSelector(letra, () => elegirRaiz(raiz));
+    b.dataset.raiz = String(raiz);
+    raices.appendChild(b);
+  });
+  TIPOS_BOTON.forEach(tipo => {
+    const b = botonSelector(etiquetaTipo(tipo), () => elegirTipo(tipo));
+    b.dataset.tipo = tipo;
+    if (tipo === '/') b.setAttribute('aria-label', t('chord.bassAria'));
+    tipos.appendChild(b);
+  });
   marcarSeleccion();
 }
 function marcarSeleccion(){
-  document.querySelectorAll('#chord-list .chord-chip').forEach(b => {
-    const on = b.dataset.id === state.chordId;
+  const a = acordeActual();
+  document.querySelectorAll('#chord-roots .chord-chip').forEach(b => {
+    const on = +b.dataset.raiz === a.raiz;
     b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
   });
+  document.querySelectorAll('#chord-types .chord-chip').forEach(b => {
+    if (b.dataset.tipo === '/') b.textContent = etiquetaTipo('/');   // cambia con la nota
+    const on = b.dataset.tipo === tipoDe(a);
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+    b.disabled = !acordeDe(a.raiz, b.dataset.tipo);
+  });
+}
+/** Otra nota: se queda el tipo si existe (de Lam a Mim); si no, el mayor. */
+function elegirRaiz(raiz){
+  const nuevo = acordeDe(raiz, tipoDe(acordeActual())) || acordeDe(raiz, '') || ACORDES.find(a => a.raiz === raiz);
+  if (nuevo) selectChord(idAcorde(nuevo), true);   // hoy todas tienen mayor; por si el catálogo crece (AT-17 B3)
+}
+function elegirTipo(tipo){
+  const nuevo = acordeDe(acordeActual().raiz, tipo);
+  if (nuevo) selectChord(idAcorde(nuevo), true);
 }
 
 function selectChord(id, sonar){
@@ -4537,17 +5298,6 @@ function limpiarAcorde(){
   document.querySelectorAll('#board .string-label').forEach(l => {
     delete l.dataset.mark; l.removeAttribute('aria-label');
   });
-}
-
-/** Lleva la vista del mástil a los trastes del acorde. */
-function verTrastesAcorde(a){
-  const scroll = document.getElementById('board-scroll');
-  const fw = parseFloat(getComputedStyle(document.getElementById('board')).getPropertyValue('--fret-w')) || 0;
-  if (!fw || !scroll.clientWidth) return;
-  const trastes = cuerdasAcorde(a).map(c => c.traste).filter(f => f);
-  const lo = Math.min(...trastes), hi = Math.max(...trastes);
-  const visible = scroll.clientWidth - LABEL_W;
-  scroll.scrollLeft = NUT_W + hi * fw <= visible ? 0 : NUT_W + (lo - 1) * fw;
 }
 
 function renderChords(){
@@ -4596,30 +5346,7 @@ function renderChords(){
     }
   }
   labelCells();
-  drawChordStaff(a);
-  requestAnimationFrame(() => verTrastesAcorde(a));
-}
-
-/** El pentagrama escribe el acorde con sus notas apiladas (AC-03). Dos notas
- *  a un paso de distancia no caben una encima de otra: la de arriba va a la derecha. */
-function drawChordStaff(a){
-  const svg = document.getElementById('staff');
-  svg.setAttribute('viewBox', STAFF_CORTO);
-  drawStaffBase(svg, 38, 166);
-  const notas = cuerdasAcorde(a).filter(c => c.midi !== null).map(c => ({ midi: c.midi, esc: escrituraEnAcorde(a, c.midi) }));
-  let anteriorY = null, desplazada = false, altY = null, columna = 0;
-  notas.forEach(n => {
-    const y = staffYEscrita(n.esc, n.midi);
-    desplazada = anteriorY !== null && Math.abs(anteriorY - y) < GAP * 0.75 && !desplazada;
-    // Dos alteraciones a menos de una sexta se pisarían: la segunda, más a la izquierda (AT-10 #8).
-    if (n.esc.alt){
-      columna = altY !== null && Math.abs(altY - y) < GAP * 2.5 ? (columna + 1) % 2 : 0;
-      altY = y;
-    }
-    const x = desplazada ? 124 : 108;
-    drawNote(svg, n.midi, x, 'var(--text)', false, n.esc, (x - 108) + 14 + columna * 12);
-    anteriorY = y;
-  });
+  clearStaff();          // en Acordes el pentagrama no se ve: manda el dibujo (F5.8 #6)
 }
 
 function leaveChords(){
@@ -4629,18 +5356,16 @@ function leaveChords(){
 }
 
 function bindChords(){
-  const q = document.getElementById('chord-search');
-  q.addEventListener('input', buildChordList);
   document.getElementById('chord-play').addEventListener('click', () => strumChord(acordeActual()));
   document.getElementById('chord-standard').addEventListener('click', () => {
     setTuning('standard');
   });
-  buildChordList();
+  buildChordPicker();
 }
 
-/** Nomenclatura o idioma cambiados: los nombres del listado, otra vez. */
+/** Nomenclatura o idioma cambiados: los nombres de los botones, otra vez. */
 function refreshChords(){
-  buildChordList();
+  buildChordPicker();
   renderChords();
 }
 //# sourceURL=js/15-acordes.js
@@ -4813,6 +5538,9 @@ document.querySelectorAll('#set-onmiss button').forEach(b => {
   b.addEventListener('click', () => { state.onMiss = b.dataset.v; save(); syncUI(); });
 });
 document.getElementById('qb-giveup').addEventListener('click', () => revealAnswer(0));
+document.querySelectorAll('#set-theme button').forEach(b => {
+  b.addEventListener('click', () => { state.theme = b.dataset.v; save(); syncUI(); });
+});
 document.querySelectorAll('#set-lang button').forEach(b => {
   b.addEventListener('click', () => setLang(b.dataset.v));
 });
@@ -4864,12 +5592,12 @@ document.getElementById('set-reset').addEventListener('click', async () => {
   syncUI();
   applyZoom();
   updateRotateHint();          // «Restablecer» recupera el aviso para girar
-  setTunerMode(state.tunerMode);   // el afinador vuelve a «De oído»
+  stopMic(); setMicString('auto');    // el micrófono se apaga y la cuerda vuelve a «Auto» (AT-14 #12)
+  setTunerMode(tunerModeInicial());   // el afinador vuelve a su modo de fábrica
   // Escalas, ♯/♭ y nomenclatura también vuelven a lo de fábrica: sin esto, los
   // selectores y los botones seguían diciendo lo de antes (AT-09 #1).
-  resetScalePractice(); sc.paso = 0;
+  reiniciarEscala();
   stopMetro(); metro.aviso = ''; refreshMetro();          // el metrónomo vuelve a 80, 4/4 (MT-05)
-  document.getElementById('chord-search').value = '';    // y Acordes, sin filtro (AT-10 #7)
   refreshNoteText();
   hideSettings();
   // El reto anterior puede referirse a una nota que ya no existe en la
@@ -4909,8 +5637,8 @@ document.getElementById('app-version').textContent = 'Trasteando ' + APP_VERSION
   svg.appendChild(el('path', { d:CLEF_PATH, fill:'currentColor' }));
   document.getElementById('qb-staff-icon').appendChild(svg);
 })();
-// Al abrir se entra siempre en Libre (L-01), aunque la dirección diga otra área.
-if (canHistory) history.replaceState({ screen:'free' }, '', '#libre');
+// Al abrir se entra siempre en Libre (L-01), aunque la dirección diga otra área:
+// la dirección ya la dejó en #libre la prueba de canHistory (09-navegacion.js).
 aplicarIdioma();               // los textos fijos, en el idioma elegido (G-12)
 buildTuner();
 buildBoard();
