@@ -1,6 +1,6 @@
 # Trasteando — Compatibilidad entre sistemas operativos
 
-**Versión:** 1.11 · **Fecha:** 15 de noviembre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
+**Versión:** 1.12 · **Fecha:** 15 de noviembre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
 
 La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este documento lista cada capacidad del navegador que usa o usará, cómo se comporta en cada sistema y qué hace la app donde falta. Se revisa en cada etapa que añada una capacidad nueva.
 
@@ -43,6 +43,7 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 | CSS `:has()` | Cursor de mano en las filas de Ajustes con interruptor (0.3.1); centrar el punto único del metrónomo en 1/4 (0.5.4) | ✅ | ✅ | ✅ Safari 15.4+ | Sin él, la fila funciona igual; solo no cambia el cursor |
 | `scrollIntoView` con opciones | Que la casilla con el foco del teclado se vea (0.3.1) | ✅ | ✅ | ✅ | Sin opciones, el navegador desplaza igualmente al dar el foco |
 | Golpes programados en el reloj de audio (`OscillatorNode`, `currentTime`) | Metrónomo exacto (MT-04, 0.5.4) | ✅ | ✅ | ✅ | Parte de Web Audio. Si el audio se rehace (iOS), el metrónomo se para en vez de sonar a destiempo |
+| Saber qué se oye ahora (`getOutputTimestamp()`; si no, `outputLatency` y `baseLatency`) | Que la luz y el péndulo del metrónomo vayan con el clic que se oye, no con el que se calcula (MT-04, 0.6.7) | ✅ | ✅ | ⚠️ `getOutputTimestamp` y `baseLatency` desde Safari 14.1; con auriculares Bluetooth, por confirmar en tu prueba | Se detecta qué hay: medida del navegador, latencias declaradas o, sin nada, el reloj de audio como antes (como mucho, 0,5 s de corrección) |
 | Ventana modal nativa (`<dialog>` y `showModal()`) | Ventana de compás del metrónomo: foco atrapado, Escape e inerte el resto (0.5.4) | ✅ | ✅ | ✅ Safari 15.4+ | Sin `showModal`, la ventana se enseña igual por encima; Escape y «atrás» la cierran desde la app |
 | Captura del puntero (`setPointerCapture`) | Arrastrar la barra del tempo aunque el dedo se salga (0.5.4) | ✅ | ✅ | ✅ | Protegida: sin ella, la barra responde mientras el dedo siga encima |
 | CSS `accent-color` y unidad `dvh` | Casilla del acento en ámbar; ventana que cabe con la barra del navegador (0.5.4) | ✅ | ✅ | ✅ Safari 15.4+ | Sin ellos, la casilla sale en el color del sistema y la ventana usa `vh` |
@@ -58,7 +59,8 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.11** | 15/11/2026 | F5.8 #6 (0.6.5, Acordes): sin capacidades nuevas; la rejilla `grid` con `repeat(auto-fill, minmax())` y el atributo `disabled` son estándar en los tres sistemas (Safari 10.1+). |
+| **1.12** | 15/11/2026 | F5.8 #7 (0.6.7, metrónomo): `getOutputTimestamp()`, `outputLatency` y `baseLatency` para que lo que se ve vaya con lo que se oye, con su alternativa. |
+| 1.11 | 15/11/2026 | F5.8 #6 (0.6.5, Acordes): sin capacidades nuevas; la rejilla `grid` con `repeat(auto-fill, minmax())` y el atributo `disabled` son estándar en los tres sistemas (Safari 10.1+). |
 | 1.10 | 15/11/2026 | F5.8 #5 (0.6.4, Escalas por posiciones): sin capacidades nuevas; solo temporizadores y desplazamiento del mástil, ya en uso en Acordes. |
 | 1.9 | 15/11/2026 | Temas (V-10, 0.6.3, F5.8 #3): `prefers-color-scheme` con su evento `change`, `color-scheme` y `meta theme-color`. |
 | 1.8 | 12/11/2026 | Screen Wake Lock (G-13) y filtros de audio para el micrófono (A-02), en la 0.6.2 (F5.8 #2). |

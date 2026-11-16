@@ -1334,8 +1334,10 @@ test('cada tecla negra se escribe con ♯ o con ♭ según Ajustes, igual en tod
 const metroExtra = `
   __ctx.createBuffer = () => ({});
   __ctx.createOscillator = () => { const n = new Nodo('oscilador'); n.frequency = { value: 0 }; n.arranques = [];
-    n.start = t => n.arranques.push(t); n.stop = () => {}; return n; };
-  globalThis.__golpes = () => __nodos.filter(n => n.tipo === 'oscilador').map(n => [n.arranques[0], n.frequency.value]);
+    n.start = t => n.arranques.push(t); n.stop = t => { n.parada = t; }; return n; };
+  // Un golpe retirado (parado antes de arrancar) no llega a sonar: no cuenta.
+  globalThis.__golpes = () => __nodos.filter(n => n.tipo === 'oscilador' && !(n.parada <= n.arranques[0]))
+    .map(n => [n.arranques[0], n.frequency.value]);
   globalThis.__avanza = hasta => { while (__ctx.currentTime < hasta){ __ctx.currentTime += 0.025; metroProgramar(); } };`;
 const metroFalso = audioFalso + metroExtra;
 
@@ -1351,7 +1353,7 @@ test('metrónomo: cada golpe cae a 60/tempo s exactos a 30, 120 y 250 ppm, progr
     for (let i = 1; i < g.length; i++)
       assert.ok(Math.abs(g[i][0] - g[i - 1][0] - 60 / bpm) < 0.001, bpm + ' ppm, golpe ' + i + ': ' + (g[i][0] - g[i - 1][0]));
     assert.deepEqual(g.slice(0, 5).map(x => x[1]), [1760, 1175, 1175, 1175, 1760], 'fuerte, normal, normal, normal, fuerte');
-    assert.ok(g.at(-1)[0] <= A.ev('__ctx.currentTime') + 0.1 + 1e-9, 'nunca más de 100 ms por adelantado');
+    assert.ok(g.at(-1)[0] <= A.ev('__ctx.currentTime') + 0.3 + 1e-9, 'nunca más de 300 ms por adelantado');
     assert.equal(A.ev('stopMetro()'), true);
   }
 });
@@ -1477,10 +1479,118 @@ test('metrónomo: cambiar el tempo o la subdivisión mientras suena no adelanta 
   A.ev('setTempo(120)');                      // el siguiente sigue a 13,06; desde ahí, cada 0,5 s
   A.ev('__avanza(14.6)');
   A.ev('setSubdivision(2)');                  // empieza en el próximo tiempo, 15,06
-  A.ev('__avanza(15.9)');
+  A.ev('__avanza(15.7)');                     // apuntados hasta 16,0 (300 ms por adelantado)
   const g = JSON.parse(A.ev('JSON.stringify(__golpes().map(x => x[0]))'));
   const pasos = g.slice(1).map((x, i) => Math.round((x - g[i]) * 1000) / 1000);
   assert.deepEqual(pasos, [1, 1, 1, 0.5, 0.5, 0.5, 0.5, 0.25, 0.25, 0.25]);
+});
+
+// --- F5.8 #7: el pulso, sin huecos y con lo que se ve a la par de lo que se oye (MT-04) ---
+
+test('metrónomo: 60 s a 250 ppm con tirones del navegador de hasta 0,27 s, sin perder ni mover un golpe (MT-04, AR-12 #3, F5.8 #7)', t => {
+  const A = boot(APP, { metro: { bpm: 250, sig: '4/4', sub: 1, accent: true } });
+  A.ev(metroFalso);
+  A.ev('startMetro()');
+  t.after(() => A.ev('stopMetro()'));
+  // El temporizador se despierta tarde a ratos: entre 5 y 270 ms (siempre los mismos, para repetirlo).
+  A.ev(`(() => { let r = 7; const azar = () => (r = (r * 16807) % 2147483647) / 2147483647;
+    while (__ctx.currentTime < 70){ __ctx.currentTime += 0.005 + 0.265 * azar(); metroProgramar(); } })()`);
+  const g = JSON.parse(A.ev('JSON.stringify(__golpes().map(x => x[0]))'));
+  const inicio = A.ev('metro.inicio');
+  assert.ok(g.at(-1) >= 70, 'llega al final del minuto: ' + g.at(-1));
+  assert.equal(g.length, Math.round((g.at(-1) - inicio) / 0.24) + 1, 'ni un golpe perdido');
+  for (let i = 1; i < g.length; i++)
+    assert.ok(Math.abs(g[i] - g[i - 1] - 0.24) < 1e-6, 'golpe ' + i + ': ' + (g[i] - g[i - 1]));
+});
+
+test('metrónomo: Parar calla lo ya apuntado; cambiar el tempo o el acento rehace lo apuntado sin mover el golpe siguiente (MT-04, F5.8 #7)', t => {
+  const A = boot(APP, { metro: { bpm: 120, sig: '4/4', sub: 1, accent: true } });
+  A.ev(metroFalso);
+  A.ev('startMetro()');
+  t.after(() => A.ev('stopMetro()'));
+  const inicio = A.ev('metro.inicio');
+  const golpes = () => JSON.parse(A.ev('JSON.stringify(__golpes())'));
+  // Tempo: el golpe de inicio+0,5 ya está apuntado; pasa a 60 ppm y sigue ahí, sin repetirse.
+  A.ev(`__avanza(${inicio + 0.3})`);
+  assert.ok(golpes().some(x => Math.abs(x[0] - inicio - 0.5) < 1e-6), 'apuntado por adelantado');
+  A.ev('setTempo(60)');
+  A.ev(`__avanza(${inicio + 1.4})`);
+  assert.deepEqual(golpes().map(x => Math.round((x[0] - inicio) * 1000) / 1000), [0, 0.5, 1.5], 'el siguiente, en su sitio; luego, cada segundo');
+  // Acento: el primer tiempo del compás (inicio+3,5) ya está apuntado con acento; al quitarlo, suena normal.
+  A.ev(`__avanza(${inicio + 3.3})`);
+  assert.equal(golpes().find(x => Math.abs(x[0] - inicio - 3.5) < 1e-6)[1], 1760);
+  A.ev('setAccent(false)');
+  assert.equal(golpes().filter(x => Math.abs(x[0] - inicio - 3.5) < 1e-6).map(x => x[1]).join(), '1175', 'uno solo, sin acento');
+  // Parar: lo apuntado que aún no ha sonado no suena.
+  A.ev(`__avanza(${inicio + 4.3})`);
+  assert.ok(golpes().some(x => x[0] > A.ev('__ctx.currentTime')), 'hay uno apuntado');
+  A.ev('stopMetro()');
+  assert.equal(golpes().filter(x => x[0] > A.ev('__ctx.currentTime')).length, 0, 'tras Parar, ninguno pendiente');
+  assert.equal(A.ev('metro.programados.length'), 0);
+});
+
+test('metrónomo: cambiar compás o figura con el pulso ya apuntado lo rehace una vez; dos cambios seguidos no hacen saltar el contador (MT-03, MT-04, AT-18 A1, AR-19 #3)', t => {
+  const A = boot(APP, { metro: { bpm: 60, sig: '4/4', sub: 2, accent: true } });
+  A.ev(metroFalso);
+  A.ev('startMetro()');
+  t.after(() => A.ev('stopMetro()'));
+  const golpes = () => JSON.parse(A.ev('JSON.stringify(__golpes().map(g => [Math.round(g[0] * 1000) / 1000, g[1]]))'));
+  const en = s => golpes().filter(g => Math.abs(g[0] - s) < 1e-6);
+  // Compás: el pulso de 12,06 ya está apuntado (con la 4/4: normal); pasa a 3/4 y es su primer tiempo.
+  A.ev('__avanza(11.8)');
+  assert.equal(en(12.06).length, 1, 'apuntado por adelantado');
+  A.ev("setCompas('3/4')");
+  A.ev('__avanza(15.3)');
+  assert.deepEqual(en(12.06), [[12.06, 1760]], 'uno solo, con el acento del 3/4');
+  assert.deepEqual([13.06, 14.06, 15.06].map(s => en(s).map(g => g[1]).join()), ['1175', '1175', '1760'], 'compás de tres');
+  // Figura: el pulso de 16,06 ya está apuntado; con semicorcheas, el pulso no se mueve ni se repite.
+  A.ev('__avanza(15.8)');
+  A.ev('setSubdivision(4)');
+  A.ev('__avanza(16.4)');
+  assert.equal(en(16.06).length, 1);
+  assert.deepEqual(en(16.31).map(g => g[1]), [880], 'y la semicorchea, a su cuarto de pulso');
+  // Dos cambios seguidos: la corchea de 18,56 queda apuntada por el cambio de compás
+  // (suena) y el de tempo, justo después, no debe volver a ella con el contador de antes.
+  A.ev('setSubdivision(2)');
+  A.ev('__avanza(18.3)');                         // apuntada la corchea de 18,56; el pulso de 19,06 aún no
+  A.ev("setCompas('4/4'); setTempo(120)");
+  A.ev('__avanza(19.5)');
+  const tras = golpes().filter(g => g[0] > 18.5).map(g => g[0]);
+  assert.deepEqual(tras.slice(0, 3), [18.56, 19.06, 19.31], 'la corchea suena y el pulso sigue en 19,06, ya a 120 ppm');
+});
+
+test('metrónomo: la luz y el péndulo van con lo que se oye, descontando la latencia de salida (MT-04, MT-06, PL-04, F5.8 #7)', t => {
+  const A = boot(APP, { metro: { bpm: 60, sig: '4/4', sub: 1, accent: true } });
+  A.ev(metroFalso);
+  A.doc.querySelector('.tab[data-screen="metro"]').click();
+  A.ev('startMetro()');
+  t.after(() => A.ev('stopMetro()'));
+  const inicio = A.ev('metro.inicio');
+  const vistosEn = s => { A.ev(`__avanza(${s}); metroDibujar()`); return A.ev('metro.vistos'); };
+  // 1. Sin datos de latencia, como antes: el reloj de audio.
+  assert.equal(A.ev('metroOido() === __ctx.currentTime'), true);
+  // 2. Declara 0,2 s de salida (unos auriculares Bluetooth): la luz espera a que se oiga.
+  A.ev('__ctx.outputLatency = 0.2; __ctx.baseLatency = 0.01');
+  assert.equal(vistosEn(inicio + 0.1), 0, 'calculado, pero aún no se oye');
+  assert.equal(vistosEn(inicio + 0.22), 1, 'se oye: el primer pulso se ve');
+  const angulo = parseFloat(A.$('metro-slider').style.getPropertyValue('--ang'));
+  assert.ok(Math.abs(angulo + 30) < 0.5, 'y el péndulo está en su extremo cuando se oye (MT-06): ' + angulo);
+  // 3. Con getOutputTimestamp(), manda la medida del navegador (aquí, 0,15 s de retraso).
+  //    (El banco no trae el reloj performance del navegador: uno fijo basta.)
+  A.ev('globalThis.performance = { now: () => 1000 }');
+  A.ev(`__ctx.getOutputTimestamp = () => ({ contextTime: __ctx.currentTime - 0.15, performanceTime: performance.now() })`);
+  assert.equal(vistosEn(inicio + 1.1), 1, 'el segundo pulso aún no se oye');
+  assert.equal(vistosEn(inicio + 1.16), 2);
+  assert.ok(Math.abs(A.ev('metroOido()') - (A.ev('__ctx.currentTime') - 0.15)) < 0.01);
+  // Lo que pasó desde la medida se suma: 50 ms después, se oye 0,05 s más allá (AT-18 B3).
+  A.ev('globalThis.performance = { now: () => 1050 }');
+  A.ev(`__ctx.getOutputTimestamp = () => ({ contextTime: __ctx.currentTime - 0.15, performanceTime: 1000 })`);
+  assert.ok(Math.abs(A.ev('metroOido()') - (A.ev('__ctx.currentTime') - 0.1)) < 1e-9);
+  // 4. Una medida absurda (o los ceros del arranque) no deja la luz a destiempo.
+  A.ev(`__ctx.getOutputTimestamp = () => ({ contextTime: __ctx.currentTime - 9, performanceTime: performance.now() })`);
+  assert.ok(Math.abs(A.ev('__ctx.currentTime - metroOido()') - 0.5) < 1e-9, 'como mucho, 0,5 s');
+  A.ev(`__ctx.getOutputTimestamp = () => ({ contextTime: 0, performanceTime: 0 })`);
+  assert.ok(Math.abs(A.ev('__ctx.currentTime - metroOido()') - 0.21) < 1e-9, 'sin medida, las latencias declaradas');
 });
 
 // --- F5.8 #1: el péndulo del metrónomo (MT-06, tu comentario del 22/10) ---
