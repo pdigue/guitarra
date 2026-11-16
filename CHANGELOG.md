@@ -35,9 +35,10 @@ Roadmap F6.3 (G-04): que el navegador ofrezca instalarla y quede como un icono m
 - **G-04** · **Manifiesto propio (`manifest.webmanifest`).** Un archivo JSON que le dice al navegador cómo se llama la app, cómo se abre (a pantalla completa, sin barra de direcciones), sus colores y sus iconos. Antes iba incrustado en la página (`data:`) y sin iconos, y Chrome no la daba por instalable. Las direcciones son relativas (`./`), para que funcione también en `/guitarra/`, la web de pruebas.
 - **G-04** · **Iconos PNG** en `iconos/`: 192 y 512 px (los que exige Chrome), uno «maskable» de 512 (a sangre, para que Android lo recorte en círculo o en gota sin cortar el dibujo) y el del iPhone, `apple-touch-icon.png`, de 180 px y sin transparencia (el iPhone no usa los del manifiesto ni acepta SVG: hasta ahora, al añadirla a la pantalla de inicio, salía una captura en vez del icono).
 - Un solo dibujo, `iconos/icono.svg`, del que salen todos con `herramientas/generar-iconos.js`. El dibujo, ahora con **6 cuerdas** (tenía 5).
-- **G-03** · El Service Worker guarda también el manifiesto y los iconos: instalada y sin red, no pierde su icono.
+- **G-04** · El Service Worker guarda también el manifiesto y los iconos: instalada y sin red, no pierde su icono.
 - El archivo autónomo no los lleva: desde el disco no se instala, y el navegador anotaría un error al no encontrarlos.
-- Banco: `tests/instalar.test.js` (5 pruebas) y una más en `tests/sw.test.js`. En Chromium, `herramientas/comprobar-instalable.js`: 12 de 12 (Chrome no pone ningún motivo en contra y el manifiesto trae los iconos de 192, 512 y «maskable»; con la 0.6.8 fallan 3: desde 2024 Chrome deja instalar casi cualquier página, así que preguntarle solo a él ya no basta).
+- Sin `id` en el manifiesto (AT-20 #1): uno relativo se calcula desde la raíz del dominio, y la app tendría la identidad de todo `pdigue.github.io`; sin él, su identidad es su carpeta, `/guitarra/`. Comprobado con lo que entiende Chrome.
+- Banco: `tests/instalar.test.js` (5 pruebas) y una más en `tests/sw.test.js`. En Chromium, `herramientas/comprobar-instalable.js`: 13 de 13 (Chrome no pone ningún motivo en contra y el manifiesto trae los iconos de 192, 512 y «maskable»; con la 0.6.8 fallan 3: desde 2024 Chrome deja instalar casi cualquier página, así que preguntarle solo a él ya no basta).
 
 ### Pendiente
 - Instalarla desde la web publicada, en el iPhone y en Android (F7.2).

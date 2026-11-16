@@ -63,8 +63,8 @@ Auditoría a fondo de lo que cambió en F5.8 y etiqueta `v0.5.x` en el commit qu
 
 | Etapa | Qué se hace | Requisitos | Cómo se valida | Estado |
 |---|---|---|---|:---:|
-| **F6.2** | Service Worker para funcionar sin conexión desde la web | G-03 | Cargar, modo avión y seguir usándola (`herramientas/comprobar-sin-conexion.js`) | ✅ parte de F6.2 (`localhost`, `0.6.8`): 9 de 9 en Chromium; G-03 se cierra en F7.2 (web publicada e iPhone instalado) |
-| **F6.3** | Manifiesto propio e iconos | G-04 | El navegador ofrece instalarla; Lighthouse la da por instalable | ✅ parte de F6.3 (`localhost`, `0.6.9`): Chrome la da por instalable, con la consulta que usaba Lighthouse más el criterio clásico de iconos, porque desde 2024 Chrome instala casi cualquier página y Lighthouse 12 retiró esa prueba (`herramientas/comprobar-instalable.js`, 12 de 12); G-04 se cierra en F7.2 (instalada desde la web publicada, en el iPhone y en Android) |
+| **F6.2** | Service Worker para funcionar sin conexión desde la web | G-03 | Cargar, modo avión y seguir usándola (`herramientas/comprobar-sin-conexion.js`) | 🔨 parte de F6.2 (`localhost`, `0.6.8`): 9 de 9 en Chromium; G-03 se cierra en F7.2 (web publicada e iPhone instalado) |
+| **F6.3** | Manifiesto propio e iconos | G-04 | Chrome no pone motivos en contra (`Page.getInstallabilityErrors`) y el manifiesto trae iconos de 192, 512 y «maskable» (`herramientas/comprobar-instalable.js`); antes decía «Lighthouse la da por instalable» (AR-21 #2) | 🔨 parte de F6.3 (`localhost`, `0.6.9`): Chrome la da por instalable, con la consulta que usaba Lighthouse más el criterio clásico de iconos, porque desde 2024 Chrome instala casi cualquier página y Lighthouse 12 retiró esa prueba (`herramientas/comprobar-instalable.js`, 13 de 13); G-04 se cierra en F7.2 (instalada desde la web publicada, en el iPhone y en Android) |
 | **F6.4** | README, licencia del código, créditos en la app y privacidad | G-06, G-11 | Los cuatro existen y son coherentes | ⬜ licencia: decisión tuya |
 
 ### 🚦 CP-6 · Puerta de lanzamiento
@@ -125,7 +125,7 @@ El historial hasta la v3.26 está en `docs/historico/roadmap.md`.
 
 | Versión | Fecha | Cambio |
 |---|---|---|
-| **4.6** | 16/11/2026 | F6.3 hecha (`0.6.9`): manifiesto propio (`manifest.webmanifest`) e iconos PNG (192, 512, «maskable» y el del iPhone, de 180), comprobada instalable en `localhost` (12 de 12 en Chromium); G-04 queda parcial hasta la web publicada (F7.2). «Estás aquí», al día. |
+| **4.6** | 16/11/2026 | F6.3 hecha (`0.6.9`): manifiesto propio (`manifest.webmanifest`) e iconos PNG (192, 512, «maskable» y el del iPhone, de 180), comprobada instalable en `localhost` (13 de 13 en Chromium); G-04 queda parcial hasta la web publicada (F7.2). «Estás aquí», al día. |
 | 4.5 | 16/11/2026 | F6.2 hecha (`0.6.8`): la app funciona sin conexión desde la web con un Service Worker (`sw.js`), comprobada en `localhost` (9 de 9 en Chromium); G-03 queda parcial hasta la web publicada (F7.2). |
 | 4.4 | 15/11/2026 | F5.8 #7 hecho (`0.6.7`, PR #22): el metrónomo ya no pierde golpes con tirones y lo que se ve va con lo que se oye (MT-04); #6 fusionado (PR #21). |
 | 4.3 | 15/11/2026 | F5.8 #6 hecho (`0.6.5`, PR #21): Acordes, elegidos por nota y tipo y dibujados en grande en los trastes 0 a 5 (tus respuestas del 15/11). |

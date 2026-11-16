@@ -20,7 +20,8 @@ const RE_JS = /<script src="(js\/[^"?]+)(?:\?[^"]*)?"><\/script>/g;
 // Lo que sirve para instalar la app desde la web (G-04, F6.3): el manifiesto y el
 // icono del iPhone. Abierta desde el disco no se puede instalar, y el navegador
 // intentaría leer esos archivos, que no van dentro, y anotaría un error.
-const RE_INSTALAR = /^<link rel="(?:manifest|apple-touch-icon)" href="[^"]*">\n/gm;
+// Tolera sangría y otros atributos (AT-20 #3).
+const RE_INSTALAR = /^[ \t]*<link rel="(?:manifest|apple-touch-icon)"[^>]*>\n/gm;
 
 const leer = (base, rel) => fs.readFileSync(path.join(base, rel), 'utf8').replace(/\r\n/g, '\n');
 

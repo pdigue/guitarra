@@ -58,6 +58,10 @@ const anotar = (ok, que, detalle = '') => { resultados.push({ ok, que, detalle }
     anotar(errors.length === 0, 'el navegador lo lee sin errores', errors.map(e => e.message).join('; '));
     const m = JSON.parse(data || '{}');
     anotar(m.display === 'standalone' && m.name === 'Trasteando', 'nombre y pantalla completa', m.name + ', ' + m.display);
+    // La identidad de la app instalada, como la calcula Chrome (AT-20 #1): la carpeta
+    // de la app, no la raíz del dominio, que compartiría con cualquier otra web de él.
+    const { manifest: entendido } = await cdp.send('Page.getAppManifest');
+    anotar(entendido && entendido.id === URL_APP, 'identidad de la app: su carpeta', entendido && entendido.id);
 
     const { installabilityErrors: motivos } = await cdp.send('Page.getInstallabilityErrors');
     anotar(motivos.length === 0, 'Chrome la da por instalable (sin motivos en contra)',

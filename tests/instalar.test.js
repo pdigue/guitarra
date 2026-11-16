@@ -31,7 +31,11 @@ test('el manifiesto tiene lo que Chrome pide para instalar y abre a pantalla com
   // Relativos: la web de pruebas vive en /guitarra/, no en la raíz del servidor.
   assert.equal(m.start_url, './');
   assert.equal(m.scope, './');
-  assert.equal(m.id, './');
+  // Sin «id» (AT-20 #1): un id relativo se calcula desde la raíz del dominio, no desde
+  // /guitarra/, y la app tendría la identidad de todo pdigue.github.io. Sin él, la
+  // identidad es start_url, que sí sale de la carpeta. Y el id no se puede cambiar
+  // después sin que las instalaciones de antes cuenten como otra app.
+  assert.ok(!('id' in m), 'sin id: la identidad es start_url');
   assert.equal(m.lang, 'es');
   // Los mismos colores que la página, para que al abrir no haya un fogonazo de otro color.
   const tema = leer('index.html').match(/<meta name="theme-color" content="([^"]+)">/)[1];
