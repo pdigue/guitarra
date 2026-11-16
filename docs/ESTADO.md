@@ -1,17 +1,18 @@
 # Trasteando — Estado para retomar
 
-**Actualizado:** 16/11/2026, con la app en la `0.6.7` · lo mantiene la conversación que trabaja.
-**Documentos:** requisitos v2.4 · matriz v2.4 · roadmap v4.4 (baseline 0.6.2; lo anterior, en `docs/historico/`)
+**Actualizado:** 16/11/2026, con la app en la `0.6.8` · lo mantiene la conversación que trabaja.
+**Documentos:** requisitos v2.5 · matriz v2.5 · roadmap v4.5 (baseline 0.6.2; lo anterior, en `docs/historico/`)
 
 > **Al empezar:** compara este archivo (GitHub) con `claude/ESTADO.md` del proyecto; si difieren, avisa a Pablo (manda GitHub). Las reglas están en `CLAUDE.md`. **Al terminar:** déjalo al día y acaba con «ESTADO actualizado: versión X, siguiente paso Y». Propón tú el cambio de conversación al cerrar el bloque.
 
 ## 1. Dónde estamos
-- **Ramas:** `main` = `0.6.7` (el 16/11 se fusionó el PR #22; el 15/11, del #18 al #21). Ningún PR abierto. `archivo/hasta-0.6.2` (472ff7a): salvavidas, no se borra nunca.
-- **Web de pruebas:** https://pdigue.github.io/guitarra/ (rama `pruebas`, con la `0.6.7`).
+- **Ramas:** `main` = `0.6.8` (el 16/11 se fusionaron el #22 y el #23; el 15/11, del #18 al #21). Ningún PR abierto. `archivo/hasta-0.6.2` (472ff7a): salvavidas, no se borra nunca.
+- **Web de pruebas:** https://pdigue.github.io/guitarra/ (rama `pruebas`, con la `0.6.8`: ya lleva el Service Worker).
+- **Bloque F6.2, Service Worker: cerrado y fusionado** (`0.6.8`, PR #23, banco 221 de 221). `sw.js` guarda la app la primera vez que se abre con red (36 archivos) y sin red contesta con las copias; la página, primero de la red. G-03 pasa a «Cumple parcialmente» y PL-04 cambia su evidencia (requisitos y matriz v2.5, compatibilidad v1.13): falta desde la web publicada y en el iPhone instalado (F7.2). Banco: `tests/sw.test.js`; Chromium (`comprobar-sin-conexion.js`): 9 de 9. Auditorías ligeras AT-19 y AR-20: sin críticos ni altos; corregidos los medios (una página de otra versión ya no pisa la copia; el aviso de Safari, que borra lo guardado tras unos 7 días sin uso salvo la app instalada); los bajos, anotados en G-03.
 - **Bloque F5.8 #7, Metrónomo: cerrado y fusionado** (`0.6.7`, PR #22): se perdían golpes (solo 100 ms programados: un tirón de más de ~75 ms hacía saltar el siguiente) y la luz iba con el sonido calculado, no con el que sale. Ahora, 300 ms programados; los cambios y Parar retiran y rehacen lo apuntado; la luz y el péndulo, con `getOutputTimestamp()` o las latencias declaradas; osciladores soltados al acabar. MT-04 cambia (vuelve a «sin validar»). Medido: en el banco, 60 s a 250 ppm con tirones; en Chromium (`herramientas/medir-metronomo.js`), 10 de 63 golpes perdidos antes y 0 de 64 ahora. Auditorías ligeras AT-18 (un alto, corregido: dos cambios seguidos podían dejarlo mudo) y AR-19 (sin críticos ni altos; corregidos los medios). Falta tu prueba.
 - **Bloque F5.8 #6, Acordes: cerrado y fusionado** (`0.6.6`, PR #21): se elige con dos filas, nota y tipo, con lo inexistente apagado y el bajo que dice su nota (AC-01); el mástil enseña en grande los trastes 0 a 5, sin pentagrama, zoom ni aviso para girar (AC-07); retirados AC-03 (pentagrama) y AC-06 (buscador); V-01 y P-03, precisados. Auditorías ligeras AT-17 y AR-18, sin críticos ni altos; corregidos el foco de teclado y la prueba del traste 5. `0.6.6`: arranca también en un marco aislado (la vista previa del chat dejaba el mástil vacío). Falta tu prueba.
 - **Bloque F5.8 #5, Escalas: cerrado y fusionado** (`0.6.4`, PR #20): una posición cada vez (E-07: 3 notas por cuerda, 2 en pentatónicas; la 1 en la tónica), «Escuchar» (E-08), tocar la escala (E-09), «Todas» (E-10) y Practicar en orden (E-05b); E-05 retirado (estado nuevo en el generador). Auditorías ligeras AT-16 y AR-17, sin críticos; lo alto de AR-17 eran decisiones de Pablo, respondidas el 15/11. Falta la prueba de Pablo.
-- **Después, una conversación por bloque:** retomar F6.2 (`auto/F6.2-service-worker`, `7692bc5`: código hecho, faltan documentos, auditoría y PR; la rama es anterior a la 0.6.x, hay que llevarla sobre `main`). Las propuestas (#8), en espera. F5.9 (cierre de la fase, auditoría a fondo, etiqueta `v0.5.x`), cuando hayas probado en el móvil lo de F5.8.
+- **Después, una conversación por bloque:** F6.3 (manifiesto e iconos, G-04). Las propuestas (#8), en espera. F5.9 (cierre de la fase, auditoría a fondo, etiqueta `v0.5.x`), cuando hayas probado en el móvil lo de F5.8.
 - **Hecho en F5.8:** #1 péndulo (MT-06, `0.6.1`); #2 afinador que sigue la nota y abre en Micrófono, y pantalla encendida (A-02, A-03, G-13, `0.6.2`). #3 y #4 aspecto: temas (V-10), tableta (V-11), pistas grandes en Adivinar (J-01, J-06), `0.6.3`. Todos, a falta de la prueba de Pablo.
 
 ## 2. Pendiente de Pablo (no bloquea)
@@ -25,6 +26,7 @@
 8. Probar Escalas (`0.6.4`) en el iPhone: posiciones, «Escuchar» (380 ms por nota), «Todas» y Practicar.
 9. Probar Acordes (`0.6.6`) en el iPhone, el iPad y el ordenador; decir si echa de menos los «Populares» (AR-18 #4).
 10. Probar el metrónomo (`0.6.7`) en el iPhone: un minuto a 120 y otro a 250 ppm, con el altavoz y con auriculares Bluetooth, en Metrónomo y también sonando en Libre. Superada si no hay ningún hueco y la luz y el péndulo van con el clic. Después, decidir (AR-19): si con Bluetooth la luz sigue adelantada, ¿un ajuste manual de retraso?; si aún hay huecos, ¿subir el adelanto a 0,5 s?
+11. Cuando F6.2 esté en la web de pruebas, probar sin conexión en el iPhone (no bloquea): abrir la app con red y esperar unos segundos, poner el modo avión, cerrarla y volver a abrirla; mejor también desde el icono de la pantalla de inicio. Ojo: tras publicar una versión, con la red lenta puede salir la anterior una vez (la versión se ve en Ajustes). Decidir (AR-20 #5) si quiere un aviso de «lista sin conexión».
 
 ## 3. Cómo se trabaja
 - **Banco:** `node --test` en verde (unos 2 min). Las pruebas que arrancan la app se pasan dos veces (varios archivos y autónomo, `tests/autonomo.test.js`); un archivo nuevo que arranque la app se añade allí. Sueltas: `node --test-name-pattern="texto" tests/banco.test.js`. `tests/documentos.test.js`: baseline y versiones.
@@ -36,6 +38,9 @@
 - **Trampas:** no usar `pkill -f "node --test"` ni `rev`. Arrays de la app: `JSON.parse(A.ev('JSON.stringify(...)'))`. Un metrónomo arrancado en una prueba se para en `t.after`.
 
 ## 4. Decisiones recientes
+- **16/11:** fusionado el #23 (F6.2), a petición tuya en la misma conversación.
+- **16/11 · Arranque:** el mensaje para abrir conversación pide también conectar el repositorio con permiso de escritura (§5).
+- **16/11 · F6.2:** la rama vieja se pone al día fusionando `main` dentro (no se reescribe: no hace falta *force push*); versión `0.6.8`.
 - **16/11:** fusionado el #22 sin la prueba en el móvil (las pruebas no bloquean; lo que salga, en una versión siguiente). Propuestas (#8) en espera; siguiente bloque, F6.2.
 - **15/11 · Metrónomo (F5.8 #7):** 300 ms programados por adelantado y rehacer lo apuntado al cambiar algo (en vez de esperar a que se agote); lo que se ve, con lo que se oye.
 - **15/11 · Acordes (F5.8 #6):** el mástil de la app acotado a los trastes 0 a 5 y grande (no un diagrama de cancionero), sin pentagrama; elegir por nota y tipo, sin buscador ni listado. Aceptada la anchura de los trastes en el ordenador, sin tope (AR-18 #3).
@@ -46,4 +51,4 @@
 - **22/10:** péndulo con la pesa arriba más lenta; F5 queda abierta (F5.8 y F5.9).
 
 ## 5. Para abrir la siguiente conversación
-Dentro del proyecto «APP GUITARRA»: **«Lee ESTADO y sigue.»** Detrás, lo que quiera Pablo ese día (aprobaciones como «fusiona el #18», comentarios, peticiones). **Siguiente paso:** retomar F6.2 (service worker), en una conversación nueva: «Lee ESTADO y sigue. Retoma F6.2».
+Dentro del proyecto «APP GUITARRA»: **«Lee ESTADO y sigue. Conecta el repositorio con permiso de escritura.»** (decisión del 16/11: sin pedirlo así, el control de la sesión puede negar la escritura y no se puede subir nada). Detrás, lo que quiera Pablo ese día (aprobaciones como «fusiona el #24», comentarios, peticiones). **Siguiente paso:** F6.3 (manifiesto e iconos, G-04), en una conversación nueva: «Lee ESTADO y sigue. Conecta el repositorio con permiso de escritura. Empieza F6.3».

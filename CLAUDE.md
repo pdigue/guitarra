@@ -6,6 +6,9 @@ Cliente: Pablo Díaz Guerra. Está aprendiendo a programar: explica, no solo hag
 Idioma: español en todo (código comentado, commits, informes y respuestas).
 
 ## Al empezar cada conversación
+0. Conecta el repositorio **con permiso de escritura** (Pablo lo pide en el
+   mensaje de arranque). Si se niega, díselo a Pablo antes de trabajar: sin él
+   no se puede subir la rama ni abrir el PR.
 1. Lee **docs/ESTADO.md** del repositorio (en la rama que diga el propio ESTADO o
    el mensaje de Pablo): dice dónde estamos, qué está pendiente y cómo se trabaja.
 2. Compáralo con su copia en el proyecto de claude.ai, **claude/ESTADO.md**.
@@ -89,7 +92,8 @@ sola por larga:
 2. Deja ESTADO al día (repositorio y proyecto) con el banco en verde.
 3. Si cambió la forma de trabajar, da el texto nuevo completo de las
    instrucciones del proyecto: Pablo lo pega; el agente no puede editarlas.
-4. Recuerda el mensaje de arranque («Lee ESTADO y sigue») y qué puede añadir Pablo.
+4. Recuerda el mensaje de arranque («Lee ESTADO y sigue. Conecta el repositorio
+   con permiso de escritura.») y qué puede añadir Pablo.
 5. Termina con «ESTADO actualizado: versión X, siguiente paso Y».
 
 ## Ahorro de uso

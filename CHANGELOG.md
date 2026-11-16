@@ -8,7 +8,8 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.6.7** | 15/11/2026 | F5.8 · #7, el metrónomo sin huecos y a la par | Rama `auto/F5.8-metronomo` (PR #22) |
+| **0.6.8** | 16/11/2026 | F6.2 · sin conexión desde la web (Service Worker) | `main`, fusionada el 16/11 (PR #23) |
+| 0.6.7 | 15/11/2026 | F5.8 · #7, el metrónomo sin huecos y a la par | `main`, fusionada el 16/11 (PR #22) |
 | 0.6.6 | 15/11/2026 | F5.8 · #6, arranca también en un marco aislado | `main`, fusionada el 15/11 (PR #21) |
 | 0.6.5 | 15/11/2026 | F5.8 · #6, Acordes más sencillo | `main`, fusionada el 15/11 (PR #21) |
 | 0.6.4 | 15/11/2026 | F5.8 · #5, Escalas por posiciones | `main`, fusionada el 15/11 (PR #20) |
@@ -22,6 +23,25 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.6.8] — 16/11/2026 · F6.2 · La app funciona sin conexión desde la web
+
+Roadmap F6.2 (G-03): abrirla una vez con red y, después, usarla en modo avión.
+
+### Añadido
+- **G-03** · **Service Worker (`sw.js`).** Un programa pequeño que el navegador guarda aparte y que se pone en medio de cada petición de la app. La primera vez que se abre con red guarda la página, el estilo, el código y las 17 grabaciones (36 archivos); sin red, contesta él con esas copias.
+- **G-03** · **Siempre la última versión.** La página se pide primero a la red (si no hay, o tarda más de 3 s, se usa la copia); lo demás sale de la copia, porque cada versión lleva su `?v=`. Al llegar una versión nueva se guarda entera y se borran las copias de la anterior.
+- **G-03, PL-04** · Se registra solo donde existe (`https` o `localhost`), nunca con doble clic ni en el archivo autónomo, que ya lleva el audio dentro (G-07). Si el navegador no lo tiene, la app funciona igual, solo que con conexión.
+- Banco: `tests/sw.test.js` (8 pruebas: la precarga es justo lo que carga `index.html` más las grabaciones, sin red todo sale de la copia, versiones…) y cuándo se registra. En Chromium, `herramientas/comprobar-sin-conexion.js`: 9 de 9.
+
+### Corregido tras las auditorías AT-19 y AR-20
+- **G-03** · Una página de **otra versión** que llega de la red (la nueva que tarda tras publicar, o una vieja de la caché de 10 minutos de GitHub Pages) se enseña, pero ya no sustituye a la copia guardada: sin red se abriría una página que pide archivos que no están, y la app no arrancaría (AT-19 M1). Con su prueba.
+- **PL-04** · `docs/compatibilidad.md` v1.13: el Service Worker, en uso, con el aviso del iPhone (Safari borra lo guardado por un sitio que no se usa en unos 7 días, salvo la app instalada), y una fila para su caché (AT-19 M2, AR-20 #1). El criterio de F7.2 pide probarlo en el iPhone desde Safari y desde la app instalada, también tras días sin abrirla (AR-20 #2).
+
+### Pendiente
+- Comprobarlo desde la web publicada y en el iPhone (F7.2). Lo bajo de las auditorías, anotado en G-03.
 
 ---
 
