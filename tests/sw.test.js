@@ -166,6 +166,22 @@ test('sin red: la página, el estilo, el código y las grabaciones salen de la c
   assert.equal(await sw.lanzar('fetch', { request: new Request(BASE + 'js/x.js', { method: 'POST', body: 'x' }) }), undefined);
 });
 
+test('sin red, el manifiesto y todos los iconos salen de la copia: instalada, no pierde su icono (G-04)', async () => {
+  const sw = await instalado();
+  sw.red.estado = 'cortada';
+  const manifiesto = JSON.parse(leer('manifest.webmanifest'));
+  const iconos = [...manifiesto.icons.map(i => i.src), 'iconos/apple-touch-icon.png'];
+  const r = await pedir(sw, recurso('manifest.webmanifest'));
+  assert.deepEqual(JSON.parse(await r.text()), manifiesto);
+  for (const src of iconos){
+    const png = await pedir(sw, recurso(src));
+    assert.ok(png, src + ' no está en la copia');
+    assert.equal((await png.arrayBuffer()).byteLength, fs.statSync(path.join(RAIZ, src)).size, src);
+  }
+  // Solo ese nombre exacto: otro que empiece igual no es de la app.
+  assert.equal(await pedir(sw, recurso('manifest.webmanifest.bak')), undefined);
+});
+
 test('con red, la página viene de la red y deja su copia para la próxima vez sin conexión', async () => {
   const sw = await instalado();
   const v = vm.runInContext('VERSION', sw.ctx);
