@@ -8,7 +8,7 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.6.8** | 16/11/2026 | F6.2 · sin conexión desde la web (Service Worker) | Rama `auto/F6.2-service-worker` (PR #23) |
+| **0.6.8** | 16/11/2026 | F6.2 · sin conexión desde la web (Service Worker) | `main`, fusionada el 16/11 (PR #23) |
 | 0.6.7 | 15/11/2026 | F5.8 · #7, el metrónomo sin huecos y a la par | `main`, fusionada el 16/11 (PR #22) |
 | 0.6.6 | 15/11/2026 | F5.8 · #6, arranca también en un marco aislado | `main`, fusionada el 15/11 (PR #21) |
 | 0.6.5 | 15/11/2026 | F5.8 · #6, Acordes más sencillo | `main`, fusionada el 15/11 (PR #21) |
