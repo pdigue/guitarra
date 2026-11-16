@@ -1,6 +1,6 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 1.18 · **Fecha:** 15 de noviembre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0); la sección 7b (seis áreas, con Metrónomo y Acordes), aprobada el 21/10 y retocada el 22/10 con tu decisión de la pesa del metrónomo; los detalles del péndulo, a falta de tu visto bueno en la web de pruebas. Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
+**Versión:** 1.19 · **Fecha:** 15 de noviembre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0); la sección 7b (seis áreas, con Metrónomo y Acordes), aprobada el 21/10 y retocada el 22/10 con tu decisión de la pesa del metrónomo; los detalles del péndulo, a falta de tu visto bueno en la web de pruebas. Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
 **Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.6.4` · `requisitos.md` v2.2 · `roadmap.md` v4.2
 **Revisión:** auditoría de requisitos AR-04 (`historico/auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
@@ -266,7 +266,8 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.18** | 15/11/2026 | F5.8 #6: Acordes por nota y tipo, con el acorde en grande en los trastes 0 a 5; sin pentagrama, buscador ni aviso para girar en Acordes (§7b, AC-01, AC-07, V-01). |
+| **1.19** | 15/11/2026 | F5.8 #7: el metrónomo no cambia de aspecto; la luz del pulso y el péndulo llegan cuando el clic se oye, no antes (§7b, MT-04). |
+| 1.18 | 15/11/2026 | F5.8 #6: Acordes por nota y tipo, con el acorde en grande en los trastes 0 a 5; sin pentagrama, buscador ni aviso para girar en Acordes (§7b, AC-01, AC-07, V-01). |
 | 1.17 | 15/11/2026 | F5.8 #5: Escalas, una posición cada vez (la 1 en la tónica), con «Escuchar», «Todas» y una Práctica nueva en orden (§Escalas, E-03 a E-10, P-03); textos cortos en el móvil. |
 | 1.16 | 15/11/2026 | F5.8 #3 y #4: disposición «Tableta y ordenador» (§3, V-11; umbral de área útil 700 × 600 tras AR-16 #1, y excepción al principio 1 de §2), temas en Ajustes › Aspecto (§10, V-10; Madera de fábrica, tu decisión del 15/11) y, en Adivinar, la franja de pistas en grande y la nota tocada en pequeño (§6, J-01, J-06). |
 | 1.15 | 12/11/2026 | F5.8 #2: el afinador abre en Micrófono, sostiene la última lectura y mantiene la pantalla encendida (A-02, A-03, G-13). El metrónomo avisa donde no puede mantenerla. |
