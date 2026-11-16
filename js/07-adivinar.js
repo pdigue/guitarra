@@ -104,7 +104,6 @@ function renderClues(){
     });
     if (color) v.style.color = color;
     b.appendChild(k); b.appendChild(v);
-    encajar(v);
   };
   const midi = challenge ? challenge.midi : null;
   const i = challenge ? noteInfo(midi) : null;
@@ -116,39 +115,55 @@ function renderClues(){
        cuerdas);
   const pistas = document.querySelector('.ch-hints');
   pistas.classList.toggle('has-clue', !!challenge && screen === 'guess' && (state.hintNote || state.hintString));
-  // Al encender la franja cambia el ancho de cada recuadro: se vuelve a encajar.
+  // Se encajan al final, con la franja ya encendida y su ancho definitivo.
   pistas.querySelectorAll('.clue-v').forEach(encajar);
 }
 
 /** Que la respuesta de una pista quepa entera en su recuadro (F5.8, 16/11).
  *  Antes, el tamaño dependía del número de letras («21 px si pasa de 7»), y
  *  con 4 o 5 cuerdas en inglés no cabía: salía «1st 2nd 3rd …», y en el panel
- *  estrecho del horizontal, nada. Ahora se mide de verdad: se parte del tamaño
- *  del CSS (30 px en el móvil, 44 en tableta) y se baja de 1 en 1 hasta que
- *  cabe, sin bajar de ENCAJE_MIN; si ni así, se parte en dos líneas.
- *  Medir obliga al navegador a calcular la página, pero son pocas vueltas y
- *  solo al cambiar de reto, de pista o de tamaño de ventana. */
-const ENCAJE_MIN = 13;
+ *  estrecho del horizontal, nada. Ahora se mide de verdad: scrollWidth es lo
+ *  que el texto necesita y clientWidth, lo que el recuadro le da. Se parte del
+ *  tamaño del CSS (30 px en el móvil, 44 en tableta), se calcula de una vez el
+ *  que cabría (una regla de tres) y se afina de 1 en 1.
+ *  Nunca baja de ENCAJE_MIN, 20 px: es el tamaño de la nota que tocas (J-01), y
+ *  lo que buscas no debe verse más pequeño que lo que tocas (tu #4, AR-22 #1).
+ *  Si ni así cabe, se parte en dos líneas. */
+const ENCAJE_MIN = 20;
 function encajar(v){
   v.style.fontSize = ''; v.classList.remove('wrap');
   if (!v.clientWidth) return;                 // oculta: se encaja cuando se vea
-  let px = parseFloat(getComputedStyle(v).fontSize);
-  while (v.scrollWidth > v.clientWidth + 1 && px > ENCAJE_MIN){ px -= 1; v.style.fontSize = px + 'px'; }
-  if (v.scrollWidth > v.clientWidth + 1) v.classList.add('wrap');
+  const noCabe = () => v.scrollWidth > v.clientWidth + 1;
+  if (!noCabe()) return;
+  const max = parseFloat(getComputedStyle(v).fontSize);
+  let px = Math.max(ENCAJE_MIN, Math.min(max, Math.floor(max * v.clientWidth / v.scrollWidth)));
+  v.style.fontSize = px + 'px';
+  while (noCabe() && px > ENCAJE_MIN){ px -= 1; v.style.fontSize = px + 'px'; }
+  if (noCabe()) v.classList.add('wrap');
 }
-// Girar el móvil o cambiar la ventana cambia el sitio disponible.
-window.addEventListener('resize', () => document.querySelectorAll('.ch-hints .clue-v').forEach(encajar));
+// Si cambia el ancho de la franja (girar el móvil, cambiar la ventana, aparecer
+// «Ver la respuesta»…), se vuelve a encajar, una vez por fotograma como mucho.
+// ResizeObserver avisa de cualquier cambio de tamaño de un elemento; donde no
+// exista, basta el aviso de la ventana (resize).
+let encajePendiente = 0;
+function reencajar(){
+  cancelAnimationFrame(encajePendiente);
+  encajePendiente = requestAnimationFrame(() => document.querySelectorAll('.ch-hints .clue-v').forEach(encajar));
+}
+if (typeof ResizeObserver === 'function') new ResizeObserver(reencajar).observe(document.querySelector('.ch-hints'));
+else window.addEventListener('resize', reencajar);
 
 function renderChallenge(){
   const box = document.getElementById('challenge-text');
   const btn = document.getElementById('btn-repeat');
   btn.classList.toggle('ready', !guessStarted);
   btn.setAttribute('aria-label', guessStarted ? t('guess.repeat') : t('guess.startAria'));
-  renderClues();
   // «Ver la respuesta»: solo en el modo de seguir intentando, tras fallar (J-13),
   // y mientras el reto está en marcha: si se pausó al ocultar la app, primero ▶ (AT-09 #9).
+  // Va antes que las pistas: al aparecer, las estrecha, y se miden ya con su ancho (AT-21 #1).
   const rendirse = document.getElementById('qb-giveup');
   rendirse.hidden = !(guessStarted && challenge && challenge.misses && !challenge.revealed && !challenge.solved);
+  renderClues();
   if (!challenge){ box.textContent = ''; return; }
 
   if (!guessStarted){

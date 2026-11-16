@@ -2153,8 +2153,9 @@ test('en Adivinar las cuerdas de la pista son números grandes con la «ª» peq
   const reglaV = css.match(/\.ch-hints\.has-clue \.chip\.clue \.clue-v \{[^}]*\}/)[0];
   assert.doesNotMatch(reglaV, /ellipsis/);
   assert.match(reglaV, /width:100%/);
-  assert.match(css, /html \{ -webkit-text-size-adjust:100%; text-size-adjust:100%; \}/);
-  assert.equal(A.ev('ENCAJE_MIN'), 13, 'nunca más pequeño que 13 px; si no cabe, en dos líneas');
+  assert.match(css, /-webkit-text-size-adjust:\s*100%/);
+  assert.match(css, /[^-]text-size-adjust:\s*100%/);
+  assert.equal(A.ev('ENCAJE_MIN'), 20, 'nunca más pequeña que la nota que tocas (20 px, J-01); si no cabe, en dos líneas');
 });
 
 test('en inglés, las cuerdas de la pista llevan «st», «nd», «rd» y «th» pequeños (J-06, G-12)', () => {

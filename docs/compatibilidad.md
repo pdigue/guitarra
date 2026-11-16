@@ -54,6 +54,8 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 | `color-scheme` y `meta theme-color` | Que los controles nativos y la barra del navegador vayan con el tema (0.6.3) | ✅ | ✅ | ✅ | Se ignoran: la app se ve igual, solo la barra del sistema no cambia de color |
 | Tamaño de texto fijo (`text-size-adjust`) | Que el iPhone no agrande el texto por su cuenta al girar la pantalla (0.6.10) | — | ✅ | ✅ Safari, con `-webkit-` | Sin él, el texto puede salir más grande de lo previsto tras girar el móvil; la app sigue funcionando |
 | Medir el texto (`scrollWidth`, `clientWidth`) | Que la respuesta de una pista quepa entera, bajando su tamaño (J-06, 0.6.10) | ✅ | ✅ | ✅ | Estándar en todos; si el recuadro está oculto, se mide al verse |
+| Avisar de cambios de tamaño (`ResizeObserver`) | Volver a encajar las pistas al girar, al cambiar la ventana o al aparecer «Ver la respuesta» (J-06, 0.6.10; AT-21) | ✅ | ✅ | ✅ desde Safari 13.1 | Sin él, se vuelve a encajar con el aviso de la ventana (`resize`) |
+| `max()` en CSS | Que el ordinal de las cuerdas no baje de 11 px (0.6.10) | ✅ | ✅ | ✅ desde Safari 11.1 | Sin él, el ordinal es la mitad del número |
 | Pantalla completa | Ocultar las barras del navegador | ✅ | ✅ | ❌ en Safari | La app instalada ya abre a pantalla completa |
 
 ✅ funciona · ⚠️ con matices · ❌ no disponible · — no aplica
@@ -62,7 +64,7 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.15** | 16/11/2026 | Tu comentario del 16/11 (0.6.10): `text-size-adjust`, para que el iPhone no agrande el texto al girarlo, y medir el texto de las pistas para que quepa. |
+| **1.15** | 16/11/2026 | Tu comentario del 16/11 (0.6.10): `text-size-adjust`, para que el iPhone no agrande el texto al girarlo; medir el texto de las pistas para que quepa, `ResizeObserver` para volver a medir y `max()` en CSS. |
 | 1.14 | 16/11/2026 | F6.3 (0.6.9, instalable): el manifiesto propio y los iconos PNG, en uso; Firefox de escritorio no instala; el iPhone toma el icono de `apple-touch-icon`; la pantalla de arranque de Android, oscura también con el tema claro. |
 | 1.13 | 16/11/2026 | F6.2 (0.6.8, sin conexión desde la web): el Service Worker, en uso, con el aviso de Safari en el iPhone (AT-19 M2, AR-20 #1); fila nueva de la caché del Service Worker. |
 | 1.12 | 15/11/2026 | F5.8 #7 (0.6.7, metrónomo): `getOutputTimestamp()`, `outputLatency` y `baseLatency` para que lo que se ve vaya con lo que se oye, con su alternativa. |
