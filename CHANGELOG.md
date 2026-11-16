@@ -8,7 +8,8 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.6.9** | 16/11/2026 | F6.3 · instalable: manifiesto e iconos | `auto/F6.3-manifiesto` |
+| **0.6.10** | 16/11/2026 | F5.8 · #9, las pistas de Adivinar se leen enteras | `auto/F5.8-pistas` (PR #25) |
+| 0.6.9 | 16/11/2026 | F6.3 · instalable: manifiesto e iconos | `auto/F6.3-manifiesto` (PR #24) |
 | 0.6.8 | 16/11/2026 | F6.2 · sin conexión desde la web (Service Worker) | `main`, fusionada el 16/11 (PR #23) |
 | 0.6.7 | 15/11/2026 | F5.8 · #7, el metrónomo sin huecos y a la par | `main`, fusionada el 16/11 (PR #22) |
 | 0.6.6 | 15/11/2026 | F5.8 · #6, arranca también en un marco aislado | `main`, fusionada el 15/11 (PR #21) |
@@ -24,6 +25,23 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.6.10] — 16/11/2026 · F5.8 · Las pistas de Adivinar se leen enteras
+
+Tu comentario del 16/11, con capturas del iPhone: «no se ven las cuerdas de pista, incluso peor en horizontal… optimiza los tamaños».
+
+### Corregido
+- **J-06** · **Las cuerdas ya no se cortan.** El tamaño se elegía por el número de letras (21 px si pasaba de 7), y con 4 o más cuerdas en inglés no cabía: «1st 2nd 3rd 4t…». Ahora se **mide**: la respuesta empieza en 30 px (44 en tableta) y baja de 1 en 1 hasta caber entera; nunca por debajo de 20 px, el tamaño de la nota que tocas, para que lo que buscas no se vea más pequeño que lo que tocas (si no cabe, en dos líneas). Nada se corta con «…». Se vuelve a medir al girar, al cambiar la ventana y cuando aparece «Ver la respuesta» (`ResizeObserver`).
+- **J-06** · **Las cuerdas, en números con el ordinal pequeño:** «1ª 2ª 3ª» y, en inglés, «1st 2nd 3rd» con «st», «nd»… pequeños y arriba. Es lo que menos informa, y así el número se ve grande.
+- **J-06** · **En horizontal** el panel mide unos 140 px: la nota se quedaba en «F…» y las cuerdas, en blanco (el recuadro se quedaba sin ancho). Ahora las dos pistas van una encima de la otra, con todo el ancho; para que el pentagrama siga a la vista, la racha se pone al lado de ▶, y no en una fila propia debajo.
+- **El texto gigante tras girar el iPhone** (tu tercera captura): Safari agranda por su cuenta el texto que cree pequeño al pasar a horizontal, y al volver no siempre lo deshace. Con `text-size-adjust: 100%` los tamaños son siempre los del CSS.
+- Banco: dos pruebas nuevas (las cuerdas en números con su ordinal, en español y en inglés; el CSS sin «…» y con `text-size-adjust`). En Chromium, `herramientas/comprobar-pistas.js`: 126 de 126 (iPhone grande y SE e iPad, vertical y horizontal, español e inglés, notas en 3 a 6 cuerdas, tras un fallo y tras girar; ▶ libre de la racha).
+- **J-07** · En horizontal, la racha va al lado de ▶ (antes, en una fila propia debajo).
+
+### Pendiente
+- Tu prueba en el iPhone, en vertical y en horizontal.
 
 ---
 
