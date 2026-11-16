@@ -2134,12 +2134,34 @@ test('en un tema claro el pentagrama se escribe con la tinta del texto, no con e
   assert.match(B.$('staff').querySelector('ellipse').getAttribute('fill'), /^#/, 'en Madera, el color de la nota');
 });
 
-test('en Adivinar una pista larga («1ª 2ª 3ª 4ª») se marca para caber entera en su mitad de la franja (J-06, F5.8 #4)', () => {
+test('en Adivinar las cuerdas de la pista son números grandes con la «ª» pequeña, y nada se corta con «…» (J-06, tu comentario del 16/11)', () => {
   const A = boot(APP, { hintNote: true, hintString: true });
   A.doc.querySelector('.tab[data-screen="guess"]').click();
   assert.ok(A.doc.querySelector('.ch-hints').classList.contains('has-clue'), 'con pistas encendidas, la franja es de pistas');
-  for (const id of ['qb-hint-note', 'qb-hint-string']) {
-    const v = A.$(id).querySelector('.clue-v');
-    assert.equal(v.classList.contains('long'), v.textContent.length > 7, id + ': «' + v.textContent + '»');
-  }
+  const v = A.$('qb-hint-string').querySelector('.clue-v');
+  const numeros = A.ev('positionsFor(challenge.midi).map(p => p.string.number)');
+  const ords = v.querySelectorAll('.ord');
+  assert.equal(ords.length, numeros.length, 'una por cuerda');
+  ords.forEach((o, j) => {
+    assert.equal(o.querySelector('small').textContent, 'ª', 'la «ª», aparte, para hacerla pequeña');
+    assert.equal(o.textContent.trim(), numeros[j] + 'ª');
+  });
+  assert.ok(!v.classList.contains('long'), 'ya no se adivina el tamaño por el número de letras: se mide (encajar)');
+  // El CSS: sin puntos suspensivos; la respuesta, a todo el ancho; y el iPhone
+  // no agranda el texto por su cuenta al girar (text-size-adjust).
+  const css = require('fs').readFileSync(require('path').join(__dirname, '..', 'css', 'trasteando.css'), 'utf8');
+  const reglaV = css.match(/\.ch-hints\.has-clue \.chip\.clue \.clue-v \{[^}]*\}/)[0];
+  assert.doesNotMatch(reglaV, /ellipsis/);
+  assert.match(reglaV, /width:100%/);
+  assert.match(css, /html \{ -webkit-text-size-adjust:100%; text-size-adjust:100%; \}/);
+  assert.equal(A.ev('ENCAJE_MIN'), 13, 'nunca más pequeño que 13 px; si no cabe, en dos líneas');
+});
+
+test('en inglés, las cuerdas de la pista llevan «st», «nd», «rd» y «th» pequeños (J-06, G-12)', () => {
+  const A = boot(APP, { hintString: true, lang: 'en' });
+  A.doc.querySelector('.tab[data-screen="guess"]').click();
+  const fines = [...A.$('qb-hint-string').querySelectorAll('.ord small')].map(s => s.textContent);
+  const esperados = JSON.parse(A.ev('JSON.stringify(positionsFor(challenge.midi).map(p => ord(p.string.number).replace(/^\\d+/, "")))'));
+  assert.deepEqual(fines, esperados);
+  assert.ok(fines.every(f => ['st', 'nd', 'rd', 'th'].includes(f)));
 });

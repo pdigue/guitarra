@@ -1,11 +1,13 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 2.6 · **Fecha:** 16 de noviembre de 2026 · **Base:** `requisitos.md` v2.6 · app `0.6.9` · `roadmap.md` v4.6  
+**Versión:** 2.7 · **Fecha:** 16 de noviembre de 2026 · **Base:** `requisitos.md` v2.7 · app `0.6.10` · `roadmap.md` v4.7  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple. El historial hasta la 1.25 está en `docs/historico/matriz-cumplimiento.md`.
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
+
+**Cambios en la 2.7** (16/11/2026): Tu comentario del 16/11: J-06, criterio (la respuesta, entera en el iPhone en vertical y en horizontal, de 13 px o más; ya no 21 px por tener más de 7 caracteres) y evidencia nuevos (banco y comprobar-pistas en Chromium, 48 de 48); verificado parcialmente hasta tu prueba.
 
 **Cambios en la 2.6** (16/11/2026): F6.3: G-04, método (banco y Chromium; en F7.2, el cliente), criterio (instalable en localhost; en F7.2, desde la web publicada en el iPhone y en Android) y evidencia nuevos (banco del manifiesto y los iconos; comprobar-instalable en Chromium, 12 de 12); verificado parcialmente: falta desde la web publicada (F7.2); el criterio de F7.2, del cliente (AR-21 #4). PL-04, evidencia (compatibilidad v1.14) (AR-21 #3).
 
@@ -78,7 +80,7 @@
 | **J-03** | F1.1 | D | Tras acertar se señalan las demás posiciones válidas. | Cumple | F1.1 #14 · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
 | **J-04** | F1.1 | D | La pista «Nombre» muestra el nombre y la octava de la nota que suena. | Cumple | F1.1 #14 · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
 | **J-05** | F1.1 | D | La pista «Cuerda» lista las cuerdas donde puede estar la nota. | Cumple | F1.1 #14 · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
-| **J-06** | F1.1 · F5.8 | D | Las dos pistas se activan con chips visibles en Adivinar, sin abrir Ajustes; encendidas, enseñan su respuesta en grande (0.4.1); desde la 0.6.3, con una pista encendida esta ocupa todo el ancho de su fila y con dos, la mitad cada una; la respuesta, a 30 px en el móvil y 44 en tableta (21 y 34 si pasa de 7 caracteres, para caber entera). | Cumple | F1.1 #14 · Banco (node --test): pistas grandes, también antes de ▶; pista larga (0.6.3) | Verificado parcialmente | Cliente · listado 14/09 |
+| **J-06** | F1.1 · F5.8 | D | Las dos pistas se activan con chips visibles en Adivinar, sin abrir Ajustes; encendidas, enseñan su respuesta en grande (0.4.1); desde la 0.6.3, con una pista encendida esta ocupa todo el ancho de su fila y con dos, la mitad cada una; la respuesta, a 30 px en el móvil y 44 en tableta como máximo; desde la 0.6.10 se ve entera (sin «…» ni recuadro vacío) en el iPhone grande y pequeño, en vertical y en horizontal, en español y en inglés, con notas en 2 a 6 cuerdas, sin bajar de 13 px; las cuerdas, en números con el ordinal pequeño; en horizontal, las dos pistas apiladas. | Cumple | F1.1 #14 · Banco (node --test): pistas grandes, también antes de ▶; las cuerdas en números con su ordinal pequeño, en español y en inglés, y CSS sin «…» y con text-size-adjust (0.6.10) · herramientas/comprobar-pistas.js en Chromium, 0.6.10: 48 de 48 respuestas enteras (4 tamaños de iPhone × 2 idiomas × 3 notas, la menor a 15 px) | Verificado parcialmente | Cliente · listado 14/09 |
 | **J-07** | F1.1 | T | La racha sube con cada acierto y vuelve a 0 con cada fallo. | Cumple | Banco (node --test): acierto y fallo · Sesión 1: E04 | Verificado | Cliente · listado 14/09 |
 | **J-08** | F1.1 | T | El récord de cada afinación persiste tras recargar y tras «Restablecer todos los ajustes»; solo «Borrar los récords de racha» los pone a cero. | Cumple | Banco (node --test): récords por afinación guardados y restablecer · F1.1 #13 · Sesión 1: A15 | Verificado parcialmente | Cliente · listado 14/09 |
 | **J-09** | F1.1 | D | Acierto y fallo se distinguen al instante por color y destello. | Cumple | F1.1 #9 · Sesión 1: A09 y E04 | Verificado | Cliente · listado 14/09 |

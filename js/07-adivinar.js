@@ -92,21 +92,52 @@ function renderClues(){
     b.classList.add('clue');
     const k = document.createElement('span'), v = document.createElement('b');
     k.className = 'clue-k'; k.textContent = etiqueta[1] + ' ';   // el lector lee «Nota Sol#3», no «NotaSol#3»
-    // Una respuesta larga («1ª 2ª 3ª 4ª») baja de tamaño para caber entera en su mitad (F5.8 #4).
-    v.className = 'clue-v' + (valor.length > 7 ? ' long' : ''); v.textContent = valor;
+    v.className = 'clue-v';
+    // El valor es un texto («Fa#4») o una lista de cuerdas: cada una, su número
+    // grande y su «ª» (o «st», «nd»…) pequeña, que es lo que menos informa (F5.8, 16/11).
+    if (typeof valor === 'string') v.textContent = valor;
+    else valor.forEach(([num, fin], j) => {
+      const c = document.createElement('span'), s = document.createElement('small');
+      // El espacio va delante del número: el texto sigue siendo «4ª 5ª» para el lector.
+      c.className = 'ord'; c.textContent = (j ? ' ' : '') + num; s.textContent = fin;
+      c.appendChild(s); v.appendChild(c);
+    });
     if (color) v.style.color = color;
     b.appendChild(k); b.appendChild(v);
+    encajar(v);
   };
   const midi = challenge ? challenge.midi : null;
   const i = challenge ? noteInfo(midi) : null;
   chip('qb-hint-note', state.hintNote && screen === 'guess', [t('hint.name'), t('hint.note')],
        challenge ? noteName(midi) + i.octave : '', i && i.color);
-  const cuerdas = challenge ? positionsFor(midi).map(p => ord(p.string.number)) : [];
+  // ord(3) = «3ª» o «3rd»: el número, por un lado, y lo demás, por otro.
+  const cuerdas = challenge ? positionsFor(midi).map(p => { const n = String(p.string.number); return [n, ord(p.string.number).slice(n.length)]; }) : [];
   chip('qb-hint-string', state.hintString && screen === 'guess', [t('hint.string'), t(cuerdas.length > 1 ? 'hint.strings' : 'hint.string')],
-       cuerdas.join(' '));
-  document.querySelector('.ch-hints').classList.toggle('has-clue',
-    !!challenge && screen === 'guess' && (state.hintNote || state.hintString));
+       cuerdas);
+  const pistas = document.querySelector('.ch-hints');
+  pistas.classList.toggle('has-clue', !!challenge && screen === 'guess' && (state.hintNote || state.hintString));
+  // Al encender la franja cambia el ancho de cada recuadro: se vuelve a encajar.
+  pistas.querySelectorAll('.clue-v').forEach(encajar);
 }
+
+/** Que la respuesta de una pista quepa entera en su recuadro (F5.8, 16/11).
+ *  Antes, el tamaño dependía del número de letras («21 px si pasa de 7»), y
+ *  con 4 o 5 cuerdas en inglés no cabía: salía «1st 2nd 3rd …», y en el panel
+ *  estrecho del horizontal, nada. Ahora se mide de verdad: se parte del tamaño
+ *  del CSS (30 px en el móvil, 44 en tableta) y se baja de 1 en 1 hasta que
+ *  cabe, sin bajar de ENCAJE_MIN; si ni así, se parte en dos líneas.
+ *  Medir obliga al navegador a calcular la página, pero son pocas vueltas y
+ *  solo al cambiar de reto, de pista o de tamaño de ventana. */
+const ENCAJE_MIN = 13;
+function encajar(v){
+  v.style.fontSize = ''; v.classList.remove('wrap');
+  if (!v.clientWidth) return;                 // oculta: se encaja cuando se vea
+  let px = parseFloat(getComputedStyle(v).fontSize);
+  while (v.scrollWidth > v.clientWidth + 1 && px > ENCAJE_MIN){ px -= 1; v.style.fontSize = px + 'px'; }
+  if (v.scrollWidth > v.clientWidth + 1) v.classList.add('wrap');
+}
+// Girar el móvil o cambiar la ventana cambia el sitio disponible.
+window.addEventListener('resize', () => document.querySelectorAll('.ch-hints .clue-v').forEach(encajar));
 
 function renderChallenge(){
   const box = document.getElementById('challenge-text');

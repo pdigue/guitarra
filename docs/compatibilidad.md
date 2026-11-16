@@ -1,6 +1,6 @@
 # Trasteando — Compatibilidad entre sistemas operativos
 
-**Versión:** 1.14 · **Fecha:** 16 de noviembre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
+**Versión:** 1.15 · **Fecha:** 16 de noviembre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
 
 La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este documento lista cada capacidad del navegador que usa o usará, cómo se comporta en cada sistema y qué hace la app donde falta. Se revisa en cada etapa que añada una capacidad nueva.
 
@@ -52,6 +52,8 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 | Filtros de audio (`BiquadFilterNode`) | Limpiar el sonido del micrófono antes de analizarlo: fuera graves de menos de 60 Hz y agudos de más de 1200 Hz (A-02, 0.6.2) | ✅ | ✅ | ✅ | Parte de Web Audio. Si faltara `createBiquadFilter`, se analiza sin filtrar, como antes |
 | Modo claro u oscuro del sistema (`matchMedia('(prefers-color-scheme: dark)')` y su evento `change`) | El tema «Automático» (V-10, 0.6.3): elegir claro u oscuro y seguir el cambio con la app abierta | ✅ | ✅ | ✅ (el evento, con `addListener` en Safari anterior a 14) | Sin `matchMedia`, «Automático» es oscuro; Madera y Partitura no lo necesitan |
 | `color-scheme` y `meta theme-color` | Que los controles nativos y la barra del navegador vayan con el tema (0.6.3) | ✅ | ✅ | ✅ | Se ignoran: la app se ve igual, solo la barra del sistema no cambia de color |
+| Tamaño de texto fijo (`text-size-adjust`) | Que el iPhone no agrande el texto por su cuenta al girar la pantalla (0.6.10) | — | ✅ | ✅ Safari, con `-webkit-` | Sin él, el texto puede salir más grande de lo previsto tras girar el móvil; la app sigue funcionando |
+| Medir el texto (`scrollWidth`, `clientWidth`) | Que la respuesta de una pista quepa entera, bajando su tamaño (J-06, 0.6.10) | ✅ | ✅ | ✅ | Estándar en todos; si el recuadro está oculto, se mide al verse |
 | Pantalla completa | Ocultar las barras del navegador | ✅ | ✅ | ❌ en Safari | La app instalada ya abre a pantalla completa |
 
 ✅ funciona · ⚠️ con matices · ❌ no disponible · — no aplica
@@ -60,7 +62,8 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.14** | 16/11/2026 | F6.3 (0.6.9, instalable): el manifiesto propio y los iconos PNG, en uso; Firefox de escritorio no instala; el iPhone toma el icono de `apple-touch-icon`; la pantalla de arranque de Android, oscura también con el tema claro. |
+| **1.15** | 16/11/2026 | Tu comentario del 16/11 (0.6.10): `text-size-adjust`, para que el iPhone no agrande el texto al girarlo, y medir el texto de las pistas para que quepa. |
+| 1.14 | 16/11/2026 | F6.3 (0.6.9, instalable): el manifiesto propio y los iconos PNG, en uso; Firefox de escritorio no instala; el iPhone toma el icono de `apple-touch-icon`; la pantalla de arranque de Android, oscura también con el tema claro. |
 | 1.13 | 16/11/2026 | F6.2 (0.6.8, sin conexión desde la web): el Service Worker, en uso, con el aviso de Safari en el iPhone (AT-19 M2, AR-20 #1); fila nueva de la caché del Service Worker. |
 | 1.12 | 15/11/2026 | F5.8 #7 (0.6.7, metrónomo): `getOutputTimestamp()`, `outputLatency` y `baseLatency` para que lo que se ve vaya con lo que se oye, con su alternativa. |
 | 1.11 | 15/11/2026 | F5.8 #6 (0.6.5, Acordes): sin capacidades nuevas; la rejilla `grid` con `repeat(auto-fill, minmax())` y el atributo `disabled` son estándar en los tres sistemas (Safari 10.1+). |
