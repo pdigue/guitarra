@@ -17,6 +17,12 @@ const path = require('path');
 const RE_CSS = /<link rel="stylesheet" href="(css\/[^"?]+)(?:\?[^"]*)?">/g;
 const RE_JS = /<script src="(js\/[^"?]+)(?:\?[^"]*)?"><\/script>/g;
 
+// Lo que sirve para instalar la app desde la web (G-04, F6.3): el manifiesto y el
+// icono del iPhone. Abierta desde el disco no se puede instalar, y el navegador
+// intentaría leer esos archivos, que no van dentro, y anotaría un error.
+// Tolera sangría y otros atributos (AT-20 #3).
+const RE_INSTALAR = /^[ \t]*<link rel="(?:manifest|apple-touch-icon)"[^>]*>\n/gm;
+
 const leer = (base, rel) => fs.readFileSync(path.join(base, rel), 'utf8').replace(/\r\n/g, '\n');
 
 // Desde la 0.6.0 (F6.1) cada módulo incrustado termina con «//# sourceURL=js/…».
@@ -55,6 +61,7 @@ function incrustable(base, rel, etiqueta){
 function ensamblar(htmlPath){
   const base = path.dirname(htmlPath);
   return leer(base, path.basename(htmlPath))
+    .replace(RE_INSTALAR, '')
     .replace(RE_CSS, (_, rel) => '<style>\n' + incrustable(base, rel, 'style') + '</style>')
     .replace(RE_JS, (_, rel) => '<script>' + conSalto(incrustable(base, rel, 'script')) + nombrar(rel) + '</script>');
 }
