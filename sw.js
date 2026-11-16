@@ -13,15 +13,15 @@
    3. En cada petición:
       - la página (index.html): primero la red, para ver siempre la última
         versión; si no hay red, o tarda más de ESPERA_RED ms, la copia;
-      - estilo, código y grabaciones: primero la copia, que no cambia dentro de
-        una versión (los ?v= de index.html cambian con cada una);
+      - estilo, código, grabaciones, manifiesto e iconos: primero la copia, que
+        no cambia dentro de una versión (los ?v= de index.html cambian con cada una);
       - todo lo demás pasa sin tocar.
 
    La caché lleva la versión en el nombre. Cambiar VERSION cambia este archivo,
    y eso es lo que hace que el navegador instale el Service Worker nuevo. Una
    prueba del banco exige que coincida con APP_VERSION (js/01-teoria.js). */
 
-const VERSION = '0.6.8';
+const VERSION = '0.6.9';
 const CACHE = 'trasteando-' + VERSION;
 const ESPERA_RED = 3000;   // ms que se espera a la red antes de usar la copia de la página
 
@@ -35,11 +35,16 @@ const GRABACIONES = {
   nylon:    ['E2', 'A2', 'D3', 'G3', 'B3', 'E4', 'A4', 'E5', 'As5'],
   acoustic: ['E2', 'A2', 'D3', 'G3', 'B3', 'E4', 'A4', 'D5'],
 };
+// Para instalarla (G-04, F6.3): el manifiesto y sus iconos, y el del iPhone.
+// Así, instalada y sin red, el sistema sigue encontrando su icono y su nombre.
+const INSTALAR = ['manifest.webmanifest', 'iconos/icono-192.png', 'iconos/icono-512.png',
+  'iconos/icono-maskable-512.png', 'iconos/apple-touch-icon.png'];
 const PRECARGA = [
   'index.html',
   'css/trasteando.css?v=' + VERSION,
   ...MODULOS.map(m => 'js/' + m + '.js?v=' + VERSION),
   ...Object.entries(GRABACIONES).flatMap(([t, notas]) => notas.map(n => 'samples/' + t + '/' + n + '.mp3')),
+  ...INSTALAR,
 ];
 
 // Direcciones completas: el alcance es la carpeta de este archivo (en la web
@@ -47,7 +52,10 @@ const PRECARGA = [
 const BASE = new URL('./', self.location).href;
 const PAGINA = new URL('index.html', BASE).href;
 const esPagina = url => url.split('?')[0] === BASE || url.split('?')[0] === PAGINA;
-const esRecurso = url => /^(css|js|samples)\//.test(url.slice(BASE.length)) && url.startsWith(BASE);
+// El manifiesto y los iconos no llevan ?v=, pero la caché es de una versión y
+// se rehace entera con la siguiente: tampoco cambian dentro de una versión.
+const esRecurso = url => url.startsWith(BASE) &&
+  /^((css|js|samples|iconos)\/|manifest\.webmanifest$)/.test(url.slice(BASE.length).split('?')[0]);
 
 self.addEventListener('install', e => {
   // addAll falla entera si falla un solo archivo: mejor no instalar que dejar

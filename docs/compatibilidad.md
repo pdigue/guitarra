@@ -1,6 +1,6 @@
 # Trasteando — Compatibilidad entre sistemas operativos
 
-**Versión:** 1.13 · **Fecha:** 16 de noviembre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
+**Versión:** 1.14 · **Fecha:** 16 de noviembre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
 
 La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este documento lista cada capacidad del navegador que usa o usará, cómo se comporta en cada sistema y qué hace la app donde falta. Se revisa en cada etapa que añada una capacidad nueva.
 
@@ -28,8 +28,8 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 | Vibración | Respuesta al fallar en Adivinar | — | ✅ | ❌ | Se omite; el color y el destello bastan (J-09) |
 | Atributo `inert` | Que el panel cerrado no reciba el foco | ✅ | ✅ | ✅ | — |
 | Abrir el archivo con doble clic (`file://`) | Modo archivo autónomo (G-07) | ✅ con `dist/trasteando.html` (0.2.1) | ⚠️ a verificar | ❌ la app Archivos no ejecuta JavaScript | En iPhone, la web o la app instalada |
-| Instalar como app | Icono en la pantalla de inicio (G-04) | ✅ Edge, Chrome | ✅ | ✅ «Añadir a pantalla de inicio» | — |
-| Icono de la app instalada | Que se vea el icono propio | ✅ | ✅ | ⚠️ exige PNG; hoy es SVG | Iconos PNG en F6.3 |
+| Instalar como app (manifiesto web, `manifest.webmanifest`) | Icono en la pantalla de inicio y abrir a pantalla completa (G-04, manifiesto propio desde la 0.6.9) | ✅ Edge, Chrome; ❌ Firefox | ✅ Chrome lo ofrece | ✅ Safari: Compartir → «Añadir a pantalla de inicio» (toma del manifiesto el nombre y la pantalla completa, no el icono) | Solo con `https` o `localhost` y el Service Worker. Sin instalar, la app funciona igual en el navegador. El autónomo no lleva el manifiesto: desde el disco no se instala. En Android, la pantalla de arranque usa el fondo oscuro del manifiesto también con el tema claro (V-10) |
+| Icono de la app instalada | Que se vea el icono propio | ✅ PNG de 192 y 512 | ✅ y el «maskable», que Android recorta a su forma | ✅ `apple-touch-icon` PNG de 180 px, sin transparencia (no acepta SVG) (0.6.9) | Si no encuentra el icono, el sistema pone una captura de la página. El Service Worker los guarda, para que instalada y sin red no lo pierda |
 | Service Worker | Funcionar sin conexión desde la web (G-03, en uso desde la 0.6.8) | ✅ | ✅ | ⚠️ Safari borra lo guardado por un sitio que no se usa en unos 7 días, salvo la app añadida a la pantalla de inicio, que guarda aparte (hay que abrirla una vez con red desde el icono); en modo privado no se conserva | Solo con `https` o `localhost`; se registra solo si existe y nunca en el autónomo ni con `file://`. Sin él, o con la copia borrada, la app funciona igual con conexión. En el iPhone, sin conexión de forma fiable, instalada (G-04) |
 | Caché del Service Worker (Cache Storage) | Guardar los 36 archivos de la app (0.6.8) | ✅ | ✅ | ⚠️ la misma regla de los 7 días | Si no cabe o falla un archivo, no se instala (todo o nada) y la app sigue pidiendo a la red |
 | Micrófono (`getUserMedia`) | Afinador por micrófono (A-02, 0.4.0) | ✅ | ✅ | ✅ | Solo con `https` o `localhost`. Sin él (archivo, sin `https`, sin permiso) el modo Micrófono dice por qué y De oído sigue. En la app instalada del iPhone, a verificar con la web de pruebas |
@@ -60,7 +60,8 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.13** | 16/11/2026 | F6.2 (0.6.8, sin conexión desde la web): el Service Worker, en uso, con el aviso de Safari en el iPhone (AT-19 M2, AR-20 #1); fila nueva de la caché del Service Worker. |
+| **1.14** | 16/11/2026 | F6.3 (0.6.9, instalable): el manifiesto propio y los iconos PNG, en uso; Firefox de escritorio no instala; el iPhone toma el icono de `apple-touch-icon`; la pantalla de arranque de Android, oscura también con el tema claro. |
+| 1.13 | 16/11/2026 | F6.2 (0.6.8, sin conexión desde la web): el Service Worker, en uso, con el aviso de Safari en el iPhone (AT-19 M2, AR-20 #1); fila nueva de la caché del Service Worker. |
 | 1.12 | 15/11/2026 | F5.8 #7 (0.6.7, metrónomo): `getOutputTimestamp()`, `outputLatency` y `baseLatency` para que lo que se ve vaya con lo que se oye, con su alternativa. |
 | 1.11 | 15/11/2026 | F5.8 #6 (0.6.5, Acordes): sin capacidades nuevas; la rejilla `grid` con `repeat(auto-fill, minmax())` y el atributo `disabled` son estándar en los tres sistemas (Safari 10.1+). |
 | 1.10 | 15/11/2026 | F5.8 #5 (0.6.4, Escalas por posiciones): sin capacidades nuevas; solo temporizadores y desplazamiento del mástil, ya en uso en Acordes. |

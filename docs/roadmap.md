@@ -1,6 +1,6 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 4.5 · **Fecha:** 16 de noviembre de 2026
+**Versión:** 4.6 · **Fecha:** 16 de noviembre de 2026
 **Se actualiza:** al cerrar cada bloque (regla 5 de `CLAUDE.md`). Las versiones vigentes de la app y de los demás documentos están en `docs/ESTADO.md`.
 
 > **Baseline 0.6.2** (tu decisión del 15/11): las fases hechas ocupan una línea; el detalle es solo para lo que queda. El roadmap completo hasta la v3.26, con la teoría de cada etapa, la pista T, el gobierno y los métodos de validación, está en `docs/historico/roadmap.md` (rama `archivo/hasta-0.6.2`).
@@ -9,7 +9,7 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** F5.8 (tus comentarios del 12/11) con F6 empezada. `main` tiene la `0.6.4` (PR #18 a #20, fusionados el 15/11); `auto/F5.8-acordes` (PR #21), la `0.6.5`.
+📍 **Estás aquí:** F6 (F6.3 hecha, a falta de fusionar), con F5.8 a falta de tu prueba en el móvil. `main` tiene la `0.6.8`; `auto/F6.3-manifiesto`, la `0.6.9`.
 
 **Leyenda:** ⬜ pendiente · ⏳ en curso · 🔨 hecha, sin tu prueba · ✅ validada · 📅 en una sesión contigo · ⏸ en pausa
 
@@ -20,7 +20,7 @@
 | **F3** · Interfaz · `0.3.x` | `interfaz.md` aprobada, horizontal, accesibilidad, Sesión 1 (35 validados); etiqueta `v0.3.3` | ✅ |
 | **F4** · Micrófono · `0.4.x` | Afinador por micrófono (YIN en un hilo), idioma; F4.3 espera tu prueba de 10 minutos con la guitarra | 🔨 |
 | **F5** · Escalas, metrónomo y acordes · `0.5.x` | F5.1 a F5.7 y CP-5 hechos; F5.2 a F5.4, F5.6 y F5.7 esperan la Sesión 2; **F5.8 y F5.9, abajo** | ⏳ |
-| **F6** · Preparación · `0.6.x` | F6.1 hecha (`0.6.0`, el autónomo pasa el banco); F6.2 hecha (`0.6.8`, sin conexión desde la web); **F6.3 y F6.4, abajo** | ⏳ |
+| **F6** · Preparación · `0.6.x` | F6.1 hecha (`0.6.0`, el autónomo pasa el banco); F6.2 hecha (`0.6.8`, sin conexión desde la web); F6.3 hecha (`0.6.9`, instalable); **F6.4, abajo** | ⏳ |
 | **F7** · Publicación · `1.0.0` | **Abajo** | ⬜ |
 
 **Sesión 2, con la guitarra** (antes de CP-6): escalas, metrónomo, acordes, afinador (V-09), el sonido en el iPhone (S-01) y el autónomo con doble clic en Windows (G-08).
@@ -64,7 +64,7 @@ Auditoría a fondo de lo que cambió en F5.8 y etiqueta `v0.5.x` en el commit qu
 | Etapa | Qué se hace | Requisitos | Cómo se valida | Estado |
 |---|---|---|---|:---:|
 | **F6.2** | Service Worker para funcionar sin conexión desde la web | G-03 | Cargar, modo avión y seguir usándola (`herramientas/comprobar-sin-conexion.js`) | ✅ parte de F6.2 (`localhost`, `0.6.8`): 9 de 9 en Chromium; G-03 se cierra en F7.2 (web publicada e iPhone instalado) |
-| **F6.3** | Manifiesto propio e iconos | G-04 | El navegador ofrece instalarla; Lighthouse la da por instalable | ⬜ |
+| **F6.3** | Manifiesto propio e iconos | G-04 | El navegador ofrece instalarla; Lighthouse la da por instalable | ✅ parte de F6.3 (`localhost`, `0.6.9`): Chrome la da por instalable, con la consulta que usaba Lighthouse más el criterio clásico de iconos, porque desde 2024 Chrome instala casi cualquier página y Lighthouse 12 retiró esa prueba (`herramientas/comprobar-instalable.js`, 12 de 12); G-04 se cierra en F7.2 (instalada desde la web publicada, en el iPhone y en Android) |
 | **F6.4** | README, licencia del código, créditos en la app y privacidad | G-06, G-11 | Los cuatro existen y son coherentes | ⬜ licencia: decisión tuya |
 
 ### 🚦 CP-6 · Puerta de lanzamiento
@@ -88,7 +88,7 @@ En esta fase no se añade funcionalidad.
 
 ## 5. Inventario de lanzamiento
 
-**Falta:** `manifest.webmanifest` e iconos (F6.3) · `privacidad.html`, `LICENSE` y créditos en la app (F6.4) · comprobar que *Trasteando* no choca con una marca · fichas de tienda y capturas (F7.4) · `.well-known/assetlinks.json` en la raíz del dominio, para Android (F7.4) · un Mac con Xcode, solo si hay App Store.
+**Falta:** `privacidad.html`, `LICENSE` y créditos en la app (F6.4) · comprobar que *Trasteando* no choca con una marca · fichas de tienda y capturas (F7.4) · `.well-known/assetlinks.json` en la raíz del dominio, para Android (F7.4) · un Mac con Xcode, solo si hay App Store.
 
 | Cuenta | Coste | Notas |
 |---|---|---|
@@ -125,7 +125,8 @@ El historial hasta la v3.26 está en `docs/historico/roadmap.md`.
 
 | Versión | Fecha | Cambio |
 |---|---|---|
-| **4.5** | 16/11/2026 | F6.2 hecha (`0.6.8`): la app funciona sin conexión desde la web con un Service Worker (`sw.js`), comprobada en `localhost` (9 de 9 en Chromium); G-03 queda parcial hasta la web publicada (F7.2). |
+| **4.6** | 16/11/2026 | F6.3 hecha (`0.6.9`): manifiesto propio (`manifest.webmanifest`) e iconos PNG (192, 512, «maskable» y el del iPhone, de 180), comprobada instalable en `localhost` (12 de 12 en Chromium); G-04 queda parcial hasta la web publicada (F7.2). «Estás aquí», al día. |
+| 4.5 | 16/11/2026 | F6.2 hecha (`0.6.8`): la app funciona sin conexión desde la web con un Service Worker (`sw.js`), comprobada en `localhost` (9 de 9 en Chromium); G-03 queda parcial hasta la web publicada (F7.2). |
 | 4.4 | 15/11/2026 | F5.8 #7 hecho (`0.6.7`, PR #22): el metrónomo ya no pierde golpes con tirones y lo que se ve va con lo que se oye (MT-04); #6 fusionado (PR #21). |
 | 4.3 | 15/11/2026 | F5.8 #6 hecho (`0.6.5`, PR #21): Acordes, elegidos por nota y tipo y dibujados en grande en los trastes 0 a 5 (tus respuestas del 15/11). |
 | 4.2 | 15/11/2026 | F5.8 #5 hecho (`0.6.4`, PR #20): Escalas por posiciones, con «Escuchar», «Todas» y una Práctica nueva en orden (tus respuestas del 15/11). |

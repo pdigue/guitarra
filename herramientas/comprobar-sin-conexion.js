@@ -63,11 +63,15 @@ const anotar = (ok, que, detalle = '') => { resultados.push({ ok, que, detalle }
     await page.waitForFunction(() => !!navigator.serviceWorker.controller, null, { timeout: 15000 });
     const precarga = await page.evaluate(v => caches.open('trasteando-' + v).then(c => c.keys()).then(k => k.length), version);
     // Lo esperado se cuenta, no se escribe a mano (con 00-aspecto pasó de 35 a 36):
-    // la página, cada archivo con «?v=» de index.html y cada grabación de samples/.
+    // la página, cada archivo con «?v=» de index.html, cada grabación de samples/
+    // y, desde la 0.6.9 (G-04), el manifiesto con sus iconos y el del iPhone.
     const html = fs.readFileSync(path.join(REPO, 'index.html'), 'utf8');
     const grabaciones = ['nylon', 'acoustic'].reduce((n, t) =>
       n + fs.readdirSync(path.join(REPO, 'samples', t)).filter(f => f.endsWith('.mp3')).length, 0);
-    const esperado = 1 + (html.match(/(?:src|href)="[^"]+\?v=/g) || []).length + grabaciones;
+    const mf = path.join(REPO, 'manifest.webmanifest');
+    const instalar = fs.existsSync(mf) ? 1 + JSON.parse(fs.readFileSync(mf, 'utf8')).icons.length
+      + (/rel="apple-touch-icon" href="iconos\//.test(html) ? 1 : 0) : 0;
+    const esperado = 1 + (html.match(/(?:src|href)="[^"]+\?v=/g) || []).length + grabaciones + instalar;
     anotar(precarga === esperado, 'con conexión, el Service Worker guarda la app entera', `${precarga} de ${esperado} archivos en trasteando-${version}, en ${Date.now() - t0} ms`);
 
     // 3. Sin red, como en modo avión, y volver a abrirla.
