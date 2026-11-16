@@ -8,9 +8,10 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.6.11** | 16/11/2026 | F5.8 · #9, pistas en una línea y frase del reto más corta | `auto/F5.8-pistas` (PR #25) |
-| 0.6.10 | 16/11/2026 | F5.8 · #9, las pistas de Adivinar se leen enteras | `auto/F5.8-pistas` (PR #25) |
-| 0.6.9 | 16/11/2026 | F6.3 · instalable: manifiesto e iconos | `auto/F6.3-manifiesto` (PR #24) |
+| **0.6.12** | 16/11/2026 | F5.8 · #10, ningún control fuera de la pantalla | `auto/F5.8-respuesta` (PR pendiente) |
+| 0.6.11 | 16/11/2026 | F5.8 · #9, pistas en una línea y frase del reto más corta | `main`, fusionada el 16/11 (PR #25) |
+| 0.6.10 | 16/11/2026 | F5.8 · #9, las pistas de Adivinar se leen enteras | `main`, fusionada el 16/11 (PR #25) |
+| 0.6.9 | 16/11/2026 | F6.3 · instalable: manifiesto e iconos | `main`, fusionada el 16/11 (PR #24) |
 | 0.6.8 | 16/11/2026 | F6.2 · sin conexión desde la web (Service Worker) | `main`, fusionada el 16/11 (PR #23) |
 | 0.6.7 | 15/11/2026 | F5.8 · #7, el metrónomo sin huecos y a la par | `main`, fusionada el 16/11 (PR #22) |
 | 0.6.6 | 15/11/2026 | F5.8 · #6, arranca también en un marco aislado | `main`, fusionada el 15/11 (PR #21) |
@@ -26,6 +27,26 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.6.12] — 16/11/2026 · F5.8 · Ningún control fuera de la pantalla
+
+Tu comentario del 16/11, con una captura del iPhone en horizontal: «“Ver la respuesta” se sale de la pantalla. Revisa que todos los posibles controles quedan bien en todas las circunstancias. Y reduce el texto de cuando falla: “Try again!” directamente». Y tu respuesta a AR-22 #5: «ok, crea el J-14».
+
+### Corregido
+- **J-14** · En horizontal, tras un fallo con las pistas encendidas, **«Ver la respuesta» se salía del panel** por la derecha. Las pistas van en columna, y el botón tenía `flex-basis: 100%` con saltos permitidos: en una columna, ese 100 % es el **alto**, y Safari lo mandaba a una segunda columna. Ahora va siempre debajo.
+- **J-14 · V-01** · En vertical, con las dos pistas encendidas (y más tras un fallo), **las pestañas se salían por abajo** en un iPhone con Safari (390 × 664): sobraban 10 px, y 57 tras un fallo. Ahora, mientras hay pistas, se esconde el aviso para girar (vuelve al apagarlas) y las cajas de pista miden 48 px en vez de 58.
+- **V-04** · En el móvil en horizontal, el zoom de inicio no descontaba las **zonas seguras** (la isla y la barra de inicio): en un iPhone 15 Pro instalado salían 10 trastes de 38 px, y el Pro Max (932 px de ancho) caía en la regla de tableta, con 17 de 28 px. Ahora son los que caben a 40 px: 9 y 11. A quien ya tenía un zoom guardado no le cambia (como tú, con 12).
+- **G-05** · En un Android en horizontal con las barras de Chrome (280 px de alto), el botón de Ajustes del raíl quedaba cortado: 7 botones de 40 px no caben. Ahora el raíl se desplaza, como el panel.
+
+### Cambiado
+- **J-14** · Al fallar, el aviso es solo **«✗ ¡Prueba otra vez!»** («✗ Try again!»).
+- **Requisitos y matriz v2.9:** J-14, nuevo (las pistas se leen enteras y, con ellas, ningún control queda fuera), con lo que tenía J-06 desde la 0.6.10; J-06 vuelve a «se activan sin abrir el menú» (validado en la Sesión 1); V-01 y V-04, sus notas.
+
+### Comprobado
+- `herramientas/comprobar-disposicion.js`, ampliada: simula las **zonas seguras** del iPhone instalado (15 Pro y Pro Max, en las dos orientaciones), prepara estados (Adivinar tras un fallo con las dos pistas, Escalas practicando) y mira que **ningún control** quede fuera de la pantalla, bajo una zona segura o recortado por una caja (antes no miraba dentro del panel). 82 pantallas, en español y en inglés: todo correcto (antes de corregir, 14 fallos).
+- `herramientas/comprobar-pistas.js`: 126 de 126. Banco: 229 de 229.
 
 ---
 

@@ -21,7 +21,7 @@
    y eso es lo que hace que el navegador instale el Service Worker nuevo. Una
    prueba del banco exige que coincida con APP_VERSION (js/01-teoria.js). */
 
-const VERSION = '0.6.11';
+const VERSION = '0.6.12';
 const CACHE = 'trasteando-' + VERSION;
 const ESPERA_RED = 3000;   // ms que se espera a la red antes de usar la copia de la página
 
