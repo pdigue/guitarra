@@ -73,7 +73,16 @@ function paginaRedPrimero(e){
   let guardar = Promise.resolve();
   const red = fetch(e.request).then(r => {
     // La copia se hace antes de entregar la respuesta: el cuerpo solo se lee una vez.
-    if (r.ok){ const copia = r.clone(); guardar = caches.open(CACHE).then(c => c.put(PAGINA, copia)); }
+    // Solo se guarda si es la página de ESTA versión (AT-19 M1): una página más
+    // nueva (que llega tarde, tras publicar) o más vieja (de la caché de 10 minutos
+    // de GitHub Pages) pediría archivos que esta caché no tiene, y sin red la app
+    // no arrancaría. Se reconoce por los «?v=» de sus archivos.
+    if (r.ok){
+      const copia = r.clone();
+      guardar = copia.text().then(t => t.includes('?v=' + VERSION + '"')
+        ? caches.open(CACHE).then(c => c.put(PAGINA, new Response(t, { headers: copia.headers })))
+        : undefined);
+    }
     return r;
   });
   // Que el navegador no duerma al Service Worker antes de guardar la copia nueva.

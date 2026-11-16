@@ -168,10 +168,25 @@ test('sin red: la página, el estilo, el código y las grabaciones salen de la c
 
 test('con red, la página viene de la red y deja su copia para la próxima vez sin conexión', async () => {
   const sw = await instalado();
-  sw.red.cambios['index.html'] = 'versión nueva';
-  assert.equal(await (await pedir(sw, navegacion(''))).text(), 'versión nueva');
+  const v = vm.runInContext('VERSION', sw.ctx);
+  const nueva = '<script src="js/01-teoria.js?v=' + v + '"></script> retocada';
+  sw.red.cambios['index.html'] = nueva;
+  assert.equal(await (await pedir(sw, navegacion(''))).text(), nueva);
   sw.red.estado = 'cortada';
-  assert.equal(await (await pedir(sw, navegacion(''))).text(), 'versión nueva');
+  assert.equal(await (await pedir(sw, navegacion(''))).text(), nueva);
+});
+
+test('una página de otra versión que llega de la red se entrega, pero no sustituye a la copia (AT-19 M1)', async () => {
+  // Tras publicar la 0.6.9, la red da su página; esta caché no tiene sus archivos:
+  // si se guardase, sin red se abriría una página que no puede arrancar.
+  const sw = await instalado();
+  for (const otra of ['<script src="js/01-teoria.js?v=9.9.9"></script>', 'sin versión']){
+    sw.red.estado = 'bien';
+    sw.red.cambios['index.html'] = otra;
+    assert.equal(await (await pedir(sw, navegacion(''))).text(), otra, 'con red se ve lo que hay');
+    sw.red.estado = 'cortada';
+    assert.equal(await (await pedir(sw, navegacion(''))).text(), leer('index.html'), 'sin red, la copia buena');
+  }
 });
 
 test('con la red colgada, pasado el plazo se usa la copia de la página', async () => {

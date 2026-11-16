@@ -63,7 +63,7 @@ Auditoría a fondo de lo que cambió en F5.8 y etiqueta `v0.5.x` en el commit qu
 
 | Etapa | Qué se hace | Requisitos | Cómo se valida | Estado |
 |---|---|---|---|:---:|
-| **F6.2** | Service Worker para funcionar sin conexión desde la web | G-03 | Cargar, modo avión y seguir usándola (`herramientas/comprobar-sin-conexion.js`) | ✅ `0.6.8`: 9 de 9 en Chromium (localhost); desde la web publicada, en F7.2 |
+| **F6.2** | Service Worker para funcionar sin conexión desde la web | G-03 | Cargar, modo avión y seguir usándola (`herramientas/comprobar-sin-conexion.js`) | ✅ parte de F6.2 (`localhost`, `0.6.8`): 9 de 9 en Chromium; G-03 se cierra en F7.2 (web publicada e iPhone instalado) |
 | **F6.3** | Manifiesto propio e iconos | G-04 | El navegador ofrece instalarla; Lighthouse la da por instalable | ⬜ |
 | **F6.4** | README, licencia del código, créditos en la app y privacidad | G-06, G-11 | Los cuatro existen y son coherentes | ⬜ licencia: decisión tuya |
 
@@ -79,7 +79,7 @@ En esta fase no se añade funcionalidad.
 | Etapa | Qué se hace | Requisitos | Cómo se valida |
 |---|---|---|---|
 | **F7.1** | Activar GitHub Pages (oficial) | X-02 | La URL carga desde un dispositivo ajeno; G-08 reconfirmado contra ella |
-| **F7.2** | Instalarla y usarla en Android, iPhone y Windows | G-03, G-04, PL-01 a PL-04, X-03 | Afinar una guitarra con el móvil y el ordenador apagado |
+| **F7.2** | Instalarla y usarla en Android, iPhone y Windows | G-03, G-04, PL-01 a PL-04, X-03 | Afinar una guitarra con el móvil y el ordenador apagado; en el iPhone, sin conexión desde Safari y desde la app instalada, también tras varios días sin abrirla |
 | **F7.3** | Optimizar la carga | — | Lighthouse: usable en menos de 3 s en conexión móvil lenta |
 | **F7.4** | Decidir tiendas y empaquetar | G-09 | Documento de decisión y, si se aprueba, ficha enviada |
 | **F7.5** | Lanzar la `1.0.0` y retrospectiva | — | Etiqueta `v1.0.0` y lecciones aprendidas |

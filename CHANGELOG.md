@@ -36,8 +36,12 @@ Roadmap F6.2 (G-03): abrirla una vez con red y, después, usarla en modo avión.
 - **G-03, PL-04** · Se registra solo donde existe (`https` o `localhost`), nunca con doble clic ni en el archivo autónomo, que ya lleva el audio dentro (G-07). Si el navegador no lo tiene, la app funciona igual, solo que con conexión.
 - Banco: `tests/sw.test.js` (8 pruebas: la precarga es justo lo que carga `index.html` más las grabaciones, sin red todo sale de la copia, versiones…) y cuándo se registra. En Chromium, `herramientas/comprobar-sin-conexion.js`: 9 de 9.
 
+### Corregido tras las auditorías AT-19 y AR-20
+- **G-03** · Una página de **otra versión** que llega de la red (la nueva que tarda tras publicar, o una vieja de la caché de 10 minutos de GitHub Pages) se enseña, pero ya no sustituye a la copia guardada: sin red se abriría una página que pide archivos que no están, y la app no arrancaría (AT-19 M1). Con su prueba.
+- **PL-04** · `docs/compatibilidad.md` v1.13: el Service Worker, en uso, con el aviso del iPhone (Safari borra lo guardado por un sitio que no se usa en unos 7 días, salvo la app instalada), y una fila para su caché (AT-19 M2, AR-20 #1). El criterio de F7.2 pide probarlo en el iPhone desde Safari y desde la app instalada, también tras días sin abrirla (AR-20 #2).
+
 ### Pendiente
-- Comprobarlo desde la web publicada y en el iPhone (F7.2).
+- Comprobarlo desde la web publicada y en el iPhone (F7.2). Lo bajo de las auditorías, anotado en G-03.
 
 ---
 
