@@ -1220,7 +1220,7 @@ test('Adivinar con «Al fallar: Reintentar»: el reto sigue, la racha se rompe, 
   assert.equal(A.ev('streak'), 0, 'el fallo rompe la racha');
   assert.equal(A.ev('locked'), false, 'puedes seguir probando');
   assert.equal(A.ev('challenge'), reto, 'el mismo reto');
-  assert.match(A.$('challenge-text').innerHTML, /No es esa/);
+  assert.match(A.$('challenge-text').innerHTML, /Prueba otra vez/);
   assert.equal(A.$('qb-giveup').hidden, false, 'aparece «Ver la respuesta»');
   await sleep(1300);
   assert.equal(A.doc.querySelectorAll('.fret-cell.reveal').length, 0, 'no se revela sola');

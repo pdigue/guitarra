@@ -1,7 +1,7 @@
 # Trasteando — Especificación de Requisitos
 
-**Versión del documento:** 2.8 · **Fecha:** 16 de noviembre de 2026  
-**Válido para:** app `0.6.11` · `roadmap.md` v4.8 · `matriz-cumplimiento` v2.8 · fase en curso **F6** (F5 sigue abierta)  
+**Versión del documento:** 2.9 · **Fecha:** 16 de noviembre de 2026  
+**Válido para:** app `0.6.12` · `roadmap.md` v4.9 · `matriz-cumplimiento` v2.9 · fase en curso **F6** (F5 sigue abierta)  
 **Repositorio:** github.com/pdigue/guitarra, carpeta `docs/` · **Gestiona:** chat de Desarrollo  
 **Tipo de producto:** aplicación web progresiva (PWA), desarrollada en local y publicada al final del roadmap
 
@@ -11,7 +11,7 @@
 
 | Total | ✅ Implementados | 🟡 Parciales | ⬜ Pendientes | ➖ Retirados | ✅ Validados |
 |:---:|:---:|:---:|:---:|:---:|:---:|
-| 118 | 101 | 7 | 7 | 3 | 48 |
+| 119 | 102 | 7 | 7 | 3 | 49 |
 
 > Un requisito implementado no cuenta como cumplido hasta superar su prueba. El primero validado fue **S-08**, en la 0.2.0. La Sesión 1 (20/10, en tu iPhone y tu PC) validó 35 de golpe; lo que cambió la 0.3.3 y el sonido en el iPhone esperan a la Sesión 2.
 
@@ -36,6 +36,7 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 
 | Versión | Fecha | App | Roadmap | Resumen | Origen |
 |---|---|:---:|:---:|---|---|
+| **2.9** | 16/11/2026 | 0.6.12 | 4.9 | Tu comentario del 16/11 (en horizontal, «Ver la respuesta» se salía de la pantalla; «revisa que todos los controles quedan bien en todas las circunstancias») y tu respuesta a AR-22 #5: **J-14, nuevo**, recoge lo de que las pistas se lean enteras, y ahora también que con ellas a la vista ningún control quede fuera; J-06 vuelve a ser «se activan sin abrir el menú», validado en la Sesión 1. Con pistas, el aviso para girar se esconde (V-01); en el móvil en horizontal, el zoom de inicio descuenta las zonas seguras (V-04). 1 nuevo y 3 modificados: 119 en total. | Tu comentario y tu respuesta del 16/11 |
 | **2.8** | 16/11/2026 | 0.6.11 | 4.8 | Tu decisión del 16/11 sobre las pistas: en una sola línea en los dos idiomas, sin bajar de 20 px; en horizontal, en Adivinar, el panel más ancho (204 px) a costa de un poco de mástil; y la frase del reto, más corta. J-06 cambia su criterio. | Tu decisión del 16/11 |
 | **2.7** | 16/11/2026 | 0.6.10 | 4.7 | Tu comentario del 16/11 sobre las pistas de Adivinar (no se veían las cuerdas, y en horizontal aún peor): J-06 deja de fijar el tamaño por el número de letras; la respuesta se mide y se reduce hasta caber entera (30 px en el móvil y 44 en tableta como máximo, 20 como mínimo, el de la nota que tocas, y si no, dos líneas), las cuerdas van en números con el ordinal pequeño y, en horizontal, las pistas se apilan. J-06 sigue sin validar hasta tu prueba. | Tu comentario del 16/11 |
 | **2.6** | 16/11/2026 | 0.6.9 | 4.6 | F6.3, la app instalable: G-04 tiene ya su manifiesto propio (`manifest.webmanifest`) con iconos PNG de 192 y 512 px y uno «maskable» para Android, y el icono del iPhone en PNG de 180 px; Chrome la da por instalable en `localhost`. Sigue «Cumple parcialmente»: falta instalarla desde la web publicada, en el iPhone y en Android (F7.2). | Roadmap F6.3 |
@@ -46,7 +47,7 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 | 2.1 | 15/11/2026 | 0.6.3 | 4.0 | F5.8 #3 y #4: temas elegibles (V-10) y disposición para tableta y ordenador (V-11); en Adivinar, las pistas en grande y la nota tocada en pequeño (J-01, J-06); el grupo Aspecto en Ajustes (C-02) y las pestañas en tableta (C-04); el mástil de inicio a 40 px en tableta (V-04); C-08 deja los temas a V-10; notas de PL-03 y G-05. J-06 vuelve a «sin validar» hasta tu prueba. Con las auditorías AR-16 y AT-15. 2 nuevos y 8 modificados: 113 en total. | Tus comentarios F5.8 #3 y #4 |
 | 2.0 | 15/11/2026 | 0.6.2 | 4.0 | Baseline 0.6.2: mismos ID, textos, criterios, estados e implementación; cada nota se queda en lo vigente y lo pendiente de tu prueba. Corregido: en 13 requisitos la columna *Desde* llevaba la nota de la Sesión 1, que pasa a *Notas*. 111 en total. | Tu decisión del 15/11 |
 
-**En la 2.8:** modificados ✏️ J-06.
+**En la 2.9:** nuevos 🆕 J-14 · modificados ✏️ J-06, V-01, V-04.
 
 ---
 
@@ -196,7 +197,7 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 | **J-03** | Tras acertar se señalan las demás posiciones válidas. | Media | F1.1 | ✅ | ✅ | 0.1.0 | Reutiliza L-03. Validado en la Sesión 1 (E04). |
 | **J-04** | Pista opcional: nombre de la nota que suena. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (E04). |
 | **J-05** | Pista opcional: cuerda o cuerdas donde puede encontrarse. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (E04). |
-| **J-06** ✏️ | Las pistas se activan desde la propia interfaz, sin abrir el menú. | Alta | F1.1 · F5.8 | ✅ | ⬜ | 0.1.0 | Las dos pistas son «esta nota en esta cuerda»; ninguna, «de oído». Encendida, cada pista ocupa su parte de la franja, con la respuesta en grande y borde discontinuo (0.6.3, F5.8 #4). Desde la 0.6.10 (tu comentario del 16/11: con muchas cuerdas no se leían, y en horizontal nada), la respuesta se mide y baja de tamaño hasta caber entera, sin «…» y sin bajar de 20 px, el de la nota que tocas (J-01): lo que buscas no se ve más pequeño que lo que tocas (AR-22 #1); y desde la 0.6.11, en **una sola línea** en los dos idiomas (tu decisión del 16/11): en horizontal, en Adivinar, el panel pasa de 176 a 204 px a costa de un poco de mástil; con las dos pistas, la de la nota ocupa lo que necesita y el resto es para las cuerdas; «Ver la respuesta», en la fila de debajo. La frase del reto, más corta: «Pulsa ▶, escucha y encuéntrala»; las cuerdas, con el número grande y la «ª» (o «st», «nd»…) pequeña; en horizontal, las dos pistas una encima de la otra, con todo el ancho del panel. Y el iPhone ya no agranda el texto por su cuenta al girarlo. Para tu prueba: en vertical y en horizontal, en español y en inglés, una nota en 4 cuerdas o más, y girar el móvil y volver (AR-22 #8). Pendiente (AR-22 #5): ¿lo de verse enteras pasa a un requisito propio, para cerrar J-06 como lo validaste en la Sesión 1? Lo esencial se validó en la Sesión 1 (E04); el aspecto de la 0.6.3, cuando lo pruebes (AR-16 #2). |
+| **J-06** ✏️ | Las pistas se activan desde la propia interfaz, sin abrir el menú. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Las dos pistas son «esta nota en esta cuerda»; ninguna, «de oído». Cómo se ve la respuesta, en J-14 (desde la 2.9: tu respuesta a AR-22 #5). Validado en la Sesión 1 (E04). |
 | **J-07** | Contador de racha visible durante el juego. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (E04). |
 | **J-08** | El récord de racha más larga persiste entre sesiones. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | `localStorage`, un récord por afinación (J-11); «Restablecer» lo conserva y se borra con su propio botón. Lo de la 0.3.3 se confirma en la Sesión 2. |
 | **J-09** | Feedback visual inmediato de acierto y de error. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Color en la posición pulsada y destello en la barra del reto. Validado en la Sesión 1 (A09, E04). |
@@ -204,6 +205,7 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 | **J-11** | Cada afinación tiene su propio récord de racha. | Media | F4.4 | ✅ | ✅ | 0.4.1 | Decidido el 21/10: por afinación (una racha en DADGAD no se compara con una en estándar). Validado por el banco. |
 | **J-12** | Los ajustes que revelan la respuesta —ver todas las notas— no se aplican en Adivinar. | Alta | F1.3 | ✅ | ✅ | 0.1.2 | Con «ver todas las notas», el juego enseñaba la solución. Validado en la Sesión 1 (A10). |
 | **J-13** | Al fallar en Adivinar, por defecto sigues intentándolo hasta que aciertes o pidas «Ver la respuesta»; en Ajustes puedes elegir que la respuesta se enseñe nada más fallar. Acertar tras fallar pasa al reto siguiente sin sumar a la racha. | Media | F5.5 | ✅ | ✅ | 0.5.1 | Ajustes › Adivinar › «Al fallar»: Ver respuesta o Reintentar (de fábrica desde la 0.5.3). Validado por el banco. |
+| **J-14** 🆕 | Encendidas, las pistas se leen enteras: la respuesta en grande, en una sola línea y nunca más pequeña que la nota que tocas, en cualquier pantalla, orientación e idioma; y con ellas a la vista, ningún control queda fuera de la pantalla. | Alta | F5.8 | ✅ | ⬜ | 0.6.10 | Separado de J-06 en la 2.9 (AR-22 #5, tu respuesta del 16/11). Cada pista ocupa su parte de la franja, con borde discontinuo (0.6.3). Desde la 0.6.10, la respuesta se mide y baja de tamaño hasta caber, sin «…» y sin bajar de 20 px, el de la nota que tocas (J-01; AR-22 #1); las cuerdas, con el número grande y la «ª» (o «st», «nd»…) pequeña; el iPhone ya no agranda el texto al girarlo. Desde la 0.6.11, en **una sola línea** en los dos idiomas: en horizontal, en Adivinar, el panel pasa de 176 a 204 px y las dos pistas van una encima de la otra. Desde la 0.6.12 (tu captura del 16/11, iPhone en horizontal): «Ver la respuesta» ya no se sale del panel (en una columna, `flex-basis: 100%` es el alto, y Safari lo mandaba a una segunda columna); el aviso «✗ ¡Prueba otra vez!», sin más; en vertical, con pistas se esconde el aviso para girar (V-01) y las cajas miden 48 px, para que las pestañas no se salgan por abajo. Para tu prueba: en vertical y en horizontal, en español y en inglés, falla con las dos pistas encendidas y una nota en 4 cuerdas o más, y gira el móvil y vuelve. |
 
 ---
 
@@ -276,10 +278,10 @@ El historial de la 1.0 a la 1.27, con el detalle de cada versión, está en `doc
 
 | ID | Requisito | Prior. | Etapa | Impl. | Valid. | Desde | Notas |
 |----|-----------|--------|-------|:-----:|:------:|:-----:|-------|
-| **V-01** | En móvil se **sugiere** la orientación horizontal con un aviso discreto; no se fuerza. | Alta | F3.2 | ✅ | ✅ | 0.3.0 | En horizontal, raíl, mástil a todo el alto y panel (52,8 px por cuerda en el iPhone). Aviso para girar solo con el dedo, en vertical y con menos de 600 px de ancho, en Libre, Adivinar y Escalas (desde la 0.6.5, no en Acordes, que enseña siempre los trastes 0 a 5: AC-07). Validado en la Sesión 1 (C02, C03, D03). |
+| **V-01** ✏️ | En móvil se **sugiere** la orientación horizontal con un aviso discreto; no se fuerza. | Alta | F3.2 | ✅ | ✅ | 0.3.0 | En horizontal, raíl, mástil a todo el alto y panel (52,8 px por cuerda en el iPhone). Aviso para girar solo con el dedo, en vertical y con menos de 600 px de ancho, en Libre, Adivinar y Escalas (desde la 0.6.5, no en Acordes, que enseña siempre los trastes 0 a 5: AC-07). Desde la 0.6.12, en Adivinar se esconde mientras haya pistas encendidas, que ocupan su sitio (J-14). Validado en la Sesión 1 (C02, C03, D03). |
 | **V-02** | El afinador funciona en vertical y en horizontal. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | — |
 | **V-03** | En escritorio el mástil aprovecha el ancho disponible. | Alta | F1.1 | ✅ | ⬜ | 0.1.0 | Arranca con el mástil completo en pantallas anchas. |
-| **V-04** | Control de zoom que determina qué porción del mástil se ve. | Alta | F1.1 · F3.2 | ✅ | ✅ | 0.1.0 | De 3 a 24 trastes; por defecto de 40 px con el dedo (34 con ratón), hasta 28 px si se pide con «+»; lo guardado se conserva al girar. Desde la 0.6.3, con el dedo y 900 px o más, el mástil de inicio respeta los 40 px (antes, 38 en un iPad de 1024); a quien ya tenía un zoom guardado no le cambia hasta «Restablecer» (AT-15 #7). Validado en la Sesión 1 (A07, A08, C04). |
+| **V-04** ✏️ | Control de zoom que determina qué porción del mástil se ve. | Alta | F1.1 · F3.2 | ✅ | ✅ | 0.1.0 | De 3 a 24 trastes; por defecto de 40 px con el dedo (34 con ratón), hasta 28 px si se pide con «+»; lo guardado se conserva al girar. Desde la 0.6.3, con el dedo y 900 px o más, el mástil de inicio respeta los 40 px (antes, 38 en un iPad de 1024); a quien ya tenía un zoom guardado no le cambia hasta «Restablecer» (AT-15 #7). Desde la 0.6.12, en el móvil en horizontal, los de inicio son los que caben a 40 px descontando las zonas seguras de la isla (9 en un iPhone 15 Pro instalado y 11 en un Pro Max; antes, 10 fijos de 38 px, y el Pro Max caía en la regla de 900 px: 17 de 28 px). Validado en la Sesión 1 (A07, A08, C04). |
 | **V-05** | Cuando el mástil no cabe, el usuario se desplaza lateralmente. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (A08). |
 | **V-06** | El ancho de traste no cambia al desplazarse: el zoom fija el tamaño y el desplazamiento mueve la ventana. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (A07). |
 | **V-07** | El mástil se readapta al redimensionar la ventana. | Alta | F1.1 | ✅ | ✅ | 0.1.0 | Validado en la Sesión 1 (A08). |
@@ -343,7 +345,7 @@ Qué requisitos cierra o valida cada etapa del roadmap. Es la misma información
 | **F5.5** | N-06, J-13 |
 | **F5.6** | MT-01, MT-02, MT-03, MT-04, MT-05 |
 | **F5.7** | AC-01, AC-02, AC-04, AC-05 |
-| **F5.8** | G-13, J-01, J-06, E-03, E-05b, E-09, E-06, E-07, E-08, E-10, MT-06, AC-01, AC-07, V-10, V-11, C-02 |
+| **F5.8** | G-13, J-01, J-14, E-03, E-05b, E-09, E-06, E-07, E-08, E-10, MT-06, AC-01, AC-07, V-10, V-11, C-02 |
 | **F6.1** | G-08 |
 | **F6.2** | G-03 |
 | **F6.3** | G-04 |
