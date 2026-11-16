@@ -98,6 +98,10 @@ const PANTALLAS = [
   ['iphone-safari-vertical-adivinar-fallo',   390, 664, true, 'guess', false, false, { estado: 'fallo' }],
   ['iphone-se-safari-vertical-adivinar-fallo',375, 553, true, 'guess', false, false, { estado: 'fallo' }],
   ['iphone-safari-horizontal-escalas-practica', 750, 342, true, 'scales', false, false, { estado: 'practica' }],
+  ['android-chrome-horizontal-adivinar-fallo', 780, 280, true, 'guess', false, false, { estado: 'fallo' }],
+  ['android-pequeno-vertical-adivinar-fallo',  360, 560, true, 'guess', false, false, { estado: 'fallo' }],
+  ['ipad-vertical-adivinar-fallo',             820, 1180, true, 'guess', false, false, { estado: 'fallo' }],
+  ['ipad-mini-horizontal-safari-adivinar-fallo', 1133, 670, true, 'guess', false, false, { estado: 'fallo' }],
   // iPhone instalado (sin barras de Safari), con las zonas seguras de verdad: en
   // horizontal, 59 px a cada lado y 21 abajo; en vertical, 59 arriba y 34 abajo.
   // El 15 Pro (852 × 393) y el Pro Max (932 × 430), el de tu captura del 16/11.
@@ -189,13 +193,18 @@ const ESTADOS = {
         .filter(vis).filter(e => {
           if (e.closest('.panel') && getComputedStyle(document.getElementById('panel')).display !== 'contents') return false;
           const r = e.getBoundingClientRect();
+          // Contra la pantalla entera: la cabecera y las pestañas se meten bajo las zonas
+          // seguras a propósito, con relleno; sus botones los mira «cortados».
           return r.bottom > innerHeight + 0.5 || r.right > innerWidth + 0.5 || r.top < -0.5 || r.left < -0.5;
         }).map(e => e.className.split(' ')[0]);
       // Cada control, entero a la vista: dentro de la pantalla menos las zonas
       // seguras y de toda caja que lo recorte. Solo puede quedar por debajo (o
       // por encima) en una caja que se desplaza en vertical, y a los lados en las
       // que se desplazan a propósito en horizontal (el mástil, la tira de compases).
-      const despLado = e => e.matches('.board-scroll, .mp-sigs');
+      // Se desplaza a los lados la caja que lo tiene en el css y se pasa de ancho
+      // (el mástil, la tira de compases, los chips en vertical) (AT-22 M2).
+      const despLado = (a, cs) => /auto|scroll/.test(cs.overflowX) && a.scrollWidth > a.clientWidth + 1 &&
+        !a.matches('.panel');   // el panel solo se desplaza en vertical: a los lados, recorta
       out.cortados = [...document.querySelectorAll('button, select, input, [role="switch"], a[href]')].filter(vis).filter(b => {
         const r = b.getBoundingClientRect();
         let dentroLado = false, dentroAlto = false;
@@ -204,8 +213,12 @@ const ESTADOS = {
           if (cs.overflowX === 'visible' && cs.overflowY === 'visible') continue;
           const c = a.getBoundingClientRect();
           const despAlto = /auto|scroll/.test(cs.overflowY) && a.scrollHeight > a.clientHeight;
-          if (despLado(a)) dentroLado = true;
+          if (despLado(a, cs)) dentroLado = true;
           else if (r.left < c.left - 0.5 || r.right > c.right + 0.5) return true;
+          // La caja que se desplaza, a su vez, a la vista (AT-22 M3): su interior, sin
+          // el relleno, que es lo que la deja meterse bajo una zona segura a propósito.
+          if (despAlto && (c.top + parseFloat(cs.paddingTop) < zonas.top - 0.5 ||
+                           c.bottom - parseFloat(cs.paddingBottom) > innerHeight - zonas.bottom + 0.5)) return true;
           if (despAlto) dentroAlto = true;
           else if (!dentroAlto && (r.top < c.top - 0.5 || r.bottom > c.bottom + 0.5)) return true;
         }
