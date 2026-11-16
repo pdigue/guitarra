@@ -8,7 +8,9 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.6.9** | 16/11/2026 | F6.3 · instalable: manifiesto e iconos | `auto/F6.3-manifiesto` |
+| **0.6.11** | 16/11/2026 | F5.8 · #9, pistas en una línea y frase del reto más corta | `auto/F5.8-pistas` (PR #25) |
+| 0.6.10 | 16/11/2026 | F5.8 · #9, las pistas de Adivinar se leen enteras | `auto/F5.8-pistas` (PR #25) |
+| 0.6.9 | 16/11/2026 | F6.3 · instalable: manifiesto e iconos | `auto/F6.3-manifiesto` (PR #24) |
 | 0.6.8 | 16/11/2026 | F6.2 · sin conexión desde la web (Service Worker) | `main`, fusionada el 16/11 (PR #23) |
 | 0.6.7 | 15/11/2026 | F5.8 · #7, el metrónomo sin huecos y a la par | `main`, fusionada el 16/11 (PR #22) |
 | 0.6.6 | 15/11/2026 | F5.8 · #6, arranca también en un marco aislado | `main`, fusionada el 15/11 (PR #21) |
@@ -24,6 +26,37 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.6.11] — 16/11/2026 · F5.8 · Pistas en una línea y frase del reto más corta
+
+Tu decisión del 16/11, tras ver las dos opciones: «mejor en una línea, pero que sea una línea en ambos idiomas; dale más espacio al margen con las pistas recortando un poco los trastes… algo conciso [para la frase]».
+
+### Cambiado
+- **J-06** · **Las pistas, en una sola línea** en español y en inglés, nunca por debajo de 20 px. Para que quepan:
+  - en horizontal, en Adivinar, el panel de la derecha pasa de 176 a **204 px**, a costa de un poco de mástil (en el iPhone grande, de unos 610 a 585 px; en el SE, de 427 a 399; y sin bajar de 40 px por traste, el mínimo para el dedo). En las demás áreas sigue igual;
+  - con las dos pistas encendidas, la de la nota ocupa lo que necesita (como mínimo, el 30 %) y el resto es para las cuerdas;
+  - «Ver la respuesta», que aparece tras un fallo, va en la fila de debajo: en la misma fila dejaba a cada pista con unos 80 px.
+- **La frase del reto, más corta:** «Pulsa ▶, escucha y encuéntrala» (antes, «Pulsa ▶ para oír la nota» y, debajo, «y búscala en el mástil»); durante el reto, «Escucha y encuéntrala». En inglés, «Press ▶, listen and find it» y «Listen and find it». Cabe en una línea en vertical y en dos como mucho en el panel de horizontal.
+- `herramientas/comprobar-pistas.js` exige ahora una sola línea: 126 de 126; la más pequeña, 22 px (6 cuerdas en inglés, en horizontal). `comprobar-disposicion.js`: todo correcto (cada traste, 40 px o más).
+
+---
+
+## [0.6.10] — 16/11/2026 · F5.8 · Las pistas de Adivinar se leen enteras
+
+Tu comentario del 16/11, con capturas del iPhone: «no se ven las cuerdas de pista, incluso peor en horizontal… optimiza los tamaños».
+
+### Corregido
+- **J-06** · **Las cuerdas ya no se cortan.** El tamaño se elegía por el número de letras (21 px si pasaba de 7), y con 4 o más cuerdas en inglés no cabía: «1st 2nd 3rd 4t…». Ahora se **mide**: la respuesta empieza en 30 px (44 en tableta) y baja de 1 en 1 hasta caber entera; nunca por debajo de 20 px, el tamaño de la nota que tocas, para que lo que buscas no se vea más pequeño que lo que tocas (si no cabe, en dos líneas). Nada se corta con «…». Se vuelve a medir al girar, al cambiar la ventana y cuando aparece «Ver la respuesta» (`ResizeObserver`).
+- **J-06** · **Las cuerdas, en números con el ordinal pequeño:** «1ª 2ª 3ª» y, en inglés, «1st 2nd 3rd» con «st», «nd»… pequeños y arriba. Es lo que menos informa, y así el número se ve grande.
+- **J-06** · **En horizontal** el panel mide unos 140 px: la nota se quedaba en «F…» y las cuerdas, en blanco (el recuadro se quedaba sin ancho). Ahora las dos pistas van una encima de la otra, con todo el ancho; para que el pentagrama siga a la vista, la racha se pone al lado de ▶, y no en una fila propia debajo.
+- **El texto gigante tras girar el iPhone** (tu tercera captura): Safari agranda por su cuenta el texto que cree pequeño al pasar a horizontal, y al volver no siempre lo deshace. Con `text-size-adjust: 100%` los tamaños son siempre los del CSS.
+- Banco: dos pruebas nuevas (las cuerdas en números con su ordinal, en español y en inglés; el CSS sin «…» y con `text-size-adjust`). En Chromium, `herramientas/comprobar-pistas.js`: 126 de 126 (iPhone grande y SE e iPad, vertical y horizontal, español e inglés, notas en 3 a 6 cuerdas, tras un fallo y tras girar; ▶ libre de la racha).
+- **J-07** · En horizontal, la racha va al lado de ▶ (antes, en una fila propia debajo).
+
+### Pendiente
+- Tu prueba en el iPhone, en vertical y en horizontal.
 
 ---
 

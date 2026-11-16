@@ -1,6 +1,6 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 4.6 · **Fecha:** 16 de noviembre de 2026
+**Versión:** 4.8 · **Fecha:** 16 de noviembre de 2026
 **Se actualiza:** al cerrar cada bloque (regla 5 de `CLAUDE.md`). Las versiones vigentes de la app y de los demás documentos están en `docs/ESTADO.md`.
 
 > **Baseline 0.6.2** (tu decisión del 15/11): las fases hechas ocupan una línea; el detalle es solo para lo que queda. El roadmap completo hasta la v3.26, con la teoría de cada etapa, la pista T, el gobierno y los métodos de validación, está en `docs/historico/roadmap.md` (rama `archivo/hasta-0.6.2`).
@@ -9,7 +9,7 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** F6 (F6.3 hecha, a falta de fusionar), con F5.8 a falta de tu prueba en el móvil. `main` tiene la `0.6.8`; `auto/F6.3-manifiesto`, la `0.6.9`.
+📍 **Estás aquí:** F6 (F6.3 hecha, a falta de fusionar), con F5.8 a falta de tu prueba en el móvil. `main` tiene la `0.6.8`; `auto/F6.3-manifiesto` (PR #24), la `0.6.9`, y `auto/F5.8-pistas` (PR #25, encima), la `0.6.11`.
 
 **Leyenda:** ⬜ pendiente · ⏳ en curso · 🔨 hecha, sin tu prueba · ✅ validada · 📅 en una sesión contigo · ⏸ en pausa
 
@@ -39,6 +39,7 @@ Un bloque de trabajo por comentario, cada uno en su conversación (regla de `CLA
 | **#5** · Escalas | Las 4 escalas, una posición cada vez (3 notas por cuerda; 2 en las pentatónicas; la 1 en la tónica), tocar y escuchar, «Todas» y una Práctica nueva en orden | E-07 a E-10 (nuevos) · E-05 (retirado) · E-01, E-02, E-02b, E-03, E-04, E-05b, E-06, P-03 | 🔨 `0.6.4`, PR #20 · a falta de tu prueba |
 | **#6** · Acordes | Menos a la vista; el dibujo como protagonista: se elige con dos filas, la nota y el tipo, y el mástil enseña en grande los trastes 0 a 5 | AC-07 (nuevo) · AC-03 y AC-06 (retirados) · AC-01 | 🔨 `0.6.6`, fusionado (PR #21) · a falta de tu prueba |
 | **#7** · Metrónomo | Medido y corregido: 300 ms programados por adelantado (no se pierden golpes con tirones de hasta 0,25 s), los cambios y Parar rehacen lo ya apuntado, y la luz y el péndulo van con lo que se oye (latencia de salida descontada) | MT-04 | 🔨 `0.6.7`, PR #22 · a falta de tu prueba |
+| **#9** · Pistas (16/11) | Que las pistas de Adivinar se lean enteras: la respuesta se mide y se ajusta (sin «…»), las cuerdas en números con el ordinal pequeño, en horizontal apiladas; el iPhone ya no agranda el texto al girarlo | J-06 | 🔨 `0.6.10`, PR #25 · a falta de tu prueba |
 | **#8** · Propuestas | Las que apruebes (afinador cromático, Adivinar por niveles, reto inverso, rasgueo, arpegio y favoritos) | nuevos | ⬜ espera tu «sí» |
 
 **Comentarios de F5.8** (AR-14 #5). La lista se cierra cuando lo digas o al empezar F5.9. Cada fila guarda tu comentario tal cual, qué aprobaste antes de programar y qué solo se te explicó.
@@ -53,6 +54,7 @@ Un bloque de trabajo por comentario, cada uno en su conversación (regla de `CLA
 | 6 | «En cuanto a la parte de acordes, es igual, parece confuso y engorroso. Simplifícalo y mejora el looking» | **15/11:** el mástil acotado y grande, y elegir por nota y tipo (tus respuestas) | Sin pentagrama ni buscador en Acordes; las notas del acorde siguen junto al nombre | AC-07 (nuevo), AC-01; AC-03 y AC-06 retirados | `0.6.5` | 🔨 hecho, a falta de tu prueba |
 | 7 | «el metrónomo no termina de funcionar del todo bien. Analízalo» | La pantalla encendida («Sí», 12/11): hecha en la `0.6.2` (G-13) | Lo que notas (12/11): a veces el pulso suena irregular y lo que se ve no va con el sonido; «no siempre, es una sensación: comprueba». **15/11, analizado:** se perdían golpes cuando el móvil se entretenía más de unos 75 ms (solo había 100 ms programados), y la luz se encendía con el sonido calculado, no con el que sale (la latencia del altavoz o de los auriculares Bluetooth). Medido en Chromium: 10 de 63 golpes perdidos con tirones; ahora, 0 | MT-04 | `0.6.7` | 🔨 hecho, a falta de tu prueba |
 | 8 | «propongas nuevas mejoras de cara a implementarlas. Quiero ver un cambio claro a mejor en la app, tanto en funcionamiento como en contenido, como en looking, en un corto plazo» | — (12/11: recibido) | Lista de propuestas enviada el 12/11; cada una que apruebes entra como requisito nuevo | — | — | ⬜ recibido el 12/11 |
+| 9 | «Antes, no se ven las cuerdas de pista, incluso peor en horizontal, adaptalos, mas pequeño o solo numero y los st etc pequeños etc no lo se. Optimiza los tamaños» (16/11, con capturas). Y después: «Mejor en una linea pero que sea una linea en ambos idiomas, dale mas espacio al margen con las pistas recortando un poco los trastes… algo conciso [para la frase]» | Números grandes con el ordinal pequeño; la respuesta se mide y se ajusta, sin «…»; en una sola línea en los dos idiomas, nunca menor que la nota que tocas (20 px); en horizontal, en Adivinar, panel de 204 px a costa de un poco de mástil; la frase, «Pulsa ▶, escucha y encuéntrala» | En horizontal, las pistas apiladas y la racha junto a ▶; «Ver la respuesta» en la fila de debajo; el iPhone ya no agranda el texto al girar | J-06 | `0.6.10`, `0.6.11` | 🔨 hecho, a falta de tu prueba |
 
 ### F5.9 · Cierre (⬜)
 Auditoría a fondo de lo que cambió en F5.8 y etiqueta `v0.5.x` en el commit que cierre la fase, aunque la app sea `0.6.n` (G-10).
@@ -125,7 +127,9 @@ El historial hasta la v3.26 está en `docs/historico/roadmap.md`.
 
 | Versión | Fecha | Cambio |
 |---|---|---|
-| **4.6** | 16/11/2026 | F6.3 hecha (`0.6.9`): manifiesto propio (`manifest.webmanifest`) e iconos PNG (192, 512, «maskable» y el del iPhone, de 180), comprobada instalable en `localhost` (13 de 13 en Chromium); G-04 queda parcial hasta la web publicada (F7.2). «Estás aquí», al día. |
+| **4.8** | 16/11/2026 | Tu decisión del 16/11 (F5.8 #9): las pistas en una línea, el panel de Adivinar más ancho en horizontal y la frase del reto más corta, en la `0.6.11`. |
+| 4.7 | 16/11/2026 | Tu comentario del 16/11 (F5.8 #9, pistas de Adivinar): hecho en la `0.6.10`. |
+| 4.6 | 16/11/2026 | F6.3 hecha (`0.6.9`): manifiesto propio (`manifest.webmanifest`) e iconos PNG (192, 512, «maskable» y el del iPhone, de 180), comprobada instalable en `localhost` (13 de 13 en Chromium); G-04 queda parcial hasta la web publicada (F7.2). «Estás aquí», al día. |
 | 4.5 | 16/11/2026 | F6.2 hecha (`0.6.8`): la app funciona sin conexión desde la web con un Service Worker (`sw.js`), comprobada en `localhost` (9 de 9 en Chromium); G-03 queda parcial hasta la web publicada (F7.2). |
 | 4.4 | 15/11/2026 | F5.8 #7 hecho (`0.6.7`, PR #22): el metrónomo ya no pierde golpes con tirones y lo que se ve va con lo que se oye (MT-04); #6 fusionado (PR #21). |
 | 4.3 | 15/11/2026 | F5.8 #6 hecho (`0.6.5`, PR #21): Acordes, elegidos por nota y tipo y dibujados en grande en los trastes 0 a 5 (tus respuestas del 15/11). |

@@ -1,7 +1,7 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 1.19 · **Fecha:** 15 de noviembre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0); la sección 7b (seis áreas, con Metrónomo y Acordes), aprobada el 21/10 y retocada el 22/10 con tu decisión de la pesa del metrónomo; los detalles del péndulo, a falta de tu visto bueno en la web de pruebas. Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
-**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.6.4` · `requisitos.md` v2.2 · `roadmap.md` v4.2
+**Versión:** 1.21 · **Fecha:** 16 de noviembre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0); la sección 7b (seis áreas, con Metrónomo y Acordes), aprobada el 21/10 y retocada el 22/10 con tu decisión de la pesa del metrónomo; los detalles del péndulo, a falta de tu visto bueno en la web de pruebas. Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
+**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.6.11` · `requisitos.md` v2.8 · `roadmap.md` v4.8
 **Revisión:** auditoría de requisitos AR-04 (`historico/auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
 
@@ -88,13 +88,13 @@ De arriba abajo: cabecera (nombre y ⚙), acceso rápido (**Do Re Mi**, **Pentag
 
 Igual que Libre, con la **tarjeta del reto** entre el acceso rápido y el mástil:
 
-- **Primera fila:** ▶ empezar y repetir el sonido · mensaje del reto («Escucha y busca la nota», «✓ Sol3», «✗ Era Sol3 · racha a 0») · racha y récord (J-07, J-08). **Desde la 0.3.3** (Sesión 1), al entrar no suena nada: ▶ aparece resaltado y el mensaje dice «Pulsa ▶ para oír la nota»; antes de ▶ el mástil suena pero no puntúa (J-01).
+- **Primera fila:** ▶ empezar y repetir el sonido · mensaje del reto («Pulsa ▶, escucha y encuéntrala» antes de empezar; «Escucha y encuéntrala» durante, desde la 0.6.11; «✓ Sol3», «✗ Era Sol3 · racha a 0») · racha y récord (J-07, J-08). **Desde la 0.3.3** (Sesión 1), al entrar no suena nada: ▶ aparece resaltado y el mensaje dice «Pulsa ▶ para oír la nota»; antes de ▶ el mástil suena pero no puntúa (J-01).
 - **Segunda fila (cambio):** las **pistas** (Nombre, Cuerda) y su resultado («3ª, 4ª, 5ª o 6ª»). Hoy están en la barra de acceso rápido, que en el iPhone no cabe por 4 px; dentro de la tarjeta quedan junto al reto al que ayudan (J-06).
 - **Desde la 0.4.1** (tu comentario del 21/10): encendida, cada pista enseña su respuesta **dentro de su botón, en grande**, con etiqueta pequeña y borde discontinuo de «pista»: «NOTA Sol#3», «CUERDAS 3ª 4ª». Con alguna encendida, sobra el rótulo «Pistas» y las dos caben en una fila. La **lectura grande** de debajo vuelve a ser la nota que tocas: lo que buscas está en las pistas, lo que tocas en la lectura, y no se confunden.
 - **Al fallar** (J-09, J-10): la posición pulsada se rellena en rojo con ✗ y, 1,2 s después, las correctas en verde con su nombre y ✓; el reto siguiente llega 3 s más tarde. **Al acertar**, todas las correctas en verde (J-03).
 - La lectura grande y el pentagrama muestran **la nota que tocas** (desde la 0.4.1; en la 0.3.3 mostraban la buscada y confundían). La buscada solo se ve con la pista de nombre, en su botón, o al responder. El pentagrama no muestra la nota hasta que respondes, y «Ver todas las notas» no se aplica (J-12).
 
-- **Desde la 0.6.3** (F5.8 #4): con una pista encendida, la fila de pistas es **la franja de lo que se busca**: cada pista encendida ocupa su parte, con la respuesta en grande (30 px en el móvil, 44 en tableta; una larga, como «1ª 2ª 3ª 4ª», se reduce para caber). La nota que tocas se lee **en pequeño y en gris** junto al pentagrama, para que no compita con la buscada (J-01, J-06).
+- **Desde la 0.6.3** (F5.8 #4): con una pista encendida, la fila de pistas es **la franja de lo que se busca**: cada pista encendida ocupa su parte, con la respuesta en grande (30 px en el móvil, 44 en tableta; una larga, como «1ª 2ª 3ª 4ª», se reduce para caber). **Desde la 0.6.10** (tu comentario del 16/11): la respuesta se mide y se reduce hasta caber entera, nunca con «…» ni más pequeña que la nota que tocas, 20 px, y **en una sola línea** en los dos idiomas (0.6.11): con las dos pistas, la de la nota ocupa lo que necesita y el resto es para las cuerdas; «Ver la respuesta», en la fila de debajo; las cuerdas, con el **número grande y la «ª» pequeña** («st», «nd», «rd», «th» en inglés); en **horizontal**, las dos pistas una encima de la otra, con todo el ancho del panel, y la racha al lado de ▶ para que el pentagrama siga a la vista. La nota que tocas se lee **en pequeño y en gris** junto al pentagrama, para que no compita con la buscada (J-01, J-06).
 
 ### Afinador — bocetos A3 y A4
 
@@ -143,7 +143,7 @@ La propuesta saca todo eso del alto del mástil: **raíl | mástil | panel**.
 |---|---|---|
 | Raíl izquierdo | 64 px de ancho | Las seis áreas, de 44 px de alto cada una, y ⚙ abajo |
 | Mástil | Todo el alto: números de traste (18 px) y seis cuerdas | — |
-| Panel derecho | 176 px de ancho | Los controles del área, de arriba abajo (tabla siguiente), y el zoom abajo |
+| Panel derecho | 176 px de ancho; en Adivinar, 204 px (0.6.11), para que las pistas quepan en una línea | Los controles del área, de arriba abajo (tabla siguiente), y el zoom abajo |
 
 | Área | Panel |
 |---|---|
@@ -266,7 +266,9 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.19** | 15/11/2026 | F5.8 #7: el metrónomo no cambia de aspecto; la luz del pulso y el péndulo llegan cuando el clic se oye, no antes (§7b, MT-04). |
+| **1.21** | 16/11/2026 | Tu decisión del 16/11: pistas en una línea; panel de Adivinar de 204 px en horizontal; frase del reto más corta; «Ver la respuesta» debajo de las pistas (§6, §7b). |
+| 1.20 | 16/11/2026 | Tu comentario del 16/11: las pistas de Adivinar se leen enteras; en horizontal, apiladas, y la racha junto a ▶ (§6, J-06). |
+| 1.19 | 15/11/2026 | F5.8 #7: el metrónomo no cambia de aspecto; la luz del pulso y el péndulo llegan cuando el clic se oye, no antes (§7b, MT-04). |
 | 1.18 | 15/11/2026 | F5.8 #6: Acordes por nota y tipo, con el acorde en grande en los trastes 0 a 5; sin pentagrama, buscador ni aviso para girar en Acordes (§7b, AC-01, AC-07, V-01). |
 | 1.17 | 15/11/2026 | F5.8 #5: Escalas, una posición cada vez (la 1 en la tónica), con «Escuchar», «Todas» y una Práctica nueva en orden (§Escalas, E-03 a E-10, P-03); textos cortos en el móvil. |
 | 1.16 | 15/11/2026 | F5.8 #3 y #4: disposición «Tableta y ordenador» (§3, V-11; umbral de área útil 700 × 600 tras AR-16 #1, y excepción al principio 1 de §2), temas en Ajustes › Aspecto (§10, V-10; Madera de fábrica, tu decisión del 15/11) y, en Adivinar, la franja de pistas en grande y la nota tocada en pequeño (§6, J-01, J-06). |

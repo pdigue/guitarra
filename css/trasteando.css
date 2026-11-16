@@ -87,6 +87,10 @@ html, body {
   user-select:none; -webkit-user-select:none; overscroll-behavior:none; position:fixed;
   touch-action:manipulation;
 }
+/* El iPhone, al girarlo, agranda por su cuenta el texto que cree pequeño
+   («text autosizing»): tras volver a vertical, el texto del reto salía al doble
+   (tu captura del 16/11). Con esto, los tamaños son siempre los del CSS. */
+html { -webkit-text-size-adjust:100%; text-size-adjust:100%; }
 body {
   display:flex; flex-direction:column;
   padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
@@ -631,6 +635,12 @@ body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
   .tab { flex:0 0 auto; min-height:44px; padding:5px 1px; font-size:9.5px; }
   .tab-settings { display:flex; margin-top:auto; }
   #board-area { grid-column:2; grid-row:1; min-height:0; padding:6px 6px 2px; }
+  /* En Adivinar, el panel es más ancho (204 px en vez de 176), a costa de un poco
+     de mástil: así las dos pistas caben en una línea en los dos idiomas sin bajar
+     de 20 px (tu decisión del 16/11). En el iPhone grande, el mástil pasa de unos
+     610 a unos 585 px; en el SE, de 427 a 399. No más: con 10 trastes a la vista,
+     cada uno bajaría de 40 px, el mínimo para el dedo (comprobar-disposicion). */
+  body[data-screen="guess"] { grid-template-columns:64px minmax(0,1fr) 204px; }
   #tuner { grid-column:2 / -1; grid-row:1; min-height:0; }
   #metro { grid-column:2 / -1; grid-row:1; min-height:0; display:grid;
            grid-template-columns:minmax(120px,.8fr) minmax(0,1fr) minmax(0,1fr); grid-template-rows:minmax(0,1fr);
@@ -765,13 +775,40 @@ html[data-scheme="light"] .challenge-text b { color:var(--text) !important; }
    Encendida, cada pista ocupa su parte de la franja, con la respuesta en
    grande; la nota que tocas pasa a ser una lectura pequeña y apagada junto al
    pentagrama, para que no compita con la que buscas. */
-.ch-hints.has-clue { flex-wrap:nowrap; }
+/* Las pistas, en su fila; «Ver la respuesta», si aparece, en la de debajo: en la
+   misma fila dejaba a cada pista con 80 px y las cuerdas no cabían (16/11). */
+.ch-hints.has-clue { flex-wrap:wrap; }
+.ch-hints.has-clue .giveup { flex:1 0 100%; order:9; }
+/* Con las dos pistas, la nota («Fa#4») ocupa lo que necesita, con un mínimo, y
+   el resto es para las cuerdas, que pueden ser seis («1st 2nd 3rd 4th 5th 6th»). */
+.ch-hints.dos #qb-hint-note.clue { flex:0 1 auto; min-width:30%; }
 .ch-hints.has-clue .chip.clue { flex:1 1 0; min-width:0; min-height:58px; border-radius:14px;
   flex-direction:column; align-items:center; justify-content:center; gap:0; padding:4px 10px; }
 .ch-hints.has-clue .chip.clue .clue-k { font-size:10.5px; line-height:13px; }
-.ch-hints.has-clue .chip.clue .clue-v { font-size:30px; line-height:36px; white-space:nowrap;
-  overflow:hidden; text-overflow:ellipsis; max-width:100%; }
-.ch-hints.has-clue .chip.clue .clue-v.long { font-size:21px; }
+/* La respuesta ocupa todo el ancho de su recuadro; este es su tamaño máximo, y
+   encajar() (js/07-adivinar.js) lo baja hasta que cabe entera, sin bajar de 20 px
+   (si no, dos líneas) (16/11). El ordinal, nunca menor de 11 px. */
+.ch-hints.has-clue .chip.clue .clue-v { display:block; width:100%; text-align:center;
+  font-size:30px; line-height:1.2; white-space:nowrap; overflow:hidden; }
+.ch-hints.has-clue .chip.clue .clue-v.wrap { white-space:normal; line-height:1.05; }
+/* Cuerdas: el número, grande; «st», «nd», «rd», «th», pequeños y arriba. La «ª»
+   ya es una letra volada: solo se achica un poco. */
+.clue-v .ord + .ord { margin-left:-.12em; }
+.clue-v .ord small { font-size:max(.5em, 11px); vertical-align:.75em; line-height:0; margin-left:.02em; opacity:.8; }
+html:lang(es) .clue-v .ord small { font-size:.75em; vertical-align:baseline; margin-left:0; }
+/* En horizontal el panel mide unos 140 px: lado a lado, seis cuerdas no caben
+   ni a 13 px. Ahí los recuadros van uno encima del otro, cada uno con todo el
+   ancho: ocupan lo mismo de alto que antes y se leen mucho mejor. */
+@media (orientation:landscape) and (max-height:520px){
+  .ch-hints.has-clue { flex-direction:column; align-items:stretch; gap:4px; }
+  .ch-hints.has-clue .chip.clue { flex:none; min-height:0; padding:2px 3px 3px; border-radius:12px; }
+  body[data-screen="guess"] .panel { padding-left:6px; padding-right:6px; }
+  .ch-hints.has-clue .chip.clue .clue-k { font-size:9.5px; line-height:12px; }
+  .ch-hints.has-clue .chip.clue .clue-v { font-size:26px; }
+  /* Y para que el pentagrama siga a la vista: la racha, al lado de ▶ y no en
+     una fila propia debajo (se parte en dos líneas si hace falta). */
+  .ch-main .stats { flex:1 1 0; min-width:0; text-align:right; }
+}
 body[data-screen="guess"] .note-readout { min-width:52px; height:auto; }
 body[data-screen="guess"] .note-name { font-family:inherit; font-style:normal; font-weight:600;
   font-size:20px; line-height:24px; height:24px; color:var(--muted); text-shadow:none; }
@@ -801,8 +838,7 @@ body[data-screen="guess"] .note-oct { margin-top:0; }
   .stats { font-size:13px; } .stats .streak { font-size:16px; }
   .ch-hints.has-clue .chip.clue { min-height:84px; border-radius:16px; }
   .ch-hints.has-clue .chip.clue .clue-k { font-size:12px; line-height:15px; }
-  .ch-hints.has-clue .chip.clue .clue-v { font-size:44px; line-height:52px; }
-  .ch-hints.has-clue .chip.clue .clue-v.long { font-size:34px; }
+  .ch-hints.has-clue .chip.clue .clue-v { font-size:44px; }
   .display:not(.hidden) { flex:0 1 230px; max-height:none; }   /* cede antes que el mástil */
   .display-inner { padding:10px 24px; gap:24px; justify-content:center; }
   .staff-wrap { flex:0 1 560px; }
