@@ -115,6 +115,7 @@ function renderClues(){
        cuerdas);
   const pistas = document.querySelector('.ch-hints');
   pistas.classList.toggle('has-clue', !!challenge && screen === 'guess' && (state.hintNote || state.hintString));
+  pistas.classList.toggle('dos', !!challenge && screen === 'guess' && state.hintNote && state.hintString);
   // Se encajan al final, con la franja ya encendida y su ancho definitivo.
   pistas.querySelectorAll('.clue-v').forEach(encajar);
 }
@@ -167,8 +168,9 @@ function renderChallenge(){
   if (!challenge){ box.textContent = ''; return; }
 
   if (!guessStarted){
-    box.innerHTML = '<b>' + t('guess.press1') + ' <span class="sr-only">' + t('guess.pressSr') + '</span> ' + t('guess.press2') +
-      '</b><br><span class="dim">' + t('guess.press3') + '</span>';
+    // Una sola frase: «Pulsa ▶, escucha y encuéntrala» (antes, dos: «… para oír la nota»
+    // y «y búscala en el mástil»). El lector de pantalla oye además «(Empezar)».
+    box.innerHTML = '<b>' + t('guess.press1') + '<span class="sr-only"> ' + t('guess.pressSr') + '</span>' + t('guess.press2') + '</b>';
     return;
   }
 

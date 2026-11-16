@@ -2,7 +2,7 @@
 // tu comentario del 16/11): en iPhone grande y pequeño, en vertical y en
 // horizontal, en español y en inglés, con notas que están en 2, 5 y 6 cuerdas.
 // Cada respuesta debe verse (ancho mayor que 0), caber sin cortarse y no bajar
-// de 20 px, la nota que tocas (J-01; AR-22 #1), en una línea o en dos. Además (AT-21):
+// de 20 px, la nota que tocas (J-01; AR-22 #1), y en una sola línea. Además (AT-21):
 // girar sin recargar, un fallo con «Ver la respuesta» a la vista, iPad, y en
 // horizontal, ▶ de 40 px o más sin que la racha se le monte encima. Guarda una imagen con todas las franjas, para mirarlas de un vistazo.
 // Herramienta de desarrollo: necesita Playwright con Chromium (y Python con PIL
@@ -25,7 +25,8 @@ const MINIMO = 20;
   let total = 0;
   const revisar = (medidas, donde) => { for (const m of medidas){
     total++;
-    if (!(m.ancho > 0 && m.cabe && m.px >= MINIMO)) fallos.push(`${donde}: «${m.texto}» ${m.px}px, ancho ${m.ancho}${m.cabe ? '' : ', no cabe'}`);
+    // En una sola línea, en los dos idiomas (tu decisión del 16/11).
+    if (!(m.ancho > 0 && m.cabe && m.px >= MINIMO && !m.partida)) fallos.push(`${donde}: «${m.texto}» ${m.px}px, ancho ${m.ancho}${m.cabe ? '' : ', no cabe'}${m.partida ? ', en dos líneas' : ''}`);
   } };
   for (const locale of IDIOMAS) for (const [nombre, ancho, alto] of TAMANOS){
     const ctx = await navegador.newContext({ viewport: { width: ancho, height: alto }, deviceScaleFactor: 2,
