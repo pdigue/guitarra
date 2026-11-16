@@ -44,15 +44,15 @@ const server = http.createServer((req, res) => {
     const tirones = setInterval(() => { const fin = performance.now() + 200; while (performance.now() < fin); }, 700);
     await new Promise(r => setTimeout(r, segundos * 1000));
     clearInterval(tirones);
-    const inicio = metro.inicio, ctx = audioCtx;
+    const ctx = audioCtx;
     stopMetro();
-    // Los retirados (parados antes de sonar) no cuentan: se reconocen porque su
-    // salida se soltó; en la versión antigua no se retira ninguno.
+    // Mientras se mide no se cambia nada, así que no hay golpes retirados (solo
+    // los que calla Parar, al final): cada momento distinto es un golpe.
     const ts = golpes.map(g => g.t).filter((t, i, a) => a.indexOf(t) === i).sort((a, b) => a - b);
     const iv = 60 / 250, desv = ts.slice(1).map((t, i) => Math.abs(t - ts[i] - iv)).filter(d => d < iv / 2);
     const esperados = Math.round((ts.at(-1) - ts[0]) / iv) + 1;
     // Retraso de cada luz respecto a su golpe más cercano anterior.
-    const retrasos = luces.map(l => { const t = ts.filter(x => x <= l + 0.6).filter(x => x <= l).at(-1); return t === undefined ? null : l - t; })
+    const retrasos = luces.map(l => { const t = ts.filter(x => x <= l).at(-1); return t === undefined ? null : l - t; })
       .filter(x => x !== null && x < 0.6);
     const media = a => a.reduce((s, x) => s + x, 0) / (a.length || 1);
     return { golpes: ts.length, esperados, perdidos: esperados - ts.length, desvMax: Math.max(0, ...desv),
@@ -65,6 +65,7 @@ const server = http.createServer((req, res) => {
   console.log(`Golpes: ${r.golpes} de ${r.esperados} → perdidos: ${r.perdidos}`);
   console.log(`Desviación máxima entre golpes seguidos: ${(r.desvMax * 1000).toFixed(3)} ms (los perdidos aparte)`);
   console.log(`La luz se enciende, de media, ${(r.luzMedia * 1000).toFixed(1)} ms después de que el reloj de audio pase por el golpe (${r.luces} luces)`);
+  console.log('(En Chromium sin altavoz real, la latencia no es la de un móvil: el retraso de la luz solo sirve para comparar versiones.)');
   console.log(`Latencias que declara el navegador: salida ${r.outputLatency} s, base ${r.baseLatency} s; getOutputTimestamp: ${r.getOutputTimestamp ? 'sí' : 'no'}`);
   if (errores.length) console.log('Errores: ' + errores.join(' | '));
   await browser.close(); server.close();

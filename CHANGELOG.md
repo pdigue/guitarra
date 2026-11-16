@@ -35,6 +35,11 @@ Tu comentario del 12/11 #7: «el metrónomo no termina de funcionar del todo bie
 - **MT-04, MT-06** · **La luz y el péndulo van con lo que se oye.** Se calculaban con el sonido que el navegador *prepara*, que sale por el altavoz un poco después (0,15 a 0,25 s con auriculares Bluetooth). Ahora se pregunta al navegador qué está sonando (`getOutputTimestamp()` o las latencias que declare) y la luz espera a ese momento.
 - Los osciladores de cada golpe se sueltan al acabar (AT-11 #6).
 
+### Corregido tras las auditorías AT-18 y AR-19
+- Dos cambios seguidos muy rápidos (el compás o la figura y, enseguida, el tempo o el acento) podían dejar el metrónomo mudo durante minutos aunque dijera «sonando»: al retirar golpes ya no se vuelve a uno contado desde el arranque anterior.
+- Un golpe que vaya a sonar en menos de 30 ms ya no se retira (antes, 10 ms): en algunos móviles podía cortarse a medias.
+- MT-04 dice ya lo que se puede medir: los cambios, desde el primer golpe que aún no ha empezado (compás y figura, desde el próximo pulso), y la latencia, la que mida o declare el navegador. El péndulo (MT-06), en el control de cambios.
+
 ### Añadido
 - `herramientas/medir-metronomo.js`: mide en un Chromium real golpes perdidos, intervalos y el retraso de la luz, bajo tirones; acepta otra raíz para comparar con una versión anterior.
 

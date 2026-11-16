@@ -1529,6 +1529,36 @@ test('metrónomo: Parar calla lo ya apuntado; cambiar el tempo o el acento rehac
   assert.equal(A.ev('metro.programados.length'), 0);
 });
 
+test('metrónomo: cambiar compás o figura con el pulso ya apuntado lo rehace una vez; dos cambios seguidos no hacen saltar el contador (MT-03, MT-04, AT-18 A1, AR-19 #3)', t => {
+  const A = boot(APP, { metro: { bpm: 60, sig: '4/4', sub: 2, accent: true } });
+  A.ev(metroFalso);
+  A.ev('startMetro()');
+  t.after(() => A.ev('stopMetro()'));
+  const golpes = () => JSON.parse(A.ev('JSON.stringify(__golpes().map(g => [Math.round(g[0] * 1000) / 1000, g[1]]))'));
+  const en = s => golpes().filter(g => Math.abs(g[0] - s) < 1e-6);
+  // Compás: el pulso de 12,06 ya está apuntado (con la 4/4: normal); pasa a 3/4 y es su primer tiempo.
+  A.ev('__avanza(11.8)');
+  assert.equal(en(12.06).length, 1, 'apuntado por adelantado');
+  A.ev("setCompas('3/4')");
+  A.ev('__avanza(15.3)');
+  assert.deepEqual(en(12.06), [[12.06, 1760]], 'uno solo, con el acento del 3/4');
+  assert.deepEqual([13.06, 14.06, 15.06].map(s => en(s).map(g => g[1]).join()), ['1175', '1175', '1760'], 'compás de tres');
+  // Figura: el pulso de 16,06 ya está apuntado; con semicorcheas, el pulso no se mueve ni se repite.
+  A.ev('__avanza(15.8)');
+  A.ev('setSubdivision(4)');
+  A.ev('__avanza(16.4)');
+  assert.equal(en(16.06).length, 1);
+  assert.deepEqual(en(16.31).map(g => g[1]), [880], 'y la semicorchea, a su cuarto de pulso');
+  // Dos cambios seguidos: la corchea de 18,56 queda apuntada por el cambio de compás
+  // (suena) y el de tempo, justo después, no debe volver a ella con el contador de antes.
+  A.ev('setSubdivision(2)');
+  A.ev('__avanza(18.3)');                         // apuntada la corchea de 18,56; el pulso de 19,06 aún no
+  A.ev("setCompas('4/4'); setTempo(120)");
+  A.ev('__avanza(19.5)');
+  const tras = golpes().filter(g => g[0] > 18.5).map(g => g[0]);
+  assert.deepEqual(tras.slice(0, 3), [18.56, 19.06, 19.31], 'la corchea suena y el pulso sigue en 19,06, ya a 120 ppm');
+});
+
 test('metrónomo: la luz y el péndulo van con lo que se oye, descontando la latencia de salida (MT-04, MT-06, PL-04, F5.8 #7)', t => {
   const A = boot(APP, { metro: { bpm: 60, sig: '4/4', sub: 1, accent: true } });
   A.ev(metroFalso);
@@ -1543,6 +1573,8 @@ test('metrónomo: la luz y el péndulo van con lo que se oye, descontando la lat
   A.ev('__ctx.outputLatency = 0.2; __ctx.baseLatency = 0.01');
   assert.equal(vistosEn(inicio + 0.1), 0, 'calculado, pero aún no se oye');
   assert.equal(vistosEn(inicio + 0.22), 1, 'se oye: el primer pulso se ve');
+  const angulo = parseFloat(A.$('metro-slider').style.getPropertyValue('--ang'));
+  assert.ok(Math.abs(angulo + 30) < 0.5, 'y el péndulo está en su extremo cuando se oye (MT-06): ' + angulo);
   // 3. Con getOutputTimestamp(), manda la medida del navegador (aquí, 0,15 s de retraso).
   //    (El banco no trae el reloj performance del navegador: uno fijo basta.)
   A.ev('globalThis.performance = { now: () => 1000 }');
@@ -1550,6 +1582,10 @@ test('metrónomo: la luz y el péndulo van con lo que se oye, descontando la lat
   assert.equal(vistosEn(inicio + 1.1), 1, 'el segundo pulso aún no se oye');
   assert.equal(vistosEn(inicio + 1.16), 2);
   assert.ok(Math.abs(A.ev('metroOido()') - (A.ev('__ctx.currentTime') - 0.15)) < 0.01);
+  // Lo que pasó desde la medida se suma: 50 ms después, se oye 0,05 s más allá (AT-18 B3).
+  A.ev('globalThis.performance = { now: () => 1050 }');
+  A.ev(`__ctx.getOutputTimestamp = () => ({ contextTime: __ctx.currentTime - 0.15, performanceTime: 1000 })`);
+  assert.ok(Math.abs(A.ev('metroOido()') - (A.ev('__ctx.currentTime') - 0.1)) < 1e-9);
   // 4. Una medida absurda (o los ceros del arranque) no deja la luz a destiempo.
   A.ev(`__ctx.getOutputTimestamp = () => ({ contextTime: __ctx.currentTime - 9, performanceTime: performance.now() })`);
   assert.ok(Math.abs(A.ev('__ctx.currentTime - metroOido()') - 0.5) < 1e-9, 'como mucho, 0,5 s');

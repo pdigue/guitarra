@@ -27,7 +27,7 @@
 
 const METRO_CADA = 0.025;       // s entre repasos del programador
 const METRO_ADELANTO = 0.3;     // s de golpes programados por adelantado
-const METRO_MARGEN = 0.01;      // s: un golpe que suena antes de esto ya no se puede retirar
+const METRO_MARGEN = 0.03;      // s: un golpe que suena antes de esto quizá ya esté calculado: no se retira (AT-18 B2)
 const METRO_LATENCIA_MAX = 0.5; // s: más retraso de salida que esto sería un dato erróneo
 
 /* Lo que se oye va por detrás del reloj de audio (MT-04, F5.8 #7).
@@ -120,7 +120,11 @@ function metroCallar(p){
 function metroRebobinar(soloPulsos){
   if (!metro.sonando || !metro.ctx) return;
   const limite = metro.ctx.currentTime + METRO_MARGEN, sub = state.metro.sub;
-  const i = metro.programados.findIndex(p => p.t > limite && (!soloPulsos || p.paso % sub === 0));
+  // Nunca se vuelve a un golpe anterior al inicio vigente: son las subdivisiones
+  // que un cambio de compás o de figura dejó sonar, y su n se contó desde el
+  // inicio de antes. Si se eligieran, el contador saltaría (AT-18 A1).
+  const i = metro.programados.findIndex(p => p.t > limite && p.t >= metro.inicio - 1e-9
+                                            && (!soloPulsos || p.paso % sub === 0));
   if (i < 0) return;                            // nada que retirar: el contador ya apunta al siguiente
   const primero = metro.programados[i];
   metro.programados.slice(i).forEach(metroCallar);
