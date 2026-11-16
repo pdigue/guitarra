@@ -184,8 +184,10 @@ function renderChallenge(){
   }
 
   if (challenge.misses && !challenge.solved){
-    // Corto (tu comentario del 16/11): «✗ ¡Prueba otra vez!»; que ▶ repite la nota ya se ve.
-    box.innerHTML = '<b class="ko">' + t('guess.miss') + '</b>';
+    // Corto (tu comentario del 16/11): «✗ ¡Prueba otra vez!»; que ▶ repite la nota
+    // ya lo dice la frase del reto. La ✗, oculta al lector de pantalla, que la
+    // leería como «multiplicación» (AT-22 B5).
+    box.innerHTML = '<b class="ko"><span aria-hidden="true">✗ </span>' + t('guess.miss') + '</b>';
     return;
   }
 
