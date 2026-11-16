@@ -975,7 +975,7 @@ test('idioma: en Ajustes se cambia a inglés y vuelve al español; se guarda y n
   assert.equal(A.$('sheet-title').textContent, 'Settings');
   assert.equal(A.$('st-streak').textContent, 'Streak 3', 'la racha sigue');
   assert.equal(A.$('st-record').textContent, 'Best 0 · Standard');
-  assert.match(A.$('challenge-text').innerHTML, /Listen and find the note/);
+  assert.match(A.$('challenge-text').innerHTML, /Listen and find it/);
   assert.match(A.$('zoom-label').textContent, /frets in view|Whole neck/);
   assert.equal(A.$('tuning-select').children[0].textContent, 'Standard (E A D G B E)');
   assert.match(A.doc.querySelector('.fret-cell[data-row="0"][data-fret="0"]').getAttribute('aria-label'), /^1st string, open$/);
