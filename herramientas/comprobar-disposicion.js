@@ -3,6 +3,7 @@
 //
 // Uso, desde la carpeta del proyecto:
 //     node herramientas/comprobar-disposicion.js [carpeta-de-capturas]
+//     SOLO=metronomo node herramientas/comprobar-disposicion.js /tmp/x   (solo esas pantallas)
 //
 // Necesita Node y Playwright con Chromium. Es una herramienta de desarrollo:
 // la app no la usa. Abre index.html en cada pantalla de la tabla PANTALLAS,
@@ -35,6 +36,9 @@ const LOCALE = process.env.IDIOMA || 'es-ES';
 
 const RAIZ = path.resolve(__dirname, '..');
 const APP = 'file://' + path.join(RAIZ, process.env.APP_HTML || 'index.html');
+// Con SOLO=texto, solo las pantallas cuyo nombre lo contiene (p. ej. SOLO=metronomo),
+// para comprobar únicamente lo que toca un cambio (regla 7 de CLAUDE.md).
+const SOLO = process.env.SOLO || '';
 const SALIDA = process.argv[2] || path.join(RAIZ, 'docs', 'verificaciones', 'img', 'F3.2');
 const MIN = 40;
 
@@ -141,7 +145,7 @@ const ESTADOS = {
   let fallos = 0;
   const fallo = (pantalla, msg) => { fallos++; console.log(`FALLO ${pantalla}: ${msg}`); };
 
-  for (const [nombre, w, h, dedo, area, avisoEsperado, ajustes, extra = {}] of PANTALLAS) {
+  for (const [nombre, w, h, dedo, area, avisoEsperado, ajustes, extra = {}] of PANTALLAS.filter(p => p[0].includes(SOLO))) {
     const ctx = await navegador.newContext({ locale: LOCALE, viewport: { width: w, height: h }, hasTouch: dedo,
                                              isMobile: dedo, deviceScaleFactor: 2 });
     const pagina = await ctx.newPage();

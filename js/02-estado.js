@@ -24,8 +24,7 @@ const DEFAULTS = {
   visibleFrets:null,      // se calcula en el primer arranque según la pantalla
   maxChallengeFret:12,    // hasta dónde llegan los retos del modo Adivinar
   records:{},             // récord de racha de cada afinación: { standard: 7, dropd: 3 } (J-11)
-  tunerMode:'mic',        // afinador: 'mic' por micrófono · 'ear' de oído (F4.3; por defecto Micrófono desde F5.8 #2)
-  tunerPick:false,        // true cuando lo has elegido tú: solo entonces se recuerda
+  tunerMode:'mic',        // afinador: 'mic' por micrófono · 'ear' de oído (F4.3). Al abrir la app, siempre Micrófono (17/11)
   lang:null,              // 'es' o 'en' (G-12); sin elegir, el del navegador
   scaleId:'mayor',        // Escalas (F5): tipo y tónica (clase de altura)
   scalePc:0,
@@ -33,7 +32,7 @@ const DEFAULTS = {
   accidentals:{},         // tecla negra → 'sharp' o 'flat' (N-06); sin dato, sostenido
   metro:{ bpm:80, sig:'4/4', sub:1, accent:true },  // metrónomo (MT-05): tempo, compás, golpes por pulso y acento en el primero
   chordId:'C',            // acorde elegido en Acordes (F5.7), por su nombre en inglés
-  theme:'madera'          // tema (F5.8 #3, C-08): 'madera' · 'auto' (claro u oscuro, como el dispositivo) · 'partitura'
+  theme:'partitura'       // tema (F5.8 #3, C-08): 'madera' · 'auto' (claro u oscuro, como el dispositivo) · 'partitura' (el de fábrica desde el 17/11)
 };
 
 const storage = {
@@ -64,8 +63,10 @@ function sanitize(raw){
   }
   if (!['latin','anglo'].includes(s.notation)) s.notation = DEFAULTS.notation;
   if (!['nylon','acoustic'].includes(s.timbre)) s.timbre = DEFAULTS.timbre;
-  s.tunerPick = s.tunerPick === true;
-  if (!s.tunerPick || !['ear','mic'].includes(s.tunerMode)) s.tunerMode = DEFAULTS.tunerMode;
+  // El afinador abre siempre en Micrófono (tu decisión del 17/11, AR-15 #8): lo
+  // guardado no cuenta, y se borra la marca de «lo elegiste tú» de versiones anteriores.
+  delete s.tunerPick;
+  s.tunerMode = DEFAULTS.tunerMode;
   if (!['es','en'].includes(s.lang)) s.lang = idiomaDelNavegador();
   if (!ESCALAS.some(e => e.id === s.scaleId)) s.scaleId = DEFAULTS.scaleId;
   if (!Number.isInteger(s.scalePc) || s.scalePc < 0 || s.scalePc > 11) s.scalePc = DEFAULTS.scalePc;

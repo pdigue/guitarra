@@ -385,12 +385,10 @@ function showMicPanel(motivo){
 
 /** Cambia entre De oído y Micrófono. El micrófono no se enciende solo: hay que
  *  pulsar «Activar el micrófono», así nunca escucha sin que lo pidas.
- *  `elegido`: lo has pulsado tú, y entonces se recuerda. Si nunca has elegido,
- *  el afinador abre en Micrófono donde se puede usar y en De oído donde no
- *  (el archivo con doble clic, una web sin https): F5.8 #2. */
-function setTunerMode(modo, elegido){
+ *  Lo que elijas vale mientras la app esté abierta; al volver a abrirla, el
+ *  afinador empieza otra vez en Micrófono (tu decisión del 17/11, AR-15 #8). */
+function setTunerMode(modo){
   state.tunerMode = modo === 'mic' ? 'mic' : 'ear';
-  if (elegido){ state.tunerPick = true; save(); }
   document.querySelectorAll('#tuner-mode button').forEach(b => {
     const on = b.dataset.v === state.tunerMode;
     b.classList.toggle('on', on); b.setAttribute('aria-pressed', on);
@@ -400,8 +398,9 @@ function setTunerMode(modo, elegido){
   if (state.tunerMode !== 'mic') stopMic();
   else if (!mic.analyser) showMicPanel(micUnavailable());
 }
-/** El modo con el que abre el afinador: el que elegiste o, si nunca elegiste, el que se pueda usar. */
-const tunerModeInicial = () => state.tunerPick ? state.tunerMode : (micUnavailable() ? 'ear' : 'mic');
+/** El modo con el que abre el afinador: Micrófono donde se puede usar y De oído
+ *  donde no (el archivo con doble clic, una web sin https): F5.8 #2. */
+const tunerModeInicial = () => micUnavailable() ? 'ear' : 'mic';
 
 function setMicString(v){
   mic.string = v;
@@ -428,7 +427,7 @@ function labelMicStrings(){
 function bindMicTuner(){
   drawGauge();
   labelMicStrings();
-  document.querySelectorAll('#tuner-mode button').forEach(b => b.addEventListener('click', () => setTunerMode(b.dataset.v, true)));
+  document.querySelectorAll('#tuner-mode button').forEach(b => b.addEventListener('click', () => setTunerMode(b.dataset.v)));
   document.querySelectorAll('#mic-string button').forEach(b => b.addEventListener('click', () => setMicString(b.dataset.v)));
   document.getElementById('mic-start').addEventListener('click', startMic);
   document.getElementById('mic-stop').addEventListener('click', stopMic);

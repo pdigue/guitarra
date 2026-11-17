@@ -1,6 +1,6 @@
 # Trasteando — Compatibilidad entre sistemas operativos
 
-**Versión:** 1.17 · **Fecha:** 17 de noviembre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
+**Versión:** 1.18 · **Fecha:** 17 de noviembre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
 
 La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este documento lista cada capacidad del navegador que usa o usará, cómo se comporta en cada sistema y qué hace la app donde falta. Se revisa en cada etapa que añada una capacidad nueva.
 
@@ -42,6 +42,7 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 | CSS `grid` y `display: contents` | Disposición en vertical, en horizontal y amplia (F3.2) | ✅ | ✅ | ✅ Safari 11.1+ | Todos los navegadores de referencia lo tienen |
 | CSS `position: sticky` | Zoom siempre a la vista en el panel horizontal (0.3.0) | ✅ | ✅ | ✅ | Si faltara, el zoom se alcanza desplazando el panel |
 | CSS `:has()` | Cursor de mano en las filas de Ajustes con interruptor (0.3.1); centrar el punto único del metrónomo en 1/4 (0.5.4) | ✅ | ✅ | ✅ Safari 15.4+ | Sin él, la fila funciona igual; solo no cambia el cursor |
+| Consultas de contenedor (`container-type`, unidad `cqw`) | Que la barra del metrónomo en horizontal se acorte lo justo para abrirse 30°, como en vertical (MT-06, 0.6.16) | ✅ | ✅ | ✅ Safari 16+ | Sin ellas, la barra ocupa todo el alto y se abre algo menos (lo calcula `amplitudPendulo()`), como hasta la 0.6.15 |
 | `scrollIntoView` con opciones | Que la casilla con el foco del teclado se vea (0.3.1) | ✅ | ✅ | ✅ | Sin opciones, el navegador desplaza igualmente al dar el foco |
 | Golpes programados en el reloj de audio (`OscillatorNode`, `currentTime`) | Metrónomo exacto (MT-04, 0.5.4) | ✅ | ✅ | ✅ | Parte de Web Audio. Si el audio se rehace (iOS), el metrónomo se para en vez de sonar a destiempo |
 | Saber qué se oye ahora (`getOutputTimestamp()`; si no, `outputLatency` y `baseLatency`) | Que la luz y el péndulo del metrónomo vayan con el clic que se oye, no con el que se calcula (MT-04, 0.6.7) | ✅ | ✅ | ⚠️ `getOutputTimestamp` y `baseLatency` desde Safari 14.1; con auriculares Bluetooth, por confirmar en tu prueba | Se detecta qué hay: medida del navegador, latencias declaradas o, sin nada, el reloj de audio como antes (como mucho, 0,5 s de corrección) |
@@ -67,7 +68,8 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.17** | 17/11/2026 | F6.4 (0.6.14): fila nueva, abrir la política de privacidad en una pestaña nueva; sin aviso para girar (orientación y tipo de puntero). |
+| **1.18** | 17/11/2026 | F5.8 #11 (0.6.16): fila nueva, consultas de contenedor (`cqw`) para la barra del metrónomo en horizontal. |
+| 1.17 | 17/11/2026 | F6.4 (0.6.14): fila nueva, abrir la política de privacidad en una pestaña nueva; sin aviso para girar (orientación y tipo de puntero). |
 | 1.16 | 16/11/2026 | Tu comentario del 16/11 (0.6.12): zonas seguras en el zoom de inicio y `overscroll-behavior` en el raíl. Y `comprobar-disposicion.js` simula las zonas seguras del iPhone con Chromium (`Emulation.setSafeAreaInsetsOverride`). |
 | 1.15 | 16/11/2026 | Tu comentario del 16/11 (0.6.10): `text-size-adjust`, para que el iPhone no agrande el texto al girarlo; medir el texto de las pistas para que quepa, `ResizeObserver` para volver a medir y `max()` en CSS. |
 | 1.14 | 16/11/2026 | F6.3 (0.6.9, instalable): el manifiesto propio y los iconos PNG, en uso; Firefox de escritorio no instala; el iPhone toma el icono de `apple-touch-icon`; la pantalla de arranque de Android, oscura también con el tema claro. |
