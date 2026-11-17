@@ -3,7 +3,7 @@
 Todo lo que Trasteando usa y no hemos creado nosotros, de dónde sale y con qué
 licencia. Lo exige el requisito **G-06** y, para el audio, **S-07**.
 
-**Última revisión:** 21/10/2026 (recortes para el banco del afinador)
+**Última revisión:** 17/11/2026 (los créditos, también en la app)
 
 ---
 
@@ -22,16 +22,19 @@ de copyright y la licencia junto al código.
 
 ## Texto de atribución
 
-Este es el texto que acompaña a la app cuando se distribuya. Antes de publicar
-(F6.4) aparecerá también dentro de la app, en Ajustes.
+Este es el texto que acompaña a la app. Desde la 0.6.14 (F6.4) aparece también
+dentro de la app, en Ajustes → Acerca de, en los dos idiomas; el banco comprueba
+que dicen lo mismo (AR-24 #1, AT-23 B5).
 
-> Sonido de guitarra clásica: «ClassicalGuitar-multisampled», de quartertone
-> (freesound.org), licencia CC BY 4.0. Sonido de guitarra acústica: University
-> of Iowa Electronic Music Studios. Ambos editados por Nicholaus P. Brosowsky en
-> *tonejs-instruments* (github.com/nbrosowsky/tonejs-instruments), licencia
-> CC BY 3.0 (creativecommons.org/licenses/by/3.0). Trasteando los usa sin
-> modificar, salvo en el archivo autónomo, donde van recortados a 4,5 s con un
-> fundido final y recodificados a 128 kbps.
+> Guitarra clásica: «ClassicalGuitar-multisampled», de quartertone
+> (freesound.org/people/quartertone/packs/11573), licencia CC BY 4.0
+> (creativecommons.org/licenses/by/4.0). Guitarra acústica: grabaciones de la
+> University of Iowa Electronic Music Studios (theremin.music.uiowa.edu), de uso
+> libre. Ambas, editadas por Nicholaus P. Brosowsky en tonejs-instruments
+> (github.com/nbrosowsky/tonejs-instruments), licencia CC BY 3.0
+> (creativecommons.org/licenses/by/3.0). Se usan sin modificar, salvo en la
+> versión descargable, donde van recortadas a 4,5 s, con un fundido final, y
+> recodificadas.
 
 ---
 

@@ -71,9 +71,6 @@ document.getElementById('sheet').addEventListener('click', ev => {
   handle.addEventListener('pointercancel', end);
   handle.addEventListener('lostpointercapture', end);
 })();
-document.getElementById('rotate-close').addEventListener('click', () => {
-  state.rotateHintClosed = true; save(); updateRotateHint();
-});
 
 document.getElementById('qb-notation').addEventListener('click', toggleNotation);
 document.getElementById('qb-staff').addEventListener('click', () => {
@@ -219,7 +216,6 @@ document.getElementById('set-reset').addEventListener('click', async () => {
   buildBoard();
   syncUI();
   applyZoom();
-  updateRotateHint();          // «Restablecer» recupera el aviso para girar
   stopMic(); setMicString('auto');    // el micrófono se apaga y la cuerda vuelve a «Auto» (AT-14 #12)
   setTunerMode(tunerModeInicial());   // el afinador vuelve a su modo de fábrica
   // Escalas, ♯/♭ y nomenclatura también vuelven a lo de fábrica: sin esto, los
@@ -246,7 +242,6 @@ document.getElementById('set-reset').addEventListener('click', async () => {
 // obsoleto. Además, ya no se pisa el zoom elegido por el usuario (V-08).
 let resizeFrame = null;
 window.addEventListener('resize', () => {
-  updateRotateHint();
   if (screen === 'tuner' || screen === 'metro') return;
   if (resizeFrame) cancelAnimationFrame(resizeFrame);
   resizeFrame = requestAnimationFrame(applyZoom);
@@ -280,7 +275,6 @@ bindBoardKeys();
 clearStaff();
 syncUI();
 applyZoom();
-updateRotateHint();
 
 /**
  * Funcionar sin conexión desde la web (G-03, F6.2): se registra sw.js, el

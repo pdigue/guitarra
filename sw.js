@@ -21,7 +21,7 @@
    y eso es lo que hace que el navegador instale el Service Worker nuevo. Una
    prueba del banco exige que coincida con APP_VERSION (js/01-teoria.js). */
 
-const VERSION = '0.6.13';
+const VERSION = '0.6.15';
 const CACHE = 'trasteando-' + VERSION;
 const ESPERA_RED = 3000;   // ms que se espera a la red antes de usar la copia de la página
 
@@ -45,6 +45,7 @@ const PRECARGA = [
   ...MODULOS.map(m => 'js/' + m + '.js?v=' + VERSION),
   ...Object.entries(GRABACIONES).flatMap(([t, notas]) => notas.map(n => 'samples/' + t + '/' + n + '.mp3')),
   ...INSTALAR,
+  'privacidad.html',     // la política de privacidad (G-11, F6.4), también sin red
 ];
 
 // Direcciones completas: el alcance es la carpeta de este archivo (en la web
@@ -52,10 +53,10 @@ const PRECARGA = [
 const BASE = new URL('./', self.location).href;
 const PAGINA = new URL('index.html', BASE).href;
 const esPagina = url => url.split('?')[0] === BASE || url.split('?')[0] === PAGINA;
-// El manifiesto y los iconos no llevan ?v=, pero la caché es de una versión y
+// El manifiesto, los iconos y la política de privacidad no llevan ?v=, pero la caché es de una versión y
 // se rehace entera con la siguiente: tampoco cambian dentro de una versión.
 const esRecurso = url => url.startsWith(BASE) &&
-  /^((css|js|samples|iconos)\/|manifest\.webmanifest$)/.test(url.slice(BASE.length).split('?')[0]);
+  /^((css|js|samples|iconos)\/|manifest\.webmanifest$|privacidad\.html$)/.test(url.slice(BASE.length).split('?')[0]);
 
 self.addEventListener('install', e => {
   // addAll falla entera si falla un solo archivo: mejor no instalar que dejar

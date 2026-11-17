@@ -122,6 +122,7 @@ test('la precarga es justo lo que carga index.html más todas las grabaciones, y
   const grabaciones = Object.entries(audio.M).flatMap(([t, m]) => Object.values(m).map(([f]) => 'samples/' + t + '/' + f));
   assert.deepEqual(precarga.filter(u => u.startsWith('samples/')).sort(), grabaciones.sort());
   assert.ok(precarga.includes('index.html'));
+  assert.ok(precarga.includes('privacidad.html'), 'la política de privacidad, también sin red (G-11, F6.4)');
   for (const u of precarga) assert.ok(fs.existsSync(path.join(RAIZ, u.split('?')[0])), u + ' no existe');
 });
 

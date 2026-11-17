@@ -16,9 +16,9 @@
 <!-- El de la pestaña va dentro (es iconos/icono.svg) para que también lo tenga el autónomo;
      sin él, el navegador pide favicon.ico y da 404 (Sesión 1, A16) -->
 <link rel="icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" rx="40" fill="%23140e09"/><circle cx="90" cy="90" r="52" fill="none" stroke="%23e8a45c" stroke-width="5"/><circle cx="90" cy="90" r="40" fill="none" stroke="%236b4f30" stroke-width="3" stroke-dasharray="4 5"/><line x1="38" y1="70" x2="142" y2="70" stroke="%23e8dfd3" stroke-width="1.2"/><line x1="38" y1="78" x2="142" y2="78" stroke="%23e8dfd3" stroke-width="1.6"/><line x1="38" y1="86" x2="142" y2="86" stroke="%23e8dfd3" stroke-width="2"/><line x1="38" y1="94" x2="142" y2="94" stroke="%23e8dfd3" stroke-width="2.4"/><line x1="38" y1="102" x2="142" y2="102" stroke="%23e8dfd3" stroke-width="2.8"/><line x1="38" y1="110" x2="142" y2="110" stroke="%23e8dfd3" stroke-width="3.2"/></svg>'>
-<link rel="stylesheet" href="css/trasteando.css?v=0.6.13">
+<link rel="stylesheet" href="css/trasteando.css?v=0.6.15">
 <!-- El tema guardado, antes de pintar nada (AT-15 #3) -->
-<script src="js/00-aspecto.js?v=0.6.13"></script>
+<script src="js/00-aspecto.js?v=0.6.15"></script>
 </head>
 <body>
 
@@ -182,11 +182,6 @@
 
 </div>
 
-<!-- ============ AVISO PARA GIRAR (V-01) ============ -->
-<div class="rotate-hint" id="rotate-hint" hidden>
-  <span>&#10227; <span data-t="rotate">Gira el móvil para ver más trastes</span></span>
-  <button class="rotate-close" id="rotate-close" aria-label="Cerrar el aviso" data-t-aria="rotate.close">&#10005;</button>
-</div>
 
 <!-- ============ MÁSTIL ============ -->
 <div class="board-area" id="board-area">
@@ -402,6 +397,18 @@
   <div class="set-group">
     <button class="reset" id="set-reset" data-t="set.reset">Restablecer todos los ajustes</button>
     <button class="reset" id="set-clear-record" data-t="set.clear">Borrar los récords de racha</button>
+  </div>
+
+  <!-- Acerca de (F6.4). El enlace se abre en la misma ventana: en el iPhone, con
+       la app instalada, otra pestaña la sacaría de la app y sin red no abriría
+       (AT-23 A1); la política trae su «Volver». Solo el autónomo abre otra pestaña. privacidad (G-11), créditos de las grabaciones (G-06) y derechos. -->
+  <div class="set-group about" id="set-about">
+    <span data-t="set.about">Acerca de</span>
+    <p data-t="about.privacy">Trasteando no recoge ni envía datos personales.</p>
+    <p><a id="about-privacy" href="privacidad.html" data-t="about.privacy.link">Política de privacidad</a></p>
+    <p class="about-title" data-t="about.credits.title">Créditos del sonido</p>
+    <p class="about-small" id="about-credits" data-t="about.credits">Guitarra clásica: «ClassicalGuitar-multisampled», de quartertone (freesound.org/people/quartertone/packs/11573), licencia CC BY 4.0 (creativecommons.org/licenses/by/4.0). Guitarra acústica: grabaciones de la University of Iowa Electronic Music Studios (theremin.music.uiowa.edu), de uso libre. Ambas, editadas por Nicholaus P. Brosowsky en tonejs-instruments (github.com/nbrosowsky/tonejs-instruments), licencia CC BY 3.0 (creativecommons.org/licenses/by/3.0). Se usan sin modificar, salvo en la versión descargable, donde van recortadas a 4,5 s, con un fundido final, y recodificadas.</p>
+    <p class="about-small" data-t="about.rights">© 2026 Pablo Díaz Guerra. Todos los derechos reservados.</p>
     <p class="version" id="app-version"></p>
   </div>
 </div>
@@ -410,21 +417,21 @@
      comparten lo que declaran. herramientas/ensamblar.js los une en un solo archivo
      para dist/trasteando.html (G-08). El «?v=» lleva la versión de la app: así el
      navegador no mezcla archivos de dos versiones guardados en su caché (AT-07 #3). -->
-<script src="js/00-idioma.js?v=0.6.13"></script>
-<script src="js/01-teoria.js?v=0.6.13"></script>
-<script src="js/02-estado.js?v=0.6.13"></script>
-<script src="js/03-audio.js?v=0.6.13"></script>
-<script src="js/04-pentagrama.js?v=0.6.13"></script>
-<script src="js/05-mastil.js?v=0.6.13"></script>
-<script src="js/06-zoom.js?v=0.6.13"></script>
-<script src="js/07-adivinar.js?v=0.6.13"></script>
-<script src="js/08-afinador-referencia.js?v=0.6.13"></script>
-<script src="js/09-navegacion.js?v=0.6.13"></script>
-<script src="js/10-tono.js?v=0.6.13"></script>
-<script src="js/11-afinador-micro.js?v=0.6.13"></script>
-<script src="js/13-escalas.js?v=0.6.13"></script>
-<script src="js/14-metronomo.js?v=0.6.13"></script>
-<script src="js/15-acordes.js?v=0.6.13"></script>
-<script src="js/99-arranque.js?v=0.6.13"></script>
+<script src="js/00-idioma.js?v=0.6.15"></script>
+<script src="js/01-teoria.js?v=0.6.15"></script>
+<script src="js/02-estado.js?v=0.6.15"></script>
+<script src="js/03-audio.js?v=0.6.15"></script>
+<script src="js/04-pentagrama.js?v=0.6.15"></script>
+<script src="js/05-mastil.js?v=0.6.15"></script>
+<script src="js/06-zoom.js?v=0.6.15"></script>
+<script src="js/07-adivinar.js?v=0.6.15"></script>
+<script src="js/08-afinador-referencia.js?v=0.6.15"></script>
+<script src="js/09-navegacion.js?v=0.6.15"></script>
+<script src="js/10-tono.js?v=0.6.15"></script>
+<script src="js/11-afinador-micro.js?v=0.6.15"></script>
+<script src="js/13-escalas.js?v=0.6.15"></script>
+<script src="js/14-metronomo.js?v=0.6.15"></script>
+<script src="js/15-acordes.js?v=0.6.15"></script>
+<script src="js/99-arranque.js?v=0.6.15"></script>
 </body>
 </html>

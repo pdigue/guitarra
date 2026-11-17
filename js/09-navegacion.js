@@ -35,7 +35,6 @@ function setScreen(next){
   document.getElementById('scale-nav').hidden = !isScales;
   document.getElementById('qb-scale-all').hidden = !isScales;
   document.getElementById('qb-scale-practice').hidden = !isScales;
-  updateRotateHint();
 
   clearMarks(['active','equal','correct','wrong','reveal']);
   clearTimeout(nextTimer);
@@ -193,17 +192,6 @@ document.addEventListener('keydown', ev => {
   if (ev.key === 'Escape' && sheetIsOpen()) hideSettings();
   else if (ev.key === 'Escape' && typeof pickerAbierto === 'function' && pickerAbierto()) hidePicker();
 });
-
-/* --- Aviso para girar el móvil (V-01, interfaz.md §7) ---
-   Solo con el dedo, en vertical y en pantallas de menos de 600 px; nunca en
-   el Afinador ni en el Metrónomo, que funcionan igual en las dos orientaciones, ni
-   en Acordes, que enseña siempre los trastes 0 a 5 (AC-07). Cerrado no vuelve:
-   se guarda con los ajustes, y «Restablecer» lo recupera. */
-function updateRotateHint(){
-  const show = coarsePointer() && window.innerHeight > window.innerWidth &&
-               window.innerWidth < 600 && screen !== 'tuner' && screen !== 'metro' && screen !== 'chords' && !state.rotateHintClosed;
-  document.getElementById('rotate-hint').hidden = !show;
-}
 
 function toggleNotation(){
   state.notation = state.notation === 'latin' ? 'anglo' : 'latin';

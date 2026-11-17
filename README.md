@@ -1,14 +1,15 @@
 # Trasteando
 
 Aplicación web para aprender las notas del mástil de la guitarra, leerlas en el
-pentagrama y afinar con varias afinaciones. Proyecto personal de Pablo Díaz
-Guerra, en desarrollo local; se publicará al final del roadmap.
+pentagrama, practicar escalas y acordes, afinar y tocar con metrónomo. Proyecto personal de Pablo Díaz
+Guerra, en desarrollo, con una web de pruebas sin anunciar; se publicará al final
+del roadmap.
 
 ## Cómo abrirla
 
 | Modo | Cómo | Qué funciona |
 |---|---|---|
-| Archivo | Doble clic en `dist/trasteando.html` | Todo, sin conexión, salvo el futuro afinador por micrófono |
+| Archivo | Doble clic en `dist/trasteando.html` | Todo, sin conexión, salvo el afinador por micrófono |
 | Local | VS Code → clic derecho en `index.html` → *Open with Live Server* | Todo |
 | En el iPhone | Con Live Server encendido, abrir en Safari `http://<IP del ordenador>:5500` | Todo salvo micrófono e instalación |
 
@@ -29,9 +30,11 @@ simulado y comprueba los requisitos que se pueden verificar sin pantalla.
 guitarra/
 ├── index.html            la estructura de la app; carga css/ y js/
 ├── css/                  el estilo
-├── js/                   la lógica, un archivo por tema (00-idioma … 13-escalas y 99-arranque)
+├── js/                   la lógica, un archivo por tema (00-aspecto … 15-acordes y 99-arranque)
 ├── CHANGELOG.md          qué cambió en cada versión
 ├── CREDITOS.md           origen y licencia de lo que no es nuestro
+├── LICENSE               todos los derechos reservados (salvo las grabaciones)
+├── privacidad.html       la política de privacidad, en español e inglés
 ├── CLAUDE.md             reglas para los agentes que trabajan en el proyecto
 ├── .claude/agents/       los dos auditores, de solo lectura
 ├── docs/
@@ -48,7 +51,21 @@ guitarra/
 └── tests/                banco de pruebas automático
 ```
 
+## Privacidad
+
+Trasteando no recoge ni envía datos personales: los ajustes se quedan en el
+dispositivo y el micrófono se analiza allí mismo. Lo detalla
+[privacidad.html](privacidad.html), que también se abre desde la app (Ajustes →
+Acerca de).
+
 ## Créditos
 
 El sonido de guitarra procede de grabaciones con licencia Creative Commons. El
-detalle y el texto de atribución están en [CREDITOS.md](CREDITOS.md).
+detalle y el texto de atribución están en [CREDITOS.md](CREDITOS.md), y la app
+los muestra en Ajustes → Acerca de.
+
+## Licencia
+
+© 2026 Pablo Díaz Guerra. **Todos los derechos reservados**: el código se puede
+leer, pero no copiar ni reutilizar sin permiso (ver [LICENSE](LICENSE)). Las
+grabaciones de `samples/` conservan su licencia Creative Commons.
