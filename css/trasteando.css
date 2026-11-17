@@ -799,7 +799,7 @@ body.con-pistas .rotate-hint { display:none; }
    encajar() (js/07-adivinar.js) lo baja hasta que cabe entera, sin bajar de 20 px
    (si no, dos líneas) (16/11). El ordinal, nunca menor de 11 px. */
 .ch-hints.has-clue .chip.clue .clue-v { display:block; width:100%; text-align:center;
-  font-size:30px; line-height:1.1; white-space:nowrap; overflow:hidden; }
+  font-size:26px; line-height:1.1; white-space:nowrap; overflow:hidden; }   /* 30 hasta la 0.6.12: destacaba demasiado (17/11) */
 .ch-hints.has-clue .chip.clue .clue-v.wrap { white-space:normal; line-height:1.05; }
 /* Cuerdas: el número, grande; «st», «nd», «rd», «th», pequeños y arriba. La «ª»
    ya es una letra volada: solo se achica un poco. */
@@ -819,7 +819,7 @@ html:lang(es) .clue-v .ord small { font-size:.75em; vertical-align:baseline; mar
   .ch-hints.has-clue .chip.clue { flex:none; min-height:0; padding:2px 3px 3px; border-radius:12px; }
   body[data-screen="guess"] .panel { padding-left:6px; padding-right:6px; }
   .ch-hints.has-clue .chip.clue .clue-k { font-size:9.5px; line-height:12px; }
-  .ch-hints.has-clue .chip.clue .clue-v { font-size:26px; }
+  .ch-hints.has-clue .chip.clue .clue-v { font-size:23px; }
   /* Y para que el pentagrama siga a la vista: la racha, al lado de ▶ y no en
      una fila propia debajo (se parte en dos líneas si hace falta). */
   .ch-main .stats { flex:1 1 0; min-width:0; text-align:right; }
@@ -857,7 +857,7 @@ body[data-screen="guess"] .note-oct { margin-top:0; }
   .ch-hints.has-clue .chip.clue { min-height:72px; border-radius:16px; }
   .ch-hints.has-clue .giveup { flex:0 0 auto; align-self:stretch; padding:0 22px; }
   .ch-hints.has-clue .chip.clue .clue-k { font-size:12px; line-height:15px; }
-  .ch-hints.has-clue .chip.clue .clue-v { font-size:44px; }
+  .ch-hints.has-clue .chip.clue .clue-v { font-size:38px; }
   .display:not(.hidden) { flex:0 1 230px; max-height:none; }   /* cede antes que el mástil */
   .display-inner { padding:10px 24px; gap:24px; justify-content:center; }
   .staff-wrap { flex:0 1 560px; }

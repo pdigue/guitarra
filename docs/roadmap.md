@@ -9,7 +9,7 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** F6 (F6.2 y F6.3 hechas; sigue F6.4), con F5.8 a falta de tu prueba en el móvil. `main` tiene la `0.6.11`; `auto/F5.8-respuesta` (F5.8 #10), la `0.6.12`.
+📍 **Estás aquí:** F6 (F6.2 y F6.3 hechas; sigue F6.4), con F5.8 a falta de tu prueba en el móvil. `main` tiene la `0.6.11`; `auto/F5.8-respuesta` (F5.8 #10), la `0.6.13`.
 
 **Leyenda:** ⬜ pendiente · ⏳ en curso · 🔨 hecha, sin tu prueba · ✅ validada · 📅 en una sesión contigo · ⏸ en pausa
 
@@ -40,7 +40,7 @@ Un bloque de trabajo por comentario, cada uno en su conversación (regla de `CLA
 | **#6** · Acordes | Menos a la vista; el dibujo como protagonista: se elige con dos filas, la nota y el tipo, y el mástil enseña en grande los trastes 0 a 5 | AC-07 (nuevo) · AC-03 y AC-06 (retirados) · AC-01 | 🔨 `0.6.6`, fusionado (PR #21) · a falta de tu prueba |
 | **#7** · Metrónomo | Medido y corregido: 300 ms programados por adelantado (no se pierden golpes con tirones de hasta 0,25 s), los cambios y Parar rehacen lo ya apuntado, y la luz y el péndulo van con lo que se oye (latencia de salida descontada) | MT-04 | 🔨 `0.6.7`, PR #22 · a falta de tu prueba |
 | **#9** · Pistas (16/11) | Que las pistas de Adivinar se lean enteras: la respuesta se mide y se ajusta (sin «…»), las cuerdas en números con el ordinal pequeño, en horizontal apiladas; el iPhone ya no agranda el texto al girarlo | J-06 | 🔨 `0.6.10`, PR #25 · a falta de tu prueba |
-| **#10** · Controles a la vista (16/11) | «Ver la respuesta» ya no se sale en horizontal; en vertical, con pistas, las pestañas no se salen; zoom de inicio con las zonas seguras; raíl desplazable; aviso de fallo, «✗ ¡Prueba otra vez!» | J-14 (nuevo) · J-06, V-01, V-04, G-05 | 🔨 `0.6.12`, PR #26 · a falta de tu prueba |
+| **#10** · Controles a la vista (16/11) | «Ver la respuesta» ya no se sale en horizontal; en vertical, con pistas, las pestañas no se salen; zoom de inicio con las zonas seguras; raíl desplazable; aviso de fallo, «✗ ¡Prueba otra vez!» | J-14 (nuevo) · J-06, V-01, V-04, G-05 | 🔨 `0.6.12` y `0.6.13` (V-12, pistas de 26 px), PR #26 · a falta de tu prueba |
 | **#8** · Propuestas | Las que apruebes (afinador cromático, Adivinar por niveles, reto inverso, rasgueo, arpegio y favoritos) | nuevos | ⬜ espera tu «sí» |
 
 **Comentarios de F5.8** (AR-14 #5). La lista se cierra cuando lo digas o al empezar F5.9. Cada fila guarda tu comentario tal cual, qué aprobaste antes de programar y qué solo se te explicó.
@@ -110,10 +110,11 @@ En esta fase no se añade funcionalidad.
 
 | Decisión | Bloquea | Plazo |
 |---|---|---|
-| Licencia del código | F6.4 | Antes de F6.4 |
+| ~~Licencia del código~~ | F6.4 | Decidida el 17/11: todos los derechos reservados; repositorio público (la web de pruebas de GitHub es gratis solo así); *issues* desactivados; privacidad sin contacto hasta F7 |
 | Tiendas y orden | F7.4 | Antes de F7.4 |
 | Péndulo: 13° en horizontal o varilla más corta; ↑ sube el tempo o la pesa (AR-14 #2, #8) | — | Cuando quieras |
 | Propuestas de F5.8 #8 | F5.8 #8 | Cuando quieras |
+| **Idea para después de la 1.0 (17/11):** cuentas de usuario (correo o Google), preferencias y récords guardados en la nube y ranking con amigos. Necesita un servidor con base de datos y política de privacidad con contacto; si se hace, también repositorio privado y un hospedaje que publique desde él | — | Después de F7 |
 
 | Riesgo | Señal de alarma | Plan |
 |---|---|---|

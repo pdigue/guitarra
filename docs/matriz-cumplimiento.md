@@ -1,11 +1,13 @@
 # Trasteando — Matriz de cumplimiento de requisitos
 
-**Versión:** 2.9 · **Fecha:** 16 de noviembre de 2026 · **Base:** `requisitos.md` v2.9 · app `0.6.12` · `roadmap.md` v4.9  
+**Versión:** 2.10 · **Fecha:** 17 de noviembre de 2026 · **Base:** `requisitos.md` v2.10 · app `0.6.13` · `roadmap.md` v4.9  
 **Cliente:** Pablo Díaz Guerra · **Proveedor:** chat de Desarrollo · **Verificación independiente:** auditores
 
 > Versión en texto de `matriz-cumplimiento.xlsx`, para que los auditores puedan leerla. El texto de cada requisito está en `requisitos.md`; aquí va cómo se demuestra que se cumple. El historial hasta la 1.25 está en `docs/historico/matriz-cumplimiento.md`.
 
 **Métodos:** I inspección · A análisis · D demostración · T prueba. **Regla de cierre:** una etapa se cierra cuando todos sus requisitos están en *Cumple* y *Verificado*.
+
+**Cambios en la 2.10** (17/11/2026): Tus respuestas del 17/11: V-12 nuevo (controles a la vista en toda la app), con comprobar-disposicion como evidencia; J-14, pistas de 26 px; V-01, aprobado lo de esconder el aviso con pistas.
 
 **Cambios en la 2.9** (16/11/2026): Tu comentario y tu respuesta del 16/11: J-14 nuevo (las pistas se leen enteras y ningún control queda fuera de la pantalla), con el criterio que tenía J-06 y lo de la 0.6.12; verificado parcialmente hasta tu prueba. J-06, criterio de origen (validado en la Sesión 1, E04). V-01 y V-04, criterio y evidencia, y G-05, evidencia (comprobar-disposicion con zonas seguras y estados, 81 pantallas en los dos idiomas). Con AR-23 y AT-22.
 
@@ -29,7 +31,7 @@
 
 | Total | Cumple | Cumple parcialmente | No cumple | No aplica | Verificados | Verificados parcialmente |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 119 | 102 | 7 | 4 | 6 | 49 | 33 |
+| 120 | 103 | 7 | 4 | 6 | 49 | 34 |
 
 | ID | Etapa | Método | Criterio de aceptación | Declaración | Evidencia | Verificación | Origen |
 |---|---|:---:|---|---|---|---|---|
@@ -141,6 +143,7 @@
 | **V-09** | F1.3 | T | El modo Guía mantiene visibles solo los números de los trastes con marca. | Cumple | Banco (node --test) · F1.1 #11 · Sesión 1: A11 | Verificado | AR-01 |
 | **V-10** | F5.8 | T | Ajustes › Aspecto ofrece Madera, Automático y Partitura; Madera es el de fábrica; la elección se guarda y un valor desconocido vuelve a Madera; Automático sigue al dispositivo, también si cambia con la app abierta, y es oscuro si el navegador no sabe decirlo; en un tema claro el pentagrama y la nota usan la tinta del texto, también tras cambiar de tema con una nota escrita; en los cuatro aspectos (Madera, Automático oscuro y claro, Partitura) todo texto pasa comprobar-accesibilidad con los umbrales de G-05; y el cliente aprueba el aspecto en su iPhone. | Cumple | Banco (node --test): temas, Automático (con y sin matchMedia), tinta al cambiar de tema · comprobar-accesibilidad con TEMA y ESQUEMA en los cuatro aspectos · elección del cliente el 15/11 (Madera de fábrica) | Verificado parcialmente | Cliente · 12/11 (F5.8 #3) |
 | **V-11** | F5.8 | D | Con área útil de 700 × 600 px o más: cuerdas de 40 a 80 px con el dedo (30 a 80 con ratón), el mástil a lo sumo de 420 px de alto con el dedo y 380 con ratón; el pentagrama, hasta 230 px; pestañas en la cabecera desde 1100 px de ancho y en su fila por debajo, sin pisar el nombre ni Ajustes; nada se sale de la pantalla. Pantallas: iPad 820 × 1180, 744 × 1133, 1180 × 820, 1024 × 768 y 1133 × 670 (iPad mini en horizontal con las barras de Safari) con el dedo; ordenador 1440 × 900 y 1280 × 620 con ratón. | Cumple | comprobar-disposicion: las pantallas de tableta y ordenador del criterio (con Adivinar, Libre, Metrónomo, Acordes y Ajustes), en español e inglés | Verificado parcialmente | Cliente · 12/11 (F5.8 #3) |
+| **V-12** | F5.8 | D | En las pantallas de comprobar-disposicion (iPhone con Safari y el SE, iPhone 15 Pro y Pro Max instalados con sus zonas seguras en las dos orientaciones, Android simulado, iPad y ordenador) y sus estados (cada área; Ajustes; la ventana del compás; Adivinar con pistas y tras un fallo; Escalas practicando), en español y en inglés: ningún control fuera de la pantalla, bajo una zona segura ni recortado por una caja; lo que queda por debajo en el raíl, el panel o una hoja que se desplazan cuenta como a la vista. | Cumple | comprobar-disposicion.js, 0.6.13: 81 pantallas en español y en inglés, todo correcto (con la 0.6.11, 14 fallos). Solo Chromium: falta Safari, en tu iPhone | Verificado parcialmente | Cliente · 16/11 (AR-22 #5) |
 | **C-01** | F1.1 | D | El botón de Ajustes abre el panel desde cualquier pantalla y Escape lo cierra. | Cumple | F1.1 #14 · Sesión 1: A19 y C05 | Verificado | Cliente · listado 14/09 |
 | **C-02** | F1.1 · F5.8 | I | El panel contiene todos los ajustes listados, el idioma (0.4.2), el tema (0.6.3) y la versión de la app. | Cumple | F1.1 #12 · Banco (node --test): grupos Idioma y Aspecto | Pendiente | Cliente · listado 14/09 |
 | **C-03** | F1.1 | D | Nomenclatura, pentagrama y pistas tienen chips de acceso rápido. | Cumple | F1.1 #14 | Pendiente | Cliente · listado 14/09 |

@@ -8,7 +8,8 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.6.12** | 16/11/2026 | F5.8 · #10, ningún control fuera de la pantalla | `auto/F5.8-respuesta` (PR #26) |
+| **0.6.13** | 17/11/2026 | F5.8 · #10, tus respuestas: V-12 y pistas algo más pequeñas | `auto/F5.8-respuesta` (PR #26) |
+| 0.6.12 | 16/11/2026 | F5.8 · #10, ningún control fuera de la pantalla | `auto/F5.8-respuesta` (PR #26) |
 | 0.6.11 | 16/11/2026 | F5.8 · #9, pistas en una línea y frase del reto más corta | `main`, fusionada el 16/11 (PR #25) |
 | 0.6.10 | 16/11/2026 | F5.8 · #9, las pistas de Adivinar se leen enteras | `main`, fusionada el 16/11 (PR #25) |
 | 0.6.9 | 16/11/2026 | F6.3 · instalable: manifiesto e iconos | `main`, fusionada el 16/11 (PR #24) |
@@ -27,6 +28,21 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.6.13] — 17/11/2026 · F5.8 · Tus respuestas a la auditoría AR-23
+
+Tus respuestas del 17/11: la regla general de los controles, sí; el aviso para girar, que no esté con pistas («si alguien quiere girar el móvil, que lo gire»); y de las pistas, «reducir ligeramente el tamaño… igual destaca un poco demasiado».
+
+### Cambiado
+- **J-14** · Las respuestas de las pistas parten de **26 px** en el móvil (antes 30), 23 en horizontal (antes 26) y 38 en tableta (antes 44). Siguen sin bajar de 20 px, el de la nota que tocas. En un iPhone con Safari, el pentagrama gana sitio: de 60 a 65 px tras un fallo con pistas. En tu Pro Max y en el 15 Pro instalados ya tenía sus 140 px, como en tu foto.
+- **V-12, nuevo** · En ninguna área ni estado un control queda fuera de la pantalla, bajo una zona segura ni recortado (AR-23 #2). Su evidencia, `comprobar-disposicion.js`.
+- **V-01** · Esconder el aviso para girar con pistas, aprobado (AR-23 #6).
+- **Requisitos y matriz v2.10.**
+
+### Comprobado
+- `comprobar-pistas.js`: 126 de 126. `comprobar-disposicion.js`: 81 pantallas, en español y en inglés, todo correcto. Banco: 234 de 234.
 
 ---
 

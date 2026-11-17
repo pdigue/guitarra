@@ -127,7 +127,7 @@ function renderClues(){
  *  con 4 o 5 cuerdas en inglés no cabía: salía «1st 2nd 3rd …», y en el panel
  *  estrecho del horizontal, nada. Ahora se mide de verdad: scrollWidth es lo
  *  que el texto necesita y clientWidth, lo que el recuadro le da. Se parte del
- *  tamaño del CSS (30 px en el móvil, 44 en tableta), se calcula de una vez el
+ *  tamaño del CSS (26 px en el móvil, 38 en tableta; desde la 0.6.13), se calcula de una vez el
  *  que cabría (una regla de tres) y se afina de 1 en 1.
  *  Nunca baja de ENCAJE_MIN, 20 px: es el tamaño de la nota que tocas (J-01), y
  *  lo que buscas no debe verse más pequeño que lo que tocas (tu #4, AR-22 #1).
