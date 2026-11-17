@@ -20,7 +20,7 @@
 //   recortado por una caja; solo puede quedar por debajo en una caja que se
 //   desplaza en vertical, como el panel en horizontal (16/11: «Ver la respuesta»
 //   se salía del panel en el iPhone y esto no lo miraba);
-// - que el aviso para girar sale donde debe y solo ahí (V-01).
+// - que no hay aviso para girar en ninguna pantalla (V-01: se quitó en la 0.6.14).
 // Cada pantalla puede llevar zonas seguras (las de un iPhone con isla, simuladas
 // con Emulation.setSafeAreaInsetsOverride de Chromium) y un estado de la app
 // (p. ej. Adivinar tras un fallo, con las dos pistas). Ver ESTADOS.
@@ -38,26 +38,26 @@ const APP = 'file://' + path.join(RAIZ, process.env.APP_HTML || 'index.html');
 const SALIDA = process.argv[2] || path.join(RAIZ, 'docs', 'verificaciones', 'img', 'F3.2');
 const MIN = 40;
 
-// nombre, ancho, alto, dedo, área, si debe salir el aviso para girar y si se abre Ajustes
+// nombre, ancho, alto, dedo, área, si debe salir el aviso para girar (desde la 0.6.14, nunca) y si se abre Ajustes
 const PANTALLAS = [
   ['iphone-safari-horizontal-libre',    750, 342, true,  'free',  false],
   ['iphone-safari-horizontal-adivinar', 750, 342, true,  'guess', false],
   ['iphone-instalada-horizontal',       844, 390, true,  'free',  false],
   ['android-chrome-horizontal-adivinar',780, 280, true,  'guess', false],
-  ['iphone-safari-vertical-libre',      390, 664, true,  'free',  true ],
-  ['iphone-safari-vertical-adivinar',   390, 664, true,  'guess', true ],
+  ['iphone-safari-vertical-libre',      390, 664, true,  'free',  false ],
+  ['iphone-safari-vertical-adivinar',   390, 664, true,  'guess', false ],
   ['iphone-safari-vertical-afinador',   390, 664, true,  'tuner', false],
   ['iphone-safari-horizontal-afinador', 750, 342, true,  'tuner', false],
   ['windows-1280',                     1280, 720, false, 'free',  false],
   ['windows-estrecha',                  500, 700, false, 'guess', false],
   // Pantallas bajas (AR-05 #1, AT-04 #1): la navegación no puede salirse.
-  ['iphone-se-safari-vertical-adivinar', 375, 553, true,  'guess', true ],
-  ['android-pequeno-vertical-libre',     360, 560, true,  'free',  true ],
+  ['iphone-se-safari-vertical-adivinar', 375, 553, true,  'guess', false ],
+  ['android-pequeno-vertical-libre',     360, 560, true,  'free',  false ],
   // Escalas (F5): tarjeta con submodo, tónica y tipo, y el paso a paso bajo el mástil.
-  ['iphone-safari-vertical-escalas',    390, 664, true,  'scales', true ],
-  ['iphone-se-safari-vertical-escalas', 375, 553, true,  'scales', true ],
+  ['iphone-safari-vertical-escalas',    390, 664, true,  'scales', false ],
+  ['iphone-se-safari-vertical-escalas', 375, 553, true,  'scales', false ],
   ['iphone-safari-horizontal-escalas',  750, 342, true,  'scales', false],
-  // Metrónomo (F5.6): área propia, sin aviso para girar; y su ventana de compás.
+  // Metrónomo (F5.6): área propia; y su ventana de compás.
   ['iphone-safari-vertical-metronomo',   390, 664, true,  'metro', false],
   ['iphone-se-safari-vertical-metronomo',375, 553, true,  'metro', false],
   ['iphone-safari-horizontal-metronomo', 750, 342, true,  'metro', false],
@@ -90,7 +90,7 @@ const PANTALLAS = [
   ['windows-1280-ventana-adivinar',     1280, 620, false, 'guess', false],
   ['windows-1280-ventana-acordes',      1280, 620, false, 'chords', false],
   // Ajustes abierto: sus controles también miden 40 px (AR-05 #3).
-  ['iphone-safari-vertical-ajustes',     390, 664, true,  'free',  true,  true],
+  ['iphone-safari-vertical-ajustes',     390, 664, true,  'free',  false,  true],
   ['iphone-safari-horizontal-ajustes',   750, 342, true,  'free',  false, true],
   // Estados que cambian el panel: Adivinar tras un fallo, con las dos pistas
   // (aparece «Ver la respuesta»), y Escalas practicando.
@@ -119,10 +119,10 @@ const PANTALLAS = [
       [`iphone-${m}-instalada-horizontal-acordes`,  w, h, true, 'chords', false, false, hz],
       [`iphone-${m}-instalada-horizontal-ajustes`,  w, h, true, 'free',   false, true,  hz],
       [`iphone-${m}-instalada-vertical-adivinar-fallo`, h, w, true, 'guess', false, false, { ...vt, estado: 'fallo' }],
-      [`iphone-${m}-instalada-vertical-escalas-practica`, h, w, true, 'scales', true, false, { ...vt, estado: 'practica' }],
+      [`iphone-${m}-instalada-vertical-escalas-practica`, h, w, true, 'scales', false, false, { ...vt, estado: 'practica' }],
       [`iphone-${m}-instalada-vertical-metronomo-compas`, h, w, true, 'metro', false, false, vt],
       [`iphone-${m}-instalada-vertical-acordes`,    h, w, true, 'chords', false, false, vt],
-      [`iphone-${m}-instalada-vertical-ajustes`,    h, w, true, 'free',   true,  true,  vt],
+      [`iphone-${m}-instalada-vertical-ajustes`,    h, w, true, 'free',   false, true,  vt],
     ];
   }),
 ];
@@ -180,7 +180,7 @@ const ESTADOS = {
         return a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom; };
       const barra = document.querySelector('.tabbar');
       out.pisa = ['.brand', '#btn-settings'].filter(q => choca(barra, document.querySelector(q)));
-      out.aviso = !document.getElementById('rotate-hint').hidden && vis(document.getElementById('rotate-hint'));
+      out.aviso = !!document.querySelector('.rotate-hint, #rotate-hint');   // ya no existe (0.6.14)
       const disp = document.getElementById('display');
       if (vis(disp) && !disp.classList.contains('hidden')) out.pentagrama = disp.getBoundingClientRect().height;
       out.pequenos = [...document.querySelectorAll('button, select, [role="switch"]')].filter(vis).filter(b => {
@@ -189,7 +189,7 @@ const ESTADOS = {
                   Math.round(b.getBoundingClientRect().width) + '×' + Math.round(b.getBoundingClientRect().height));
       // Lo que se sale de la pantalla. El panel en horizontal puede desplazarse
       // por dentro (interfaz.md §7), así que lo que cuenta es el propio panel.
-      out.fuera = [...document.querySelectorAll('.header, .quickbar, .challenge, .scales-card, .sc-nav, .display, .zoombar, .rotate-hint, .board-area, .tabbar, .tuner, .metro, .chords-card, .panel, .brand')]
+      out.fuera = [...document.querySelectorAll('.header, .quickbar, .challenge, .scales-card, .sc-nav, .display, .zoombar, .board-area, .tabbar, .tuner, .metro, .chords-card, .panel, .brand')]
         .filter(vis).filter(e => {
           if (e.closest('.panel') && getComputedStyle(document.getElementById('panel')).display !== 'contents') return false;
           const r = e.getBoundingClientRect();

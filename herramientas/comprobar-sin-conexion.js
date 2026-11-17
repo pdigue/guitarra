@@ -71,7 +71,9 @@ const anotar = (ok, que, detalle = '') => { resultados.push({ ok, que, detalle }
     const mf = path.join(REPO, 'manifest.webmanifest');
     const instalar = fs.existsSync(mf) ? 1 + JSON.parse(fs.readFileSync(mf, 'utf8')).icons.length
       + (/rel="apple-touch-icon" href="iconos\//.test(html) ? 1 : 0) : 0;
-    const esperado = 1 + (html.match(/(?:src|href)="[^"]+\?v=/g) || []).length + grabaciones + instalar;
+    // Y la política de privacidad, si la página la enlaza (G-11, F6.4).
+    const privacidad = /href="privacidad\.html"/.test(html) ? 1 : 0;
+    const esperado = 1 + (html.match(/(?:src|href)="[^"]+\?v=/g) || []).length + grabaciones + instalar + privacidad;
     anotar(precarga === esperado, 'con conexión, el Service Worker guarda la app entera', `${precarga} de ${esperado} archivos en trasteando-${version}, en ${Date.now() - t0} ms`);
 
     // 3. Sin red, como en modo avión, y volver a abrirla.

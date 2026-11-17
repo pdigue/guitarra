@@ -421,8 +421,8 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   font-size:14px; font-weight:700; white-space:nowrap; background:var(--surface2); border:1px solid var(--line2); color:var(--text); }
 .chord-chip.on { background:var(--amber); border-color:var(--amber); color:var(--on-accent); }
 .chord-chip:disabled { opacity:.35; cursor:default; }
-/* El dibujo es lo principal (AC-07): en Acordes no hay pentagrama, ni zoom, ni
-   aviso para girar; el mástil enseña los trastes 0 a 5 y no se desplaza. */
+/* El dibujo es lo principal (AC-07): en Acordes no hay pentagrama ni zoom;
+   el mástil enseña los trastes 0 a 5 y no se desplaza. */
 body[data-screen="chords"] .display, body[data-screen="chords"] .zoombar,
 body[data-screen="chords"] #qb-staff { display:none; }
 body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
@@ -549,19 +549,12 @@ body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
 .tab:disabled { opacity:.35; cursor:default; }
 .tab-settings { display:none; }   /* solo en el raíl, en horizontal */
 
-/* ===== AVISO PARA GIRAR (V-01) ===== */
-.rotate-hint { flex-shrink:0; display:flex; align-items:center; justify-content:space-between;
-  gap:6px; margin:6px 8px 0; padding:0 0 0 12px; border:1px dashed var(--line2);
-  border-radius:10px; font-size:12.5px; color:var(--muted); }
-.rotate-close { background:none; border:none; color:var(--muted); width:40px; height:40px;
-  font-size:15px; cursor:pointer; flex-shrink:0; }
-
 /* ===== ORDEN EN LA COLUMNA (vertical y amplia) =====
    El panel no crea caja propia (display:contents): sus piezas se colocan entre
    las demás con order. En horizontal pasa a ser la columna de la derecha. */
 .panel { display:contents; }
 .header { order:1; } .quickbar { order:2; } .challenge { order:3; } .display { order:4; }
-.rotate-hint { order:5; } .board-area { order:6; } .sc-nav, .zoombar { order:7; } .tuner, .metro { order:8; }
+.board-area { order:6; } .sc-nav, .zoombar { order:7; } .tuner, .metro { order:8; }
 .scales-card, .chords-card { order:3; }
 .tabbar { order:9; }
 
@@ -618,6 +611,11 @@ body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
   border-radius:50%; background:var(--muted); transition:transform .18s, background .18s; }
 .sw.on::before { background:var(--amber); border-color:var(--amber); }
 .sw.on::after { transform:translateX(19px); background:var(--on-accent); }
+/* Acerca de (F6.4): texto que se lee, no controles; el enlace, con 44 px para el dedo. */
+.about p { margin:0 0 8px; font-size:13px; line-height:1.45; color:var(--muted); }
+.about .about-title { margin-top:12px; color:var(--text); font-size:12.5px; font-weight:700; }
+.about .about-small { font-size:11.5px; overflow-wrap:anywhere; }
+.about a { display:inline-flex; align-items:center; min-height:44px; color:var(--amber); font-weight:700; }
 .version { text-align:center; font-size:11px; color:var(--faint); margin:14px 0 0;
   font-variant-numeric:tabular-nums; }
 .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
@@ -645,7 +643,7 @@ body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
 @media (orientation:landscape) and (max-height:520px){
   body { display:grid; grid-template-columns:64px minmax(0,1fr) 176px;
          grid-template-rows:minmax(0,1fr); padding-bottom:env(safe-area-inset-bottom); }
-  .header, .rotate-hint { display:none; }
+  .header { display:none; }
   .tabbar { grid-column:1; grid-row:1; flex-direction:column; justify-content:flex-start;
             gap:2px; border-top:none; border-right:1px solid var(--line); padding:6px 0; }
   /* Un destino por área y ⚙: con seis áreas, 7 × 44 px caben en los 342 px del iPhone (interfaz §7b). */
@@ -799,9 +797,6 @@ html[data-scheme="light"] .challenge-text b { color:var(--text) !important; }
 /* Las pistas, en su fila; «Ver la respuesta», si aparece, en la de debajo: en la
    misma fila dejaba a cada pista con 80 px y las cuerdas no cabían (16/11). */
 .ch-hints.has-clue { row-gap:4px; }
-/* Con las pistas encendidas, el aviso para girar se esconde: ocupan su sitio, y
-   vuelve al apagarlas (16/11). */
-body.con-pistas .rotate-hint { display:none; }
 .ch-hints.has-clue .giveup { flex:1 0 100%; order:9; }
 /* Con las dos pistas, la nota («Fa#4») ocupa lo que necesita, con un mínimo, y
    el resto es para las cuerdas, que pueden ser seis («1st 2nd 3rd 4th 5th 6th»). */
@@ -1089,11 +1084,6 @@ try {
 
 </div>
 
-<!-- ============ AVISO PARA GIRAR (V-01) ============ -->
-<div class="rotate-hint" id="rotate-hint" hidden>
-  <span>&#10227; <span data-t="rotate">Gira el móvil para ver más trastes</span></span>
-  <button class="rotate-close" id="rotate-close" aria-label="Cerrar el aviso" data-t-aria="rotate.close">&#10005;</button>
-</div>
 
 <!-- ============ MÁSTIL ============ -->
 <div class="board-area" id="board-area">
@@ -1309,6 +1299,16 @@ try {
   <div class="set-group">
     <button class="reset" id="set-reset" data-t="set.reset">Restablecer todos los ajustes</button>
     <button class="reset" id="set-clear-record" data-t="set.clear">Borrar los récords de racha</button>
+  </div>
+
+  <!-- Acerca de (F6.4): privacidad (G-11), créditos de las grabaciones (G-06) y derechos. -->
+  <div class="set-group about" id="set-about">
+    <span data-t="set.about">Acerca de</span>
+    <p data-t="about.privacy">Trasteando no recoge ni envía datos personales.</p>
+    <p><a id="about-privacy" href="https://pdigue.github.io/guitarra/privacidad.html" target="_blank" rel="noopener" data-t="about.privacy.link">Política de privacidad</a></p>
+    <p class="about-title" data-t="about.credits.title">Créditos del sonido</p>
+    <p class="about-small" id="about-credits" data-t="about.credits">Guitarra clásica: quartertone (CC BY 4.0) y Nicholaus P. Brosowsky (CC BY 3.0).</p>
+    <p class="about-small" data-t="about.rights">© 2026 Pablo Díaz Guerra. Todos los derechos reservados.</p>
     <p class="version" id="app-version"></p>
   </div>
 </div>
@@ -1399,7 +1399,6 @@ const TEXTOS = {
     'scale.pr.done': '✓ ¡Completa! Ya tocas la posición {p} de {e}. Toca la primera para repetir',
     'zoom.less': 'Ver menos trastes', 'zoom.more': 'Ver más trastes',
     'zoom.n': '{n} trastes a la vista', 'zoom.all': 'Mástil completo',
-    'rotate': 'Gira el móvil para ver más trastes', 'rotate.close': 'Cerrar el aviso',
     'board': 'Mástil. Flechas para moverte, Intro o Espacio para tocar',
     'cell.open': '{o} cuerda, al aire', 'cell.fret': '{o} cuerda, traste {f}',
     'tuner.mode': 'Modo del afinador', 'tuner.ear': 'De oído', 'tuner.mic': 'Micrófono',
@@ -1439,6 +1438,13 @@ const TEXTOS = {
     'set.look': 'Aspecto', 'set.theme': 'Tema', 'set.theme.sub': '«Automático» sigue el modo claro u oscuro del dispositivo',
     'theme.wood': 'Madera', 'theme.auto': 'Automático', 'theme.sheet': 'Partitura',
     'set.reset': 'Restablecer todos los ajustes', 'set.clear': 'Borrar los récords de racha',
+    // Acerca de (F6.4): privacidad (G-11), créditos de las grabaciones (G-06) y derechos.
+    'set.about': 'Acerca de',
+    'about.privacy': 'Trasteando no recoge ni envía datos personales. Tus ajustes y récords se guardan solo en este dispositivo, y el sonido del micrófono se analiza aquí mismo: no se graba ni se envía.',
+    'about.privacy.link': 'Política de privacidad',
+    'about.credits.title': 'Créditos del sonido',
+    'about.credits': 'Guitarra clásica: «ClassicalGuitar-multisampled», de quartertone (freesound.org), licencia CC BY 4.0. Guitarra acústica: University of Iowa Electronic Music Studios. Ambas, editadas por Nicholaus P. Brosowsky en tonejs-instruments (github.com/nbrosowsky/tonejs-instruments), licencia CC BY 3.0 (creativecommons.org/licenses/by/3.0). Se usan sin modificar, salvo en el archivo autónomo, donde van recortadas a 4,5 s, con un fundido final, y recodificadas.',
+    'about.rights': '© 2026 Pablo Díaz Guerra. Todos los derechos reservados (salvo las grabaciones, con su propia licencia).',
     'confirm.clear': '¿Borrar los récords de racha de todas las afinaciones?',
     'confirm.reset': '¿Restablecer todos los ajustes? Tus récords se conservan.',
     'timbre.nylon': 'Guitarra clásica de cuerdas de nylon', 'timbre.acoustic': 'Guitarra acústica de cuerdas de acero',
@@ -1522,7 +1528,6 @@ const TEXTOS = {
     'scale.pr.done': '✓ Done! You can play position {p} of {e}. Play the first one to repeat',
     'zoom.less': 'Show fewer frets', 'zoom.more': 'Show more frets',
     'zoom.n': '{n} frets in view', 'zoom.all': 'Whole neck',
-    'rotate': 'Turn your phone to see more frets', 'rotate.close': 'Close this tip',
     'board': 'Fretboard. Arrow keys to move, Enter or Space to play',
     'cell.open': '{o} string, open', 'cell.fret': '{o} string, fret {f}',
     'tuner.mode': 'Tuner mode', 'tuner.ear': 'By ear', 'tuner.mic': 'Microphone',
@@ -1562,6 +1567,12 @@ const TEXTOS = {
     'set.look': 'Appearance', 'set.theme': 'Theme', 'set.theme.sub': '“Automatic” follows your device’s light or dark mode',
     'theme.wood': 'Wood', 'theme.auto': 'Automatic', 'theme.sheet': 'Sheet music',
     'set.reset': 'Reset all settings', 'set.clear': 'Clear best streaks',
+    'set.about': 'About',
+    'about.privacy': 'Trasteando does not collect or send any personal data. Your settings and records are stored only on this device, and the microphone sound is analysed right here: it is never recorded or sent.',
+    'about.privacy.link': 'Privacy policy',
+    'about.credits.title': 'Sound credits',
+    'about.credits': 'Classical guitar: "ClassicalGuitar-multisampled" by quartertone (freesound.org), licensed under CC BY 4.0. Acoustic guitar: University of Iowa Electronic Music Studios. Both edited by Nicholaus P. Brosowsky in tonejs-instruments (github.com/nbrosowsky/tonejs-instruments), licensed under CC BY 3.0 (creativecommons.org/licenses/by/3.0). Used unmodified, except in the standalone file, where they are trimmed to 4.5 s with a fade-out and re-encoded.',
+    'about.rights': '© 2026 Pablo Díaz Guerra. All rights reserved (except the recordings, which have their own licence).',
     'confirm.clear': 'Clear the best streaks of every tuning?',
     'confirm.reset': 'Reset all settings? Your best streaks are kept.',
     'timbre.nylon': 'Classical guitar with nylon strings', 'timbre.acoustic': 'Acoustic guitar with steel strings',
@@ -1633,6 +1644,11 @@ function aplicarIdioma(){
   document.querySelectorAll('[data-t-aria]').forEach(e => e.setAttribute('aria-label', t(e.dataset.tAria)));
   document.querySelectorAll('[data-t-title]').forEach(e => e.setAttribute('title', t(e.dataset.tTitle)));
   document.querySelectorAll('[data-t-placeholder]').forEach(e => e.setAttribute('placeholder', t(e.dataset.tPlaceholder)));
+  // La política de privacidad es una sola página con las dos versiones: en
+  // inglés, el enlace salta a la suya (#en). Se cambia solo lo que va tras «#»,
+  // porque en el archivo autónomo el enlace es a la web, no a un archivo vecino.
+  const priv = document.getElementById('about-privacy');
+  if (priv) priv.setAttribute('href', priv.getAttribute('href').split('#')[0] + (lang() === 'en' ? '#en' : ''));
 }
 //# sourceURL=js/00-idioma.js
 </script>
@@ -1644,7 +1660,7 @@ function aplicarIdioma(){
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.6.13';
+const APP_VERSION = '0.6.14';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -1848,7 +1864,6 @@ const DEFAULTS = {
   visibleFrets:null,      // se calcula en el primer arranque según la pantalla
   maxChallengeFret:12,    // hasta dónde llegan los retos del modo Adivinar
   records:{},             // récord de racha de cada afinación: { standard: 7, dropd: 3 } (J-11)
-  rotateHintClosed:false, // el aviso para girar, una vez cerrado, no vuelve (V-01)
   tunerMode:'mic',        // afinador: 'mic' por micrófono · 'ear' de oído (F4.3; por defecto Micrófono desde F5.8 #2)
   tunerPick:false,        // true cuando lo has elegido tú: solo entonces se recuerda
   lang:null,              // 'es' o 'en' (G-12); sin elegir, el del navegador
@@ -1894,6 +1909,7 @@ function sanitize(raw){
   if (!['es','en'].includes(s.lang)) s.lang = idiomaDelNavegador();
   if (!ESCALAS.some(e => e.id === s.scaleId)) s.scaleId = DEFAULTS.scaleId;
   if (!Number.isInteger(s.scalePc) || s.scalePc < 0 || s.scalePc > 11) s.scalePc = DEFAULTS.scalePc;
+  delete s.rotateHintClosed; // el aviso para girar se quitó en la 0.6.14 (F6.4)
   delete s.scaleMode;     // el submodo Mostrar/Práctica se quitó en la 0.6.4 (F5.8 #5)
   if (!['reveal','retry'].includes(s.onMiss)) s.onMiss = DEFAULTS.onMiss;
   if (!['madera','auto','partitura'].includes(s.theme)) s.theme = DEFAULTS.theme;
@@ -1913,7 +1929,7 @@ function sanitize(raw){
   // Quien estrena la app en inglés empieza con C D E; luego decide en Ajustes.
   if (!(raw && raw.notation) && s.lang === 'en') s.notation = 'anglo';
   if (typeof s.chordId !== 'string') s.chordId = DEFAULTS.chordId;   // si no existe, Acordes enseña el primero
-  ['showStaff','showAllNotes','showEquals','hintNote','hintString','rotateHintClosed']
+  ['showStaff','showAllNotes','showEquals','hintNote','hintString']
     .forEach(k => { s[k] = !!s[k]; });
   // fretNums sustituye al interruptor showFretNums de la 0.1.1. Quien lo tuviera
   // apagado conserva su elección al actualizar. Se mira el valor guardado (raw),
@@ -3030,8 +3046,6 @@ function renderClues(){
   const pistas = document.querySelector('.ch-hints');
   pistas.classList.toggle('has-clue', !!challenge && screen === 'guess' && (state.hintNote || state.hintString));
   pistas.classList.toggle('dos', !!challenge && screen === 'guess' && state.hintNote && state.hintString);
-  // Con pistas, el aviso para girar se esconde (css): en vertical no cabía todo (16/11).
-  document.body.classList.toggle('con-pistas', pistas.classList.contains('has-clue'));
   // Se encajan al final, con la franja ya encendida y su ancho definitivo.
   pistas.querySelectorAll('.clue-v').forEach(encajar);
 }
@@ -3333,7 +3347,6 @@ function setScreen(next){
   document.getElementById('scale-nav').hidden = !isScales;
   document.getElementById('qb-scale-all').hidden = !isScales;
   document.getElementById('qb-scale-practice').hidden = !isScales;
-  updateRotateHint();
 
   clearMarks(['active','equal','correct','wrong','reveal']);
   clearTimeout(nextTimer);
@@ -3491,17 +3504,6 @@ document.addEventListener('keydown', ev => {
   if (ev.key === 'Escape' && sheetIsOpen()) hideSettings();
   else if (ev.key === 'Escape' && typeof pickerAbierto === 'function' && pickerAbierto()) hidePicker();
 });
-
-/* --- Aviso para girar el móvil (V-01, interfaz.md §7) ---
-   Solo con el dedo, en vertical y en pantallas de menos de 600 px; nunca en
-   el Afinador ni en el Metrónomo, que funcionan igual en las dos orientaciones, ni
-   en Acordes, que enseña siempre los trastes 0 a 5 (AC-07). Cerrado no vuelve:
-   se guarda con los ajustes, y «Restablecer» lo recupera. */
-function updateRotateHint(){
-  const show = coarsePointer() && window.innerHeight > window.innerWidth &&
-               window.innerWidth < 600 && screen !== 'tuner' && screen !== 'metro' && screen !== 'chords' && !state.rotateHintClosed;
-  document.getElementById('rotate-hint').hidden = !show;
-}
 
 function toggleNotation(){
   state.notation = state.notation === 'latin' ? 'anglo' : 'latin';
@@ -5567,9 +5569,6 @@ document.getElementById('sheet').addEventListener('click', ev => {
   handle.addEventListener('pointercancel', end);
   handle.addEventListener('lostpointercapture', end);
 })();
-document.getElementById('rotate-close').addEventListener('click', () => {
-  state.rotateHintClosed = true; save(); updateRotateHint();
-});
 
 document.getElementById('qb-notation').addEventListener('click', toggleNotation);
 document.getElementById('qb-staff').addEventListener('click', () => {
@@ -5715,7 +5714,6 @@ document.getElementById('set-reset').addEventListener('click', async () => {
   buildBoard();
   syncUI();
   applyZoom();
-  updateRotateHint();          // «Restablecer» recupera el aviso para girar
   stopMic(); setMicString('auto');    // el micrófono se apaga y la cuerda vuelve a «Auto» (AT-14 #12)
   setTunerMode(tunerModeInicial());   // el afinador vuelve a su modo de fábrica
   // Escalas, ♯/♭ y nomenclatura también vuelven a lo de fábrica: sin esto, los
@@ -5742,7 +5740,6 @@ document.getElementById('set-reset').addEventListener('click', async () => {
 // obsoleto. Además, ya no se pisa el zoom elegido por el usuario (V-08).
 let resizeFrame = null;
 window.addEventListener('resize', () => {
-  updateRotateHint();
   if (screen === 'tuner' || screen === 'metro') return;
   if (resizeFrame) cancelAnimationFrame(resizeFrame);
   resizeFrame = requestAnimationFrame(applyZoom);
@@ -5776,7 +5773,6 @@ bindBoardKeys();
 clearStaff();
 syncUI();
 applyZoom();
-updateRotateHint();
 
 /**
  * Funcionar sin conexión desde la web (G-03, F6.2): se registra sw.js, el

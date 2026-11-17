@@ -61,7 +61,6 @@ const TEXTOS = {
     'scale.pr.done': '✓ ¡Completa! Ya tocas la posición {p} de {e}. Toca la primera para repetir',
     'zoom.less': 'Ver menos trastes', 'zoom.more': 'Ver más trastes',
     'zoom.n': '{n} trastes a la vista', 'zoom.all': 'Mástil completo',
-    'rotate': 'Gira el móvil para ver más trastes', 'rotate.close': 'Cerrar el aviso',
     'board': 'Mástil. Flechas para moverte, Intro o Espacio para tocar',
     'cell.open': '{o} cuerda, al aire', 'cell.fret': '{o} cuerda, traste {f}',
     'tuner.mode': 'Modo del afinador', 'tuner.ear': 'De oído', 'tuner.mic': 'Micrófono',
@@ -101,6 +100,13 @@ const TEXTOS = {
     'set.look': 'Aspecto', 'set.theme': 'Tema', 'set.theme.sub': '«Automático» sigue el modo claro u oscuro del dispositivo',
     'theme.wood': 'Madera', 'theme.auto': 'Automático', 'theme.sheet': 'Partitura',
     'set.reset': 'Restablecer todos los ajustes', 'set.clear': 'Borrar los récords de racha',
+    // Acerca de (F6.4): privacidad (G-11), créditos de las grabaciones (G-06) y derechos.
+    'set.about': 'Acerca de',
+    'about.privacy': 'Trasteando no recoge ni envía datos personales. Tus ajustes y récords se guardan solo en este dispositivo, y el sonido del micrófono se analiza aquí mismo: no se graba ni se envía.',
+    'about.privacy.link': 'Política de privacidad',
+    'about.credits.title': 'Créditos del sonido',
+    'about.credits': 'Guitarra clásica: «ClassicalGuitar-multisampled», de quartertone (freesound.org), licencia CC BY 4.0. Guitarra acústica: University of Iowa Electronic Music Studios. Ambas, editadas por Nicholaus P. Brosowsky en tonejs-instruments (github.com/nbrosowsky/tonejs-instruments), licencia CC BY 3.0 (creativecommons.org/licenses/by/3.0). Se usan sin modificar, salvo en el archivo autónomo, donde van recortadas a 4,5 s, con un fundido final, y recodificadas.',
+    'about.rights': '© 2026 Pablo Díaz Guerra. Todos los derechos reservados (salvo las grabaciones, con su propia licencia).',
     'confirm.clear': '¿Borrar los récords de racha de todas las afinaciones?',
     'confirm.reset': '¿Restablecer todos los ajustes? Tus récords se conservan.',
     'timbre.nylon': 'Guitarra clásica de cuerdas de nylon', 'timbre.acoustic': 'Guitarra acústica de cuerdas de acero',
@@ -184,7 +190,6 @@ const TEXTOS = {
     'scale.pr.done': '✓ Done! You can play position {p} of {e}. Play the first one to repeat',
     'zoom.less': 'Show fewer frets', 'zoom.more': 'Show more frets',
     'zoom.n': '{n} frets in view', 'zoom.all': 'Whole neck',
-    'rotate': 'Turn your phone to see more frets', 'rotate.close': 'Close this tip',
     'board': 'Fretboard. Arrow keys to move, Enter or Space to play',
     'cell.open': '{o} string, open', 'cell.fret': '{o} string, fret {f}',
     'tuner.mode': 'Tuner mode', 'tuner.ear': 'By ear', 'tuner.mic': 'Microphone',
@@ -224,6 +229,12 @@ const TEXTOS = {
     'set.look': 'Appearance', 'set.theme': 'Theme', 'set.theme.sub': '“Automatic” follows your device’s light or dark mode',
     'theme.wood': 'Wood', 'theme.auto': 'Automatic', 'theme.sheet': 'Sheet music',
     'set.reset': 'Reset all settings', 'set.clear': 'Clear best streaks',
+    'set.about': 'About',
+    'about.privacy': 'Trasteando does not collect or send any personal data. Your settings and records are stored only on this device, and the microphone sound is analysed right here: it is never recorded or sent.',
+    'about.privacy.link': 'Privacy policy',
+    'about.credits.title': 'Sound credits',
+    'about.credits': 'Classical guitar: "ClassicalGuitar-multisampled" by quartertone (freesound.org), licensed under CC BY 4.0. Acoustic guitar: University of Iowa Electronic Music Studios. Both edited by Nicholaus P. Brosowsky in tonejs-instruments (github.com/nbrosowsky/tonejs-instruments), licensed under CC BY 3.0 (creativecommons.org/licenses/by/3.0). Used unmodified, except in the standalone file, where they are trimmed to 4.5 s with a fade-out and re-encoded.',
+    'about.rights': '© 2026 Pablo Díaz Guerra. All rights reserved (except the recordings, which have their own licence).',
     'confirm.clear': 'Clear the best streaks of every tuning?',
     'confirm.reset': 'Reset all settings? Your best streaks are kept.',
     'timbre.nylon': 'Classical guitar with nylon strings', 'timbre.acoustic': 'Acoustic guitar with steel strings',
@@ -295,4 +306,9 @@ function aplicarIdioma(){
   document.querySelectorAll('[data-t-aria]').forEach(e => e.setAttribute('aria-label', t(e.dataset.tAria)));
   document.querySelectorAll('[data-t-title]').forEach(e => e.setAttribute('title', t(e.dataset.tTitle)));
   document.querySelectorAll('[data-t-placeholder]').forEach(e => e.setAttribute('placeholder', t(e.dataset.tPlaceholder)));
+  // La política de privacidad es una sola página con las dos versiones: en
+  // inglés, el enlace salta a la suya (#en). Se cambia solo lo que va tras «#»,
+  // porque en el archivo autónomo el enlace es a la web, no a un archivo vecino.
+  const priv = document.getElementById('about-privacy');
+  if (priv) priv.setAttribute('href', priv.getAttribute('href').split('#')[0] + (lang() === 'en' ? '#en' : ''));
 }

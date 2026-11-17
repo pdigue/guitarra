@@ -3,7 +3,7 @@
 Todo lo que Trasteando usa y no hemos creado nosotros, de dónde sale y con qué
 licencia. Lo exige el requisito **G-06** y, para el audio, **S-07**.
 
-**Última revisión:** 21/10/2026 (recortes para el banco del afinador)
+**Última revisión:** 17/11/2026 (los créditos, también en la app)
 
 ---
 
@@ -22,8 +22,8 @@ de copyright y la licencia junto al código.
 
 ## Texto de atribución
 
-Este es el texto que acompaña a la app cuando se distribuya. Antes de publicar
-(F6.4) aparecerá también dentro de la app, en Ajustes.
+Este es el texto que acompaña a la app. Desde la 0.6.14 (F6.4) aparece también
+dentro de la app, en Ajustes → Acerca de, en los dos idiomas.
 
 > Sonido de guitarra clásica: «ClassicalGuitar-multisampled», de quartertone
 > (freesound.org), licencia CC BY 4.0. Sonido de guitarra acústica: University

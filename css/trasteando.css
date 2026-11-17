@@ -404,8 +404,8 @@ select { flex:1; min-height:40px; background:var(--surface); border:1px solid va
   font-size:14px; font-weight:700; white-space:nowrap; background:var(--surface2); border:1px solid var(--line2); color:var(--text); }
 .chord-chip.on { background:var(--amber); border-color:var(--amber); color:var(--on-accent); }
 .chord-chip:disabled { opacity:.35; cursor:default; }
-/* El dibujo es lo principal (AC-07): en Acordes no hay pentagrama, ni zoom, ni
-   aviso para girar; el mástil enseña los trastes 0 a 5 y no se desplaza. */
+/* El dibujo es lo principal (AC-07): en Acordes no hay pentagrama ni zoom;
+   el mástil enseña los trastes 0 a 5 y no se desplaza. */
 body[data-screen="chords"] .display, body[data-screen="chords"] .zoombar,
 body[data-screen="chords"] #qb-staff { display:none; }
 body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
@@ -532,19 +532,12 @@ body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
 .tab:disabled { opacity:.35; cursor:default; }
 .tab-settings { display:none; }   /* solo en el raíl, en horizontal */
 
-/* ===== AVISO PARA GIRAR (V-01) ===== */
-.rotate-hint { flex-shrink:0; display:flex; align-items:center; justify-content:space-between;
-  gap:6px; margin:6px 8px 0; padding:0 0 0 12px; border:1px dashed var(--line2);
-  border-radius:10px; font-size:12.5px; color:var(--muted); }
-.rotate-close { background:none; border:none; color:var(--muted); width:40px; height:40px;
-  font-size:15px; cursor:pointer; flex-shrink:0; }
-
 /* ===== ORDEN EN LA COLUMNA (vertical y amplia) =====
    El panel no crea caja propia (display:contents): sus piezas se colocan entre
    las demás con order. En horizontal pasa a ser la columna de la derecha. */
 .panel { display:contents; }
 .header { order:1; } .quickbar { order:2; } .challenge { order:3; } .display { order:4; }
-.rotate-hint { order:5; } .board-area { order:6; } .sc-nav, .zoombar { order:7; } .tuner, .metro { order:8; }
+.board-area { order:6; } .sc-nav, .zoombar { order:7; } .tuner, .metro { order:8; }
 .scales-card, .chords-card { order:3; }
 .tabbar { order:9; }
 
@@ -601,6 +594,11 @@ body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
   border-radius:50%; background:var(--muted); transition:transform .18s, background .18s; }
 .sw.on::before { background:var(--amber); border-color:var(--amber); }
 .sw.on::after { transform:translateX(19px); background:var(--on-accent); }
+/* Acerca de (F6.4): texto que se lee, no controles; el enlace, con 44 px para el dedo. */
+.about p { margin:0 0 8px; font-size:13px; line-height:1.45; color:var(--muted); }
+.about .about-title { margin-top:12px; color:var(--text); font-size:12.5px; font-weight:700; }
+.about .about-small { font-size:11.5px; overflow-wrap:anywhere; }
+.about a { display:inline-flex; align-items:center; min-height:44px; color:var(--amber); font-weight:700; }
 .version { text-align:center; font-size:11px; color:var(--faint); margin:14px 0 0;
   font-variant-numeric:tabular-nums; }
 .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
@@ -628,7 +626,7 @@ body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
 @media (orientation:landscape) and (max-height:520px){
   body { display:grid; grid-template-columns:64px minmax(0,1fr) 176px;
          grid-template-rows:minmax(0,1fr); padding-bottom:env(safe-area-inset-bottom); }
-  .header, .rotate-hint { display:none; }
+  .header { display:none; }
   .tabbar { grid-column:1; grid-row:1; flex-direction:column; justify-content:flex-start;
             gap:2px; border-top:none; border-right:1px solid var(--line); padding:6px 0; }
   /* Un destino por área y ⚙: con seis áreas, 7 × 44 px caben en los 342 px del iPhone (interfaz §7b). */
@@ -782,9 +780,6 @@ html[data-scheme="light"] .challenge-text b { color:var(--text) !important; }
 /* Las pistas, en su fila; «Ver la respuesta», si aparece, en la de debajo: en la
    misma fila dejaba a cada pista con 80 px y las cuerdas no cabían (16/11). */
 .ch-hints.has-clue { row-gap:4px; }
-/* Con las pistas encendidas, el aviso para girar se esconde: ocupan su sitio, y
-   vuelve al apagarlas (16/11). */
-body.con-pistas .rotate-hint { display:none; }
 .ch-hints.has-clue .giveup { flex:1 0 100%; order:9; }
 /* Con las dos pistas, la nota («Fa#4») ocupa lo que necesita, con un mínimo, y
    el resto es para las cuerdas, que pueden ser seis («1st 2nd 3rd 4th 5th 6th»). */

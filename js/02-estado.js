@@ -24,7 +24,6 @@ const DEFAULTS = {
   visibleFrets:null,      // se calcula en el primer arranque según la pantalla
   maxChallengeFret:12,    // hasta dónde llegan los retos del modo Adivinar
   records:{},             // récord de racha de cada afinación: { standard: 7, dropd: 3 } (J-11)
-  rotateHintClosed:false, // el aviso para girar, una vez cerrado, no vuelve (V-01)
   tunerMode:'mic',        // afinador: 'mic' por micrófono · 'ear' de oído (F4.3; por defecto Micrófono desde F5.8 #2)
   tunerPick:false,        // true cuando lo has elegido tú: solo entonces se recuerda
   lang:null,              // 'es' o 'en' (G-12); sin elegir, el del navegador
@@ -70,6 +69,7 @@ function sanitize(raw){
   if (!['es','en'].includes(s.lang)) s.lang = idiomaDelNavegador();
   if (!ESCALAS.some(e => e.id === s.scaleId)) s.scaleId = DEFAULTS.scaleId;
   if (!Number.isInteger(s.scalePc) || s.scalePc < 0 || s.scalePc > 11) s.scalePc = DEFAULTS.scalePc;
+  delete s.rotateHintClosed; // el aviso para girar se quitó en la 0.6.14 (F6.4)
   delete s.scaleMode;     // el submodo Mostrar/Práctica se quitó en la 0.6.4 (F5.8 #5)
   if (!['reveal','retry'].includes(s.onMiss)) s.onMiss = DEFAULTS.onMiss;
   if (!['madera','auto','partitura'].includes(s.theme)) s.theme = DEFAULTS.theme;
@@ -89,7 +89,7 @@ function sanitize(raw){
   // Quien estrena la app en inglés empieza con C D E; luego decide en Ajustes.
   if (!(raw && raw.notation) && s.lang === 'en') s.notation = 'anglo';
   if (typeof s.chordId !== 'string') s.chordId = DEFAULTS.chordId;   // si no existe, Acordes enseña el primero
-  ['showStaff','showAllNotes','showEquals','hintNote','hintString','rotateHintClosed']
+  ['showStaff','showAllNotes','showEquals','hintNote','hintString']
     .forEach(k => { s[k] = !!s[k]; });
   // fretNums sustituye al interruptor showFretNums de la 0.1.1. Quien lo tuviera
   // apagado conserva su elección al actualizar. Se mira el valor guardado (raw),
