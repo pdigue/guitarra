@@ -1,6 +1,6 @@
 # Trasteando — Compatibilidad entre sistemas operativos
 
-**Versión:** 1.15 · **Fecha:** 16 de noviembre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
+**Versión:** 1.16 · **Fecha:** 16 de noviembre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
 
 La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este documento lista cada capacidad del navegador que usa o usará, cómo se comporta en cada sistema y qué hace la app donde falta. Se revisa en cada etapa que añada una capacidad nueva.
 
@@ -53,6 +53,8 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 | Modo claro u oscuro del sistema (`matchMedia('(prefers-color-scheme: dark)')` y su evento `change`) | El tema «Automático» (V-10, 0.6.3): elegir claro u oscuro y seguir el cambio con la app abierta | ✅ | ✅ | ✅ (el evento, con `addListener` en Safari anterior a 14) | Sin `matchMedia`, «Automático» es oscuro; Madera y Partitura no lo necesitan |
 | `color-scheme` y `meta theme-color` | Que los controles nativos y la barra del navegador vayan con el tema (0.6.3) | ✅ | ✅ | ✅ | Se ignoran: la app se ve igual, solo la barra del sistema no cambia de color |
 | Tamaño de texto fijo (`text-size-adjust`) | Que el iPhone no agrande el texto por su cuenta al girar la pantalla (0.6.10) | — | ✅ | ✅ Safari, con `-webkit-` | Sin él, el texto puede salir más grande de lo previsto tras girar el móvil; la app sigue funcionando |
+| Zonas seguras (`env(safe-area-inset-*)`), también para el zoom de inicio | En el iPhone instalado, la isla y la barra de inicio se descuentan del ancho del mástil al elegir cuántos trastes se ven (0.6.12) | — | ✅ | ✅ | Sin zonas seguras valen 0: se cuentan los trastes con todo el ancho, como en Windows y Android |
+| Desplazamiento contenido (`overscroll-behavior`) | El raíl de pestañas se desplaza en pantallas muy bajas (280 px) sin arrastrar la página (0.6.12) | ✅ | ✅ | ✅ Safari 16 | Sin él, al llegar al final del raíl puede moverse la página; la app sigue igual. En una ventana de escritorio de menos de 520 px de alto, la barra de desplazamiento clásica estrecha el raíl: aceptado (AT-22 B2) |
 | Medir el texto (`scrollWidth`, `clientWidth`) | Que la respuesta de una pista quepa entera, bajando su tamaño (J-06, 0.6.10) | ✅ | ✅ | ✅ | Estándar en todos; si el recuadro está oculto, se mide al verse |
 | Avisar de cambios de tamaño (`ResizeObserver`) | Volver a encajar las pistas al girar, al cambiar la ventana o al aparecer «Ver la respuesta» (J-06, 0.6.10; AT-21) | ✅ | ✅ | ✅ desde Safari 13.1 | Sin él, se vuelve a encajar con el aviso de la ventana (`resize`) |
 | `max()` en CSS | Que el ordinal de las cuerdas no baje de 11 px (0.6.10) | ✅ | ✅ | ✅ desde Safari 11.1 | Sin él, el ordinal es la mitad del número |
@@ -64,7 +66,8 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.15** | 16/11/2026 | Tu comentario del 16/11 (0.6.10): `text-size-adjust`, para que el iPhone no agrande el texto al girarlo; medir el texto de las pistas para que quepa, `ResizeObserver` para volver a medir y `max()` en CSS. |
+| **1.16** | 16/11/2026 | Tu comentario del 16/11 (0.6.12): zonas seguras en el zoom de inicio y `overscroll-behavior` en el raíl. Y `comprobar-disposicion.js` simula las zonas seguras del iPhone con Chromium (`Emulation.setSafeAreaInsetsOverride`). |
+| 1.15 | 16/11/2026 | Tu comentario del 16/11 (0.6.10): `text-size-adjust`, para que el iPhone no agrande el texto al girarlo; medir el texto de las pistas para que quepa, `ResizeObserver` para volver a medir y `max()` en CSS. |
 | 1.14 | 16/11/2026 | F6.3 (0.6.9, instalable): el manifiesto propio y los iconos PNG, en uso; Firefox de escritorio no instala; el iPhone toma el icono de `apple-touch-icon`; la pantalla de arranque de Android, oscura también con el tema claro. |
 | 1.13 | 16/11/2026 | F6.2 (0.6.8, sin conexión desde la web): el Service Worker, en uso, con el aviso de Safari en el iPhone (AT-19 M2, AR-20 #1); fila nueva de la caché del Service Worker. |
 | 1.12 | 15/11/2026 | F5.8 #7 (0.6.7, metrónomo): `getOutputTimestamp()`, `outputLatency` y `baseLatency` para que lo que se ve vaya con lo que se oye, con su alternativa. |

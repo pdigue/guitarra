@@ -116,6 +116,8 @@ function renderClues(){
   const pistas = document.querySelector('.ch-hints');
   pistas.classList.toggle('has-clue', !!challenge && screen === 'guess' && (state.hintNote || state.hintString));
   pistas.classList.toggle('dos', !!challenge && screen === 'guess' && state.hintNote && state.hintString);
+  // Con pistas, el aviso para girar se esconde (css): en vertical no cabía todo (16/11).
+  document.body.classList.toggle('con-pistas', pistas.classList.contains('has-clue'));
   // Se encajan al final, con la franja ya encendida y su ancho definitivo.
   pistas.querySelectorAll('.clue-v').forEach(encajar);
 }
@@ -125,7 +127,7 @@ function renderClues(){
  *  con 4 o 5 cuerdas en inglés no cabía: salía «1st 2nd 3rd …», y en el panel
  *  estrecho del horizontal, nada. Ahora se mide de verdad: scrollWidth es lo
  *  que el texto necesita y clientWidth, lo que el recuadro le da. Se parte del
- *  tamaño del CSS (30 px en el móvil, 44 en tableta), se calcula de una vez el
+ *  tamaño del CSS (26 px en el móvil, 38 en tableta; desde la 0.6.13), se calcula de una vez el
  *  que cabría (una regla de tres) y se afina de 1 en 1.
  *  Nunca baja de ENCAJE_MIN, 20 px: es el tamaño de la nota que tocas (J-01), y
  *  lo que buscas no debe verse más pequeño que lo que tocas (tu #4, AR-22 #1).
@@ -182,7 +184,10 @@ function renderChallenge(){
   }
 
   if (challenge.misses && !challenge.solved){
-    box.innerHTML = '<b class="ko">' + t('guess.miss') + '</b> <span class="dim">' + t('guess.tryAgain') + '</span>';
+    // Corto (tu comentario del 16/11): «✗ ¡Prueba otra vez!»; que ▶ repite la nota
+    // ya lo dice la frase del reto. La ✗, oculta al lector de pantalla, que la
+    // leería como «multiplicación» (AT-22 B5).
+    box.innerHTML = '<b class="ko"><span aria-hidden="true">✗ </span>' + t('guess.miss') + '</b>';
     return;
   }
 

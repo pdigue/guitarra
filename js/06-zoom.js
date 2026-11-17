@@ -11,15 +11,30 @@
 function defaultVisibleFrets(){
   const w = window.innerWidth;
   const landscape = w > window.innerHeight;
+  // Móvil en horizontal (la misma condición que el css: alto de 520 px o menos):
+  // los trastes que caben a 40 px (G-05, V-04) en el mástil más estrecho, el de
+  // Adivinar, descontando las zonas seguras (la isla y la barra de inicio, que
+  // el css pone como relleno del body). Antes eran 10 fijos, y el iPhone Pro Max
+  // (932 px) caía en la regla de tableta: 17 trastes de 28 px (16/11).
+  if (typeof matchMedia === 'function' && matchMedia(MOVIL_H).matches){
+    const cs = getComputedStyle(document.body);
+    const util = w - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0);
+    return Math.max(5, Math.min(NUM_FRETS, Math.floor((util - MOVIL_H_RESTO - LABEL_W - NUT_W) / 40)));
+  }
   // Escritorio: mástil entero. Con el dedo (un iPad en horizontal), los que
   // caben a 40 px (G-05, V-04): el mástil entero los dejaría en 38 px a 1024.
   if (w >= 900) return coarsePointer() ? Math.min(NUM_FRETS, Math.floor((w - LABEL_W - NUT_W - BOARD_PAD_X) / 40)) : NUM_FRETS;
-  if (landscape) return 10;          // con 40 px por traste caben 10 en un iPhone con Safari
+  if (landscape) return 10;
   return 5;                          // móvil vertical: pocos y anchos
 }
 
 const LABEL_W = 30, NUT_W = 40;   // deben coincidir con --label-w y --nut-w
 const BOARD_PAD_X = 40;           // relleno lateral de .board-area en tableta (20 + 20 px, css/trasteando.css)
+// Móvil en horizontal: raíl (64) + panel de Adivinar (204, con su borde) + relleno
+// del mástil (6 + 6) (css/trasteando.css, «MÓVIL EN HORIZONTAL»).
+// Los tres valores los vigila el banco contra el css (AT-22 M1).
+const MOVIL_H_RESTO = 64 + 204 + 12;
+const MOVIL_H = '(orientation:landscape) and (max-height:520px)';   // la media query del css
 
 /** Cuántos trastes caben de verdad sin bajar del ancho mínimo cómodo. */
 function maxVisibleFrets(){

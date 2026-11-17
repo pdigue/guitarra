@@ -15,7 +15,15 @@
 // - que todo botón, desplegable e interruptor visible mide al menos 40 × 40 px
 //   con el dedo (G-05), también con Ajustes abierto;
 // - que nada visible se sale de la pantalla;
+// - que ningún control (botón, desplegable, interruptor) queda fuera de la
+//   pantalla, debajo de una zona segura (la cámara, la barra de inicio) o
+//   recortado por una caja; solo puede quedar por debajo en una caja que se
+//   desplaza en vertical, como el panel en horizontal (16/11: «Ver la respuesta»
+//   se salía del panel en el iPhone y esto no lo miraba);
 // - que el aviso para girar sale donde debe y solo ahí (V-01).
+// Cada pantalla puede llevar zonas seguras (las de un iPhone con isla, simuladas
+// con Emulation.setSafeAreaInsetsOverride de Chromium) y un estado de la app
+// (p. ej. Adivinar tras un fallo, con las dos pistas). Ver ESTADOS.
 // Falla (código 1) si algo no se cumple.
 'use strict';
 const path = require('path');
@@ -84,7 +92,48 @@ const PANTALLAS = [
   // Ajustes abierto: sus controles también miden 40 px (AR-05 #3).
   ['iphone-safari-vertical-ajustes',     390, 664, true,  'free',  true,  true],
   ['iphone-safari-horizontal-ajustes',   750, 342, true,  'free',  false, true],
+  // Estados que cambian el panel: Adivinar tras un fallo, con las dos pistas
+  // (aparece «Ver la respuesta»), y Escalas practicando.
+  ['iphone-safari-horizontal-adivinar-fallo', 750, 342, true, 'guess', false, false, { estado: 'fallo' }],
+  ['iphone-safari-vertical-adivinar-fallo',   390, 664, true, 'guess', false, false, { estado: 'fallo' }],
+  ['iphone-se-safari-vertical-adivinar-fallo',375, 553, true, 'guess', false, false, { estado: 'fallo' }],
+  ['iphone-safari-horizontal-escalas-practica', 750, 342, true, 'scales', false, false, { estado: 'practica' }],
+  ['android-chrome-horizontal-adivinar-fallo', 780, 280, true, 'guess', false, false, { estado: 'fallo' }],
+  ['android-pequeno-vertical-adivinar-fallo',  360, 560, true, 'guess', false, false, { estado: 'fallo' }],
+  ['ipad-vertical-adivinar-fallo',             820, 1180, true, 'guess', false, false, { estado: 'fallo' }],
+  ['ipad-mini-horizontal-safari-adivinar-fallo', 1133, 670, true, 'guess', false, false, { estado: 'fallo' }],
+  // iPhone instalado (sin barras de Safari), con las zonas seguras de verdad: en
+  // horizontal, 59 px a cada lado y 21 abajo; en vertical, 59 arriba y 34 abajo.
+  // El 15 Pro (852 × 393) y el Pro Max (932 × 430), el de tu captura del 16/11.
+  ...[['15pro', 852, 393], ['promax', 932, 430]].flatMap(([m, w, h]) => {
+    const hz = { insets: { left: 59, right: 59, bottom: 21 } }, vt = { insets: { top: 59, bottom: 34 } };
+    return [
+      [`iphone-${m}-instalada-horizontal-libre`,    w, h, true, 'free',   false, false, hz],
+      [`iphone-${m}-instalada-horizontal-adivinar`, w, h, true, 'guess',  false, false, hz],
+      [`iphone-${m}-instalada-horizontal-adivinar-fallo`, w, h, true, 'guess', false, false, { ...hz, estado: 'fallo' }],
+      [`iphone-${m}-instalada-horizontal-afinador`, w, h, true, 'tuner',  false, false, hz],
+      [`iphone-${m}-instalada-horizontal-escalas`,  w, h, true, 'scales', false, false, hz],
+      [`iphone-${m}-instalada-horizontal-escalas-practica`, w, h, true, 'scales', false, false, { ...hz, estado: 'practica' }],
+      [`iphone-${m}-instalada-horizontal-metronomo`, w, h, true, 'metro', false, false, hz],
+      [`iphone-${m}-instalada-horizontal-metronomo-compas`, w, h, true, 'metro', false, false, hz],
+      [`iphone-${m}-instalada-horizontal-acordes`,  w, h, true, 'chords', false, false, hz],
+      [`iphone-${m}-instalada-horizontal-ajustes`,  w, h, true, 'free',   false, true,  hz],
+      [`iphone-${m}-instalada-vertical-adivinar-fallo`, h, w, true, 'guess', false, false, { ...vt, estado: 'fallo' }],
+      [`iphone-${m}-instalada-vertical-escalas-practica`, h, w, true, 'scales', true, false, { ...vt, estado: 'practica' }],
+      [`iphone-${m}-instalada-vertical-metronomo-compas`, h, w, true, 'metro', false, false, vt],
+      [`iphone-${m}-instalada-vertical-acordes`,    h, w, true, 'chords', false, false, vt],
+      [`iphone-${m}-instalada-vertical-ajustes`,    h, w, true, 'free',   true,  true,  vt],
+    ];
+  }),
 ];
+
+// Estados de la app que se preparan antes de medir.
+const ESTADOS = {
+  // Un fallo, con las dos pistas encendidas: «✗ ¡Prueba otra vez!» y «Ver la respuesta».
+  fallo: () => { state.hintNote = state.hintString = true; guessStarted = true;
+    challenge = { midi: 60, misses: 1 }; renderChallenge(); },
+  practica: () => document.getElementById('qb-scale-practice').click(),
+};
 
 (async () => {
   fs.mkdirSync(SALIDA, { recursive: true });
@@ -92,10 +141,12 @@ const PANTALLAS = [
   let fallos = 0;
   const fallo = (pantalla, msg) => { fallos++; console.log(`FALLO ${pantalla}: ${msg}`); };
 
-  for (const [nombre, w, h, dedo, area, avisoEsperado, ajustes] of PANTALLAS) {
+  for (const [nombre, w, h, dedo, area, avisoEsperado, ajustes, extra = {}] of PANTALLAS) {
     const ctx = await navegador.newContext({ locale: LOCALE, viewport: { width: w, height: h }, hasTouch: dedo,
                                              isMobile: dedo, deviceScaleFactor: 2 });
     const pagina = await ctx.newPage();
+    const zonas = { top: 0, right: 0, bottom: 0, left: 0, ...extra.insets };
+    if (extra.insets) await (await ctx.newCDPSession(pagina)).send('Emulation.setSafeAreaInsetsOverride', { insets: zonas });
     await pagina.goto(APP);
     // La puerta de audio no hace falta para medir la disposición.
     await pagina.evaluate(() => document.getElementById('gate').classList.add('hidden'));
@@ -106,9 +157,10 @@ const PANTALLAS = [
     if (area === 'chords') await pagina.evaluate(() => selectChord('F', false));
     if (ajustes) await pagina.evaluate(() => [...document.querySelectorAll('#btn-settings, #btn-settings-rail')]
       .find(b => b.getClientRects().length).click());
+    if (extra.estado) await pagina.evaluate(`(${ESTADOS[extra.estado]})()`);
     await pagina.waitForTimeout(400);
 
-    const m = await pagina.evaluate((min) => {
+    const m = await pagina.evaluate(([min, zonas]) => {
       const vis = e => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0 &&
         getComputedStyle(e).visibility !== 'hidden' && !e.closest('[hidden], .gate.hidden, .sheet:not(.open)'); };
       const out = { dedo: matchMedia('(pointer: coarse)').matches };
@@ -141,10 +193,41 @@ const PANTALLAS = [
         .filter(vis).filter(e => {
           if (e.closest('.panel') && getComputedStyle(document.getElementById('panel')).display !== 'contents') return false;
           const r = e.getBoundingClientRect();
+          // Contra la pantalla entera: la cabecera y las pestañas se meten bajo las zonas
+          // seguras a propósito, con relleno; sus botones los mira «cortados».
           return r.bottom > innerHeight + 0.5 || r.right > innerWidth + 0.5 || r.top < -0.5 || r.left < -0.5;
         }).map(e => e.className.split(' ')[0]);
+      // Cada control, entero a la vista: dentro de la pantalla menos las zonas
+      // seguras y de toda caja que lo recorte. Solo puede quedar por debajo (o
+      // por encima) en una caja que se desplaza en vertical, y a los lados en las
+      // que se desplazan a propósito en horizontal (el mástil, la tira de compases).
+      // Se desplaza a los lados la caja que lo tiene en el css y se pasa de ancho
+      // (el mástil, la tira de compases, los chips en vertical) (AT-22 M2).
+      const despLado = (a, cs) => /auto|scroll/.test(cs.overflowX) && a.scrollWidth > a.clientWidth + 1 &&
+        !a.matches('.panel');   // el panel solo se desplaza en vertical: a los lados, recorta
+      out.cortados = [...document.querySelectorAll('button, select, input, [role="switch"], a[href]')].filter(vis).filter(b => {
+        const r = b.getBoundingClientRect();
+        let dentroLado = false, dentroAlto = false;
+        for (let a = b.parentElement; a && a !== document.body; a = a.parentElement){
+          const cs = getComputedStyle(a);
+          if (cs.overflowX === 'visible' && cs.overflowY === 'visible') continue;
+          const c = a.getBoundingClientRect();
+          const despAlto = /auto|scroll/.test(cs.overflowY) && a.scrollHeight > a.clientHeight;
+          if (despLado(a, cs)) dentroLado = true;
+          else if (r.left < c.left - 0.5 || r.right > c.right + 0.5) return true;
+          // La caja que se desplaza, a su vez, a la vista (AT-22 M3): su interior, sin
+          // el relleno, que es lo que la deja meterse bajo una zona segura a propósito.
+          if (despAlto && (c.top + parseFloat(cs.paddingTop) < zonas.top - 0.5 ||
+                           c.bottom - parseFloat(cs.paddingBottom) > innerHeight - zonas.bottom + 0.5)) return true;
+          if (despAlto) dentroAlto = true;
+          else if (!dentroAlto && (r.top < c.top - 0.5 || r.bottom > c.bottom + 0.5)) return true;
+        }
+        if (!dentroLado && (r.left < zonas.left - 0.5 || r.right > innerWidth - zonas.right + 0.5)) return true;
+        if (!dentroAlto && (r.top < zonas.top - 0.5 || r.bottom > innerHeight - zonas.bottom + 0.5)) return true;
+        return false;
+      }).map(b => (b.id || b.className || b.textContent.trim()).slice(0, 30));
       return out;
-    }, MIN);
+    }, [MIN, zonas]);
 
     const partes = [];
     if (m.cuerda !== undefined) {
@@ -168,6 +251,7 @@ const PANTALLAS = [
     if (dedo !== m.dedo) fallo(nombre, 'la emulación del puntero no coincide');
     if (dedo && m.pequenos.length) fallo(nombre, 'botones de menos de 40 px: ' + m.pequenos.join(', '));
     if (m.fuera.length) fallo(nombre, 'se sale de la pantalla: ' + m.fuera.join(', '));
+    if (m.cortados.length) fallo(nombre, 'controles cortados o tapados: ' + m.cortados.join(', '));
     if (m.aviso !== avisoEsperado) fallo(nombre, `aviso para girar ${m.aviso ? 'visible' : 'oculto'}, se esperaba ${avisoEsperado ? 'visible' : 'oculto'}`);
     partes.push(`aviso ${m.aviso ? 'sí' : 'no'}`);
     console.log(`${nombre} (${w} × ${h}, ${dedo ? 'dedo' : 'ratón'}): ${partes.join(' · ')}`);

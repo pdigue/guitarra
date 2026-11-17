@@ -560,6 +560,46 @@ test('estructura de la interfaz aprobada: panel de controles y pistas dentro del
   assert.deepEqual(sinErrores(A), []);
 });
 
+test('con pistas encendidas en Adivinar, sin aviso para girar; vuelve al apagarlas y al cambiar de área (V-01, J-14)', async () => {
+  const A = boot(APP, null, DEDO);
+  A.doc.querySelector('.tab[data-screen="guess"]').click();
+  await sleep(20);
+  assert.equal(A.doc.body.classList.contains('con-pistas'), false, 'sin pistas, el aviso sigue');
+  A.$('qb-hint-string').click();
+  await sleep(20);
+  assert.equal(A.doc.body.classList.contains('con-pistas'), true, 'con una pista, se esconde (css)');
+  A.doc.querySelector('.tab[data-screen="free"]').click();
+  await sleep(20);
+  assert.equal(A.doc.body.classList.contains('con-pistas'), false, 'en Libre no hay pistas');
+  A.doc.querySelector('.tab[data-screen="guess"]').click();
+  A.$('qb-hint-string').click();
+  await sleep(20);
+  assert.equal(A.doc.body.classList.contains('con-pistas'), false, 'al apagarla, vuelve');
+});
+
+test('zoom de inicio en el móvil en horizontal: los trastes que caben a 40 px, sin las zonas seguras (V-04)', () => {
+  const zonas = (izq, der) => ({ getComputedStyle: el => ({ paddingLeft: izq + 'px', paddingRight: der + 'px', getPropertyValue: () => '' }),
+    matchMedia: q => ({ matches: /coarse|landscape/.test(q) }) });
+  const trastes = (w, h, izq, der) => boot(APP, null, Object.assign({ innerWidth: w, innerHeight: h }, zonas(izq, der))).ev('defaultVisibleFrets()');
+  assert.equal(trastes(932, 430, 59, 59), 11, 'iPhone Pro Max instalado (antes, 17 de 28 px)');
+  assert.equal(trastes(852, 393, 59, 59), 9, 'iPhone 15 Pro instalado (antes, 10 de 38 px)');
+  assert.equal(trastes(750, 342, 0, 0), 10, 'iPhone con Safari, como antes');
+});
+
+unaVez('MOVIL_H_RESTO (js/06-zoom.js) cuadra con el css: raíl de 64 px, panel de Adivinar de 204 y relleno del mástil de 6 + 6 (AT-22 M1)', () => {
+  const css = fs.readFileSync(path.join(__dirname, '..', 'css', 'trasteando.css'), 'utf8');
+  const zoom = fs.readFileSync(path.join(__dirname, '..', 'js', '06-zoom.js'), 'utf8');
+  assert.match(zoom, /const MOVIL_H_RESTO = 64 \+ 204 \+ 12;/);
+  assert.match(css, /body \{ display:grid; grid-template-columns:64px minmax\(0,1fr\) 176px;/);
+  assert.match(css, /body\[data-screen="guess"\] \{ grid-template-columns:64px minmax\(0,1fr\) 204px; \}/);
+  assert.match(css, /#board-area \{ grid-column:2; grid-row:1; min-height:0; padding:6px 6px 2px; \}/);
+  assert.match(zoom, /\(orientation:landscape\) and \(max-height:520px\)/);
+  assert.match(css, /@media \(orientation:landscape\) and \(max-height:520px\)\{\n  body \{ display:grid/);
+  // Y la clave vieja del fallo largo ya no se usa (se borró en la 0.6.12).
+  for (const f of fs.readdirSync(path.join(__dirname, '..', 'js')))
+    assert.doesNotMatch(fs.readFileSync(path.join(__dirname, '..', 'js', f), 'utf8'), /guess\.tryAgain/, f);
+});
+
 test('aviso para girar: solo con el dedo, en vertical, fuera del Afinador, y cerrado no vuelve (V-01)', async () => {
   const A = boot(APP, null, DEDO);                  // 390 × 844: móvil en vertical
   assert.equal(A.$('rotate-hint').hidden, false, 'sale en Libre');
@@ -1220,7 +1260,7 @@ test('Adivinar con «Al fallar: Reintentar»: el reto sigue, la racha se rompe, 
   assert.equal(A.ev('streak'), 0, 'el fallo rompe la racha');
   assert.equal(A.ev('locked'), false, 'puedes seguir probando');
   assert.equal(A.ev('challenge'), reto, 'el mismo reto');
-  assert.match(A.$('challenge-text').innerHTML, /No es esa/);
+  assert.match(A.$('challenge-text').innerHTML, /Prueba otra vez/);
   assert.equal(A.$('qb-giveup').hidden, false, 'aparece «Ver la respuesta»');
   await sleep(1300);
   assert.equal(A.doc.querySelectorAll('.fret-cell.reveal').length, 0, 'no se revela sola');
