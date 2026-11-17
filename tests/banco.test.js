@@ -2139,6 +2139,39 @@ test('el tema de fábrica es Partitura (17/11); Ajustes › Aspecto lo cambia, l
   assert.match(fuente, /<meta name="theme-color" content="#f5efe3">/);
 });
 
+test('el color de Partitura cuadra en el CSS, la barra del sistema y el manifiesto (V-10, G-04, AT-24 B4)', () => {
+  const leerRaiz = f => fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
+  const css = leerRaiz('css/trasteando.css');
+  const papel = css.match(/html\[data-theme="partitura"\] \{[^}]*--bg:(#[0-9a-f]{6})/)[1];
+  const html = leerRaiz('index.html');
+  assert.equal(html.match(/<meta name="theme-color" content="([^"]+)">/)[1], papel);
+  assert.match(html, /<html lang="es" data-theme="partitura" data-scheme="light">/);
+  const m = JSON.parse(leerRaiz('manifest.webmanifest'));
+  assert.deepEqual([m.background_color, m.theme_color], [papel, papel]);
+});
+
+test('00-aspecto.js pone tema, esquema y color de la barra antes de pintar; un tema desconocido, Partitura (V-10, AT-24 M1)', () => {
+  const vm = require('vm');
+  const codigo = fs.readFileSync(path.join(__dirname, '..', 'js', '00-aspecto.js'), 'utf8');
+  const fondos = { partitura: '#f5efe3', madera: '#140e09', auto: '#000000' };
+  const correr = (guardado, oscuro) => {
+    const attrs = {}, meta = { content: '#f5efe3', setAttribute(k, v){ this.content = v; } };
+    const html = { setAttribute(k, v){ attrs[k] = v; } };
+    vm.runInNewContext(codigo, {
+      localStorage: { getItem: () => guardado === undefined ? null : JSON.stringify(guardado) },
+      document: { documentElement: html, querySelector: () => meta },
+      window: { matchMedia: () => ({ matches: oscuro }), getComputedStyle: true },
+      getComputedStyle: () => ({ getPropertyValue: () => fondos[attrs['data-theme']] }),
+    });
+    return [attrs['data-theme'], attrs['data-scheme'], meta.content];
+  };
+  assert.deepEqual(correr(undefined, true), ['partitura', 'light', '#f5efe3'], 'sin nada guardado');
+  assert.deepEqual(correr({ theme: 'madera' }, false), ['madera', 'dark', '#140e09']);
+  assert.deepEqual(correr({ theme: 'auto' }, true), ['auto', 'dark', '#000000'], 'Automático en oscuro, sin destello claro');
+  assert.deepEqual(correr({ theme: 'auto' }, false), ['auto', 'light', '#000000']);
+  assert.deepEqual(correr({ theme: 'xyz' }, true), ['partitura', 'light', '#f5efe3'], 'un valor desconocido');
+});
+
 test('«Automático» sigue el modo claro u oscuro del dispositivo, también si cambia con la app abierta; sin matchMedia, oscuro (V-10, PL-04)', () => {
   let oyente = null;
   const medio = { matches: true, addEventListener: (_, f) => { oyente = f; } };

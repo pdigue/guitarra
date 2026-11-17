@@ -79,3 +79,18 @@ test('las versiones citadas entre documentos cuadran (app, requisitos, matriz, r
   assert.ok(linea.includes(`requisitos v${v.doc}`) && linea.includes(`matriz v${v.matriz}`) && linea.includes(`roadmap v${v.roadmap}`),
     `ESTADO.md dice «${linea}»; debería citar requisitos v${v.doc}, matriz v${v.matriz} y roadmap v${v.roadmap}`);
 });
+
+// 3. La línea «En la X: modificados ✏️ …» de requisitos.md, las filas marcadas con ✏️
+//    y la lista de ID de la última fila del control de cambios dicen lo mismo
+//    (AR-25 #1: en la 2.13 salió la lista de la 2.12 y el banco no lo vio).
+test('los requisitos marcados como modificados cuadran con el control de cambios de la versión (AR-25 #1)', () => {
+  const md = leer('docs', 'requisitos.md');
+  const linea = md.match(/\*\*En la [0-9.]+:\*\*[^\n]*/)[0];
+  const enLinea = new Set((linea.match(/modificados ✏️ ([^.]*)/) || [, ''])[1].split(',').map(x => x.trim()).filter(Boolean));
+  const marcadas = new Set([...md.matchAll(/^\| \*\*([A-Z]+-[0-9A-Za-z]+)\*\* ✏️/gm)].map(m => m[1]));
+  const gen = leer('herramientas', 'documentos', 'generar-requisitos.py');
+  const ultima = gen.slice(gen.indexOf('CAMBIOS = [')).split('\n')[1];
+  const declaradas = new Set([...ultima.slice(ultima.lastIndexOf('[')).matchAll(/'([A-Z]+-[0-9A-Za-z]+)'/g)].map(m => m[1]));
+  assert.deepEqual([...marcadas].sort(), [...enLinea].sort(), 'las filas con ✏️ son las de la línea «En la …»');
+  for (const id of marcadas) assert.ok(declaradas.has(id), `${id} está marcada y no figura en la última versión del control de cambios`);
+});

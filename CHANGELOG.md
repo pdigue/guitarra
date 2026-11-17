@@ -36,10 +36,15 @@ Nada todavía.
 
 ## [0.6.16] — 17/11/2026 · F5.8 #11 · Tus decisiones del 17/11
 
+Auditorías AT-24 y AR-25, sin críticos; corregido lo alto y los medios baratos, lo demás anotado (requisitos y matriz v2.13: G-04, A-02, MT-01, MT-06 y V-10).
+
 ### Cambiado
 - **V-10** · **Partitura es el tema de fábrica** (antes, Madera). Va ya en el `<html>` y en la barra del sistema, para que al abrir no se vea un instante otro tema, y en el manifiesto (`background_color` y `theme_color`, `#f5efe3`): en Android, la pantalla de arranque de la app instalada sale color papel. Quien ya usaba la app conserva el tema que tenía guardado; un valor desconocido vuelve a Partitura.
 - **A-02** · El afinador **abre siempre en Micrófono** (AR-15 #8). «De oído» vale mientras la app está abierta (cambiar de área y volver lo mantiene); al volver a abrirla, Micrófono otra vez. Se borra la marca `tunerPick` de las versiones anteriores. Donde el micrófono no se puede usar, sigue abriendo en De oído.
 - **MT-06** · **Metrónomo en horizontal, en dos bloques** (tus fotos del 17/11, AR-14 #2): a la izquierda la barra y a la derecha todo lo demás, en el mismo orden que en vertical (nombre, tempo, puntos, compás y «Marcar», Empezar), con letras algo más pequeñas. La barra se abre **los mismos 30° que en vertical**: si la columna es estrecha para su alto, se acorta la varilla en vez de abrirse menos (con una consulta de contenedor, `cqw`; sin ella, como antes). Medido en Chromium: 30° en el iPhone 15 Pro y Pro Max instalados, en Safari, en el SE y en Android a 280 px de alto (antes, unos 13°), con la barra de 195 a 342 px y ningún control fuera.
+- **V-10** · `00-aspecto.js` pone, antes de pintar, el tema (validado), si es claro u oscuro y el color de la barra del sistema: «Automático» en oscuro ya no sale un instante claro (AT-24 M1). En horizontal, el metrónomo se desplaza si algún día no cabe (M3).
+- Banco: el color de Partitura cuadra en el CSS, la barra y el manifiesto; `00-aspecto.js`, en un entorno simulado; y la lista de modificados de requisitos cuadra con el control de cambios (AR-25 #1: en la 2.13 salió la de la 2.12). `comprobar-disposicion.js` admite `SOLO=…` para mirar solo las pantallas de un cambio.
+- Anotado: quien ya usaba la app sigue con el tema que tenía (se guarda todo el estado): para ver Partitura, Ajustes › Aspecto o «Restablecer». En Android, el arranque es color papel también con un tema oscuro (el manifiesto no sigue lo guardado). En el iPhone instalado, la hora se lee sobre Partitura (tu captura).
 
 ---
 

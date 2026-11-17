@@ -669,7 +669,8 @@ body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
   #metro { grid-column:2 / -1; grid-row:1; min-height:0; display:grid;
            grid-template-columns:minmax(120px,1fr) minmax(250px,340px);
            grid-template-rows:minmax(0,1fr) auto auto minmax(0,1fr);
-           gap:12px 20px; padding:6px 16px; }
+           gap:12px 20px; padding:6px 16px;
+           overflow-y:auto; overscroll-behavior:contain; }   /* si algún día no cabe, se desplaza (AT-24 M3) */
   /* La barra se abre los mismos 30° que en vertical: si la columna es estrecha
      para su alto, se acorta la varilla en vez de abrirse menos. Para 30° a cada
      lado, la caja debe medir la varilla + 44 px de ancho (la pesa no se sale), y
@@ -936,8 +937,21 @@ body[data-screen="guess"] .note-oct { margin-top:0; }
 // Partitura, que ya trae <html data-theme="partitura"> (decisión del 17/11).
 (function(){   // dentro de una función: no deja variables sueltas para los demás archivos
 try {
-  var guardado = JSON.parse(localStorage.getItem('trasteando.v1') || '{}');
-  if (guardado && guardado.theme) document.documentElement.setAttribute('data-theme', guardado.theme);
+  // El tema, su esquema (claro u oscuro) y el color de la barra del sistema, los
+  // tres antes de pintar: si solo se pusiera el tema, «Automático» en oscuro
+  // saldría un instante con la paleta clara (AT-24 M1). Un valor desconocido,
+  // como en sanitize() de 02-estado.js, vuelve al de fábrica.
+  var guardado = JSON.parse(localStorage.getItem('trasteando.v1') || '{}') || {};
+  var tema = ['madera','auto','partitura'].indexOf(guardado.theme) >= 0 ? guardado.theme : 'partitura';
+  var oscuro = tema === 'madera' || (tema === 'auto' && !!window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches);
+  var html = document.documentElement;
+  html.setAttribute('data-theme', tema);
+  html.setAttribute('data-scheme', oscuro ? 'dark' : 'light');
+  // La hoja de estilos ya está cargada (va antes en <head>): el fondo sale de ella.
+  var meta = document.querySelector('meta[name="theme-color"]');
+  var fondo = window.getComputedStyle ? getComputedStyle(html).getPropertyValue('--bg').trim() : '';
+  if (meta && fondo) meta.setAttribute('content', fondo);
 } catch (e) {}
 })();
 //# sourceURL=js/00-aspecto.js

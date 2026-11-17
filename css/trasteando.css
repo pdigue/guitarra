@@ -650,7 +650,8 @@ body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
   #metro { grid-column:2 / -1; grid-row:1; min-height:0; display:grid;
            grid-template-columns:minmax(120px,1fr) minmax(250px,340px);
            grid-template-rows:minmax(0,1fr) auto auto minmax(0,1fr);
-           gap:12px 20px; padding:6px 16px; }
+           gap:12px 20px; padding:6px 16px;
+           overflow-y:auto; overscroll-behavior:contain; }   /* si algún día no cabe, se desplaza (AT-24 M3) */
   /* La barra se abre los mismos 30° que en vertical: si la columna es estrecha
      para su alto, se acorta la varilla en vez de abrirse menos. Para 30° a cada
      lado, la caja debe medir la varilla + 44 px de ancho (la pesa no se sale), y
