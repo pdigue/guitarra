@@ -211,7 +211,9 @@ test('la app no descarga nada de otros servidores (S-07, F2.2)', () => {
   const { PRIVACIDAD_WEB } = require('../herramientas/ensamblar.js');
   assert.deepEqual(urls.filter(u => u !== 'http://www.w3.org/2000/svg' && u !== PRIVACIDAD_WEB), []);
   const veces = s => src.split(s).length - 1;
-  assert.equal(veces(PRIVACIDAD_WEB), veces('<a id="about-privacy" href="' + PRIVACIDAD_WEB + '"'), 'solo como enlace del «Acerca de»');
+  const enlaces = src.match(new RegExp('<a\\b[^>]*\\bhref="' + PRIVACIDAD_WEB.replace(/[.\/]/g, '\\$&') + '"[^>]*>', 'g')) || [];
+  assert.equal(veces(PRIVACIDAD_WEB), enlaces.length, 'solo como enlace');
+  assert.ok(enlaces.every(a => a.includes('id="about-privacy"')), 'el del «Acerca de»');
   const A = boot(APP);
   assert.equal(A.ev('SAMPLE_BASE'), 'samples/');
 });
@@ -2198,13 +2200,16 @@ test('Ajustes → Acerca de: privacidad, créditos de las grabaciones y derechos
   const texto = () => A.$('set-about').textContent;
   // Lo que pide la licencia CC BY: autor, obra, origen, licencia y si se cambió.
   for (const x of ['quartertone', 'ClassicalGuitar-multisampled', 'University of Iowa', 'Nicholaus P. Brosowsky',
-                   'tonejs-instruments', 'CC BY 4.0', 'CC BY 3.0', 'autónomo', 'no recoge ni envía datos', 'Todos los derechos reservados'])
+                   'tonejs-instruments', 'CC BY 4.0', 'CC BY 3.0', 'versión descargable', 'no recoge ni envía datos', 'Todos los derechos reservados'])
     assert.ok(texto().includes(x), 'en español falta «' + x + '»');
   assert.equal(A.$('about-privacy').getAttribute('href'), destino);
-  assert.equal(A.$('about-privacy').getAttribute('rel'), 'noopener');
+  // En la web, en la misma ventana: en el iPhone instalada, otra pestaña la sacaría
+  // de la app y sin red no abriría (AT-23 A1). En el autónomo, otra pestaña.
+  assert.equal(A.$('about-privacy').getAttribute('target'), autonomo ? '_blank' : null);
+  if (autonomo) assert.equal(A.$('about-privacy').getAttribute('rel'), 'noopener');
   A.doc.querySelector('#set-lang [data-v="en"]').click();
   await sleep(10);
-  for (const x of ['quartertone', 'Nicholaus P. Brosowsky', 'CC BY 4.0', 'CC BY 3.0', 'standalone', 'does not collect or send', 'All rights reserved'])
+  for (const x of ['quartertone', 'Nicholaus P. Brosowsky', 'CC BY 4.0', 'CC BY 3.0', 'downloadable version', 'does not collect or send', 'All rights reserved'])
     assert.ok(texto().includes(x), 'en inglés falta «' + x + '»');
   assert.equal(A.$('about-privacy').getAttribute('href'), destino + '#en', 'en inglés, a la versión inglesa');
   A.doc.querySelector('#set-lang [data-v="es"]').click();
@@ -2214,13 +2219,34 @@ test('Ajustes → Acerca de: privacidad, créditos de las grabaciones y derechos
   assert.deepEqual(sinErrores(A), []);
 });
 
+unaVez('los créditos de la app dicen lo mismo que CREDITOS.md, con lo que pide CC BY (G-06, AR-24 #1)', () => {
+  const raiz = path.join(__dirname, '..');
+  const plano = s => s.replace(/^> ?/gm, '').replace(/\s+/g, ' ').trim();
+  const creditos = fs.readFileSync(path.join(raiz, 'CREDITOS.md'), 'utf8');
+  const bloque = plano(creditos.split('## Texto de atribución')[1].split('\n---')[0]);
+  const A = boot(APP);
+  const app = A.ev("t('about.credits')");
+  assert.ok(bloque.includes(app), 'CREDITOS.md no trae el texto de la app tal cual');
+  assert.equal(plano(A.$('about-credits').textContent), app, 'y el texto de reserva de index.html es el mismo');
+  // Autor, obra, origen, licencia (con su dirección) y cambios, para cada grabación.
+  for (const x of ['quartertone', 'ClassicalGuitar-multisampled', 'freesound.org/people/quartertone/packs/11573',
+                   'creativecommons.org/licenses/by/4.0', 'University of Iowa Electronic Music Studios', 'Nicholaus P. Brosowsky',
+                   'github.com/nbrosowsky/tonejs-instruments', 'creativecommons.org/licenses/by/3.0', 'recortadas'])
+    assert.ok(app.includes(x), 'falta «' + x + '»');
+  A.ev("state.lang = 'en'");
+  for (const x of ['freesound.org/people/quartertone/packs/11573', 'creativecommons.org/licenses/by/4.0', 'creativecommons.org/licenses/by/3.0', 'trimmed'])
+    assert.ok(A.ev("t('about.credits')").includes(x), 'en inglés falta «' + x + '»');
+});
+
 unaVez('privacidad.html: las dos versiones, sin nada de fuera, y dice lo que hace la app (G-11)', () => {
   const raiz = path.join(__dirname, '..');
   const html = fs.readFileSync(path.join(raiz, 'privacidad.html'), 'utf8');
   assert.match(html, /<section id="es" lang="es">/);
   assert.match(html, /<section id="en" lang="en">/);
   // Nada que se cargue de otro sitio: ni scripts, ni estilos, ni imágenes, ni fuentes.
-  assert.doesNotMatch(html, /<script|<link |<img |<iframe|@import|url\(/i);
+  assert.doesNotMatch(html, /<script|<img |<iframe|@import|url\(|\ssrc=/i);
+  // Un solo <link>: el icono vacío, para que el navegador no pida /favicon.ico (AT-23 B2).
+  assert.deepEqual(html.match(/<link [^>]*>/g), ['<link rel="icon" href="data:,">']);
   for (const x of ['no recoge ni envía datos personales', 'micrófono', 'no se graba, no se guarda y no se envía', 'GitHub',
                    'does not collect or send any personal data', 'never recorded, stored or sent'])
     assert.ok(html.includes(x), 'falta «' + x + '»');
@@ -2228,9 +2254,11 @@ unaVez('privacidad.html: las dos versiones, sin nada de fuera, y dice lo que hac
   // el único fetch de la app es el de sus grabaciones (js/03-audio.js).
   for (const f of fs.readdirSync(path.join(raiz, 'js'))) {
     const c = fs.readFileSync(path.join(raiz, 'js', f), 'utf8');
-    assert.doesNotMatch(c, /sendBeacon|XMLHttpRequest|WebSocket|document\.cookie|indexedDB/, f);
+    assert.doesNotMatch(c, /sendBeacon|XMLHttpRequest|WebSocket|EventSource|navigator\.share|new Image\(|document\.cookie|indexedDB/, f);
     assert.equal((c.match(/\bfetch\(/g) || []).length, f === '03-audio.js' ? 1 : 0, f + ': fetch inesperado');
   }
+  // Y lo que dice del micrófono: se apaga al salir del Afinador (AR-24 #10).
+  assert.match(fs.readFileSync(path.join(raiz, 'js', '09-navegacion.js'), 'utf8'), /if \(!isTuner\) stopMic\(\);/);
 });
 
 unaVez('LICENSE: todos los derechos reservados, salvo las grabaciones, que remiten a CREDITOS.md (G-06)', () => {

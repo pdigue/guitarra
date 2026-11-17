@@ -8,7 +8,8 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 
 | Versión | Fecha | Etapa | Dónde está |
 |---|---|---|---|
-| **0.6.14** | 17/11/2026 | F6.4 · privacidad, licencia y créditos en la app; sin aviso para girar | `auto/F6.4-privacidad` |
+| **0.6.15** | 17/11/2026 | F6.4 · lo de las auditorías AT-23 y AR-24 | `auto/F6.4-privacidad` (PR #27) |
+| 0.6.14 | 17/11/2026 | F6.4 · privacidad, licencia y créditos en la app; sin aviso para girar | `auto/F6.4-privacidad` (PR #27) |
 | 0.6.13 | 17/11/2026 | F5.8 · #10, tus respuestas: V-12 y pistas algo más pequeñas | `main`, fusionada el 17/11 (PR #26) |
 | 0.6.12 | 16/11/2026 | F5.8 · #10, ningún control fuera de la pantalla | `main`, fusionada el 17/11 (PR #26) |
 | 0.6.11 | 16/11/2026 | F5.8 · #9, pistas en una línea y frase del reto más corta | `main`, fusionada el 16/11 (PR #25) |
@@ -29,6 +30,19 @@ Las versiones anteriores a la 0.6.0, de la 0.0.1 a la 0.5.7, están en `docs/his
 ## [Sin publicar]
 
 Nada todavía.
+
+---
+
+## [0.6.15] — 17/11/2026 · F6.4 · Auditorías AT-23 y AR-24
+
+Sin críticos. Corregidos los dos altos y los medios que tocan a lo que la app promete; lo demás, anotado en G-06, G-11 y V-01.
+
+### Cambiado
+- **G-11** · La política se abre **en la misma ventana** (AT-23 A1): en el iPhone con la app instalada, otra pestaña la sacaba a una hoja de Safari, sin el Service Worker (sin red no abría) y con «Volver» arrancando otra copia de la app. Solo el autónomo la abre en otra pestaña, la de la web.
+- **G-06** · Atribución completa para CC BY (AR-24 #1, AT-23 M1): las direcciones de la obra en freesound y de la licencia CC BY 4.0, y la del sitio de Iowa. La app y `CREDITOS.md` dicen ahora exactamente lo mismo, y el banco lo comprueba; el texto de reserva de `index.html` también (B5). «Archivo autónomo» pasa a «versión descargable» (AR-24 #9); los créditos, a 12,5 px (#6).
+- **G-11** · La política dice bien lo que hace «Restablecer» (vuelve a lo de fábrica y conserva el idioma; los récords, con su botón; todo, borrando los datos del sitio o la app instalada) (AT-23 M2). Lleva un icono vacío, para que el navegador no pida un `/favicon.ico` que no existe (B2).
+- Banco: la política, sin `src=` ni más `<link>` que el del icono; el código, tampoco con `EventSource`, `navigator.share` ni `new Image(`; el micrófono se apaga al salir del Afinador (AR-24 #10); el enlace de S-07, contado con una expresión regular (B4).
+- **AC-07** y **J-14** ya no hablan del aviso para girar; **V-01**, criterio medible (AR-24 #2, #3, #12). README: ya no «en desarrollo local» (#11).
 
 ---
 

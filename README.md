@@ -2,7 +2,8 @@
 
 Aplicación web para aprender las notas del mástil de la guitarra, leerlas en el
 pentagrama, practicar escalas y acordes, afinar y tocar con metrónomo. Proyecto personal de Pablo Díaz
-Guerra, en desarrollo local; se publicará al final del roadmap.
+Guerra, en desarrollo, con una web de pruebas sin anunciar; se publicará al final
+del roadmap.
 
 ## Cómo abrirla
 

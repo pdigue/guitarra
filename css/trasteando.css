@@ -597,7 +597,7 @@ body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
 /* Acerca de (F6.4): texto que se lee, no controles; el enlace, con 44 px para el dedo. */
 .about p { margin:0 0 8px; font-size:13px; line-height:1.45; color:var(--muted); }
 .about .about-title { margin-top:12px; color:var(--text); font-size:12.5px; font-weight:700; }
-.about .about-small { font-size:11.5px; overflow-wrap:anywhere; }
+.about .about-small { font-size:12.5px; overflow-wrap:anywhere; }
 .about a { display:inline-flex; align-items:center; min-height:44px; color:var(--amber); font-weight:700; }
 .version { text-align:center; font-size:11px; color:var(--faint); margin:14px 0 0;
   font-variant-numeric:tabular-nums; }
