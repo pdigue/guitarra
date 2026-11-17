@@ -35,7 +35,7 @@
 13. Decidir (AR-21 #1): ¿«pantalla completa» es como ahora (`standalone`: sin barra de direcciones, con la hora y la batería arriba) o quieres que no se vea nada más? Y (AR-21 #8): en Android, la pantalla de arranque es oscura también con el tema claro; ¿te importa?
 14. Probar las pistas (`0.6.11`) en el iPhone: en vertical y en horizontal, en español y en inglés, una nota en 4 cuerdas o más, y girar el móvil y volver.
 15. Probar la `0.6.12` en el iPhone (no bloquea): en horizontal y en vertical, en los dos idiomas, falla con las dos pistas encendidas y una nota en 4 cuerdas o más: «Ver la respuesta» y las pestañas, a la vista. Con «Restablecer» en Ajustes, mira cuántos trastes salen en horizontal (deberían ser 11 en tu Pro Max).
-16. F6.4 (no bloquea): leer `LICENSE` y `privacidad.html` (no soy abogado); desactivar los *issues* (Settings → General → Features → Issues; el agente no puede, 403); en el iPhone, abrir Ajustes → Acerca de → «Política de privacidad», volver, y lo mismo en modo avión; y mirar la vertical sin aviso para girar. Decidir antes de F7.1 (AR-24 #5) el **contacto de privacidad** (correo dedicado o formulario): las tiendas lo pedirán. Y (AR-24 #13): sin el aviso, nadie dice que en horizontal se ven más trastes; ¿te importa?
+16. F6.4 (no bloquea): leer `LICENSE` y `privacidad.html` (no soy abogado); desactivar los *issues* (Settings → General → Features → Issues; el agente no puede, 403); en el iPhone, abrir Ajustes → Acerca de → «Política de privacidad», volver, y lo mismo en modo avión; y mirar la vertical sin aviso para girar. Decidir antes de F7.1 (AR-24 #5) el **contacto de privacidad** (correo dedicado o formulario): las tiendas lo pedirán.
 
 ## 3. Cómo se trabaja
 - **Banco:** `node --test` en verde (unos 2 min). Las pruebas que arrancan la app se pasan dos veces (varios archivos y autónomo, `tests/autonomo.test.js`); un archivo nuevo que arranque la app se añade allí. Sueltas: `node --test-name-pattern="texto" tests/banco.test.js`. `tests/documentos.test.js`: baseline y versiones.
@@ -47,7 +47,7 @@
 - **Trampas:** no usar `pkill -f "node --test"` ni `rev`. Arrays de la app: `JSON.parse(A.ev('JSON.stringify(...)'))`. Un metrónomo arrancado en una prueba se para en `t.after`.
 
 ## 4. Decisiones recientes
-- **17/11 · F6.4:** el aviso para girar, fuera siempre (no solo con pistas); fusionado el #26 (F5.8 #10) a petición tuya; la política, en la misma ventana (AT-23 A1).
+- **17/11 · F6.4:** el aviso para girar, fuera siempre (no solo con pistas); y sin decir que en horizontal se ven más trastes (AR-24 #13: «el usuario ya probará y se dará cuenta»); fusionado el #26 (F5.8 #10) a petición tuya; la política, en la misma ventana (AT-23 A1).
 - **17/11 · Respuestas a AR-23 y F6.4:** V-12 sí; con pistas, sin aviso para girar; zoom de inicio con trastes de 40 px o más (en el 15 Pro, 9); pistas algo más pequeñas (26 px, `0.6.13`); lo de F6.4, en §2, 16. Idea para después de la 1.0: cuentas de usuario y ranking con amigos (roadmap §6).
 - **16/11 · F5.8 #10:** J-14 nuevo (AR-22 #5: «ok, crea el J-14»); al fallar, solo «¡Prueba otra vez!» / «Try again!»; hecho como bloque aparte de F6.4, con su rama y su PR.
 - **16/11:** fusionados el #24 (F6.3) y el #25 (F5.8 #9), a petición tuya en la misma conversación.
