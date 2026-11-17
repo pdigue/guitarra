@@ -614,7 +614,7 @@ body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
 /* Acerca de (F6.4): texto que se lee, no controles; el enlace, con 44 px para el dedo. */
 .about p { margin:0 0 8px; font-size:13px; line-height:1.45; color:var(--muted); }
 .about .about-title { margin-top:12px; color:var(--text); font-size:12.5px; font-weight:700; }
-.about .about-small { font-size:11.5px; overflow-wrap:anywhere; }
+.about .about-small { font-size:12.5px; overflow-wrap:anywhere; }
 .about a { display:inline-flex; align-items:center; min-height:44px; color:var(--amber); font-weight:700; }
 .version { text-align:center; font-size:11px; color:var(--faint); margin:14px 0 0;
   font-variant-numeric:tabular-nums; }
@@ -1301,13 +1301,15 @@ try {
     <button class="reset" id="set-clear-record" data-t="set.clear">Borrar los récords de racha</button>
   </div>
 
-  <!-- Acerca de (F6.4): privacidad (G-11), créditos de las grabaciones (G-06) y derechos. -->
+  <!-- Acerca de (F6.4). El enlace se abre en la misma ventana: en el iPhone, con
+       la app instalada, otra pestaña la sacaría de la app y sin red no abriría
+       (AT-23 A1); la política trae su «Volver». Solo el autónomo abre otra pestaña. privacidad (G-11), créditos de las grabaciones (G-06) y derechos. -->
   <div class="set-group about" id="set-about">
     <span data-t="set.about">Acerca de</span>
     <p data-t="about.privacy">Trasteando no recoge ni envía datos personales.</p>
     <p><a id="about-privacy" href="https://pdigue.github.io/guitarra/privacidad.html" target="_blank" rel="noopener" data-t="about.privacy.link">Política de privacidad</a></p>
     <p class="about-title" data-t="about.credits.title">Créditos del sonido</p>
-    <p class="about-small" id="about-credits" data-t="about.credits">Guitarra clásica: quartertone (CC BY 4.0) y Nicholaus P. Brosowsky (CC BY 3.0).</p>
+    <p class="about-small" id="about-credits" data-t="about.credits">Guitarra clásica: «ClassicalGuitar-multisampled», de quartertone (freesound.org/people/quartertone/packs/11573), licencia CC BY 4.0 (creativecommons.org/licenses/by/4.0). Guitarra acústica: grabaciones de la University of Iowa Electronic Music Studios (theremin.music.uiowa.edu), de uso libre. Ambas, editadas por Nicholaus P. Brosowsky en tonejs-instruments (github.com/nbrosowsky/tonejs-instruments), licencia CC BY 3.0 (creativecommons.org/licenses/by/3.0). Se usan sin modificar, salvo en la versión descargable, donde van recortadas a 4,5 s, con un fundido final, y recodificadas.</p>
     <p class="about-small" data-t="about.rights">© 2026 Pablo Díaz Guerra. Todos los derechos reservados.</p>
     <p class="version" id="app-version"></p>
   </div>
@@ -1443,7 +1445,7 @@ const TEXTOS = {
     'about.privacy': 'Trasteando no recoge ni envía datos personales. Tus ajustes y récords se guardan solo en este dispositivo, y el sonido del micrófono se analiza aquí mismo: no se graba ni se envía.',
     'about.privacy.link': 'Política de privacidad',
     'about.credits.title': 'Créditos del sonido',
-    'about.credits': 'Guitarra clásica: «ClassicalGuitar-multisampled», de quartertone (freesound.org), licencia CC BY 4.0. Guitarra acústica: University of Iowa Electronic Music Studios. Ambas, editadas por Nicholaus P. Brosowsky en tonejs-instruments (github.com/nbrosowsky/tonejs-instruments), licencia CC BY 3.0 (creativecommons.org/licenses/by/3.0). Se usan sin modificar, salvo en el archivo autónomo, donde van recortadas a 4,5 s, con un fundido final, y recodificadas.',
+    'about.credits': 'Guitarra clásica: «ClassicalGuitar-multisampled», de quartertone (freesound.org/people/quartertone/packs/11573), licencia CC BY 4.0 (creativecommons.org/licenses/by/4.0). Guitarra acústica: grabaciones de la University of Iowa Electronic Music Studios (theremin.music.uiowa.edu), de uso libre. Ambas, editadas por Nicholaus P. Brosowsky en tonejs-instruments (github.com/nbrosowsky/tonejs-instruments), licencia CC BY 3.0 (creativecommons.org/licenses/by/3.0). Se usan sin modificar, salvo en la versión descargable, donde van recortadas a 4,5 s, con un fundido final, y recodificadas.',
     'about.rights': '© 2026 Pablo Díaz Guerra. Todos los derechos reservados (salvo las grabaciones, con su propia licencia).',
     'confirm.clear': '¿Borrar los récords de racha de todas las afinaciones?',
     'confirm.reset': '¿Restablecer todos los ajustes? Tus récords se conservan.',
@@ -1571,7 +1573,7 @@ const TEXTOS = {
     'about.privacy': 'Trasteando does not collect or send any personal data. Your settings and records are stored only on this device, and the microphone sound is analysed right here: it is never recorded or sent.',
     'about.privacy.link': 'Privacy policy',
     'about.credits.title': 'Sound credits',
-    'about.credits': 'Classical guitar: "ClassicalGuitar-multisampled" by quartertone (freesound.org), licensed under CC BY 4.0. Acoustic guitar: University of Iowa Electronic Music Studios. Both edited by Nicholaus P. Brosowsky in tonejs-instruments (github.com/nbrosowsky/tonejs-instruments), licensed under CC BY 3.0 (creativecommons.org/licenses/by/3.0). Used unmodified, except in the standalone file, where they are trimmed to 4.5 s with a fade-out and re-encoded.',
+    'about.credits': 'Classical guitar: "ClassicalGuitar-multisampled" by quartertone (freesound.org/people/quartertone/packs/11573), licensed under CC BY 4.0 (creativecommons.org/licenses/by/4.0). Acoustic guitar: recordings by the University of Iowa Electronic Music Studios (theremin.music.uiowa.edu), free to use. Both edited by Nicholaus P. Brosowsky in tonejs-instruments (github.com/nbrosowsky/tonejs-instruments), licensed under CC BY 3.0 (creativecommons.org/licenses/by/3.0). Used unmodified, except in the downloadable version, where they are trimmed to 4.5 s with a fade-out and re-encoded.',
     'about.rights': '© 2026 Pablo Díaz Guerra. All rights reserved (except the recordings, which have their own licence).',
     'confirm.clear': 'Clear the best streaks of every tuning?',
     'confirm.reset': 'Reset all settings? Your best streaks are kept.',
@@ -1660,7 +1662,7 @@ function aplicarIdioma(){
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.6.14';
+const APP_VERSION = '0.6.15';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base

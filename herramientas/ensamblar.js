@@ -24,7 +24,8 @@ const RE_JS = /<script src="(js\/[^"?]+)(?:\?[^"]*)?"><\/script>/g;
 const RE_INSTALAR = /^[ \t]*<link rel="(?:manifest|apple-touch-icon)"[^>]*>\n/gm;
 
 // La política de privacidad (G-11, F6.4) es otra página, que no va dentro del
-// autónomo: desde el disco, el enlace lleva a la publicada en la web.
+// autónomo: desde el disco, el enlace lleva a la publicada en la web, en otra
+// pestaña para no perder la app (en la web se abre en la misma: AT-23 A1).
 // Si la dirección de la web cambia (F7.1), se cambia aquí.
 const PRIVACIDAD_WEB = 'https://pdigue.github.io/guitarra/privacidad.html';
 
@@ -67,7 +68,7 @@ function ensamblar(htmlPath){
   const base = path.dirname(htmlPath);
   return leer(base, path.basename(htmlPath))
     .replace(RE_INSTALAR, '')
-    .replace(/href="privacidad\.html"/g, 'href="' + PRIVACIDAD_WEB + '"')
+    .replace(/href="privacidad\.html"/g, 'href="' + PRIVACIDAD_WEB + '" target="_blank" rel="noopener"')
     .replace(RE_CSS, (_, rel) => '<style>\n' + incrustable(base, rel, 'style') + '</style>')
     .replace(RE_JS, (_, rel) => '<script>' + conSalto(incrustable(base, rel, 'script')) + nombrar(rel) + '</script>');
 }

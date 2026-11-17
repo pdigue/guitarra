@@ -1,7 +1,7 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 1.22 · **Fecha:** 16 de noviembre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0); la sección 7b (seis áreas, con Metrónomo y Acordes), aprobada el 21/10 y retocada el 22/10 con tu decisión de la pesa del metrónomo; los detalles del péndulo, a falta de tu visto bueno en la web de pruebas. Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
-**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.6.12` · `requisitos.md` v2.9 · `roadmap.md` v4.9
+**Versión:** 1.23 · **Fecha:** 17 de noviembre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0); la sección 7b (seis áreas, con Metrónomo y Acordes), aprobada el 21/10 y retocada el 22/10 con tu decisión de la pesa del metrónomo; los detalles del péndulo, a falta de tu visto bueno en la web de pruebas. Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
+**Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.6.14` · `requisitos.md` v2.11 · `roadmap.md` v4.10
 **Revisión:** auditoría de requisitos AR-04 (`historico/auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
 
@@ -82,7 +82,7 @@ Un ajuste puede estar en dos niveles (la nomenclatura está en el 2 y en el 3); 
 
 ### Libre — boceto A1
 
-De arriba abajo: cabecera (nombre y ⚙), acceso rápido (**Do Re Mi**, **Pentagrama**), pentagrama con la nota leída a la derecha («Sol», «Sol3 · 196 Hz»), el aviso para girar (sección 7), el mástil y el zoom. La nota pulsada se rellena en color de acento; las otras posiciones de la misma nota (L-03) van solo con borde. El mástil ocupa el alto que sobra: cada cuerda mide entre 40 y 52 px en pantallas de 660 px de alto o más (§7).
+De arriba abajo: cabecera (nombre y ⚙), acceso rápido (**Do Re Mi**, **Pentagrama**), pentagrama con la nota leída a la derecha («Sol», «Sol3 · 196 Hz»), el mástil y el zoom (hasta la 0.6.13, entre el pentagrama y el mástil iba el aviso para girar: sección 7). La nota pulsada se rellena en color de acento; las otras posiciones de la misma nota (L-03) van solo con borde. El mástil ocupa el alto que sobra: cada cuerda mide entre 40 y 52 px en pantallas de 660 px de alto o más (§7).
 
 ### Adivinar — boceto A2
 
@@ -131,7 +131,7 @@ Fila superior: tónica y tipo (E-01: mayor, menor natural y pentatónicas mayor 
 
 ### Ajustes — boceto A7
 
-Una hoja que sube desde abajo, con los grupos de hoy (Notación, Mástil, Sonido y afinación) y uno **nuevo, «Acerca de»**: Créditos y licencias (G-06, que exige que la app muestre los créditos), Privacidad (cuando exista la política, F6.4, G-11), Restablecer y el número de versión (G-10). **Desde la 0.5.2**, Notación incluye «Notas alteradas»: cinco selectores, uno por tecla negra (Do♯ | Re♭…), y hay un grupo «Adivinar» con «Al fallar: Ver respuesta | Reintentar» (0.5.1). **Desde la 0.4.2**, el primer grupo es «Idioma · Language» (Español | English, cada uno en su lengua; G-12). **Desde la 0.3.3**, el grupo Sonido enseña el estado del sonido con un botón «Reactivar sonido», y bajo Restablecer (que conserva el récord) hay un botón «Borrar los récords de racha» (uno por afinación desde la 0.4.1). En las filas con interruptor se toca la fila entera, que mide al menos 40 px de alto. Se cierra tocando fuera, con Escape o con «atrás»; el gesto de bajar llega en F3.4. Mientras está abierto, el resto de la página no responde (es un diálogo).
+Una hoja que sube desde abajo, con los grupos de hoy (Notación, Mástil, Sonido y afinación) y uno **nuevo, «Acerca de»** (hecho en la 0.6.14, F6.4: al final, tras los botones de restablecer y borrar récords, con un resumen de la privacidad, el enlace «Política de privacidad» —a `privacidad.html`, o a su parte inglesa, `#en`—, «Créditos del sonido» con el texto de atribución, los derechos y la versión). La propuesta era: Créditos y licencias (G-06, que exige que la app muestre los créditos), Privacidad (cuando exista la política, F6.4, G-11), Restablecer y el número de versión (G-10). **Desde la 0.5.2**, Notación incluye «Notas alteradas»: cinco selectores, uno por tecla negra (Do♯ | Re♭…), y hay un grupo «Adivinar» con «Al fallar: Ver respuesta | Reintentar» (0.5.1). **Desde la 0.4.2**, el primer grupo es «Idioma · Language» (Español | English, cada uno en su lengua; G-12). **Desde la 0.3.3**, el grupo Sonido enseña el estado del sonido con un botón «Reactivar sonido», y bajo Restablecer (que conserva el récord) hay un botón «Borrar los récords de racha» (uno por afinación desde la 0.4.1). En las filas con interruptor se toca la fila entera, que mide al menos 40 px de alto. Se cierra tocando fuera, con Escape o con «atrás»; el gesto de bajar llega en F3.4. Mientras está abierto, el resto de la página no responde (es un diálogo).
 
 ## 7. Móvil en horizontal (F3.2) — bocetos B1 a B6
 
@@ -166,7 +166,7 @@ En horizontal, el botón de pentagrama del panel es el símbolo 𝄞, con su nom
 
 La cuerda mide (alto útil − 28 px) / 6, así que **cumple los 40 px con un alto útil de 268 px o más**. Por debajo, la cuerda baja de 40 px; ese caso se anota y se recomienda instalar la app, que gana el alto de la barra del navegador. Los 280 px de Android son una estimación: se confirman con el simulador de Chrome en F3.2 y en un Android real cuando lo haya.
 
-**Aviso para girar** (V-01): solo en pantallas táctiles en vertical de menos de 600 px de ancho, en Libre, Adivinar y Escalas; nunca en el Afinador ni en el Metrónomo, que funcionan igual en las dos orientaciones, ni en Acordes, que enseña siempre los trastes 0 a 5 (desde la 0.6.5). Es una franja discreta sobre el mástil: «⟳ Gira el móvil para ver más trastes ✕». Desaparece al girar. Si la cierras con ✕, no vuelve: se guarda con los ajustes (C-05) y «Restablecer todos los ajustes» la recupera. Nunca sale en el Afinador, que funciona igual en las dos orientaciones (V-02), ni en una ventana estrecha de Windows. No se bloquea la orientación: el iPhone no lo permite.
+**Sin aviso para girar** (V-01, desde la 0.6.14): la app funciona en las dos orientaciones y no sugiere ninguna (tu decisión del 17/11: «si alguien quiere girar el móvil, que lo gire»). Hasta la 0.6.13 había una franja discreta sobre el mástil, «⟳ Gira el móvil para ver más trastes ✕», en vertical, en Libre, Adivinar y Escalas; desde la 0.6.12 se escondía con pistas. No se bloquea la orientación: el iPhone no lo permite.
 
 ## 7b. Metrónomo y acordes (F5.6 y F5.7) — aprobada el 21/10
 
@@ -266,7 +266,8 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.22** | 16/11/2026 | Tu comentario del 16/11 (F5.8 #10): «Ver la respuesta» debajo también en horizontal, aviso de fallo corto, sin aviso para girar con pistas, zoom de inicio con las zonas seguras y raíl desplazable en pantallas muy bajas (§6, §7). |
+| **1.23** | 17/11/2026 | F6.4 (`0.6.14`): «Acerca de», hecho (§6, A7); sin aviso para girar, por tu decisión del 17/11 (§6, §7; V-01). |
+| 1.22 | 16/11/2026 | Tu comentario del 16/11 (F5.8 #10): «Ver la respuesta» debajo también en horizontal, aviso de fallo corto, sin aviso para girar con pistas, zoom de inicio con las zonas seguras y raíl desplazable en pantallas muy bajas (§6, §7). |
 | 1.21 | 16/11/2026 | Tu decisión del 16/11: pistas en una línea; panel de Adivinar de 204 px en horizontal; frase del reto más corta; «Ver la respuesta» debajo de las pistas (§6, §7b). |
 | 1.20 | 16/11/2026 | Tu comentario del 16/11: las pistas de Adivinar se leen enteras; en horizontal, apiladas, y la racha junto a ▶ (§6, J-06). |
 | 1.19 | 15/11/2026 | F5.8 #7: el metrónomo no cambia de aspecto; la luz del pulso y el péndulo llegan cuando el clic se oye, no antes (§7b, MT-04). |

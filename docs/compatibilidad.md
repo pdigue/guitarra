@@ -1,6 +1,6 @@
 # Trasteando — Compatibilidad entre sistemas operativos
 
-**Versión:** 1.16 · **Fecha:** 16 de noviembre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
+**Versión:** 1.17 · **Fecha:** 17 de noviembre de 2026 · **Requisito:** PL-04 · **Gestiona:** chat de Desarrollo
 
 La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este documento lista cada capacidad del navegador que usa o usará, cómo se comporta en cada sistema y qué hace la app donde falta. Se revisa en cada etapa que añada una capacidad nueva.
 
@@ -36,8 +36,8 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 | Sesión de audio «play-and-record» (`navigator.audioSession`) | Que el iPhone deje grabar mientras la app está en «playback» (0.4.0) | — | — | ✅ Safari 16.4+ | Se pone al encender el micrófono y se devuelve a «playback» al apagarlo; donde no existe, se omite |
 | Analizador de audio (`AnalyserNode`) | Leer el sonido del micrófono (0.4.0) | ✅ | ✅ | ✅ | Parte de Web Audio |
 | Hilo aparte (`Worker` desde un `Blob`) | Calcular la nota sin frenar la interfaz (0.4.0) | ✅ | ✅ | ✅ | Si no se puede crear, el detector va en el hilo principal: el mismo resultado, compartiendo tiempo con la interfaz |
-| Bloquear la orientación | Forzar horizontal | ⚠️ | ⚠️ | ❌ | No se fuerza: desde la 0.3.0 un aviso discreto sugiere girar (V-01) |
-| Tipo de puntero (`matchMedia('(pointer: coarse)')`) | Saber si se toca con el dedo: botones y trastes de 40 px, aviso para girar (0.3.0) | ✅ | ✅ | ✅ | Sin `matchMedia` se trata como ratón: la app funciona, con trastes de 34 px y sin el aviso |
+| Bloquear la orientación | Forzar horizontal | ⚠️ | ⚠️ | ❌ | No se fuerza ni se sugiere: desde la 0.6.14, sin aviso para girar (V-01; de la 0.3.0 a la 0.6.13 lo había) |
+| Tipo de puntero (`matchMedia('(pointer: coarse)')`) | Saber si se toca con el dedo: botones y trastes de 40 px (0.3.0; hasta la 0.6.13, también el aviso para girar) | ✅ | ✅ | ✅ | Sin `matchMedia` se trata como ratón: la app funciona, con trastes de 34 px y sin el aviso |
 | Historial (`history.pushState` y `popstate`) | Botón o gesto «atrás» dentro de la app (C-07, 0.3.0) | ✅ | ✅ | ✅ (la app instalada no tiene botón atrás) | Sin él, «atrás» hace lo de siempre: salir de la app |
 | CSS `grid` y `display: contents` | Disposición en vertical, en horizontal y amplia (F3.2) | ✅ | ✅ | ✅ Safari 11.1+ | Todos los navegadores de referencia lo tienen |
 | CSS `position: sticky` | Zoom siempre a la vista en el panel horizontal (0.3.0) | ✅ | ✅ | ✅ | Si faltara, el zoom se alcanza desplazando el panel |
@@ -57,6 +57,7 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 | Desplazamiento contenido (`overscroll-behavior`) | El raíl de pestañas se desplaza en pantallas muy bajas (280 px) sin arrastrar la página (0.6.12) | ✅ | ✅ | ✅ Safari 16 | Sin él, al llegar al final del raíl puede moverse la página; la app sigue igual. En una ventana de escritorio de menos de 520 px de alto, la barra de desplazamiento clásica estrecha el raíl: aceptado (AT-22 B2) |
 | Medir el texto (`scrollWidth`, `clientWidth`) | Que la respuesta de una pista quepa entera, bajando su tamaño (J-06, 0.6.10) | ✅ | ✅ | ✅ | Estándar en todos; si el recuadro está oculto, se mide al verse |
 | Avisar de cambios de tamaño (`ResizeObserver`) | Volver a encajar las pistas al girar, al cambiar la ventana o al aparecer «Ver la respuesta» (J-06, 0.6.10; AT-21) | ✅ | ✅ | ✅ desde Safari 13.1 | Sin él, se vuelve a encajar con el aviso de la ventana (`resize`) |
+| Abrir otra página en una pestaña nueva (`<a target="_blank" rel="noopener">`) | La política de privacidad desde Ajustes → Acerca de (G-11, 0.6.14) | ✅ pestaña nueva; instalada, en el navegador | ✅ pestaña nueva; instalada, en una pestaña de Chrome sobre la app | ⚠️ a verificar: instalada, Safari la abre en una vista propia, encima de la app | Si se abre en la misma ventana, la política tiene «← Volver a Trasteando». `privacidad.html` no carga nada de fuera y el Service Worker la guarda: también sin red. En el autónomo, el enlace va a la web |
 | `max()` en CSS | Que el ordinal de las cuerdas no baje de 11 px (0.6.10) | ✅ | ✅ | ✅ desde Safari 11.1 | Sin él, el ordinal es la mitad del número |
 | Pantalla completa | Ocultar las barras del navegador | ✅ | ✅ | ❌ en Safari | La app instalada ya abre a pantalla completa |
 
@@ -66,7 +67,8 @@ La app se diseña para funcionar igual en **Windows, Android e iPhone**. Este do
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.16** | 16/11/2026 | Tu comentario del 16/11 (0.6.12): zonas seguras en el zoom de inicio y `overscroll-behavior` en el raíl. Y `comprobar-disposicion.js` simula las zonas seguras del iPhone con Chromium (`Emulation.setSafeAreaInsetsOverride`). |
+| **1.17** | 17/11/2026 | F6.4 (0.6.14): fila nueva, abrir la política de privacidad en una pestaña nueva; sin aviso para girar (orientación y tipo de puntero). |
+| 1.16 | 16/11/2026 | Tu comentario del 16/11 (0.6.12): zonas seguras en el zoom de inicio y `overscroll-behavior` en el raíl. Y `comprobar-disposicion.js` simula las zonas seguras del iPhone con Chromium (`Emulation.setSafeAreaInsetsOverride`). |
 | 1.15 | 16/11/2026 | Tu comentario del 16/11 (0.6.10): `text-size-adjust`, para que el iPhone no agrande el texto al girarlo; medir el texto de las pistas para que quepa, `ResizeObserver` para volver a medir y `max()` en CSS. |
 | 1.14 | 16/11/2026 | F6.3 (0.6.9, instalable): el manifiesto propio y los iconos PNG, en uso; Firefox de escritorio no instala; el iPhone toma el icono de `apple-touch-icon`; la pantalla de arranque de Android, oscura también con el tema claro. |
 | 1.13 | 16/11/2026 | F6.2 (0.6.8, sin conexión desde la web): el Service Worker, en uso, con el aviso de Safari en el iPhone (AT-19 M2, AR-20 #1); fila nueva de la caché del Service Worker. |
