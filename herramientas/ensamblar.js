@@ -23,6 +23,11 @@ const RE_JS = /<script src="(js\/[^"?]+)(?:\?[^"]*)?"><\/script>/g;
 // Tolera sangría y otros atributos (AT-20 #3).
 const RE_INSTALAR = /^[ \t]*<link rel="(?:manifest|apple-touch-icon)"[^>]*>\n/gm;
 
+// La política de privacidad (G-11, F6.4) es otra página, que no va dentro del
+// autónomo: desde el disco, el enlace lleva a la publicada en la web.
+// Si la dirección de la web cambia (F7.1), se cambia aquí.
+const PRIVACIDAD_WEB = 'https://pdigue.github.io/guitarra/privacidad.html';
+
 const leer = (base, rel) => fs.readFileSync(path.join(base, rel), 'utf8').replace(/\r\n/g, '\n');
 
 // Desde la 0.6.0 (F6.1) cada módulo incrustado termina con «//# sourceURL=js/…».
@@ -62,6 +67,7 @@ function ensamblar(htmlPath){
   const base = path.dirname(htmlPath);
   return leer(base, path.basename(htmlPath))
     .replace(RE_INSTALAR, '')
+    .replace(/href="privacidad\.html"/g, 'href="' + PRIVACIDAD_WEB + '"')
     .replace(RE_CSS, (_, rel) => '<style>\n' + incrustable(base, rel, 'style') + '</style>')
     .replace(RE_JS, (_, rel) => '<script>' + conSalto(incrustable(base, rel, 'script')) + nombrar(rel) + '</script>');
 }
@@ -81,7 +87,7 @@ function scripts(htmlPath){
   }));
 }
 
-module.exports = { ensamblar, scripts };
+module.exports = { ensamblar, scripts, PRIVACIDAD_WEB };
 
 if (require.main === module){
   const html = process.argv[2] || path.join(__dirname, '..', 'index.html');

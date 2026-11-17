@@ -1,0 +1,34 @@
+Copyright (c) 2026 Pablo Díaz Guerra. Todos los derechos reservados.
+All rights reserved.
+
+ESPAÑOL
+
+El código fuente, el diseño, los textos y los iconos de Trasteando son obra de
+Pablo Díaz Guerra. Se publican en este repositorio para que puedan leerse, pero
+no se concede ninguna licencia para copiarlos, modificarlos, distribuirlos,
+publicarlos ni usarlos en otros proyectos, total o parcialmente, sin permiso
+previo y por escrito del autor. Por estar alojado en GitHub, quedan a salvo
+solo los derechos que las condiciones de servicio de GitHub dan a sus usuarios
+(ver el repositorio y hacer una copia dentro de GitHub).
+
+Excepción: las grabaciones de guitarra de la carpeta samples/, sus recortes en
+tests/muestras-afinador/ y las copias incluidas en dist/ no son obra del autor.
+Tienen su propia licencia (Creative Commons Attribution), que es la que se les
+aplica, y no esta. Su origen, su licencia y el texto de atribución están en
+CREDITOS.md.
+
+ENGLISH
+
+The source code, design, texts and icons of Trasteando are the work of Pablo
+Díaz Guerra. They are published in this repository so that they can be read,
+but no licence is granted to copy, modify, distribute, publish or use them in
+other projects, in whole or in part, without the author's prior written
+permission. Because the repository is hosted on GitHub, only the rights that
+GitHub's Terms of Service grant to its users (viewing the repository and
+forking it within GitHub) are preserved.
+
+Exception: the guitar recordings in the samples/ folder, their excerpts in
+tests/muestras-afinador/ and the copies included in dist/ are not the author's
+work. They have their own licence (Creative Commons Attribution), which applies
+to them instead of this one. Their source, licence and attribution text are in
+CREDITOS.md.

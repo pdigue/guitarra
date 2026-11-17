@@ -206,7 +206,12 @@ test('la app no descarga nada de otros servidores (S-07, F2.2)', () => {
   // Tampoco direcciones sin protocolo («//cdn…»), que el navegador completa con https.
   assert.deepEqual(src.match(/["'(=]\s*\/\/[a-z0-9]/gi) || [], []);
   // El espacio de nombres de SVG parece una dirección, pero el navegador no la descarga.
-  assert.deepEqual(urls.filter(u => u !== 'http://www.w3.org/2000/svg'), []);
+  // Y en la página ensamblada, el enlace a la política de privacidad publicada
+  // (F6.4) tampoco: es un enlace que abre otra página si lo tocas, no una descarga.
+  const { PRIVACIDAD_WEB } = require('../herramientas/ensamblar.js');
+  assert.deepEqual(urls.filter(u => u !== 'http://www.w3.org/2000/svg' && u !== PRIVACIDAD_WEB), []);
+  const veces = s => src.split(s).length - 1;
+  assert.equal(veces(PRIVACIDAD_WEB), veces('<a id="about-privacy" href="' + PRIVACIDAD_WEB + '"'), 'solo como enlace del «Acerca de»');
   const A = boot(APP);
   assert.equal(A.ev('SAMPLE_BASE'), 'samples/');
 });
@@ -343,7 +348,9 @@ unaVez('el archivo autónomo está al día con la app, con su audio y dentro de 
     assert.equal(crypto.createHash('sha256').update(Buffer.from(b64, 'base64')).digest('hex'), fila.sha256, `${timbre}-${nota}: el audio incrustado no es el generado`);
     assert.equal(fila.sha256_original, medida[timbre][fila.archivo].sha256, `${timbre}-${nota}: la grabación original ha cambiado; hay que regenerar`);
   }
-  const urls = [...new Set(pagina.match(/https?:\/\/[^\s"'`)<>]+/g) || [])].filter(u => u !== 'http://www.w3.org/2000/svg');
+  // Solo el espacio de nombres de SVG y el enlace a la privacidad publicada (F6.4), que no se descargan.
+  const { PRIVACIDAD_WEB } = require('../herramientas/ensamblar.js');
+  const urls = [...new Set(pagina.match(/https?:\/\/[^\s"'`)<>]+/g) || [])].filter(u => u !== 'http://www.w3.org/2000/svg' && u !== PRIVACIDAD_WEB);
   assert.deepEqual(urls, []);
 });
 
@@ -539,7 +546,7 @@ test('tocar la pestaña activa no reinicia la racha (J-07, AT-02 #6)', async () 
   assert.equal(A.ev('streak'), 3);
 });
 
-// --- F3.2: disposición, aviso para girar, zoom táctil y botón «atrás» ---
+// --- F3.2: disposición, zoom táctil y botón «atrás» ---
 
 const DEDO = { matchMedia: q => ({ matches: /coarse/.test(q) }) };    // pantalla táctil
 const RATON = { matchMedia: () => ({ matches: false }) };
@@ -548,7 +555,7 @@ test('estructura de la interfaz aprobada: panel de controles y pistas dentro del
   const A = boot(APP);
   const dentro = (hijo, padre) => { for (let n = A.$(hijo); n; n = n.parentNode) if (n === A.$(padre)) return true; return false; };
   for (const id of ['quickbar', 'challenge', 'display', 'zoombar']) assert.ok(dentro(id, 'panel'), id + ' va en el panel');
-  for (const id of ['board-area', 'rotate-hint', 'tuner']) assert.ok(!dentro(id, 'panel'), id + ' va fuera del panel');
+  for (const id of ['board-area', 'tuner']) assert.ok(!dentro(id, 'panel'), id + ' va fuera del panel');
   for (const id of ['qb-hint-label', 'qb-hint-note', 'qb-hint-string']) assert.ok(dentro(id, 'challenge'), id + ' va en el reto');
   assert.ok(A.$('btn-settings-rail').closest('.tabbar'), 'Ajustes también en el raíl');
   assert.equal(A.$('qb-staff').getAttribute('aria-label'), 'Pentagrama', 'el chip con la clave tiene nombre');
@@ -558,23 +565,6 @@ test('estructura de la interfaz aprobada: panel de controles y pistas dentro del
   A.doc.querySelector('.tab[data-screen="free"]').click();
   assert.equal(A.$('panel').hidden, false);
   assert.deepEqual(sinErrores(A), []);
-});
-
-test('con pistas encendidas en Adivinar, sin aviso para girar; vuelve al apagarlas y al cambiar de área (V-01, J-14)', async () => {
-  const A = boot(APP, null, DEDO);
-  A.doc.querySelector('.tab[data-screen="guess"]').click();
-  await sleep(20);
-  assert.equal(A.doc.body.classList.contains('con-pistas'), false, 'sin pistas, el aviso sigue');
-  A.$('qb-hint-string').click();
-  await sleep(20);
-  assert.equal(A.doc.body.classList.contains('con-pistas'), true, 'con una pista, se esconde (css)');
-  A.doc.querySelector('.tab[data-screen="free"]').click();
-  await sleep(20);
-  assert.equal(A.doc.body.classList.contains('con-pistas'), false, 'en Libre no hay pistas');
-  A.doc.querySelector('.tab[data-screen="guess"]').click();
-  A.$('qb-hint-string').click();
-  await sleep(20);
-  assert.equal(A.doc.body.classList.contains('con-pistas'), false, 'al apagarla, vuelve');
 });
 
 test('zoom de inicio en el móvil en horizontal: los trastes que caben a 40 px, sin las zonas seguras (V-04)', () => {
@@ -600,24 +590,16 @@ unaVez('MOVIL_H_RESTO (js/06-zoom.js) cuadra con el css: raíl de 64 px, panel d
     assert.doesNotMatch(fs.readFileSync(path.join(__dirname, '..', 'js', f), 'utf8'), /guess\.tryAgain/, f);
 });
 
-test('aviso para girar: solo con el dedo, en vertical, fuera del Afinador, y cerrado no vuelve (V-01)', async () => {
-  const A = boot(APP, null, DEDO);                  // 390 × 844: móvil en vertical
-  assert.equal(A.$('rotate-hint').hidden, false, 'sale en Libre');
-  A.doc.querySelector('.tab[data-screen="tuner"]').click();
-  assert.equal(A.$('rotate-hint').hidden, true, 'nunca en el Afinador');
-  A.doc.querySelector('.tab[data-screen="guess"]').click();
-  assert.equal(A.$('rotate-hint').hidden, false, 'sale en Adivinar');
-  A.$('rotate-close').click();
-  assert.equal(A.$('rotate-hint').hidden, true);
-  assert.equal(JSON.parse(A.store.get('trasteando.v1')).rotateHintClosed, true, 'se guarda con los ajustes');
-  const B = boot(APP, { rotateHintClosed: true }, DEDO);
-  assert.equal(B.$('rotate-hint').hidden, true, 'cerrado no vuelve al abrir otra vez');
-  B.$('set-reset').click();
-  await sleep(20);
-  assert.equal(B.$('rotate-hint').hidden, false, '«Restablecer» lo recupera');
-  assert.equal(boot(APP, null, RATON).$('rotate-hint').hidden, true, 'con ratón no sale');
-  assert.equal(boot(APP, null, Object.assign({ innerWidth: 844, innerHeight: 390 }, DEDO)).$('rotate-hint').hidden, true, 'en horizontal no sale');
-  assert.equal(boot(APP).$('rotate-hint').hidden, true, 'sin matchMedia, como el caso más pobre, no sale');
+test('sin aviso para girar el móvil, en ninguna área ni orientación; el ajuste viejo que lo cerraba se descarta (V-01, 0.6.14)', async () => {
+  const A = boot(APP, { rotateHintClosed: true }, DEDO);   // 390 × 844: móvil en vertical
+  assert.equal(A.doc.querySelector('.rotate-hint, #rotate-hint, #rotate-close'), null, 'el aviso ya no existe');
+  for (const area of ['free', 'guess', 'scales', 'chords', 'tuner', 'metro']) {
+    A.doc.querySelector('.tab[data-screen="' + area + '"]').click();
+    await sleep(5);
+  }
+  A.$('qb-hint-string').click();               // tocar algo que guarde los ajustes
+  assert.equal('rotateHintClosed' in JSON.parse(A.store.get('trasteando.v1')), false, 'no se vuelve a guardar');
+  assert.deepEqual(sinErrores(A), []);
 });
 
 test('con el dedo los trastes miden 40 px por defecto y con «+» se ven más, hasta 28 px (V-04, G-05)', () => {
@@ -1449,7 +1431,6 @@ test('metrónomo: tempo con la barra vertical, − y +, el teclado y «Marcar»,
   assert.equal(A.$('metro').hidden, false);
   assert.equal(A.$('board-area').hidden, true, 'sin mástil, como el Afinador');
   assert.equal(A.$('panel').hidden, true);
-  assert.equal(A.$('rotate-hint').hidden, true, 'no pide girar el móvil');
   assert.equal(A.$('metro-name').textContent, 'Andante');
   A.$('metro-plus').click();
   assert.equal(A.$('metro-bpm').textContent, '81');
@@ -2205,4 +2186,60 @@ test('en inglés, las cuerdas de la pista llevan «st», «nd», «rd» y «th»
   const esperados = JSON.parse(A.ev('JSON.stringify(positionsFor(challenge.midi).map(p => ord(p.string.number).replace(/^\\d+/, "")))'));
   assert.deepEqual(fines, esperados);
   assert.ok(fines.every(f => ['st', 'nd', 'rd', 'th'].includes(f)));
+});
+
+// --- F6.4: privacidad, licencia y créditos en la app (G-06, G-11) ---
+
+test('Ajustes → Acerca de: privacidad, créditos de las grabaciones y derechos, en los dos idiomas (G-06, G-11)', async () => {
+  const A = boot(APP);
+  const autonomo = process.env.TRASTEANDO_FORMA === 'autónomo';
+  const { PRIVACIDAD_WEB } = require('../herramientas/ensamblar.js');
+  const destino = autonomo ? PRIVACIDAD_WEB : 'privacidad.html';   // desde el disco, la de la web
+  const texto = () => A.$('set-about').textContent;
+  // Lo que pide la licencia CC BY: autor, obra, origen, licencia y si se cambió.
+  for (const x of ['quartertone', 'ClassicalGuitar-multisampled', 'University of Iowa', 'Nicholaus P. Brosowsky',
+                   'tonejs-instruments', 'CC BY 4.0', 'CC BY 3.0', 'autónomo', 'no recoge ni envía datos', 'Todos los derechos reservados'])
+    assert.ok(texto().includes(x), 'en español falta «' + x + '»');
+  assert.equal(A.$('about-privacy').getAttribute('href'), destino);
+  assert.equal(A.$('about-privacy').getAttribute('rel'), 'noopener');
+  A.doc.querySelector('#set-lang [data-v="en"]').click();
+  await sleep(10);
+  for (const x of ['quartertone', 'Nicholaus P. Brosowsky', 'CC BY 4.0', 'CC BY 3.0', 'standalone', 'does not collect or send', 'All rights reserved'])
+    assert.ok(texto().includes(x), 'en inglés falta «' + x + '»');
+  assert.equal(A.$('about-privacy').getAttribute('href'), destino + '#en', 'en inglés, a la versión inglesa');
+  A.doc.querySelector('#set-lang [data-v="es"]').click();
+  await sleep(10);
+  assert.equal(A.$('about-privacy').getAttribute('href'), destino, 'y vuelve');
+  assert.ok(/^Trasteando \d+\.\d+\.\d+$/.test(A.$('app-version').textContent), 'la versión, al final');
+  assert.deepEqual(sinErrores(A), []);
+});
+
+unaVez('privacidad.html: las dos versiones, sin nada de fuera, y dice lo que hace la app (G-11)', () => {
+  const raiz = path.join(__dirname, '..');
+  const html = fs.readFileSync(path.join(raiz, 'privacidad.html'), 'utf8');
+  assert.match(html, /<section id="es" lang="es">/);
+  assert.match(html, /<section id="en" lang="en">/);
+  // Nada que se cargue de otro sitio: ni scripts, ni estilos, ni imágenes, ni fuentes.
+  assert.doesNotMatch(html, /<script|<link |<img |<iframe|@import|url\(/i);
+  for (const x of ['no recoge ni envía datos personales', 'micrófono', 'no se graba, no se guarda y no se envía', 'GitHub',
+                   'does not collect or send any personal data', 'never recorded, stored or sent'])
+    assert.ok(html.includes(x), 'falta «' + x + '»');
+  // Lo que la página promete, en el código: los ajustes solo van a localStorage y
+  // el único fetch de la app es el de sus grabaciones (js/03-audio.js).
+  for (const f of fs.readdirSync(path.join(raiz, 'js'))) {
+    const c = fs.readFileSync(path.join(raiz, 'js', f), 'utf8');
+    assert.doesNotMatch(c, /sendBeacon|XMLHttpRequest|WebSocket|document\.cookie|indexedDB/, f);
+    assert.equal((c.match(/\bfetch\(/g) || []).length, f === '03-audio.js' ? 1 : 0, f + ': fetch inesperado');
+  }
+});
+
+unaVez('LICENSE: todos los derechos reservados, salvo las grabaciones, que remiten a CREDITOS.md (G-06)', () => {
+  const lic = fs.readFileSync(path.join(__dirname, '..', 'LICENSE'), 'utf8');
+  assert.match(lic, /Copyright \(c\) 2026 Pablo Díaz Guerra\. Todos los derechos reservados\./);
+  assert.match(lic, /All rights reserved\./);
+  assert.match(lic, /samples\//);
+  assert.match(lic, /CREDITOS\.md/);
+  const readme = fs.readFileSync(path.join(__dirname, '..', 'README.md'), 'utf8');
+  assert.match(readme, /\[LICENSE\]\(LICENSE\)/);
+  assert.match(readme, /\[privacidad\.html\]\(privacidad\.html\)/);
 });

@@ -1,6 +1,6 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 4.9 · **Fecha:** 16 de noviembre de 2026
+**Versión:** 4.10 · **Fecha:** 17 de noviembre de 2026
 **Se actualiza:** al cerrar cada bloque (regla 5 de `CLAUDE.md`). Las versiones vigentes de la app y de los demás documentos están en `docs/ESTADO.md`.
 
 > **Baseline 0.6.2** (tu decisión del 15/11): las fases hechas ocupan una línea; el detalle es solo para lo que queda. El roadmap completo hasta la v3.26, con la teoría de cada etapa, la pista T, el gobierno y los métodos de validación, está en `docs/historico/roadmap.md` (rama `archivo/hasta-0.6.2`).
@@ -9,7 +9,7 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** F6 (F6.2 y F6.3 hechas; sigue F6.4), con F5.8 a falta de tu prueba en el móvil. `main` tiene la `0.6.11`; `auto/F5.8-respuesta` (F5.8 #10), la `0.6.13`.
+📍 **Estás aquí:** F6 (F6.2 a F6.4 hechas; F6.4 a falta de tu aprobación), con F5.8 a falta de tu prueba en el móvil. `main` tiene la `0.6.13`; `auto/F6.4-privacidad`, la `0.6.14`.
 
 **Leyenda:** ⬜ pendiente · ⏳ en curso · 🔨 hecha, sin tu prueba · ✅ validada · 📅 en una sesión contigo · ⏸ en pausa
 
@@ -20,7 +20,7 @@
 | **F3** · Interfaz · `0.3.x` | `interfaz.md` aprobada, horizontal, accesibilidad, Sesión 1 (35 validados); etiqueta `v0.3.3` | ✅ |
 | **F4** · Micrófono · `0.4.x` | Afinador por micrófono (YIN en un hilo), idioma; F4.3 espera tu prueba de 10 minutos con la guitarra | 🔨 |
 | **F5** · Escalas, metrónomo y acordes · `0.5.x` | F5.1 a F5.7 y CP-5 hechos; F5.2 a F5.4, F5.6 y F5.7 esperan la Sesión 2; **F5.8 y F5.9, abajo** | ⏳ |
-| **F6** · Preparación · `0.6.x` | F6.1 hecha (`0.6.0`, el autónomo pasa el banco); F6.2 hecha (`0.6.8`, sin conexión desde la web); F6.3 hecha (`0.6.9`, instalable); **F6.4, abajo** | ⏳ |
+| **F6** · Preparación · `0.6.x` | F6.1 hecha (`0.6.0`, el autónomo pasa el banco); F6.2 hecha (`0.6.8`, sin conexión desde la web); F6.3 hecha (`0.6.9`, instalable); F6.4 hecha (`0.6.14`, privacidad, licencia y créditos) | 🔨 |
 | **F7** · Publicación · `1.0.0` | **Abajo** | ⬜ |
 
 **Sesión 2, con la guitarra** (antes de CP-6): escalas, metrónomo, acordes, afinador (V-09), el sonido en el iPhone (S-01) y el autónomo con doble clic en Windows (G-08).
@@ -69,7 +69,7 @@ Auditoría a fondo de lo que cambió en F5.8 y etiqueta `v0.5.x` en el commit qu
 |---|---|---|---|:---:|
 | **F6.2** | Service Worker para funcionar sin conexión desde la web | G-03 | Cargar, modo avión y seguir usándola (`herramientas/comprobar-sin-conexion.js`) | 🔨 parte de F6.2 (`localhost`, `0.6.8`): 9 de 9 en Chromium; G-03 se cierra en F7.2 (web publicada e iPhone instalado) |
 | **F6.3** | Manifiesto propio e iconos | G-04 | Chrome no pone motivos en contra (`Page.getInstallabilityErrors`) y el manifiesto trae iconos de 192, 512 y «maskable» (`herramientas/comprobar-instalable.js`); antes decía «Lighthouse la da por instalable» (AR-21 #2) | 🔨 parte de F6.3 (`localhost`, `0.6.9`): Chrome la da por instalable, con la consulta que usaba Lighthouse más el criterio clásico de iconos, porque desde 2024 Chrome instala casi cualquier página y Lighthouse 12 retiró esa prueba (`herramientas/comprobar-instalable.js`, 13 de 13); G-04 se cierra en F7.2 (instalada desde la web publicada, en el iPhone y en Android) |
-| **F6.4** | README, licencia del código, créditos en la app y privacidad | G-06, G-11 | Los cuatro existen y son coherentes | ⬜ licencia: decisión tuya |
+| **F6.4** | README, licencia del código, créditos en la app y privacidad | G-06, G-11 | Los cuatro existen y son coherentes | 🔨 `0.6.14`: `LICENSE` (todos los derechos reservados), `privacidad.html` (español e inglés, sin contacto), Ajustes → Acerca de y README; la política, pública en F7.1 |
 
 ### 🚦 CP-6 · Puerta de lanzamiento
 Auditoría a fondo del producto completo, **antes** de publicar, contra el inventario de la sección 5. Salida: sí, no, o sí con condiciones.
@@ -92,7 +92,7 @@ En esta fase no se añade funcionalidad.
 
 ## 5. Inventario de lanzamiento
 
-**Falta:** `privacidad.html`, `LICENSE` y créditos en la app (F6.4) · comprobar que *Trasteando* no choca con una marca · fichas de tienda y capturas (F7.4) · `.well-known/assetlinks.json` en la raíz del dominio, para Android (F7.4) · un Mac con Xcode, solo si hay App Store.
+**Falta:** publicar `privacidad.html` con la app (F7.1) · comprobar que *Trasteando* no choca con una marca · fichas de tienda y capturas (F7.4) · `.well-known/assetlinks.json` en la raíz del dominio, para Android (F7.4) · un Mac con Xcode, solo si hay App Store.
 
 | Cuenta | Coste | Notas |
 |---|---|---|
@@ -130,7 +130,8 @@ El historial hasta la v3.26 está en `docs/historico/roadmap.md`.
 
 | Versión | Fecha | Cambio |
 |---|---|---|
-| **4.9** | 16/11/2026 | Tu comentario del 16/11 (F5.8 #10): ningún control fuera de la pantalla, en la `0.6.12`; J-14 nuevo. F6.2, F6.3 y F5.8 #9, fusionadas. |
+| **4.10** | 17/11/2026 | F6.4 hecha (`0.6.14`): `LICENSE`, `privacidad.html`, créditos en Ajustes → Acerca de y README; sin aviso para girar (V-01). Fusionado el #26 (F5.8 #10). |
+| 4.9 | 16/11/2026 | Tu comentario del 16/11 (F5.8 #10): ningún control fuera de la pantalla, en la `0.6.12`; J-14 nuevo. F6.2, F6.3 y F5.8 #9, fusionadas. |
 | 4.8 | 16/11/2026 | Tu decisión del 16/11 (F5.8 #9): las pistas en una línea, el panel de Adivinar más ancho en horizontal y la frase del reto más corta, en la `0.6.11`. |
 | 4.7 | 16/11/2026 | Tu comentario del 16/11 (F5.8 #9, pistas de Adivinar): hecho en la `0.6.10`. |
 | 4.6 | 16/11/2026 | F6.3 hecha (`0.6.9`): manifiesto propio (`manifest.webmanifest`) e iconos PNG (192, 512, «maskable» y el del iPhone, de 180), comprobada instalable en `localhost` (13 de 13 en Chromium); G-04 queda parcial hasta la web publicada (F7.2). «Estás aquí», al día. |

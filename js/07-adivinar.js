@@ -116,8 +116,6 @@ function renderClues(){
   const pistas = document.querySelector('.ch-hints');
   pistas.classList.toggle('has-clue', !!challenge && screen === 'guess' && (state.hintNote || state.hintString));
   pistas.classList.toggle('dos', !!challenge && screen === 'guess' && state.hintNote && state.hintString);
-  // Con pistas, el aviso para girar se esconde (css): en vertical no cabía todo (16/11).
-  document.body.classList.toggle('con-pistas', pistas.classList.contains('has-clue'));
   // Se encajan al final, con la franja ya encendida y su ancho definitivo.
   pistas.querySelectorAll('.clue-v').forEach(encajar);
 }
