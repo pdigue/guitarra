@@ -1,6 +1,6 @@
 # Trasteando — Roadmap de ejecución
 
-**Versión:** 4.10 · **Fecha:** 17 de noviembre de 2026
+**Versión:** 4.11 · **Fecha:** 17 de noviembre de 2026
 **Se actualiza:** al cerrar cada bloque (regla 5 de `CLAUDE.md`). Las versiones vigentes de la app y de los demás documentos están en `docs/ESTADO.md`.
 
 > **Baseline 0.6.2** (tu decisión del 15/11): las fases hechas ocupan una línea; el detalle es solo para lo que queda. El roadmap completo hasta la v3.26, con la teoría de cada etapa, la pista T, el gobierno y los métodos de validación, está en `docs/historico/roadmap.md` (rama `archivo/hasta-0.6.2`).
@@ -9,7 +9,7 @@
 
 ## 1. Estado de un vistazo
 
-📍 **Estás aquí:** F6 (F6.2 a F6.4 hechas; F6.4 a falta de tu aprobación), con F5.8 a falta de tu prueba en el móvil. `main` tiene la `0.6.13`; `auto/F6.4-privacidad` (PR #27), la `0.6.15`.
+📍 **Estás aquí:** F6 hecha a falta de su cierre (CP-6); F5.8, a falta de tu prueba en el móvil, con un comentario más (#11, tus decisiones del 17/11). `main` tiene la `0.6.15`; `auto/F5.8-decisiones`, la `0.6.16`.
 
 **Leyenda:** ⬜ pendiente · ⏳ en curso · 🔨 hecha, sin tu prueba · ✅ validada · 📅 en una sesión contigo · ⏸ en pausa
 
@@ -57,6 +57,7 @@ Un bloque de trabajo por comentario, cada uno en su conversación (regla de `CLA
 | 8 | «propongas nuevas mejoras de cara a implementarlas. Quiero ver un cambio claro a mejor en la app, tanto en funcionamiento como en contenido, como en looking, en un corto plazo» | — (12/11: recibido) | Lista de propuestas enviada el 12/11; cada una que apruebes entra como requisito nuevo | — | — | ⬜ recibido el 12/11 |
 | 9 | «Antes, no se ven las cuerdas de pista, incluso peor en horizontal, adaptalos, mas pequeño o solo numero y los st etc pequeños etc no lo se. Optimiza los tamaños» (16/11, con capturas). Y después: «Mejor en una linea pero que sea una linea en ambos idiomas, dale mas espacio al margen con las pistas recortando un poco los trastes… algo conciso [para la frase]» | Números grandes con el ordinal pequeño; la respuesta se mide y se ajusta, sin «…»; en una sola línea en los dos idiomas, nunca menor que la nota que tocas (20 px); en horizontal, en Adivinar, panel de 204 px a costa de un poco de mástil; la frase, «Pulsa ▶, escucha y encuéntrala» | En horizontal, las pistas apiladas y la racha junto a ▶; «Ver la respuesta» en la fila de debajo; el iPhone ya no agranda el texto al girar | J-06 | `0.6.10`, `0.6.11` | 🔨 hecho, a falta de tu prueba |
 | 10 | «Ademas de lo anterior ojo que e muestra la respuesta se sale de la pantalla. Revisa que todos los posibles controles quedan bien en todas las circunstancias / Tambien resuce el qording de cuando falla, tey it again es suficiente, o try again! Directamente» (16/11, con captura). Y sobre AR-22 #5: «ok crea el j14» | J-14 nuevo; el aviso de fallo, corto | Con las pistas, el aviso para girar se esconde en vertical; el zoom de inicio descuenta las zonas seguras | J-14 · J-06, V-01, V-04, G-05 | `0.6.12` | 🔨 hecho, a falta de tu prueba |
+| 11 | Tus decisiones del 17/11, al barrer los puntos abiertos: «Partitura» de fábrica (también el arranque); el afinador, «siempre en Micrófono»; y el metrónomo en horizontal en dos bloques, con fotos: «la barra a la izquierda (…) la misma amplitud que en vertical, ajustando simplemente su altura (…) al espacio disponible» | **17/11:** las tres, tal cual | — | V-10, A-02, MT-06 | `0.6.16` | 🔨 falta tu prueba |
 
 ### F5.9 · Cierre (⬜)
 Auditoría a fondo de lo que cambió en F5.8 y etiqueta `v0.5.x` en el commit que cierre la fase, aunque la app sea `0.6.n` (G-10).
@@ -110,9 +111,9 @@ En esta fase no se añade funcionalidad.
 
 | Decisión | Bloquea | Plazo |
 |---|---|---|
-| ~~Licencia del código~~ | F6.4 | Decidida el 17/11: todos los derechos reservados; repositorio público (la web de pruebas de GitHub es gratis solo así); *issues* desactivados; privacidad sin contacto hasta F7 |
+| ~~Licencia del código~~ | F6.4 | Decidida el 17/11: todos los derechos reservados; repositorio público (la web de pruebas de GitHub es gratis solo así); *issues* desactivados; privacidad sin contacto hasta F7; el 17/11, un correo dedicado como contacto (falta la dirección; se pone en `privacidad.html` antes de F7.1, AR-24 #5) |
 | Tiendas y orden | F7.4 | Antes de F7.4 |
-| Péndulo: 13° en horizontal o varilla más corta; ↑ sube el tempo o la pesa (AR-14 #2, #8) | — | Cuando quieras |
+| ~~Péndulo en horizontal~~ (AR-14 #2) · ↑ sube el tempo o la pesa (AR-14 #8) | — | Lo primero, decidido el 17/11: la barra a la izquierda, con 30° (`0.6.16`); lo segundo, cuando quieras |
 | Propuestas de F5.8 #8 | F5.8 #8 | Cuando quieras |
 | **Idea para después de la 1.0 (17/11):** cuentas de usuario (correo o Google), preferencias y récords guardados en la nube y ranking con amigos. Necesita un servidor con base de datos y política de privacidad con contacto; si se hace, también repositorio privado y un hospedaje que publique desde él | — | Después de F7 |
 
@@ -130,7 +131,8 @@ El historial hasta la v3.26 está en `docs/historico/roadmap.md`.
 
 | Versión | Fecha | Cambio |
 |---|---|---|
-| **4.10** | 17/11/2026 | F6.4 hecha (`0.6.14` y `0.6.15`, tras AT-23 y AR-24): `LICENSE`, `privacidad.html`, créditos en Ajustes → Acerca de y README; sin aviso para girar (V-01). Fusionado el #26 (F5.8 #10). |
+| **4.11** | 17/11/2026 | F5.8 #11, tus decisiones del 17/11 (`0.6.16`): Partitura de fábrica, afinador siempre en Micrófono, metrónomo en horizontal en dos bloques con 30° (V-10, A-02, MT-06). Fusionado el #27 (F6.4); «Estás aquí», al día. Contacto de privacidad: un correo dedicado (falta la dirección). |
+| 4.10 | 17/11/2026 | F6.4 hecha (`0.6.14` y `0.6.15`, tras AT-23 y AR-24): `LICENSE`, `privacidad.html`, créditos en Ajustes → Acerca de y README; sin aviso para girar (V-01). Fusionado el #26 (F5.8 #10). |
 | 4.9 | 16/11/2026 | Tu comentario del 16/11 (F5.8 #10): ningún control fuera de la pantalla, en la `0.6.12`; J-14 nuevo. F6.2, F6.3 y F5.8 #9, fusionadas. |
 | 4.8 | 16/11/2026 | Tu decisión del 16/11 (F5.8 #9): las pistas en una línea, el panel de Adivinar más ancho en horizontal y la frase del reto más corta, en la `0.6.11`. |
 | 4.7 | 16/11/2026 | Tu comentario del 16/11 (F5.8 #9, pistas de Adivinar): hecho en la `0.6.10`. |

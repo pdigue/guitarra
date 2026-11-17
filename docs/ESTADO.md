@@ -1,7 +1,7 @@
 # Trasteando — Estado para retomar
 
-**Actualizado:** 17/11/2026, con la app en la `0.6.15` · lo mantiene la conversación que trabaja.
-**Documentos:** requisitos v2.12 · matriz v2.12 · roadmap v4.10 (baseline 0.6.2; lo anterior, en `docs/historico/`)
+**Actualizado:** 17/11/2026, con la app en la `0.6.16` · lo mantiene la conversación que trabaja.
+**Documentos:** requisitos v2.13 · matriz v2.13 · roadmap v4.11 (baseline 0.6.2; lo anterior, en `docs/historico/`)
 
 > **Al empezar:** compara este archivo (GitHub) con `claude/ESTADO.md` del proyecto; si difieren, avisa a Pablo (manda GitHub). Las reglas están en `CLAUDE.md`. **Al terminar:** déjalo al día y acaba con «ESTADO actualizado: versión X, siguiente paso Y». Propón tú el cambio de conversación al cerrar el bloque.
 
