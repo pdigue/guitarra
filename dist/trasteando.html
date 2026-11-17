@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="es">
+<!-- Partitura es el tema de fábrica (17/11): va aquí para que, antes de leer lo
+     guardado, no se vea un instante otro tema. 00-aspecto.js lo cambia si elegiste otro. -->
+<html lang="es" data-theme="partitura" data-scheme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -7,7 +9,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Trasteando">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#140e09">
+<meta name="theme-color" content="#f5efe3">
 <title>Trasteando</title>
 <!-- Instalable (G-04, F6.3): el manifiesto y el icono del iPhone son archivos de
      verdad. El archivo autónomo (dist/) los quita: desde el disco no se instala. -->
@@ -661,12 +663,31 @@ body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
      cada uno bajaría de 40 px, el mínimo para el dedo (comprobar-disposicion). */
   body[data-screen="guess"] { grid-template-columns:64px minmax(0,1fr) 204px; }
   #tuner { grid-column:2 / -1; grid-row:1; min-height:0; }
+  /* Dos bloques (tus fotos del 17/11, AR-14): a la izquierda la barra y a la
+     derecha todo lo demás, ordenado como en vertical (nombre, tempo, puntos,
+     compás y «Marcar», Empezar), centrado en el alto. */
   #metro { grid-column:2 / -1; grid-row:1; min-height:0; display:grid;
-           grid-template-columns:minmax(120px,.8fr) minmax(0,1fr) minmax(0,1fr); grid-template-rows:minmax(0,1fr);
-           align-items:center; gap:8px 20px; padding:8px 16px; }
-  .metro-pendulo { align-self:stretch; height:auto; max-height:none; min-height:0; }
-  .metro-bpm { font-size:56px; }
-  .metro-step { width:50px; height:50px; }
+           grid-template-columns:minmax(120px,1fr) minmax(250px,340px);
+           grid-template-rows:minmax(0,1fr) auto auto minmax(0,1fr);
+           gap:12px 20px; padding:6px 16px;
+           overflow-y:auto; overscroll-behavior:contain; }   /* si algún día no cabe, se desplaza (AT-24 M3) */
+  /* La barra se abre los mismos 30° que en vertical: si la columna es estrecha
+     para su alto, se acorta la varilla en vez de abrirse menos. Para 30° a cada
+     lado, la caja debe medir la varilla + 44 px de ancho (la pesa no se sale), y
+     la varilla es el alto − 28: de ahí «ancho − 16». cqw es el ancho de la caja
+     (consulta de contenedor); sin ella (Safari < 16), la barra ocupa todo el alto
+     y se abre algo menos, como antes (amplitudPendulo, compatibilidad). */
+  .metro-pendulo { grid-column:1; grid-row:1 / -1; align-self:stretch; align-items:center;
+                   height:auto; max-height:none; min-height:0; container-type:inline-size; }
+  .metro-slider { height:100%; max-height:calc(100cqw - 16px); }
+  .metro-center { grid-column:2; grid-row:2; gap:2px; }
+  .metro-controls { grid-column:2; grid-row:3; gap:8px; }
+  /* Algo más pequeño que en vertical, para que el bloque quepa en el alto. */
+  .metro-name { font-size:17px; }
+  .metro-bpm { font-size:46px; }
+  .metro-step { width:44px; height:44px; font-size:24px; }
+  .metro-dots { padding:2px 4px; min-height:24px; }
+  .metro-play { min-height:50px; }
   /* La ventana de compás, en dos columnas: en 342 px de alto no cabe apilada. */
   .metro-picker { width:min(640px, calc(100vw - 24px)); }
   .metro-picker[open], .metro-picker:not([open]):not([hidden]) { display:grid; grid-template-columns:auto minmax(0,1fr);
@@ -911,12 +932,26 @@ body[data-screen="guess"] .note-oct { margin-top:0; }
 <script>"use strict";
 // 00-aspecto.js · Pone el tema guardado en <html> antes de pintar nada (F5.8 #3, AT-15 #3).
 // Va en el <head>: si esperara a syncUI(), la página saldría un instante con
-// Madera aunque hubieras elegido otro tema. syncUI() lo completa después
-// (data-scheme, la barra del sistema). Si algo falla, se queda Madera.
+// el tema de fábrica aunque hubieras elegido otro. syncUI() lo completa después
+// (data-scheme, la barra del sistema). Si algo falla, se queda el de fábrica,
+// Partitura, que ya trae <html data-theme="partitura"> (decisión del 17/11).
 (function(){   // dentro de una función: no deja variables sueltas para los demás archivos
 try {
-  var guardado = JSON.parse(localStorage.getItem('trasteando.v1') || '{}');
-  if (guardado && guardado.theme) document.documentElement.setAttribute('data-theme', guardado.theme);
+  // El tema, su esquema (claro u oscuro) y el color de la barra del sistema, los
+  // tres antes de pintar: si solo se pusiera el tema, «Automático» en oscuro
+  // saldría un instante con la paleta clara (AT-24 M1). Un valor desconocido,
+  // como en sanitize() de 02-estado.js, vuelve al de fábrica.
+  var guardado = JSON.parse(localStorage.getItem('trasteando.v1') || '{}') || {};
+  var tema = ['madera','auto','partitura'].indexOf(guardado.theme) >= 0 ? guardado.theme : 'partitura';
+  var oscuro = tema === 'madera' || (tema === 'auto' && !!window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches);
+  var html = document.documentElement;
+  html.setAttribute('data-theme', tema);
+  html.setAttribute('data-scheme', oscuro ? 'dark' : 'light');
+  // La hoja de estilos ya está cargada (va antes en <head>): el fondo sale de ella.
+  var meta = document.querySelector('meta[name="theme-color"]');
+  var fondo = window.getComputedStyle ? getComputedStyle(html).getPropertyValue('--bg').trim() : '';
+  if (meta && fondo) meta.setAttribute('content', fondo);
 } catch (e) {}
 })();
 //# sourceURL=js/00-aspecto.js
@@ -1662,7 +1697,7 @@ function aplicarIdioma(){
 
 /* Versión de la app. Sigue la pauta 0.<fase del roadmap>.<corrección> hasta el
    lanzamiento, que será la 1.0.0. Cada cambio queda descrito en CHANGELOG.md. */
-const APP_VERSION = '0.6.15';
+const APP_VERSION = '0.6.16';
 
 /* ============================================================
    1. TEORÍA MUSICAL — datos base
@@ -1866,8 +1901,7 @@ const DEFAULTS = {
   visibleFrets:null,      // se calcula en el primer arranque según la pantalla
   maxChallengeFret:12,    // hasta dónde llegan los retos del modo Adivinar
   records:{},             // récord de racha de cada afinación: { standard: 7, dropd: 3 } (J-11)
-  tunerMode:'mic',        // afinador: 'mic' por micrófono · 'ear' de oído (F4.3; por defecto Micrófono desde F5.8 #2)
-  tunerPick:false,        // true cuando lo has elegido tú: solo entonces se recuerda
+  tunerMode:'mic',        // afinador: 'mic' por micrófono · 'ear' de oído (F4.3). Al abrir la app, siempre Micrófono (17/11)
   lang:null,              // 'es' o 'en' (G-12); sin elegir, el del navegador
   scaleId:'mayor',        // Escalas (F5): tipo y tónica (clase de altura)
   scalePc:0,
@@ -1875,7 +1909,7 @@ const DEFAULTS = {
   accidentals:{},         // tecla negra → 'sharp' o 'flat' (N-06); sin dato, sostenido
   metro:{ bpm:80, sig:'4/4', sub:1, accent:true },  // metrónomo (MT-05): tempo, compás, golpes por pulso y acento en el primero
   chordId:'C',            // acorde elegido en Acordes (F5.7), por su nombre en inglés
-  theme:'madera'          // tema (F5.8 #3, C-08): 'madera' · 'auto' (claro u oscuro, como el dispositivo) · 'partitura'
+  theme:'partitura'       // tema (F5.8 #3, C-08): 'madera' · 'auto' (claro u oscuro, como el dispositivo) · 'partitura' (el de fábrica desde el 17/11)
 };
 
 const storage = {
@@ -1906,8 +1940,10 @@ function sanitize(raw){
   }
   if (!['latin','anglo'].includes(s.notation)) s.notation = DEFAULTS.notation;
   if (!['nylon','acoustic'].includes(s.timbre)) s.timbre = DEFAULTS.timbre;
-  s.tunerPick = s.tunerPick === true;
-  if (!s.tunerPick || !['ear','mic'].includes(s.tunerMode)) s.tunerMode = DEFAULTS.tunerMode;
+  // El afinador abre siempre en Micrófono (tu decisión del 17/11, AR-15 #8): lo
+  // guardado no cuenta, y se borra la marca de «lo elegiste tú» de versiones anteriores.
+  delete s.tunerPick;
+  s.tunerMode = DEFAULTS.tunerMode;
   if (!['es','en'].includes(s.lang)) s.lang = idiomaDelNavegador();
   if (!ESCALAS.some(e => e.id === s.scaleId)) s.scaleId = DEFAULTS.scaleId;
   if (!Number.isInteger(s.scalePc) || s.scalePc < 0 || s.scalePc > 11) s.scalePc = DEFAULTS.scalePc;
@@ -4114,12 +4150,10 @@ function showMicPanel(motivo){
 
 /** Cambia entre De oído y Micrófono. El micrófono no se enciende solo: hay que
  *  pulsar «Activar el micrófono», así nunca escucha sin que lo pidas.
- *  `elegido`: lo has pulsado tú, y entonces se recuerda. Si nunca has elegido,
- *  el afinador abre en Micrófono donde se puede usar y en De oído donde no
- *  (el archivo con doble clic, una web sin https): F5.8 #2. */
-function setTunerMode(modo, elegido){
+ *  Lo que elijas vale mientras la app esté abierta; al volver a abrirla, el
+ *  afinador empieza otra vez en Micrófono (tu decisión del 17/11, AR-15 #8). */
+function setTunerMode(modo){
   state.tunerMode = modo === 'mic' ? 'mic' : 'ear';
-  if (elegido){ state.tunerPick = true; save(); }
   document.querySelectorAll('#tuner-mode button').forEach(b => {
     const on = b.dataset.v === state.tunerMode;
     b.classList.toggle('on', on); b.setAttribute('aria-pressed', on);
@@ -4129,8 +4163,9 @@ function setTunerMode(modo, elegido){
   if (state.tunerMode !== 'mic') stopMic();
   else if (!mic.analyser) showMicPanel(micUnavailable());
 }
-/** El modo con el que abre el afinador: el que elegiste o, si nunca elegiste, el que se pueda usar. */
-const tunerModeInicial = () => state.tunerPick ? state.tunerMode : (micUnavailable() ? 'ear' : 'mic');
+/** El modo con el que abre el afinador: Micrófono donde se puede usar y De oído
+ *  donde no (el archivo con doble clic, una web sin https): F5.8 #2. */
+const tunerModeInicial = () => micUnavailable() ? 'ear' : 'mic';
 
 function setMicString(v){
   mic.string = v;
@@ -4157,7 +4192,7 @@ function labelMicStrings(){
 function bindMicTuner(){
   drawGauge();
   labelMicStrings();
-  document.querySelectorAll('#tuner-mode button').forEach(b => b.addEventListener('click', () => setTunerMode(b.dataset.v, true)));
+  document.querySelectorAll('#tuner-mode button').forEach(b => b.addEventListener('click', () => setTunerMode(b.dataset.v)));
   document.querySelectorAll('#mic-string button').forEach(b => b.addEventListener('click', () => setMicString(b.dataset.v)));
   document.getElementById('mic-start').addEventListener('click', startMic);
   document.getElementById('mic-stop').addEventListener('click', stopMic);

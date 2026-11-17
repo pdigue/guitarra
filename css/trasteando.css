@@ -644,12 +644,31 @@ body[data-screen="chords"] .board-scroll { overflow-x:hidden; }
      cada uno bajaría de 40 px, el mínimo para el dedo (comprobar-disposicion). */
   body[data-screen="guess"] { grid-template-columns:64px minmax(0,1fr) 204px; }
   #tuner { grid-column:2 / -1; grid-row:1; min-height:0; }
+  /* Dos bloques (tus fotos del 17/11, AR-14): a la izquierda la barra y a la
+     derecha todo lo demás, ordenado como en vertical (nombre, tempo, puntos,
+     compás y «Marcar», Empezar), centrado en el alto. */
   #metro { grid-column:2 / -1; grid-row:1; min-height:0; display:grid;
-           grid-template-columns:minmax(120px,.8fr) minmax(0,1fr) minmax(0,1fr); grid-template-rows:minmax(0,1fr);
-           align-items:center; gap:8px 20px; padding:8px 16px; }
-  .metro-pendulo { align-self:stretch; height:auto; max-height:none; min-height:0; }
-  .metro-bpm { font-size:56px; }
-  .metro-step { width:50px; height:50px; }
+           grid-template-columns:minmax(120px,1fr) minmax(250px,340px);
+           grid-template-rows:minmax(0,1fr) auto auto minmax(0,1fr);
+           gap:12px 20px; padding:6px 16px;
+           overflow-y:auto; overscroll-behavior:contain; }   /* si algún día no cabe, se desplaza (AT-24 M3) */
+  /* La barra se abre los mismos 30° que en vertical: si la columna es estrecha
+     para su alto, se acorta la varilla en vez de abrirse menos. Para 30° a cada
+     lado, la caja debe medir la varilla + 44 px de ancho (la pesa no se sale), y
+     la varilla es el alto − 28: de ahí «ancho − 16». cqw es el ancho de la caja
+     (consulta de contenedor); sin ella (Safari < 16), la barra ocupa todo el alto
+     y se abre algo menos, como antes (amplitudPendulo, compatibilidad). */
+  .metro-pendulo { grid-column:1; grid-row:1 / -1; align-self:stretch; align-items:center;
+                   height:auto; max-height:none; min-height:0; container-type:inline-size; }
+  .metro-slider { height:100%; max-height:calc(100cqw - 16px); }
+  .metro-center { grid-column:2; grid-row:2; gap:2px; }
+  .metro-controls { grid-column:2; grid-row:3; gap:8px; }
+  /* Algo más pequeño que en vertical, para que el bloque quepa en el alto. */
+  .metro-name { font-size:17px; }
+  .metro-bpm { font-size:46px; }
+  .metro-step { width:44px; height:44px; font-size:24px; }
+  .metro-dots { padding:2px 4px; min-height:24px; }
+  .metro-play { min-height:50px; }
   /* La ventana de compás, en dos columnas: en 342 px de alto no cabe apilada. */
   .metro-picker { width:min(640px, calc(100vw - 24px)); }
   .metro-picker[open], .metro-picker:not([open]):not([hidden]) { display:grid; grid-template-columns:auto minmax(0,1fr);

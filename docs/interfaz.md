@@ -1,6 +1,6 @@
 # Trasteando — Especificación de interfaz
 
-**Versión:** 1.23 · **Fecha:** 17 de noviembre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0); la sección 7b (seis áreas, con Metrónomo y Acordes), aprobada el 21/10 y retocada el 22/10 con tu decisión de la pesa del metrónomo; los detalles del péndulo, a falta de tu visto bueno en la web de pruebas. Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
+**Versión:** 1.24 · **Fecha:** 17 de noviembre de 2026 · **Estado:** ✅ aprobada por ti el 20/10/2026 (versión 1.0); la sección 7b (seis áreas, con Metrónomo y Acordes), aprobada el 21/10 y retocada el 22/10 con tu decisión de la pesa del metrónomo; los detalles del péndulo, a falta de tu visto bueno en la web de pruebas. Las versiones 1.1 y 1.2 corrigen cifras medidas al construirla y anotan detalles de F3.2; la 1.3 recoge la paleta que decidiste para F3.4, y la 1.4, tu comentario sobre el zoom (ver el control de cambios).
 **Etapa:** F3.1 · **Requisito:** C-06 · **Válido para:** app `0.6.14` · `requisitos.md` v2.11 · `roadmap.md` v4.10
 **Revisión:** auditoría de requisitos AR-04 (`historico/auditorias/AR-04-interfaz.md`), con sus 10 hallazgos resueltos en esta versión.
 **Bloquea:** F3.2 (horizontal), F3.4 (accesibilidad) y toda F5 (Escalas); fija también el hueco del micrófono de F4.
@@ -98,7 +98,7 @@ Igual que Libre, con la **tarjeta del reto** entre el acceso rápido y el másti
 
 ### Afinador — bocetos A3 y A4
 
-Selector arriba: **De oído | Micrófono**. Desde la 0.6.2 (tu comentario del 12/11) **abre en Micrófono** donde se puede usar, sin escuchar hasta que pulsas «Activar el micrófono»; donde no se puede, en De oído; y si eliges tú, se recuerda. Debajo, en los dos modos, la **afinación activa** (A-06, A-07), porque el micrófono también la necesita para saber qué nota corresponde a cada cuerda.
+Selector arriba: **De oído | Micrófono**. Desde la 0.6.2 (tu comentario del 12/11) **abre en Micrófono** donde se puede usar, sin escuchar hasta que pulsas «Activar el micrófono»; donde no se puede, en De oído. Si eliges De oído, vale mientras la app está abierta: al volver a abrirla, otra vez Micrófono (tu decisión del 17/11, AR-15 #8). Debajo, en los dos modos, la **afinación activa** (A-06, A-07), porque el micrófono también la necesita para saber qué nota corresponde a cada cuerda.
 
 - **De oído** (A-01, lo que hay hoy): una fila por cuerda, que suena al pulsarla y tiene − y + para bajarla o subirla un semitono (cualquier cambio la convierte en «Personalizada», A-08), y la afinación en el pentagrama (P-04, A-09).
 - **Micrófono** (F4, A-02…A-05): selector de cuerda **Auto | 6 … 1** (Auto detecta la cuerda según la afinación activa, A-04; elegir una manda sobre la detección, A-05); un indicador de aguja de −50 a +50 cents con la franja de afinado de ±5 en verde (A-03); la nota grande y los cents en número; la orden en texto y flecha, **«▲ Sube un poco» / «▼ Baja un poco» / «✓ Afinada»**; un aviso fijo, «El sonido se analiza solo en tu dispositivo» (G-11), y un botón para detener el micrófono.
@@ -174,7 +174,7 @@ Tu petición del 21/10 y tu decisión del mismo día: **el metrónomo es una fun
 
 - **Seis áreas, en este orden:** Libre · Adivinar · Afinador · Escalas · Acordes · Metrónomo. Las cuatro de siempre no cambian de sitio (principio 3); las nuevas van al final.
 - **Barra inferior (vertical):** seis destinos de 65 px de ancho en el iPhone, cada uno con icono y una etiqueta corta de 11 px. **Raíl (horizontal):** seis destinos de 44 px de alto y ⚙ abajo; caben en los 342 px del iPhone apaisado. **Ordenador:** seis pestañas en la cabecera.
-- **Metrónomo** (MT-01 a MT-05, hecho en la 0.5.4): pantalla propia, sin mástil, como el Afinador; funciona igual en vertical y en horizontal y no pide girar el móvil.
+- **Metrónomo** (MT-01 a MT-05, hecho en la 0.5.4): pantalla propia, sin mástil, como el Afinador; funciona en vertical y en horizontal y no pide girar el móvil. En horizontal, desde la 0.6.16 (tus fotos del 17/11), en **dos bloques**: a la izquierda la barra, que se abre los mismos 30° que en vertical (se acorta si la columna es estrecha), y a la derecha el resto en el orden de vertical (nombre, tempo, puntos, compás y «Marcar», Empezar), con letras algo más pequeñas.
   - **Pantalla principal**, de arriba abajo: una **barra vertical** para el tempo, que es un **péndulo** como el de un metrónomo mecánico (MT-06, tu comentario del 22/10): la pesa marca el tempo, arriba más lento y abajo más rápido; mientras suena, la barra oscila sobre su pie y llega a un extremo en cada pulso (hasta 30° a cada lado; menos si no cabe, como en horizontal); se queda recta parada, mientras la arrastras y con «reducir movimiento». También se mueve con las flechas del teclado (↑, más rápido, como cualquier deslizador); el **nombre del tempo** en italiano (Lento, Andante, Allegro…); **− 80 +**; **un punto por pulso**, el primero más grande si lleva acento y relleno el que suena; abajo, el **compás** escrito como en la partitura (4 sobre 4) y «Marcar» (tocas a ritmo y lo calcula), y el botón **Empezar**. En horizontal, la barra a la izquierda, el tempo en medio y los controles a la derecha.
   - **Al tocar el compás** se abre una ventana: los doce compases en círculos (1/4, 2/4, 3/4, 4/4, 5/4, 6/4, 3/8, 5/8, 6/8, 7/8, 9/8, 12/8), las cuatro figuras (solo el pulso, dos, tres o cuatro golpes por pulso), la casilla **Acento en el primer tiempo** y «Listo». En 6/8, 9/8 y 12/8 el pulso es la negra con puntillo: dos, tres o cuatro puntos. «Atrás», Escape o tocar fuera también la cierran. En horizontal, en dos columnas.
   - **Sigue sonando al cambiar de área**, para tocar encima en Libre, Escalas o Acordes. Mientras suena, su pestaña lleva un punto que se enciende con cada pulso; para pararlo, vuelves a ella. Se para al ocultar la app y **al escuchar con el micrófono** en el Afinador, con un aviso: su clic confundiría al detector.
@@ -213,7 +213,7 @@ Decisión del cliente: «elige tú los colores, para que las notas se distingan 
 
 ### Temas (V-10, 0.6.3; decidido el 15/11)
 
-En Ajustes › **Aspecto**, tres temas, que se cambian cuando quieras: **Madera** (de fábrica: el de siempre, más limpio), **Automático** (claro u oscuro, como el dispositivo, con los grises y el naranja del sistema de Apple) y **Partitura** (papel, tinta y rojo de imprenta). Cada tema es un juego de fichas de color (`css/trasteando.css`); el mástil es oscuro en todos, así que la paleta por nota y los colores de acierto y fallo no cambian. En un tema claro, la nota leída, las pistas y el pentagrama se escriben con la tinta del texto. Los contrastes de la sección 9 se miden en los cuatro aspectos.
+En Ajustes › **Aspecto**, tres temas, que se cambian cuando quieras: **Partitura** (papel, tinta y rojo de imprenta; de fábrica desde el 17/11, también en el arranque de la app instalada), **Madera** (el de siempre, más limpio; de fábrica hasta la 0.6.15) y **Automático** (claro u oscuro, como el dispositivo, con los grises y el naranja del sistema de Apple). Cada tema es un juego de fichas de color (`css/trasteando.css`); el mástil es oscuro en todos, así que la paleta por nota y los colores de acierto y fallo no cambian. En un tema claro, la nota leída, las pistas y el pentagrama se escriben con la tinta del texto. Los contrastes de la sección 9 se miden en los cuatro aspectos.
 
 ## 11. Alternativas descartadas
 
@@ -266,7 +266,8 @@ Los detalles se revisan tras usarla en la Sesión 1 (F3.3).
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| **1.23** | 17/11/2026 | F6.4 (`0.6.14`): «Acerca de», hecho (§6, A7); sin aviso para girar, por tu decisión del 17/11 (§6, §7; V-01). |
+| **1.24** | 17/11/2026 | F5.8 #11 (`0.6.16`): Partitura de fábrica (Temas); el afinador abre siempre en Micrófono (§6, A3); el metrónomo en horizontal, en dos bloques (§7b). |
+| 1.23 | 17/11/2026 | F6.4 (`0.6.14`): «Acerca de», hecho (§6, A7); sin aviso para girar, por tu decisión del 17/11 (§6, §7; V-01). |
 | 1.22 | 16/11/2026 | Tu comentario del 16/11 (F5.8 #10): «Ver la respuesta» debajo también en horizontal, aviso de fallo corto, sin aviso para girar con pistas, zoom de inicio con las zonas seguras y raíl desplazable en pantallas muy bajas (§6, §7). |
 | 1.21 | 16/11/2026 | Tu decisión del 16/11: pistas en una línea; panel de Adivinar de 204 px en horizontal; frase del reto más corta; «Ver la respuesta» debajo de las pistas (§6, §7b). |
 | 1.20 | 16/11/2026 | Tu comentario del 16/11: las pistas de Adivinar se leen enteras; en horizontal, apiladas, y la racha junto a ▶ (§6, J-06). |

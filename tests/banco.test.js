@@ -929,7 +929,7 @@ test('sin permiso se explica cómo darlo; sin micrófono posible, se dice por qu
   B.doc.querySelector('#tuner-mode [data-v="ear"]').click();
   assert.equal(B.$('tuner-ear').hidden, false);
   assert.equal(B.doc.querySelectorAll('#strings-tuner .tstring').length || B.$('strings-tuner').children.length, 6, 'De oído sigue con sus 6 cuerdas');
-  assert.equal(JSON.parse(B.store.get('trasteando.v1')).tunerMode, 'ear', 'el modo se guarda');
+  assert.equal(B.ev('state.tunerMode'), 'ear', 'el modo vale mientras la app está abierta (al abrirla, otra vez Micrófono: 17/11)');
 });
 
 test('cuerda automática: cada cuerda, 90 cents baja o alta, se identifica bien; también en Drop D (A-04)', async () => {
@@ -2036,29 +2036,33 @@ test('el Service Worker se registra en la web, nunca en el autónomo ni con dobl
 
 // --- F5.8 #2 (12/11): el afinador abre en Micrófono, y la pantalla no se apaga mientras se usa ---
 
-test('el afinador abre en Micrófono donde se puede usar, sin escuchar todavía; tu elección se recuerda (A-02, F5.8 #2)', async () => {
+test('el afinador abre siempre en Micrófono donde se puede usar, sin escuchar todavía; «De oído» vale mientras la app está abierta (A-02, F5.8 #2, AR-15 #8)', async () => {
   const A = boot(APP, null, microFalso());
   A.doc.querySelector('.tab[data-screen="tuner"]').click();
   assert.equal(A.$('tuner-mic').hidden, false, 'con micrófono disponible, abre en Micrófono');
   assert.equal(A.$('tuner-ear').hidden, true);
   assert.equal(A.ev('__mic.pedido'), 0, 'pero no escucha hasta que pulsas «Activar»');
-  // Quien ya usaba la app tenía guardado «De oído» sin haberlo elegido: también le abre en Micrófono.
-  const viejo = boot(APP, { tunerMode: 'ear' }, microFalso());
-  assert.equal(viejo.$('tuner-mic').hidden, false);
-  // Si lo eliges tú, se recuerda.
+  // Si eliges «De oído», sigue así al cambiar de área y volver…
   A.doc.querySelector('#tuner-mode [data-v="ear"]').click();
-  const guardado = JSON.parse(A.store.get('trasteando.v1'));
-  assert.deepEqual([guardado.tunerMode, guardado.tunerPick], ['ear', true]);
-  assert.equal(boot(APP, guardado, microFalso()).$('tuner-ear').hidden, false);
-  // «Restablecer» olvida la elección, apaga el micrófono y devuelve la cuerda a «Auto» (AT-14 #12).
-  const R = boot(APP, guardado, microFalso()); R.ev(analizadorFalso);
+  A.doc.querySelector('.tab[data-screen="free"]').click();
+  A.doc.querySelector('.tab[data-screen="tuner"]').click();
+  assert.equal(A.$('tuner-ear').hidden, false, 'en la misma sesión se mantiene');
+  // …pero al volver a abrir la app, Micrófono otra vez (tu decisión del 17/11),
+  // también con lo que guardaban las versiones anteriores («lo elegiste tú»).
+  const guardado = JSON.parse(A.store.get('trasteando.v1') || '{}');
+  assert.equal(boot(APP, guardado, microFalso()).$('tuner-mic').hidden, false);
+  const viejo = boot(APP, { tunerMode: 'ear', tunerPick: true }, microFalso());
+  assert.equal(viejo.$('tuner-mic').hidden, false, 'lo guardado antes no cuenta');
+  assert.equal(viejo.ev('state.tunerPick'), undefined, 'y la marca vieja se borra');
+  // «Restablecer» apaga el micrófono y devuelve la cuerda a «Auto» (AT-14 #12).
+  const R = boot(APP, null, microFalso()); R.ev(analizadorFalso);
+  R.doc.querySelector('#tuner-mode [data-v="ear"]').click();
   R.doc.querySelector('#tuner-mode [data-v="mic"]').click();
   R.doc.querySelector('#mic-string [data-v="3"]').click();
   R.$('set-reset').click();
   await sleep(50);
   assert.equal(R.$('tuner-mic').hidden, false);
   assert.equal(R.ev('mic.string'), 'auto');
-  assert.equal(JSON.parse(R.store.get('trasteando.v1')).tunerPick, false);
   // Donde el micrófono no se puede usar (sin https, con doble clic), abre en De oído.
   const sin = boot(APP);
   assert.equal(sin.$('tuner-ear').hidden, false);
@@ -2115,20 +2119,57 @@ test('la pantalla se mantiene encendida mientras suena el metrónomo o escucha e
 
 // --- F5.8 #3 y #4 (15/11): temas elegibles, y en Adivinar lo buscado en grande ---
 
-test('el tema de fábrica es Madera; Ajustes › Aspecto lo cambia, lo anuncia y lo guarda; uno desconocido vuelve a Madera (V-10, C-02, C-05)', () => {
+test('el tema de fábrica es Partitura (17/11); Ajustes › Aspecto lo cambia, lo anuncia y lo guarda; uno desconocido vuelve a Partitura (V-10, C-02, C-05)', () => {
   const A = boot(APP);
   const html = A.doc.documentElement;
-  assert.equal(html.dataset.theme, 'madera');
-  assert.equal(html.dataset.scheme, 'dark');
-  const boton = v => A.doc.querySelector(`#set-theme [data-v="${v}"]`);
-  assert.equal(boton('madera').getAttribute('aria-pressed'), 'true');
-  boton('partitura').click();
   assert.equal(html.dataset.theme, 'partitura');
   assert.equal(html.dataset.scheme, 'light', 'Partitura es un tema claro');
+  const boton = v => A.doc.querySelector(`#set-theme [data-v="${v}"]`);
   assert.equal(boton('partitura').getAttribute('aria-pressed'), 'true');
-  assert.equal(JSON.parse(A.store.get('trasteando.v1')).theme, 'partitura', 'se guarda');
-  assert.equal(boot(APP, { theme: 'partitura' }).doc.documentElement.dataset.theme, 'partitura', 'y vuelve al abrir');
-  assert.equal(boot(APP, { theme: 'neon' }).doc.documentElement.dataset.theme, 'madera', 'un valor desconocido no rompe nada');
+  boton('madera').click();
+  assert.equal(html.dataset.theme, 'madera');
+  assert.equal(html.dataset.scheme, 'dark');
+  assert.equal(boton('madera').getAttribute('aria-pressed'), 'true');
+  assert.equal(JSON.parse(A.store.get('trasteando.v1')).theme, 'madera', 'se guarda');
+  assert.equal(boot(APP, { theme: 'madera' }).doc.documentElement.dataset.theme, 'madera', 'y vuelve al abrir');
+  assert.equal(boot(APP, { theme: 'neon' }).doc.documentElement.dataset.theme, 'partitura', 'un valor desconocido no rompe nada');
+  // Antes de leer lo guardado, la página ya es Partitura: el <html> y la barra del sistema (sin parpadeo).
+  const fuente = require('fs').readFileSync(require('path').join(__dirname, '..', 'index.html'), 'utf8');
+  assert.match(fuente, /<html lang="es" data-theme="partitura"/);
+  assert.match(fuente, /<meta name="theme-color" content="#f5efe3">/);
+});
+
+test('el color de Partitura cuadra en el CSS, la barra del sistema y el manifiesto (V-10, G-04, AT-24 B4)', () => {
+  const leerRaiz = f => fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
+  const css = leerRaiz('css/trasteando.css');
+  const papel = css.match(/html\[data-theme="partitura"\] \{[^}]*--bg:(#[0-9a-f]{6})/)[1];
+  const html = leerRaiz('index.html');
+  assert.equal(html.match(/<meta name="theme-color" content="([^"]+)">/)[1], papel);
+  assert.match(html, /<html lang="es" data-theme="partitura" data-scheme="light">/);
+  const m = JSON.parse(leerRaiz('manifest.webmanifest'));
+  assert.deepEqual([m.background_color, m.theme_color], [papel, papel]);
+});
+
+test('00-aspecto.js pone tema, esquema y color de la barra antes de pintar; un tema desconocido, Partitura (V-10, AT-24 M1)', () => {
+  const vm = require('vm');
+  const codigo = fs.readFileSync(path.join(__dirname, '..', 'js', '00-aspecto.js'), 'utf8');
+  const fondos = { partitura: '#f5efe3', madera: '#140e09', auto: '#000000' };
+  const correr = (guardado, oscuro) => {
+    const attrs = {}, meta = { content: '#f5efe3', setAttribute(k, v){ this.content = v; } };
+    const html = { setAttribute(k, v){ attrs[k] = v; } };
+    vm.runInNewContext(codigo, {
+      localStorage: { getItem: () => guardado === undefined ? null : JSON.stringify(guardado) },
+      document: { documentElement: html, querySelector: () => meta },
+      window: { matchMedia: () => ({ matches: oscuro }), getComputedStyle: true },
+      getComputedStyle: () => ({ getPropertyValue: () => fondos[attrs['data-theme']] }),
+    });
+    return [attrs['data-theme'], attrs['data-scheme'], meta.content];
+  };
+  assert.deepEqual(correr(undefined, true), ['partitura', 'light', '#f5efe3'], 'sin nada guardado');
+  assert.deepEqual(correr({ theme: 'madera' }, false), ['madera', 'dark', '#140e09']);
+  assert.deepEqual(correr({ theme: 'auto' }, true), ['auto', 'dark', '#000000'], 'Automático en oscuro, sin destello claro');
+  assert.deepEqual(correr({ theme: 'auto' }, false), ['auto', 'light', '#000000']);
+  assert.deepEqual(correr({ theme: 'xyz' }, true), ['partitura', 'light', '#f5efe3'], 'un valor desconocido');
 });
 
 test('«Automático» sigue el modo claro u oscuro del dispositivo, también si cambia con la app abierta; sin matchMedia, oscuro (V-10, PL-04)', () => {
@@ -2152,7 +2193,7 @@ test('en un tema claro el pentagrama se escribe con la tinta del texto, no con e
   assert.match(A.$('staff').querySelector('ellipse').getAttribute('fill'), /^#/, 'de vuelta en Madera, otra vez su color');
   A.doc.querySelector('#set-theme [data-v="partitura"]').click();
   assert.equal(A.$('staff').querySelector('ellipse').getAttribute('fill'), 'currentColor');
-  const B = boot(APP);
+  const B = boot(APP, { theme: 'madera' });
   B.press(B.doc.querySelectorAll('.fret-cell')[8]);
   assert.match(B.$('staff').querySelector('ellipse').getAttribute('fill'), /^#/, 'en Madera, el color de la nota');
 });
